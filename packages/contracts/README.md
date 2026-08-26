@@ -73,6 +73,19 @@ import {
 } from "@ensforge/contracts/v1";
 ```
 
+Reverse-resolution exports cover current L1, default, L2, migration-capable L2, and standalone
+registrars:
+
+```ts
+import {
+  defaultReverseRegistrarV1Abi,
+  l2ReverseRegistrarV1Abi,
+  l2ReverseRegistrarWithMigrationV1Abi,
+  reverseRegistrarV1Abi,
+  standaloneReverseRegistrarV1Abi,
+} from "@ensforge/contracts/v1";
+```
+
 ## Commands
 
 ```sh
