@@ -26,6 +26,14 @@
       "workspace-source": "./src/index.ts",
       "default": "./dist/index.js"
     },
+    "./resolver-profiles": {
+      "workspace-source": "./src/shared/resolver-profiles/index.ts",
+      "default": "./dist/resolver-profiles.js"
+    },
+    "./shared": {
+      "workspace-source": "./src/shared/index.ts",
+      "default": "./dist/shared.js"
+    },
     "./package.json": "./package.json"
   },
   "publishConfig": {
@@ -34,6 +42,8 @@
     },
     "exports": {
       ".": "./dist/index.js",
+      "./resolver-profiles": "./dist/resolver-profiles.js",
+      "./shared": "./dist/shared.js",
       "./package.json": "./package.json"
     },
     "access": "public",
@@ -48,5 +58,8 @@
     "test": "vitest run --passWithNoTests",
     "test:watch": "vitest --passWithNoTests",
     "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "viem": "catalog:"
   }
 }

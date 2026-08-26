@@ -3,7 +3,11 @@ import type { UserConfig } from "tsdown";
 
 export default defineConfig({
   alias: { "#/": "./src/" },
-  entry: { index: "src/index.ts" },
+  entry: {
+    index: "src/index.ts",
+    "resolver-profiles": "src/shared/resolver-profiles/index.ts",
+    shared: "src/shared/index.ts",
+  },
   exports: { devExports: "workspace-source" },
   unbundle: true,
   publint: "ci-only",
