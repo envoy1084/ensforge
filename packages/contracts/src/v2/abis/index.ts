@@ -8,3 +8,6 @@ export * from "./ens-v2-resolver.js";
 export * from "./permissioned-resolver.js";
 export * from "./public-resolver.js";
 export * from "./universal-resolver.js";
+export * from "./eth-registrar.js";
+export * from "./eth-renewer-v1.js";
+export * from "./standard-rent-price-oracle.js";
