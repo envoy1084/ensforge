@@ -35,6 +35,21 @@ import { erc165Abi } from "@ensforge/contracts/shared";
 import { addrResolverAbi } from "@ensforge/contracts/resolver-profiles";
 ```
 
+## ENSv1 ownership contracts
+
+The V1 entrypoint exports the complete ownership and registry ABIs from the pinned
+`@ensdomains/ens-contracts` `v1.7.0` source:
+
+```ts
+import {
+  baseRegistrarV1Abi,
+  ensRegistryV1Abi,
+  nameWrapperFuses,
+  nameWrapperUpgradeV1Abi,
+  nameWrapperV1Abi,
+} from "@ensforge/contracts/v1";
+```
+
 ## Commands
 
 ```sh

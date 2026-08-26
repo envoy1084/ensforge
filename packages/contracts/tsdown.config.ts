@@ -7,6 +7,7 @@ export default defineConfig({
     index: "src/index.ts",
     "resolver-profiles": "src/shared/resolver-profiles/index.ts",
     shared: "src/shared/index.ts",
+    v1: "src/v1/index.ts",
   },
   exports: { devExports: "workspace-source" },
   unbundle: true,
