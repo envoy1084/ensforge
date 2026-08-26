@@ -60,6 +60,19 @@ import {
 } from "@ensforge/contracts/v1";
 ```
 
+V1 registrar exports keep interfaces and materially different implementations separate:
+
+```ts
+import {
+  bulkRenewalV1Abi,
+  ethRegistrarControllerV1Abi,
+  exponentialPremiumPriceOracleV1Abi,
+  priceOracleV1Abi,
+  staticBulkRenewalV1Abi,
+  wrappedEthRegistrarControllerV1Abi,
+} from "@ensforge/contracts/v1";
+```
+
 ## Commands
 
 ```sh
