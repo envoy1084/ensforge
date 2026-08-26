@@ -1,0 +1,13 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+
+catalog:
+  "@effect/vitest": "4.0.0-rc.112"
+  effect: "4.0.0-rc.112"
+  vitest: "4.1.11"
+
+allowBuilds:
+  esbuild: true
+  lefthook: true
+  msgpackr-extract: true
