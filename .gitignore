@@ -2,6 +2,7 @@
 .env
 .env.*
 !.env.example
+.repos/
 .turbo/
 coverage/
 dist/
