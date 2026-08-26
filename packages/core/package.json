@@ -1,0 +1,59 @@
+{
+  "name": "@ensforge/core",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Effect-native ENS actions, workflows, and Promise APIs for JavaScript and TypeScript",
+  "keywords": [
+    "effect",
+    "ens",
+    "ensv2",
+    "ethereum",
+    "sdk",
+    "typescript",
+    "viem"
+  ],
+  "license": "Apache-2.0",
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "imports": {
+    "#/*": "./src/*.ts"
+  },
+  "exports": {
+    ".": {
+      "workspace-source": "./src/index.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "imports": {
+      "#/*": "./dist/*.js"
+    },
+    "exports": {
+      ".": "./dist/index.js",
+      "./package.json": "./package.json"
+    },
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "lint": "oxlint --deny-warnings .",
+    "pack:check": "publint && attw --pack . --profile esm-only",
+    "prepack": "pnpm build",
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest --passWithNoTests",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@ensforge/contracts": "workspace:*",
+    "viem": "catalog:"
+  },
+  "peerDependencies": {
+    "effect": "catalog:"
+  }
+}
