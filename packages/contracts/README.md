@@ -50,6 +50,16 @@ import {
 } from "@ensforge/contracts/v1";
 ```
 
+The same entrypoint exports the complete V1 resolution contracts:
+
+```ts
+import {
+  offchainDnsResolverV1Abi,
+  publicResolverV1Abi,
+  universalResolverV1Abi,
+} from "@ensforge/contracts/v1";
+```
+
 ## Commands
 
 ```sh
