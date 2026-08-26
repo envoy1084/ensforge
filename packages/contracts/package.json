@@ -42,6 +42,10 @@
       "workspace-source": "./src/v1/index.ts",
       "default": "./dist/v1.js"
     },
+    "./v2": {
+      "workspace-source": "./src/v2/index.ts",
+      "default": "./dist/v2.js"
+    },
     "./package.json": "./package.json"
   },
   "publishConfig": {
@@ -54,6 +58,7 @@
       "./resolver-profiles": "./dist/resolver-profiles.js",
       "./shared": "./dist/shared.js",
       "./v1": "./dist/v1.js",
+      "./v2": "./dist/v2.js",
       "./package.json": "./package.json"
     },
     "access": "public",
