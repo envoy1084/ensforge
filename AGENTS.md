@@ -4,7 +4,8 @@ Ensforge is a pnpm and Turborepo monorepo for Effect-native Ethereum Name Servic
 
 ## Workspace map
 
-- `packages/core`: framework-independent SDK types, services, and actions.
+- `packages/contracts`: runtime-neutral ENS ABIs, interfaces, addresses, and deployment metadata.
+- `packages/core`: framework-independent SDK types, services, and actions when introduced.
 - `apps/*`: runnable applications when a concrete application is introduced.
 - `packages/*`: additional publishable packages when they have an independent public boundary.
 

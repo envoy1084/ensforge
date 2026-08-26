@@ -72,6 +72,8 @@ importers:
         specifier: 'catalog:'
         version: 4.1.11(@types/node@24.13.3)(@vitest/coverage-v8@4.1.11)(vite@8.2.2(@types/node@24.13.3)(jiti@2.6.1)(yaml@2.9.0))
 
+  packages/contracts: {}
+
   packages/template:
     dependencies:
       effect:

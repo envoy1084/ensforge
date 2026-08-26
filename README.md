@@ -2,9 +2,9 @@
 
 Ensforge is an Effect-native TypeScript SDK for the Ethereum Name Service.
 
-The repository currently contains the tooling foundation and a tested package template. Protocol
-actions, contract profiles, and React integrations can be added from that template as complete
-vertical slices.
+The repository contains the tooling foundation, a reusable package template, and the scaffold for
+the contracts package. Protocol actions and React integrations will be added as complete vertical
+slices.
 
 ## Requirements
 
@@ -22,6 +22,7 @@ pnpm check
 
 ```text
 packages/
+  contracts/   ENS contract ABIs, interfaces, and deployment metadata
   template/    Copy-ready starter for new packages
 ```
 

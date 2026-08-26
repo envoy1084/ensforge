@@ -1,0 +1,52 @@
+{
+  "name": "@ensforge/contracts",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Versioned ENS contract ABIs, interfaces, and deployment metadata for Ensforge",
+  "keywords": [
+    "abi",
+    "contracts",
+    "ens",
+    "ensv2",
+    "ethereum",
+    "typescript",
+    "viem"
+  ],
+  "license": "Apache-2.0",
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "imports": {
+    "#/*": "./src/*.ts"
+  },
+  "exports": {
+    ".": {
+      "workspace-source": "./src/index.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "imports": {
+      "#/*": "./dist/*.js"
+    },
+    "exports": {
+      ".": "./dist/index.js",
+      "./package.json": "./package.json"
+    },
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "lint": "oxlint --deny-warnings .",
+    "pack:check": "publint && attw --pack . --profile esm-only",
+    "prepack": "pnpm build",
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest --passWithNoTests",
+    "typecheck": "tsc --noEmit"
+  }
+}
