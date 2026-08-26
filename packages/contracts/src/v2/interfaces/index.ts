@@ -11,3 +11,6 @@ export * from "./temporal-registry.js";
 export * from "./tokenized-registry.js";
 export * from "./wrapper-registry.js";
 export * from "./wrapper-registry-initializable.js";
+export * from "./permissioned-resolver-initializable.js";
+export * from "./permissioned-resolver.js";
+export * from "./universal-resolver.js";

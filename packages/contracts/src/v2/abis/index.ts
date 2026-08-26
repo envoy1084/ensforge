@@ -3,3 +3,8 @@ export * from "./eth-registry.js";
 export * from "./user-registry.js";
 export * from "./wrapper-registry.js";
 export * from "./label-store.js";
+export * from "./ens-v1-resolver.js";
+export * from "./ens-v2-resolver.js";
+export * from "./permissioned-resolver.js";
+export * from "./public-resolver.js";
+export * from "./universal-resolver.js";
