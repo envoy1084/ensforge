@@ -97,6 +97,18 @@ import {
 } from "@ensforge/contracts/v1";
 ```
 
+## Deployments
+
+Addresses are exported separately from ABIs through explicit named profiles. This avoids ambiguous
+chain-only selection when legacy V1 and V2 deployments coexist on the same chain.
+
+```ts
+import { mainnetV1Deployment, sepoliaV1Deployment } from "@ensforge/contracts/deployments";
+```
+
+Mainnet uses the canonical upgradeable Universal Resolver proxy. Sepolia V1 is marked as legacy
+because current ENS applications and resolution use the V2 deployment there.
+
 ## Commands
 
 ```sh
