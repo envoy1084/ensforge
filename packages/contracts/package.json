@@ -46,6 +46,10 @@
       "workspace-source": "./src/v2/index.ts",
       "default": "./dist/v2.js"
     },
+    "./v2/experimental/hca": {
+      "workspace-source": "./src/v2/experimental/hca/index.ts",
+      "default": "./dist/v2/experimental/hca.js"
+    },
     "./package.json": "./package.json"
   },
   "publishConfig": {
@@ -59,6 +63,7 @@
       "./shared": "./dist/shared.js",
       "./v1": "./dist/v1.js",
       "./v2": "./dist/v2.js",
+      "./v2/experimental/hca": "./dist/v2/experimental/hca.js",
       "./package.json": "./package.json"
     },
     "access": "public",

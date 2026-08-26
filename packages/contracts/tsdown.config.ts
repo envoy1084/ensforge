@@ -10,6 +10,7 @@ export default defineConfig({
     shared: "src/shared/index.ts",
     v1: "src/v1/index.ts",
     v2: "src/v2/index.ts",
+    "v2/experimental/hca": "src/v2/experimental/hca/index.ts",
   },
   exports: { devExports: "workspace-source" },
   unbundle: true,
