@@ -1,5 +1,5 @@
 /** Complete IRegistryURIRenderer ABI from ENSv2. */
-export const registryUriRendererV2Abi = [
+export const registryUriRendererV2InterfaceAbi = [
   {
     inputs: [
       {

@@ -1,5 +1,5 @@
 /** Complete ITokenizedRegistry ABI from ENSv2. */
-export const tokenizedRegistryV2Abi = [
+export const tokenizedRegistryV2InterfaceAbi = [
   {
     anonymous: false,
     inputs: [

@@ -1,5 +1,5 @@
 /** Complete IRegistryEvents ABI from ENSv2. */
-export const registryEventsV2Abi = [
+export const registryEventsV2InterfaceAbi = [
   {
     anonymous: false,
     inputs: [

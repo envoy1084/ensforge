@@ -1,5 +1,5 @@
 /** Complete IStandardRegistry ABI from ENSv2. */
-export const standardRegistryV2Abi = [
+export const standardRegistryV2InterfaceAbi = [
   {
     inputs: [
       {

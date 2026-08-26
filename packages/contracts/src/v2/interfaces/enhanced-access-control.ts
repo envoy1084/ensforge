@@ -1,5 +1,5 @@
 /** Complete IEnhancedAccessControl ABI from ENSv2. */
-export const enhancedAccessControlV2Abi = [
+export const enhancedAccessControlV2InterfaceAbi = [
   {
     inputs: [
       {

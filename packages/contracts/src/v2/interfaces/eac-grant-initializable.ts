@@ -1,5 +1,5 @@
 /** Complete IEACGrantInitializable ABI from ENSv2. */
-export const eacGrantInitializableV2Abi = [
+export const eacGrantInitializableV2InterfaceAbi = [
   {
     inputs: [
       {

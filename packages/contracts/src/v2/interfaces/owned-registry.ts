@@ -1,5 +1,5 @@
 /** Complete IOwnedRegistry ABI from ENSv2. */
-export const ownedRegistryV2Abi = [
+export const ownedRegistryV2InterfaceAbi = [
   {
     anonymous: false,
     inputs: [

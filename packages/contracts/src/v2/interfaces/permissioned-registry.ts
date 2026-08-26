@@ -1,5 +1,5 @@
 /** Complete IPermissionedRegistry ABI from ENSv2. */
-export const permissionedRegistryV2Abi = [
+export const permissionedRegistryV2InterfaceAbi = [
   {
     inputs: [
       {

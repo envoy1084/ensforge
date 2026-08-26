@@ -1,5 +1,5 @@
 /** Complete IERC1155Singleton ABI from ENSv2. */
-export const erc1155SingletonV2Abi = [
+export const erc1155SingletonV2InterfaceAbi = [
   {
     anonymous: false,
     inputs: [

@@ -1,5 +1,5 @@
 /** Complete ITemporalRegistry ABI from ENSv2. */
-export const temporalRegistryV2Abi = [
+export const temporalRegistryV2InterfaceAbi = [
   {
     anonymous: false,
     inputs: [

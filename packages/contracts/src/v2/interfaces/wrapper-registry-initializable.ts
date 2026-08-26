@@ -1,5 +1,5 @@
 /** Complete IWrapperRegistryInitializable ABI from ENSv2. */
-export const wrapperRegistryInitializableV2Abi = [
+export const wrapperRegistryInitializableV2InterfaceAbi = [
   {
     inputs: [
       {
