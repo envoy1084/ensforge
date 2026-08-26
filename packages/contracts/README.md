@@ -86,6 +86,17 @@ import {
 } from "@ensforge/contracts/v1";
 ```
 
+DNS ownership and proof verification are exposed separately from the offchain DNS resolver:
+
+```ts
+import {
+  dnsRegistrarV1Abi,
+  dnsRegistrarV1InterfaceAbi,
+  dnssecOracleV1Abi,
+  dnssecOracleV1InterfaceAbi,
+} from "@ensforge/contracts/v1";
+```
+
 ## Commands
 
 ```sh
