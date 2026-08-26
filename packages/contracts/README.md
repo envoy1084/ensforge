@@ -97,17 +97,45 @@ import {
 } from "@ensforge/contracts/v1";
 ```
 
+## ENSv2 contracts
+
+The V2 entrypoint exports complete registry, resolver, registrar, migration, reverse-resolution,
+and supporting contract ABIs from the pinned Sepolia migration deployment. Solidity interfaces use
+the `V2InterfaceAbi` suffix so they remain distinct from concrete deployment ABIs.
+
+```ts
+import {
+  ethRegistrarV2Abi,
+  rootRegistryV2Abi,
+  universalResolverV2Abi,
+  wrapperRegistryV2InterfaceAbi,
+} from "@ensforge/contracts/v2";
+```
+
+Experimental HCA contracts have an explicit opt-in entrypoint and are not re-exported by the main
+V2 entrypoint:
+
+```ts
+import { standaloneHcaFactoryV2Abi } from "@ensforge/contracts/v2/experimental/hca";
+```
+
 ## Deployments
 
 Addresses are exported separately from ABIs through explicit named profiles. This avoids ambiguous
 chain-only selection when legacy V1 and V2 deployments coexist on the same chain.
 
 ```ts
-import { mainnetV1Deployment, sepoliaV1Deployment } from "@ensforge/contracts/deployments";
+import {
+  mainnetV1Deployment,
+  sepoliaV1Deployment,
+  sepoliaV2Deployment,
+} from "@ensforge/contracts/deployments";
 ```
 
 Mainnet uses the canonical upgradeable Universal Resolver proxy. Sepolia V1 is marked as legacy
-because current ENS applications and resolution use the V2 deployment there.
+because current ENS applications and resolution use the V2 deployment there. The beta V2 profile
+separates public contracts, implementations, migration infrastructure, experimental HCA contracts,
+and test tokens so higher-level SDK code cannot confuse their roles.
 
 ## Commands
 
