@@ -17,11 +17,17 @@ import {
 import { ContractError, type ContractErrorCode } from "./contract-error.js";
 import { RpcError } from "./rpc-error.js";
 
-export type ViemOperation = "readContract" | "multicall" | "simulateContract" | "writeContract";
+export type ViemOperation =
+  | "encodeFunctionData"
+  | "readContract"
+  | "multicall"
+  | "simulateContract"
+  | "writeContract";
 
 export type ViemError = ContractError | RpcError;
 
 const fallbackCodes = {
+  encodeFunctionData: "ENCODE_FAILED",
   readContract: "READ_FAILED",
   multicall: "MULTICALL_FAILED",
   simulateContract: "SIMULATION_FAILED",
