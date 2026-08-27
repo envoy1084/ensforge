@@ -11,12 +11,17 @@ export {
   type EnsWriteIntent,
 } from "./action/index.js";
 export {
+  ExpiryResult,
+  ExpirySource,
+  getExpiry,
   getOwner,
   getResolver,
   OwnerResult,
   OwnershipLevel,
   readBatch,
   readBatchSettled,
+  type GetExpiryError,
+  type GetExpiryParameters,
   type GetOwnerError,
   type GetOwnerParameters,
   type GetResolverError,

@@ -88,6 +88,25 @@ const resolverRequest = getResolver.request({ name: "sub.example.eth" });
 The `.request` form can be combined with other semantic reads in `readBatch`; compatible primitive
 contract reads share one snapshot and Multicall3 execution.
 
+## Expiry
+
+`getExpiry` presents one lifecycle boundary across ENSv1, ENSv2, and unmigrated reserved names. It
+returns the absolute expiry timestamp, grace-period duration and absolute grace-period end, together
+with the protocol and contract family that supplied those facts.
+
+```ts
+import { getExpiry } from "@ensforge/core";
+
+const expiry = await getExpiry(config, { name: "example.eth" });
+const expiryEffect = getExpiry.effect(config, { name: "example.eth" });
+const expiryRequest = getExpiry.request({ name: "example.eth" });
+```
+
+Second-level ENSv1 `.eth` names use the Base Registrar, wrapped subnames use Name Wrapper data, and
+ENSv2 names discover and read their containing registry. During migration, reserved names keep
+their V1 registration expiry and use the `ETHRenewerV1` grace-period configuration. All timestamps
+and durations are bigint seconds. Time-relative lifecycle status remains a separate semantic read.
+
 ## Names and records
 
 Pure ENS operations are synchronous and return Schema-branded domain values:

@@ -6,12 +6,15 @@ import {
   defineAction,
   defineReadAction,
   defineWriteAction,
+  getExpiry,
   getResolver,
   readBatch,
   readBatchSettled,
   type EnsReadRequest,
   type EnsWriteIntent,
   type EnsforgeConfig,
+  type ExpiryResult,
+  type GetExpiryError,
   type GetResolverError,
   type GetResolverResult,
   type ReadBatchOutcome,
@@ -34,6 +37,15 @@ expectTypeOf(action.effect(config, { value: 1 })).toEqualTypeOf<
 >();
 expectTypeOf(readAction.request({ value: 1 })).toEqualTypeOf<EnsReadRequest<number, TestFailure>>();
 expectTypeOf(writeAction.call({ value: 1 })).toEqualTypeOf<EnsWriteIntent<number, TestFailure>>();
+expectTypeOf(getExpiry(config, { name: "example.eth" })).toEqualTypeOf<
+  Promise<ExpiryResult | null>
+>();
+expectTypeOf(getExpiry.effect(config, { name: "example.eth" })).toEqualTypeOf<
+  Effect.Effect<ExpiryResult | null, GetExpiryError>
+>();
+expectTypeOf(getExpiry.request({ name: "example.eth" })).toEqualTypeOf<
+  EnsReadRequest<ExpiryResult | null, GetExpiryError>
+>();
 expectTypeOf(getResolver(config, { name: "example.eth" })).toEqualTypeOf<
   Promise<GetResolverResult>
 >();
