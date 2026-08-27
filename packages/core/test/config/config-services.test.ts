@@ -34,6 +34,7 @@ describe("config Effect services", () => {
     expect(services.network).toEqual({ network: "sepolia", chainId: 11155111 });
     expect(services.publicClient.client).toBe(publicClient);
     expect(services.ethereumClient.readContract).toBeTypeOf("function");
+    expect(services.ethereumClient.readContractDirect).toBeTypeOf("function");
     expect(services.ethereumClient.multicall).toBeTypeOf("function");
     expect(Option.getOrUndefined(services.walletClient.client)).toBe(walletClient);
     expect(services.deployments.profile).toBe(config.deployments);

@@ -4,6 +4,7 @@ import type {
   Abi,
   ContractFunctionArgs,
   ContractFunctionName,
+  ContractFunctionReturnType,
   MulticallParameters,
   MulticallReturnType,
   PublicClient,
@@ -13,6 +14,9 @@ import type {
 
 import type { ViemError } from "../../errors/viem-error.js";
 import { viemErrorToEffectError } from "../../errors/viem-error.js";
+import { executeContractRead } from "../read/contract-read-resolver.js";
+import { makeContractReadRequest, type ContractReadParameters } from "../read/contract-read.js";
+import { ReadContext } from "../read/execution-context.js";
 
 export interface EthereumClientOptions {
   readonly publicClient: PublicClient;
@@ -20,6 +24,18 @@ export interface EthereumClientOptions {
 
 export interface EthereumClientService {
   readonly readContract: <
+    const abi extends Abi,
+    functionName extends ContractFunctionName<abi, "pure" | "view">,
+    const args extends ContractFunctionArgs<abi, "pure" | "view", functionName>,
+  >(
+    parameters: ContractReadParameters<abi, functionName, args>,
+  ) => Effect.Effect<
+    ContractFunctionReturnType<abi, "pure" | "view", functionName, args>,
+    ViemError,
+    ReadContext
+  >;
+
+  readonly readContractDirect: <
     const abi extends Abi | readonly unknown[],
     functionName extends ContractFunctionName<abi, "pure" | "view">,
     const args extends ContractFunctionArgs<abi, "pure" | "view", functionName>,
@@ -41,9 +57,35 @@ export class EthereumClient extends Context.Service<EthereumClient, EthereumClie
 
 export const makeEthereumClient = ({
   publicClient,
-}: EthereumClientOptions): EthereumClientService =>
-  EthereumClient.of({
-    readContract: Effect.fn("EthereumClient.readContract")((parameters) =>
+}: EthereumClientOptions): EthereumClientService => {
+  const readContract = Effect.fn("EthereumClient.readContract")(function* <
+    const abi extends Abi,
+    functionName extends ContractFunctionName<abi, "pure" | "view">,
+    const args extends ContractFunctionArgs<abi, "pure" | "view", functionName>,
+  >(
+    parameters: ContractReadParameters<abi, functionName, args>,
+  ): Effect.fn.Return<
+    ContractFunctionReturnType<abi, "pure" | "view", functionName, args>,
+    ViemError,
+    ReadContext
+  > {
+    const context = yield* ReadContext;
+    const block =
+      parameters.blockNumber !== undefined
+        ? { blockNumber: parameters.blockNumber }
+        : parameters.blockTag !== undefined
+          ? { blockTag: parameters.blockTag }
+          : context.block;
+    const request = yield* makeContractReadRequest<abi, functionName, args>({
+      ...parameters,
+      ...block,
+    } as ContractReadParameters<abi, functionName, args>);
+    return yield* executeContractRead(request, context.contractReadResolver);
+  });
+
+  return EthereumClient.of({
+    readContract,
+    readContractDirect: Effect.fn("EthereumClient.readContractDirect")((parameters) =>
       Effect.tryPromise({
         try: () => publicClient.readContract(parameters),
         catch: (cause) => viemErrorToEffectError(cause, "readContract"),
@@ -56,3 +98,4 @@ export const makeEthereumClient = ({
       }),
     ),
   });
+};

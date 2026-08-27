@@ -19,7 +19,7 @@ export const getOwnerV2 = Effect.fn("getOwnerV2")(function* (
 ): Effect.fn.Return<OwnerResult | null, CodecError | ViemError, EthereumClient> {
   const ethereum = yield* EthereumClient;
   const dnsName = yield* dnsEncodeName.effect(name);
-  const owner = yield* ethereum.readContract({
+  const owner = yield* ethereum.readContractDirect({
     address: deployment.contracts.universalResolver,
     abi: universalResolverV2InterfaceAbi,
     functionName: "findOwner",
