@@ -14,8 +14,10 @@ The package is private while its initial configuration and action APIs are being
 
 ## Configuration
 
-One config targets one authoritative ENS network. Mainnet currently selects ENSv1; Sepolia selects
-the ENSv2 beta deployment with ENSv1 compatibility for transition-state operations.
+One config targets one authoritative ENS network. Its discriminated deployment profile describes
+which protocol generations are available: mainnet is currently `v1`, while Sepolia is
+`v2-transition` with both V1 and V2 deployments. The profile does not choose a contract for a
+particular name; later action routing will inspect that name's state before selecting V1 or V2.
 
 ```ts
 import { createConfig } from "@ensforge/core";
@@ -29,6 +31,8 @@ const config = createConfig({
     transport: http(),
   }),
 });
+
+config.deployments.phase; // "v2-transition"
 ```
 
 An optional chain-matched wallet client may be supplied for scripts. React integrations pass the

@@ -9,7 +9,7 @@ import {
   type EnsReadRequest,
   type EnsWriteIntent,
   type EnsforgeConfig,
-} from "../src/index.js";
+} from "../../src/index.js";
 
 type TestFailure = { readonly _tag: "TestFailure" };
 

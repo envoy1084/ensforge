@@ -10,21 +10,14 @@ export {
   type EnsWriteIntent,
 } from "./action/index.js";
 export {
-  ClientChainUnavailableError,
   createConfig,
-  DeploymentChainMismatchError,
-  DuplicateDeploymentError,
   ensNetworks,
+  EnsforgeConfigError,
+  EnsforgeConfigErrorCode,
   type CreateConfigParameters,
   type EnsChainId,
   type EnsDeployment,
   type EnsDeploymentProfile,
   type EnsforgeConfig,
-  type EnsforgeConfigurationError,
   type EnsNetwork,
-  NetworkClientMismatchError,
-  UnsupportedEnsNetworkError,
-  WalletAccountUnavailableError,
-  WalletClientUnavailableError,
-  type WalletContextError,
 } from "./config/index.js";

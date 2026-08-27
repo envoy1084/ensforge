@@ -1,13 +1,4 @@
-export {
-  ClientChainUnavailableError,
-  DeploymentChainMismatchError,
-  DuplicateDeploymentError,
-  NetworkClientMismatchError,
-  UnsupportedEnsNetworkError,
-  WalletAccountUnavailableError,
-  WalletClientUnavailableError,
-} from "./configuration-error.js";
-export type { EnsforgeConfigurationError, WalletContextError } from "./configuration-error.js";
+export { EnsforgeConfigError, EnsforgeConfigErrorCode } from "./configuration-error.js";
 export type {
   CreateConfigParameters,
   EnsDeployment,

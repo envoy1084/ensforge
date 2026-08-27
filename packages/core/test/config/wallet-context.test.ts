@@ -3,19 +3,15 @@ import { Cause, Effect, Exit, Option } from "effect";
 import type { WalletClient } from "viem";
 import { describe, expect, it } from "vitest";
 
-import {
-  NetworkClientMismatchError,
-  WalletAccountUnavailableError,
-  WalletClientUnavailableError,
-} from "../src/index.js";
-import { EnsNetworkService } from "../src/services/network.js";
-import { resolveWalletContext, WalletClientService } from "../src/services/wallet-client.js";
+import { EnsforgeConfigError } from "../../src/index.js";
+import { EnsNetworkService } from "../../src/services/network.js";
+import { resolveWalletContext, WalletClientService } from "../../src/services/wallet-client.js";
 import {
   makeMainnetWalletClient,
   makeSepoliaWalletClient,
   makeSepoliaWalletClientWithoutAccount,
   testAccount,
-} from "./client-fixtures.js";
+} from "../fixtures/client-fixtures.js";
 
 const provideSepoliaWallet = <Success, Failure>(
   effect: Effect.Effect<Success, Failure, WalletClientService | EnsNetworkService>,
@@ -55,7 +51,12 @@ describe("resolveWalletContext", () => {
   it("fails when no wallet client is available", async () => {
     const exit = await Effect.runPromiseExit(provideSepoliaWallet(resolveWalletContext()));
 
-    expect(getFailure(exit)).toBeInstanceOf(WalletClientUnavailableError);
+    expect(getFailure(exit)).toEqual(
+      new EnsforgeConfigError({
+        code: "WALLET_CLIENT_UNAVAILABLE",
+        message: "A wallet client is required for this operation",
+      }),
+    );
   });
 
   it("fails when no account is available", async () => {
@@ -64,7 +65,12 @@ describe("resolveWalletContext", () => {
       provideSepoliaWallet(resolveWalletContext({ walletClient })),
     );
 
-    expect(getFailure(exit)).toBeInstanceOf(WalletAccountUnavailableError);
+    expect(getFailure(exit)).toEqual(
+      new EnsforgeConfigError({
+        code: "WALLET_ACCOUNT_UNAVAILABLE",
+        message: "An account is required for this operation",
+      }),
+    );
   });
 
   it("rejects a per-call wallet client for another network", async () => {
@@ -72,6 +78,9 @@ describe("resolveWalletContext", () => {
       provideSepoliaWallet(resolveWalletContext({ walletClient: makeMainnetWalletClient() })),
     );
 
-    expect(getFailure(exit)).toBeInstanceOf(NetworkClientMismatchError);
+    expect(getFailure(exit)).toMatchObject({
+      _tag: "EnsforgeConfigError",
+      code: "NETWORK_CLIENT_MISMATCH",
+    });
   });
 });

@@ -6,18 +6,29 @@ import {
 import { describe, expect, it, vi } from "vitest";
 
 import {
-  ClientChainUnavailableError,
   createConfig,
-  NetworkClientMismatchError,
-  UnsupportedEnsNetworkError,
-} from "../src/index.js";
+  EnsforgeConfigError,
+  type EnsforgeConfigErrorCode,
+} from "../../src/index.js";
 import {
   makeChainlessPublicClient,
   makeMainnetPublicClient,
   makeMainnetWalletClient,
   makeSepoliaPublicClient,
   makeSepoliaWalletClient,
-} from "./client-fixtures.js";
+} from "../fixtures/client-fixtures.js";
+
+const expectConfigError = (operation: () => unknown, code: EnsforgeConfigErrorCode) => {
+  try {
+    operation();
+    throw new Error("Expected config creation to fail");
+  } catch (error) {
+    expect(error).toBeInstanceOf(EnsforgeConfigError);
+    if (!(error instanceof EnsforgeConfigError)) throw error;
+    expect(error.code).toBe(code);
+    expect(error.message.length).toBeGreaterThan(0);
+  }
+};
 
 describe("createConfig", () => {
   it("selects the mainnet V1 profile", () => {
@@ -28,8 +39,9 @@ describe("createConfig", () => {
     expect(config.chainId).toBe(1);
     expect(config.publicClient).toBe(publicClient);
     expect(config.walletClient).toBeUndefined();
-    expect(config.deployments.active).toBe(mainnetV1Deployment);
-    expect(config.deployments.compatibility).toEqual([]);
+    expect(config.deployments.phase).toBe("v1");
+    expect(config.deployments.v1).toBe(mainnetV1Deployment);
+    expect(config.deployments.v2).toBeUndefined();
   });
 
   it("selects the Sepolia V2 profile with V1 compatibility", () => {
@@ -41,8 +53,9 @@ describe("createConfig", () => {
     expect(config.chainId).toBe(11155111);
     expect(config.publicClient).toBe(publicClient);
     expect(config.walletClient).toBe(walletClient);
-    expect(config.deployments.active).toBe(sepoliaV2Deployment);
-    expect(config.deployments.compatibility).toEqual([sepoliaV1Deployment]);
+    expect(config.deployments.phase).toBe("v2-transition");
+    expect(config.deployments.v1).toBe(sepoliaV1Deployment);
+    expect(config.deployments.v2).toBe(sepoliaV2Deployment);
   });
 
   it("does not contact the public client", () => {
@@ -62,45 +75,52 @@ describe("createConfig", () => {
 
     expect(Object.isFrozen(config)).toBe(true);
     expect(Object.isFrozen(config.deployments)).toBe(true);
-    expect(Object.isFrozen(config.deployments.compatibility)).toBe(true);
   });
 
   it("rejects a public client for another network", () => {
-    expect(() =>
-      createConfig({ network: "mainnet", publicClient: makeSepoliaPublicClient() }),
-    ).toThrow(NetworkClientMismatchError);
+    expectConfigError(
+      () => createConfig({ network: "mainnet", publicClient: makeSepoliaPublicClient() }),
+      "NETWORK_CLIENT_MISMATCH",
+    );
   });
 
   it("rejects a wallet client for another network", () => {
-    expect(() =>
-      createConfig({
-        network: "mainnet",
-        publicClient: makeMainnetPublicClient(),
-        walletClient: makeSepoliaWalletClient(),
-      }),
-    ).toThrow(NetworkClientMismatchError);
+    expectConfigError(
+      () =>
+        createConfig({
+          network: "mainnet",
+          publicClient: makeMainnetPublicClient(),
+          walletClient: makeSepoliaWalletClient(),
+        }),
+      "NETWORK_CLIENT_MISMATCH",
+    );
 
-    expect(() =>
-      createConfig({
-        network: "sepolia",
-        publicClient: makeSepoliaPublicClient(),
-        walletClient: makeMainnetWalletClient(),
-      }),
-    ).toThrow(NetworkClientMismatchError);
+    expectConfigError(
+      () =>
+        createConfig({
+          network: "sepolia",
+          publicClient: makeSepoliaPublicClient(),
+          walletClient: makeMainnetWalletClient(),
+        }),
+      "NETWORK_CLIENT_MISMATCH",
+    );
   });
 
   it("rejects a chainless public client", () => {
-    expect(() =>
-      createConfig({ network: "mainnet", publicClient: makeChainlessPublicClient() }),
-    ).toThrow(ClientChainUnavailableError);
+    expectConfigError(
+      () => createConfig({ network: "mainnet", publicClient: makeChainlessPublicClient() }),
+      "CLIENT_CHAIN_UNAVAILABLE",
+    );
   });
 
   it("rejects an unsupported network at the runtime boundary", () => {
-    expect(() =>
-      createConfig({
-        network: "holesky" as "mainnet",
-        publicClient: makeMainnetPublicClient(),
-      }),
-    ).toThrow(UnsupportedEnsNetworkError);
+    expectConfigError(
+      () =>
+        createConfig({
+          network: "holesky" as "mainnet",
+          publicClient: makeMainnetPublicClient(),
+        }),
+      "UNSUPPORTED_NETWORK",
+    );
   });
 });

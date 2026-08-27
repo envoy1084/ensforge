@@ -7,10 +7,22 @@ export const EnsforgeConfigTypeId: unique symbol = Symbol.for("@ensforge/core/En
 
 export type EnsDeployment = EnsV1Deployment | EnsV2Deployment;
 
-export interface EnsDeploymentProfile {
-  readonly active: EnsDeployment;
-  readonly compatibility: readonly EnsDeployment[];
-}
+export type EnsDeploymentProfile =
+  | {
+      readonly phase: "v1";
+      readonly v1: EnsV1Deployment;
+      readonly v2?: never;
+    }
+  | {
+      readonly phase: "v2-transition";
+      readonly v1: EnsV1Deployment;
+      readonly v2: EnsV2Deployment;
+    }
+  | {
+      readonly phase: "v2";
+      readonly v1?: EnsV1Deployment;
+      readonly v2: EnsV2Deployment;
+    };
 
 export interface CreateConfigParameters {
   readonly network: EnsNetwork;
