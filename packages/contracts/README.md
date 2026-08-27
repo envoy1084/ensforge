@@ -137,6 +137,10 @@ because current ENS applications and resolution use the V2 deployment there. The
 separates public contracts, implementations, migration infrastructure, experimental HCA contracts,
 and test tokens so higher-level SDK code cannot confuse their roles.
 
+Experimental HCA data, test tokens, and the managed intermediate Universal Resolver proxy are
+optional because greenfield and production transition deployments do not expose the same auxiliary
+contracts.
+
 ## Commands
 
 ```sh

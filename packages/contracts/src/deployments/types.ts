@@ -70,7 +70,7 @@ export interface EnsV2MigrationContractAddresses {
 }
 
 export interface EnsV2InfrastructureContractAddresses {
-  readonly managedUniversalResolverProxy: Address;
+  readonly managedUniversalResolverProxy?: Address;
   readonly batchRegistrar: Address;
   readonly dnsV1MirrorRootBatchRegistrar: Address;
 }
@@ -98,9 +98,9 @@ export interface EnsV2Deployment {
   readonly implementations: EnsV2ImplementationAddresses;
   readonly migration: EnsV2MigrationContractAddresses;
   readonly infrastructure: EnsV2InfrastructureContractAddresses;
-  readonly experimental: {
+  readonly experimental?: {
     readonly hca: EnsV2ExperimentalHcaContractAddresses;
   };
-  readonly testTokens: EnsV2TestTokenAddresses;
+  readonly testTokens?: EnsV2TestTokenAddresses;
   readonly provenance: EnsDeploymentProvenance;
 }

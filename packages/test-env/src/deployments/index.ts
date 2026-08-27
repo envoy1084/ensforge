@@ -3,3 +3,4 @@ export {
   DevnetDeploymentManifest,
   DevnetDeploymentResponse,
 } from "./schema.js";
+export { mapDevnetDeployments, type DevnetDeployments } from "./profile.js";

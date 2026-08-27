@@ -26,7 +26,10 @@
       "workspace-source": "./src/index.ts",
       "default": "./dist/index.js"
     },
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./testing": {
+      "workspace-source": "./src/testing/index.ts"
+    }
   },
   "publishConfig": {
     "imports": {
@@ -43,7 +46,7 @@
     "build": "tsdown",
     "dev": "tsdown --watch",
     "lint": "oxlint --deny-warnings .",
-    "pack:check": "publint && attw --pack . --profile esm-only",
+    "pack:check": "publint && attw --pack . --profile esm-only --exclude-entrypoints ./testing",
     "prepack": "pnpm build",
     "test": "vitest run --passWithNoTests",
     "test:watch": "vitest --passWithNoTests",

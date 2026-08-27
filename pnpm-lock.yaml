@@ -113,9 +113,18 @@ importers:
 
   packages/test-env:
     dependencies:
+      '@ensforge/contracts':
+        specifier: workspace:*
+        version: link:../contracts
+      '@ensforge/core':
+        specifier: workspace:*
+        version: link:../core
       effect:
         specifier: 'catalog:'
         version: 4.0.0-rc.112
+      viem:
+        specifier: 'catalog:'
+        version: 2.56.0(typescript@6.0.3)
 
 packages:
 

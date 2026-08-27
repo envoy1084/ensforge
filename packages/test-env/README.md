@@ -12,18 +12,24 @@ The package currently provides:
 - cached Docker image builds from the ignored `.repos/ens-contracts-v2` checkout;
 - unique containers with Docker-assigned RPC and metadata ports;
 - bounded health polling and schema-validated deployment discovery;
+- typed v1/v2 deployment profiles with required-bytecode verification;
+- named Anvil accounts plus viem public, wallet, and test clients;
+- workspace-only v1 and v2 Ensforge configs over the same node;
 - diagnostic log capture; and
 - scoped, idempotent container cleanup.
 
 ```ts
-import { DockerEngine, startDevnet } from "@ensforge/test-env";
+import { createDevnetEnvironment, DockerEngine, startDevnet } from "@ensforge/test-env";
 import { Effect } from "effect";
 
 const program = Effect.gen(function* () {
   const devnet = yield* startDevnet();
+  const environment = yield* createDevnetEnvironment(devnet);
   return {
-    rpcUrl: devnet.rpcUrl,
-    deployments: devnet.deployments,
+    owner: environment.accounts.owner,
+    publicClient: environment.clients.publicClient,
+    v1Config: environment.configs.v1,
+    v2Config: environment.configs.v2,
   };
 });
 
@@ -36,7 +42,7 @@ The default local build policy is `if-missing`. Use `always` when deliberately r
 pinned source. CI pulls `ensDevnetPublishedImage` by its immutable digest and starts it with the
 `never` build policy, so CI never checks out or compiles the contracts repositories.
 
-Fixture seeding, viem clients, and EVM snapshot isolation are implemented in later phases.
+Fixture seeding and EVM snapshot isolation are implemented in later phases.
 
 ## Publishing the CI image
 

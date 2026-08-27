@@ -1,11 +1,11 @@
 import { Context } from "effect";
 
-import type { EnsChainId, EnsNetwork } from "../config/network.js";
+import type { EnsRuntimeChainId, EnsRuntimeNetwork } from "../config/config.js";
 
 export class EnsNetworkService extends Context.Service<
   EnsNetworkService,
   {
-    readonly network: EnsNetwork;
-    readonly chainId: EnsChainId;
+    readonly network: EnsRuntimeNetwork;
+    readonly chainId: EnsRuntimeChainId;
   }
 >()("@ensforge/core/EnsNetworkService") {}

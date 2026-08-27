@@ -2,8 +2,11 @@ import { Context, Layer, Option } from "effect";
 
 import type { PublicClient, WalletClient } from "viem";
 
-import type { EnsDeploymentProfile } from "../config/config.js";
-import type { EnsChainId, EnsNetwork } from "../config/network.js";
+import type {
+  EnsDeploymentProfile,
+  EnsRuntimeChainId,
+  EnsRuntimeNetwork,
+} from "../config/config.js";
 import { EthereumClient, makeEthereumClient } from "../internal/client/ethereum-client.js";
 import { ReadExecution, makeReadExecution } from "../internal/read/execution-context.js";
 import { DeploymentService } from "./deployment.js";
@@ -20,8 +23,8 @@ export type EnsforgeServices =
   | WalletClientService;
 
 export interface EnsforgeServiceValues {
-  readonly network: EnsNetwork;
-  readonly chainId: EnsChainId;
+  readonly network: EnsRuntimeNetwork;
+  readonly chainId: EnsRuntimeChainId;
   readonly publicClient: PublicClient;
   readonly walletClient?: WalletClient;
   readonly deployments: EnsDeploymentProfile;

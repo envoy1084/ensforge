@@ -26,6 +26,9 @@ export interface CreateConfigParameters {
   readonly walletClient?: WalletClient;
 }
 
+export type EnsRuntimeNetwork = EnsNetwork | "devnet";
+export type EnsRuntimeChainId = EnsChainId | 31337;
+
 /** Immutable, single-network configuration consumed by every Ensforge action. */
 export interface EnsforgeConfig {
   readonly [EnsforgeConfigTypeId]: typeof EnsforgeConfigTypeId;

@@ -32,6 +32,9 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "effect": "catalog:"
+    "@ensforge/contracts": "workspace:*",
+    "@ensforge/core": "workspace:*",
+    "effect": "catalog:",
+    "viem": "catalog:"
   }
 }

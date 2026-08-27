@@ -7,23 +7,23 @@ const EnsforgeConfigContextTypeId: unique symbol = Symbol.for(
   "@ensforge/core/EnsforgeConfig/context",
 );
 
-export interface InternalEnsforgeConfig extends EnsforgeConfig {
-  readonly [EnsforgeConfigContextTypeId]: Context.Context<EnsforgeServices>;
-}
-
-export const attachConfigContext = (
-  config: Omit<InternalEnsforgeConfig, typeof EnsforgeConfigContextTypeId>,
+export const attachConfigContext = <Config extends EnsforgeConfig>(
+  config: Config,
   context: Context.Context<EnsforgeServices>,
-): InternalEnsforgeConfig =>
+): Config =>
   Object.defineProperty(config, EnsforgeConfigContextTypeId, {
     value: context,
     enumerable: false,
     configurable: false,
     writable: false,
-  }) as InternalEnsforgeConfig;
+  });
 
 export const getConfigContext = (config: EnsforgeConfig): Context.Context<EnsforgeServices> =>
-  (config as InternalEnsforgeConfig)[EnsforgeConfigContextTypeId];
+  (
+    config as EnsforgeConfig & {
+      readonly [EnsforgeConfigContextTypeId]: Context.Context<EnsforgeServices>;
+    }
+  )[EnsforgeConfigContextTypeId];
 
 export const provideConfig = <Success, Failure, Requirements>(
   config: EnsforgeConfig,
