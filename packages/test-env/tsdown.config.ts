@@ -5,6 +5,7 @@ export default defineConfig({
   alias: { "#/": "./src/" },
   entry: { index: "src/index.ts" },
   exports: { devExports: "workspace-source" },
+  platform: "node",
   unbundle: true,
   publint: false,
   attw: false,
