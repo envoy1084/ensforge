@@ -49,10 +49,14 @@ export {
 export { TestEnvironmentError, TestEnvironmentErrorCode } from "./errors/index.js";
 export { createDevnetEnvironment, type DevnetEnvironment } from "./environment.js";
 export {
+  seedFixtures,
   seedV1Fixtures,
+  seedV2Fixtures,
   type EnsFixtureManifest,
+  type EnsMigrationFixtureManifest,
   type EnsNameFixture,
   type EnsV1FixtureManifest,
+  type EnsV2FixtureManifest,
   type FixtureLifecycle,
   type FixtureResolverState,
 } from "./fixtures/index.js";

@@ -26,7 +26,26 @@ export interface EnsV1FixtureManifest {
   };
 }
 
+export interface EnsV2FixtureManifest {
+  readonly active: EnsNameFixture;
+  readonly nested: EnsNameFixture;
+  readonly inheritedResolver: EnsNameFixture;
+  readonly noResolver: EnsNameFixture;
+  readonly grace: EnsNameFixture;
+  readonly expired: EnsNameFixture;
+}
+
+export interface EnsMigrationFixtureManifest {
+  readonly reservedUnwrapped: EnsNameFixture;
+  readonly reservedWrapped: EnsNameFixture;
+  readonly migratedUnlocked: EnsNameFixture;
+  readonly migratedLocked: EnsNameFixture;
+  readonly mirroredChild: EnsNameFixture;
+}
+
 export interface EnsFixtureManifest {
   readonly seededAt: bigint;
   readonly v1: EnsV1FixtureManifest;
+  readonly v2?: EnsV2FixtureManifest;
+  readonly migration?: EnsMigrationFixtureManifest;
 }

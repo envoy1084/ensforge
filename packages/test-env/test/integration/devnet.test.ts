@@ -8,7 +8,7 @@ import { ensDevnetChainId, ensDevnetPublishedImage } from "../../src/devnet/sour
 import { createDevnetEnvironment } from "../../src/environment.js";
 import type { DevnetEnvironment } from "../../src/environment.js";
 import type { EnsFixtureManifest } from "../../src/fixtures/manifest.js";
-import { seedV1Fixtures } from "../../src/fixtures/v1.js";
+import { seedFixtures } from "../../src/fixtures/seed.js";
 
 const image = process.env.ENSFORGE_TEST_IMAGE ?? ensDevnetPublishedImage;
 
@@ -25,7 +25,7 @@ describe("published ENS devnet", () => {
         return yield* createDevnetEnvironment(instance);
       }).pipe(Effect.provideService(Scope.Scope, scope), Effect.provide(DockerEngine.layer)),
     );
-    fixtures = await Effect.runPromise(seedV1Fixtures(environment));
+    fixtures = await Effect.runPromise(seedFixtures(environment));
   }, 180_000);
 
   beforeEach(async () => {
@@ -68,6 +68,18 @@ describe("published ENS devnet", () => {
     expect(fixtures.v1.grace.lifecycle).toBe("grace");
     expect(fixtures.v1.expired.lifecycle).toBe("expired");
     expect(fixtures.v1.reverse.name).toBe("v1-unwrapped.eth");
+  });
+
+  it("exposes verified native v2 and migration fixtures", () => {
+    expect(fixtures.v2?.active.protocol).toBe("v2");
+    expect(fixtures.v2?.inheritedResolver.resolverState).toBe("inherited");
+    expect(fixtures.v2?.noResolver.resolverState).toBe("missing");
+    expect(fixtures.v2?.grace.lifecycle).toBe("grace");
+    expect(fixtures.v2?.expired.lifecycle).toBe("expired");
+    expect(fixtures.migration?.reservedUnwrapped.name).toBe("v2-reserved-unwrapped.eth");
+    expect(fixtures.migration?.migratedUnlocked.owner).toBe(environment.accounts.owner);
+    expect(fixtures.migration?.migratedLocked.owner).toBe(environment.accounts.owner);
+    expect(fixtures.migration?.mirroredChild.owner).toBe(environment.accounts.owner2);
   });
 
   it("restores the baseline before the next test", async () => {
