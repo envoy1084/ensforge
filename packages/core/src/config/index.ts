@@ -1,4 +1,3 @@
-export { EnsforgeConfigError, EnsforgeConfigErrorCode } from "./configuration-error.js";
 export type {
   CreateConfigParameters,
   EnsDeployment,

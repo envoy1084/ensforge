@@ -1,5 +1,6 @@
 import { Schema } from "effect";
 
+import { ConfigError } from "../errors/config-error.js";
 import type { EnsforgeServiceValues } from "../services/context.js";
 import { makeServicesContext } from "../services/context.js";
 import {
@@ -9,7 +10,6 @@ import {
   type EnsDeploymentProfile,
   type EnsforgeConfig,
 } from "./config.js";
-import { EnsforgeConfigError } from "./configuration-error.js";
 import { attachConfigContext } from "./internal.js";
 import { getNetworkProfile } from "./network-profile.js";
 import { ensChainIds, EnsNetworkSchema, type EnsNetwork } from "./network.js";
@@ -23,14 +23,14 @@ const validateClientChain = (
   expectedChainId: number,
 ): void => {
   if (client.chain === undefined) {
-    throw new EnsforgeConfigError({
+    throw new ConfigError({
       code: "CLIENT_CHAIN_UNAVAILABLE",
       message: `The ${clientKind} client must be configured with a chain`,
     });
   }
 
   if (client.chain.id !== expectedChainId) {
-    throw new EnsforgeConfigError({
+    throw new ConfigError({
       code: "NETWORK_CLIENT_MISMATCH",
       message: `The ${clientKind} client chain ${client.chain.id} does not match ${network} (${expectedChainId})`,
     });
@@ -53,14 +53,14 @@ const validateDeployments = (profile: EnsDeploymentProfile, expectedChainId: num
 
   for (const deployment of getProfileDeployments(profile)) {
     if (deployment.chainId !== expectedChainId) {
-      throw new EnsforgeConfigError({
+      throw new ConfigError({
         code: "DEPLOYMENT_CHAIN_MISMATCH",
         message: `Deployment ${deployment.id} targets chain ${deployment.chainId}, expected ${expectedChainId}`,
       });
     }
 
     if (deploymentIds.has(deployment.id)) {
-      throw new EnsforgeConfigError({
+      throw new ConfigError({
         code: "DUPLICATE_DEPLOYMENT",
         message: `Deployment ${deployment.id} appears more than once in the selected profile`,
       });
@@ -72,7 +72,7 @@ const validateDeployments = (profile: EnsDeploymentProfile, expectedChainId: num
 
 export const createConfig = (parameters: CreateConfigParameters): EnsforgeConfig => {
   if (!Schema.is(EnsNetworkSchema)(parameters.network)) {
-    throw new EnsforgeConfigError({
+    throw new ConfigError({
       code: "UNSUPPORTED_NETWORK",
       message: `Unsupported ENS network: ${parameters.network}`,
     });

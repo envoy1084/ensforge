@@ -2,7 +2,7 @@ import { Context, Effect, Option } from "effect";
 
 import type { Account, Address, WalletClient } from "viem";
 
-import { EnsforgeConfigError } from "../config/configuration-error.js";
+import { ConfigError } from "../errors/config-error.js";
 import { EnsNetworkService } from "./network.js";
 
 export class WalletClientService extends Context.Service<
@@ -24,31 +24,27 @@ export interface ResolvedWalletContext {
 
 export const resolveWalletContext = Effect.fn("ensforge.resolveWalletContext")(function* (
   parameters: ResolveWalletContextParameters = {},
-): Effect.fn.Return<
-  ResolvedWalletContext,
-  EnsforgeConfigError,
-  WalletClientService | EnsNetworkService
-> {
+): Effect.fn.Return<ResolvedWalletContext, ConfigError, WalletClientService | EnsNetworkService> {
   const walletService = yield* WalletClientService;
   const networkService = yield* EnsNetworkService;
   const walletClient = parameters.walletClient ?? Option.getOrUndefined(walletService.client);
 
   if (walletClient === undefined) {
-    return yield* new EnsforgeConfigError({
+    return yield* new ConfigError({
       code: "WALLET_CLIENT_UNAVAILABLE",
       message: "A wallet client is required for this operation",
     });
   }
 
   if (walletClient.chain === undefined) {
-    return yield* new EnsforgeConfigError({
+    return yield* new ConfigError({
       code: "CLIENT_CHAIN_UNAVAILABLE",
       message: "The wallet client must be configured with a chain",
     });
   }
 
   if (walletClient.chain.id !== networkService.chainId) {
-    return yield* new EnsforgeConfigError({
+    return yield* new ConfigError({
       code: "NETWORK_CLIENT_MISMATCH",
       message: `The wallet client chain ${walletClient.chain.id} does not match ${networkService.network} (${networkService.chainId})`,
     });
@@ -57,7 +53,7 @@ export const resolveWalletContext = Effect.fn("ensforge.resolveWalletContext")(f
   const account = parameters.account ?? walletClient.account;
 
   if (account === undefined) {
-    return yield* new EnsforgeConfigError({
+    return yield* new ConfigError({
       code: "WALLET_ACCOUNT_UNAVAILABLE",
       message: "An account is required for this operation",
     });

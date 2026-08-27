@@ -50,6 +50,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@ensdomains/address-encoder": "catalog:",
+    "@ensdomains/content-hash": "catalog:",
     "@ensforge/contracts": "workspace:*",
     "viem": "catalog:"
   },

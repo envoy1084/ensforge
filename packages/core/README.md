@@ -52,6 +52,46 @@ const ownerEffect = yield * getOwner.effect(config, { name: "example.eth" });
 Batchable reads expose pure `.request(parameters)` descriptors, and explicitly batchable writes
 expose pure `.call(parameters)` intents. Constructing either value performs no I/O.
 
+## Names and records
+
+Pure ENS operations are synchronous and return Schema-branded domain values:
+
+```ts
+import {
+  NormalizedName,
+  decodeAddressRecord,
+  dnsEncodeName,
+  encodeAddressRecord,
+  namehash,
+  normalizeName,
+} from "@ensforge/core";
+
+const name: NormalizedName = normalizeName("Example.eth");
+const node = namehash(name);
+const dnsName = dnsEncodeName(name);
+
+const addressData = encodeAddressRecord({
+  coinType: 60n,
+  address: "0x0000000000000000000000000000000000000001",
+});
+const address = decodeAddressRecord({ coinType: 60n, data: addressData });
+```
+
+Record decoders return `null` for the empty `0x` value used by resolvers to represent an unset
+record.
+
+Schemas and their types deliberately share a name:
+
+```ts
+import { NormalizedName } from "@ensforge/core";
+
+type NormalizedNameValue = typeof NormalizedName.Type;
+```
+
+Viem supplies ENS normalization, hashing, DNS encoding, and coin-type primitives. Official ENS
+packages supply multichain address and contenthash codecs. Ensforge adds stable branded outputs,
+strict composition, and `NameError` or `CodecError` boundaries.
+
 ## Commands
 
 ```sh

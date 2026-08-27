@@ -3,7 +3,7 @@ import { Cause, Effect, Exit, Option } from "effect";
 import type { WalletClient } from "viem";
 import { describe, expect, it } from "vitest";
 
-import { EnsforgeConfigError } from "../../src/index.js";
+import { ConfigError } from "../../src/index.js";
 import { EnsNetworkService } from "../../src/services/network.js";
 import { resolveWalletContext, WalletClientService } from "../../src/services/wallet-client.js";
 import {
@@ -52,7 +52,7 @@ describe("resolveWalletContext", () => {
     const exit = await Effect.runPromiseExit(provideSepoliaWallet(resolveWalletContext()));
 
     expect(getFailure(exit)).toEqual(
-      new EnsforgeConfigError({
+      new ConfigError({
         code: "WALLET_CLIENT_UNAVAILABLE",
         message: "A wallet client is required for this operation",
       }),
@@ -66,7 +66,7 @@ describe("resolveWalletContext", () => {
     );
 
     expect(getFailure(exit)).toEqual(
-      new EnsforgeConfigError({
+      new ConfigError({
         code: "WALLET_ACCOUNT_UNAVAILABLE",
         message: "An account is required for this operation",
       }),
@@ -79,7 +79,7 @@ describe("resolveWalletContext", () => {
     );
 
     expect(getFailure(exit)).toMatchObject({
-      _tag: "EnsforgeConfigError",
+      _tag: "ConfigError",
       code: "NETWORK_CLIENT_MISMATCH",
     });
   });

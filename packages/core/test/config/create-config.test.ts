@@ -5,11 +5,7 @@ import {
 } from "@ensforge/contracts/deployments";
 import { describe, expect, it, vi } from "vitest";
 
-import {
-  createConfig,
-  EnsforgeConfigError,
-  type EnsforgeConfigErrorCode,
-} from "../../src/index.js";
+import { createConfig, ConfigError, type ConfigErrorCode } from "../../src/index.js";
 import {
   makeChainlessPublicClient,
   makeMainnetPublicClient,
@@ -18,13 +14,13 @@ import {
   makeSepoliaWalletClient,
 } from "../fixtures/client-fixtures.js";
 
-const expectConfigError = (operation: () => unknown, code: EnsforgeConfigErrorCode) => {
+const expectConfigError = (operation: () => unknown, code: ConfigErrorCode) => {
   try {
     operation();
     throw new Error("Expected config creation to fail");
   } catch (error) {
-    expect(error).toBeInstanceOf(EnsforgeConfigError);
-    if (!(error instanceof EnsforgeConfigError)) throw error;
+    expect(error).toBeInstanceOf(ConfigError);
+    if (!(error instanceof ConfigError)) throw error;
     expect(error.code).toBe(code);
     expect(error.message.length).toBeGreaterThan(0);
   }

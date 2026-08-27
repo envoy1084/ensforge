@@ -12,8 +12,6 @@ export {
 export {
   createConfig,
   ensNetworks,
-  EnsforgeConfigError,
-  EnsforgeConfigErrorCode,
   type CreateConfigParameters,
   type EnsChainId,
   type EnsDeployment,
@@ -21,3 +19,43 @@ export {
   type EnsforgeConfig,
   type EnsNetwork,
 } from "./config/index.js";
+export {
+  CodecError,
+  CodecErrorCode,
+  ConfigError,
+  ConfigErrorCode,
+  NameError,
+  NameErrorCode,
+} from "./errors/index.js";
+export {
+  decodeAddressRecord,
+  decodeContentHash,
+  dnsDecodeName,
+  dnsEncodeName,
+  encodeAddressRecord,
+  encodeContentHash,
+  fromCoinType,
+  labelhash,
+  namehash,
+  normalizeLabel,
+  normalizeName,
+  toCoinType,
+  type CoinTypeNamespace,
+  type DecodeAddressRecordParameters,
+  type DecodedContentHash,
+  type EncodeAddressRecordParameters,
+  type EncodeContentHashParameters,
+} from "./names/index.js";
+export {
+  AddressRecordData,
+  CanonicalNameIdentity,
+  CoinType,
+  ContentHash,
+  ContentHashCodec,
+  DnsEncodedName,
+  Labelhash,
+  Namehash,
+  NormalizedLabel,
+  NormalizedName,
+  RegistryResource,
+} from "./schemas/index.js";
