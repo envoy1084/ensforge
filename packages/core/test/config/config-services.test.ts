@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 
 import { getConfigLayer, provideConfig } from "../../src/config/internal.js";
 import { defineAction, createConfig, type EnsforgeConfig } from "../../src/index.js";
+import { EthereumClient } from "../../src/internal/client/ethereum-client.js";
 import { DeploymentService } from "../../src/services/deployment.js";
 import { EnsNetworkService } from "../../src/services/network.js";
 import { PublicClientService } from "../../src/services/public-client.js";
@@ -13,10 +14,11 @@ import { makeSepoliaPublicClient, makeSepoliaWalletClient } from "../fixtures/cl
 const inspectServices = Effect.gen(function* () {
   const network = yield* EnsNetworkService;
   const publicClient = yield* PublicClientService;
+  const ethereumClient = yield* EthereumClient;
   const walletClient = yield* WalletClientService;
   const deployments = yield* DeploymentService;
 
-  return { network, publicClient, walletClient, deployments };
+  return { network, publicClient, ethereumClient, walletClient, deployments };
 });
 
 describe("config Effect services", () => {
@@ -31,6 +33,8 @@ describe("config Effect services", () => {
 
     expect(services.network).toEqual({ network: "sepolia", chainId: 11155111 });
     expect(services.publicClient.client).toBe(publicClient);
+    expect(services.ethereumClient.readContract).toBeTypeOf("function");
+    expect(services.ethereumClient.multicall).toBeTypeOf("function");
     expect(Option.getOrUndefined(services.walletClient.client)).toBe(walletClient);
     expect(services.deployments.profile).toBe(config.deployments);
   });

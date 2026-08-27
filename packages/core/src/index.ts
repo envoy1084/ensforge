@@ -24,8 +24,12 @@ export {
   CodecErrorCode,
   ConfigError,
   ConfigErrorCode,
+  ContractError,
+  ContractErrorCode,
   NameError,
   NameErrorCode,
+  RpcError,
+  RpcErrorCode,
 } from "./errors/index.js";
 export {
   decodeAddressRecord,
