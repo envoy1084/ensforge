@@ -6,9 +6,13 @@ import {
   defineAction,
   defineReadAction,
   defineWriteAction,
+  readBatch,
+  readBatchSettled,
+  type ReadBatchOutcome,
   type EnsReadRequest,
   type EnsWriteIntent,
   type EnsforgeConfig,
+  type RpcError,
 } from "../../src/index.js";
 
 type TestFailure = { readonly _tag: "TestFailure" };
@@ -30,6 +34,25 @@ expectTypeOf(writeAction.call({ value: 1 })).toEqualTypeOf<EnsWriteIntent<number
 
 const readRequest = readAction.request({ value: 1 });
 const writeIntent = writeAction.call({ value: 1 });
+const batchRequests = {
+  value: readRequest,
+  label: defineReadAction((_: EnsforgeConfig, value: string) => Effect.succeed(value)).request(
+    "ens",
+  ),
+} as const;
+
+expectTypeOf(readBatch(config, batchRequests)).toEqualTypeOf<
+  Promise<{ readonly value: number; readonly label: string }>
+>();
+expectTypeOf(readBatch.effect(config, batchRequests)).toEqualTypeOf<
+  Effect.Effect<{ readonly value: number; readonly label: string }, TestFailure | RpcError>
+>();
+expectTypeOf(readBatchSettled(config, batchRequests)).toEqualTypeOf<
+  Promise<{
+    readonly value: ReadBatchOutcome<number, TestFailure>;
+    readonly label: ReadBatchOutcome<string, never>;
+  }>
+>();
 
 // @ts-expect-error Read requests and write intents are intentionally incompatible.
 const invalidReadRequest: EnsReadRequest<number, TestFailure> = writeIntent;

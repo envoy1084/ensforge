@@ -14,8 +14,17 @@ export {
   getOwner,
   OwnerResult,
   OwnershipLevel,
+  readBatch,
+  readBatchSettled,
   type GetOwnerError,
   type GetOwnerParameters,
+  type ReadBatch,
+  type ReadBatchError,
+  type ReadBatchOptions,
+  type ReadBatchOutcome,
+  type ReadBatchResult,
+  type ReadBatchSettled,
+  type ReadBatchSettledResult,
 } from "./actions/index.js";
 export {
   createConfig,
