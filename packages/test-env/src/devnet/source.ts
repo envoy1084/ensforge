@@ -16,6 +16,14 @@ export const ensDevnetChainId = 31337 as const;
 export const ensDevnetImage =
   `ensforge-contracts-devnet:${ensContractsV2Commit.slice(0, 7)}` as const;
 
+export const ensDevnetImageRepository = "ghcr.io/envoy1084/ensforge-devnet" as const;
+
+export const ensDevnetImageDigest =
+  "sha256:5efb35e1f12153c605d37a913a162580749f56fe4a270466f7c62fbf927bcfeb" as const;
+
+export const ensDevnetPublishedImage =
+  `${ensDevnetImageRepository}@${ensDevnetImageDigest}` as const;
+
 export const defaultEnsContractsV2Directory = fileURLToPath(
   new URL("../../../../.repos/ens-contracts-v2/", import.meta.url),
 );

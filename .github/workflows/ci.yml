@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: read
+  packages: read
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -25,3 +26,23 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm check
       - run: pnpm pack:check
+
+  integration:
+    name: Contract integration
+    needs: check
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      ENSFORGE_TEST_IMAGE: ghcr.io/envoy1084/ensforge-devnet@sha256:5efb35e1f12153c605d37a913a162580749f56fe4a270466f7c62fbf927bcfeb
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/setup@v2
+        with:
+          runtime: node@24.18.0
+          cache: true
+          install: false
+      - run: pnpm install --frozen-lockfile
+      - name: Pull pinned ENS devnet image
+        run: docker pull "${ENSFORGE_TEST_IMAGE}"
+      - name: Run contract integration tests
+        run: pnpm test:integration

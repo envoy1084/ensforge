@@ -2,7 +2,8 @@ import { defineVitestConfig } from "klarity/vitest";
 
 export default defineVitestConfig({
   test: {
-    exclude: ["test/integration/**", "node_modules/**", "dist/**"],
+    fileParallelism: false,
+    include: ["test/integration/**/*.test.ts"],
     passWithNoTests: false,
   },
 });

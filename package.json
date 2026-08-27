@@ -16,6 +16,7 @@
     "prepare": "lefthook install",
     "release": "pnpm check && changeset publish",
     "test": "turbo run test",
+    "test:integration": "pnpm --filter @ensforge/test-env test:integration",
     "test:watch": "turbo run test:watch",
     "typecheck": "turbo run typecheck",
     "version-packages": "changeset version"

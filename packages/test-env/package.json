@@ -27,6 +27,7 @@
     "dev": "tsdown --watch",
     "lint": "oxlint --deny-warnings .",
     "test": "vitest run",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit"
   },
