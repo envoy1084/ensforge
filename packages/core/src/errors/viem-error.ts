@@ -19,6 +19,7 @@ import { RpcError } from "./rpc-error.js";
 
 export type ViemOperation =
   | "encodeFunctionData"
+  | "getBlock"
   | "readContract"
   | "multicall"
   | "simulateContract"
@@ -32,7 +33,7 @@ const fallbackCodes = {
   multicall: "MULTICALL_FAILED",
   simulateContract: "SIMULATION_FAILED",
   writeContract: "WRITE_FAILED",
-} as const satisfies Record<ViemOperation, ContractErrorCode>;
+} as const satisfies Record<Exclude<ViemOperation, "getBlock">, ContractErrorCode>;
 
 const findCause = <ErrorClass extends Error>(
   cause: unknown,
@@ -70,25 +71,12 @@ const isDecodeError = (cause: unknown): boolean =>
   findCause(cause, AbiDecodingDataSizeTooSmallError) !== undefined ||
   findCause(cause, AbiDecodingZeroDataError) !== undefined;
 
-export const viemErrorToEffectError = (cause: unknown, operation: ViemOperation): ViemError => {
-  const reverted = findCause(cause, ContractFunctionRevertedError);
-
-  if (reverted !== undefined) {
-    return new ContractError({
-      code: "REVERTED",
-      message: reverted.shortMessage,
-      cause,
-    });
-  }
-
-  if (isDecodeError(cause)) {
-    return new ContractError({
-      code: "DECODE_FAILED",
-      message: messageFromCause(cause),
-      cause,
-    });
-  }
-
+export function viemErrorToEffectError(cause: unknown, operation: "getBlock"): RpcError;
+export function viemErrorToEffectError(
+  cause: unknown,
+  operation: Exclude<ViemOperation, "getBlock">,
+): ViemError;
+export function viemErrorToEffectError(cause: unknown, operation: ViemOperation): ViemError {
   const timeout = findCause(cause, TimeoutError);
 
   if (timeout !== undefined) {
@@ -119,9 +107,35 @@ export const viemErrorToEffectError = (cause: unknown, operation: ViemOperation)
     });
   }
 
+  if (operation === "getBlock") {
+    return new RpcError({
+      code: "REQUEST_FAILED",
+      message: messageFromCause(cause),
+      cause,
+    });
+  }
+
+  const reverted = findCause(cause, ContractFunctionRevertedError);
+
+  if (reverted !== undefined) {
+    return new ContractError({
+      code: "REVERTED",
+      message: reverted.shortMessage,
+      cause,
+    });
+  }
+
+  if (isDecodeError(cause)) {
+    return new ContractError({
+      code: "DECODE_FAILED",
+      message: messageFromCause(cause),
+      cause,
+    });
+  }
+
   return new ContractError({
     code: fallbackCodes[operation],
     message: messageFromCause(cause),
     cause,
   });
-};
+}

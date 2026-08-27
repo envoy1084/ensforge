@@ -5,6 +5,7 @@ import type { PublicClient, WalletClient } from "viem";
 import type { EnsDeploymentProfile } from "../config/config.js";
 import type { EnsChainId, EnsNetwork } from "../config/network.js";
 import { EthereumClient, makeEthereumClient } from "../internal/client/ethereum-client.js";
+import { ReadExecution, makeReadExecution } from "../internal/read/execution-context.js";
 import { DeploymentService } from "./deployment.js";
 import { EnsNetworkService } from "./network.js";
 import { PublicClientService } from "./public-client.js";
@@ -13,6 +14,7 @@ import { WalletClientService } from "./wallet-client.js";
 export type EnsforgeServices =
   | DeploymentService
   | EthereumClient
+  | ReadExecution
   | EnsNetworkService
   | PublicClientService
   | WalletClientService;
@@ -34,6 +36,7 @@ export const makeServicesContext = (
   }).pipe(
     Context.add(PublicClientService, { client: values.publicClient }),
     Context.add(EthereumClient, makeEthereumClient({ publicClient: values.publicClient })),
+    Context.add(ReadExecution, makeReadExecution({ publicClient: values.publicClient })),
     Context.add(WalletClientService, {
       client: Option.fromNullishOr(values.walletClient),
     }),
