@@ -36,3 +36,13 @@ The default build policy is `if-missing`. Use `always` when deliberately rebuild
 source, or `never` when CI has already loaded the image through Docker Buildx.
 
 Fixture seeding, viem clients, and EVM snapshot isolation are implemented in later phases.
+
+## Publishing the CI image
+
+The manual `Publish devnet image` GitHub Actions workflow builds the pinned contracts-v2 Dockerfile
+and publishes an amd64 image to `ghcr.io/<repository-owner>/ensforge-devnet`. It pushes full-commit
+and readable short tags, then prints the immutable image digest in the workflow summary.
+
+After the first publication, make the GHCR package public so forked pull requests can download it
+without credentials. Normal integration CI will consume the image by digest with the `never` build
+policy; it will not compile contracts or checkout `.repos`.
