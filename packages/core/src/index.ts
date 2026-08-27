@@ -9,4 +9,22 @@ export {
   type EnsWriteAction,
   type EnsWriteIntent,
 } from "./action/index.js";
-export type { EnsforgeConfig } from "./config/index.js";
+export {
+  ClientChainUnavailableError,
+  createConfig,
+  DeploymentChainMismatchError,
+  DuplicateDeploymentError,
+  ensNetworks,
+  type CreateConfigParameters,
+  type EnsChainId,
+  type EnsDeployment,
+  type EnsDeploymentProfile,
+  type EnsforgeConfig,
+  type EnsforgeConfigurationError,
+  type EnsNetwork,
+  NetworkClientMismatchError,
+  UnsupportedEnsNetworkError,
+  WalletAccountUnavailableError,
+  WalletClientUnavailableError,
+  type WalletContextError,
+} from "./config/index.js";

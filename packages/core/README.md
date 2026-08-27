@@ -12,6 +12,29 @@ package. React providers and hooks belong in the future `@ensforge/react` packag
 
 The package is private while its initial configuration and action APIs are being implemented.
 
+## Configuration
+
+One config targets one authoritative ENS network. Mainnet currently selects ENSv1; Sepolia selects
+the ENSv2 beta deployment with ENSv1 compatibility for transition-state operations.
+
+```ts
+import { createConfig } from "@ensforge/core";
+import { createPublicClient, http } from "viem";
+import { sepolia } from "viem/chains";
+
+const config = createConfig({
+  network: "sepolia",
+  publicClient: createPublicClient({
+    chain: sepolia,
+    transport: http(),
+  }),
+});
+```
+
+An optional chain-matched wallet client may be supplied for scripts. React integrations pass the
+currently connected wallet as a write-action override so changing connections does not rebuild the
+core config. `createConfig` performs no RPC requests and preserves the supplied client identities.
+
 ## API convention
 
 Finite asynchronous actions expose one Promise-callable symbol with the canonical Effect on a
@@ -19,7 +42,7 @@ readonly `.effect` property:
 
 ```ts
 const owner = await getOwner(config, { name: "example.eth" });
-const owner = yield * getOwner.effect(config, { name: "example.eth" });
+const ownerEffect = yield * getOwner.effect(config, { name: "example.eth" });
 ```
 
 Batchable reads expose pure `.request(parameters)` descriptors, and explicitly batchable writes
