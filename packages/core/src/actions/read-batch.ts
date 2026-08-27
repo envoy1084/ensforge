@@ -3,13 +3,9 @@ import { Effect } from "effect";
 import type { EnsReadRequest } from "../action/read-request.js";
 import { executeReadRequest } from "../action/read-request.js";
 import type { EnsforgeConfig } from "../config/config.js";
-import { provideConfig } from "../config/internal.js";
 import type { RpcError } from "../errors/rpc-error.js";
-import {
-  ReadContext,
-  ReadExecution,
-  type ReadExecutionOptions,
-} from "../internal/read/execution-context.js";
+import { makeReadContext } from "../internal/read/execute-read.js";
+import { ReadContext, type ReadExecutionOptions } from "../internal/read/execution-context.js";
 
 type ReadRequests = Readonly<Record<string, EnsReadRequest<unknown, unknown>>>;
 
@@ -75,19 +71,6 @@ export interface ReadBatchSettled {
     options?: ReadBatchOptions,
   ) => Effect.Effect<ReadBatchSettledResult<Requests>, RpcError>;
 }
-
-const makeReadContext = Effect.fn("makeReadContext")(function* (
-  config: EnsforgeConfig,
-  options: ReadBatchOptions,
-) {
-  return yield* provideConfig(
-    config,
-    Effect.gen(function* () {
-      const execution = yield* ReadExecution;
-      return yield* execution.makeContext(options);
-    }),
-  );
-});
 
 const getRequestEntries = <const Requests extends ReadRequests>(
   config: EnsforgeConfig,

@@ -1,9 +1,8 @@
 import { Effect } from "effect";
 
-import { getBlockReference } from "../../action/block.js";
 import { defineReadAction } from "../../action/read-request.js";
 import type { EnsforgeConfig } from "../../config/config.js";
-import { provideConfig } from "../../config/internal.js";
+import { executeRead } from "../../internal/read/execute-read.js";
 import { normalizeName } from "../../names/normalize.js";
 import { DeploymentService } from "../../services/deployment.js";
 import { routeOwner } from "./route.js";
@@ -13,10 +12,8 @@ import { getOwnerV2 } from "./v2.js";
 
 const getOwnerWithServices = Effect.fn("getOwnerWithServices")(function* (
   name: ReturnType<typeof normalizeName>,
-  parameters: GetOwnerParameters,
 ) {
   const deployment = yield* DeploymentService;
-  const block = getBlockReference(parameters);
 
   yield* Effect.annotateCurrentSpan({
     "ens.name": name,
@@ -25,12 +22,12 @@ const getOwnerWithServices = Effect.fn("getOwnerWithServices")(function* (
 
   switch (deployment.profile.protocol) {
     case "v1":
-      return yield* getOwnerV1(name, deployment.profile.v1, block);
+      return yield* getOwnerV1(name, deployment.profile.v1);
     case "v2": {
       const v1 = deployment.profile.v1;
       return v1 === undefined
-        ? yield* getOwnerV2(name, deployment.profile.v2, block)
-        : yield* routeOwner(name, v1, deployment.profile.v2, block);
+        ? yield* getOwnerV2(name, deployment.profile.v2)
+        : yield* routeOwner(name, v1, deployment.profile.v2);
     }
   }
 });
@@ -41,7 +38,7 @@ const getOwnerEffect = Effect.fn("ensforge.getOwner")(function* (
 ) {
   const name = yield* normalizeName.effect(parameters.name);
 
-  return yield* provideConfig(config, getOwnerWithServices(name, parameters));
+  return yield* executeRead(config, parameters, getOwnerWithServices(name));
 });
 
 export const getOwner = defineReadAction<GetOwnerParameters, OwnerResult | null, GetOwnerError>(
