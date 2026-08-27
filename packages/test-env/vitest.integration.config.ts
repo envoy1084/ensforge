@@ -13,5 +13,8 @@ export default defineVitestConfig({
     fileParallelism: false,
     include: ["test/integration/**/*.test.ts"],
     passWithNoTests: false,
+    sequence: {
+      concurrent: false,
+    },
   },
 });

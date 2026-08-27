@@ -5,6 +5,7 @@ import { createDevnetClients, verifyDevnetClients } from "./clients/clients.js";
 import { createDevnetConfigs } from "./config/config.js";
 import { mapDevnetDeployments } from "./deployments/profile.js";
 import type { DevnetInstance } from "./devnet/lifecycle.js";
+import { createDevnetState } from "./state/snapshot.js";
 
 export const createDevnetEnvironment = Effect.fn("createDevnetEnvironment")(function* (
   instance: DevnetInstance,
@@ -13,6 +14,7 @@ export const createDevnetEnvironment = Effect.fn("createDevnetEnvironment")(func
   const clients = createDevnetClients(instance.rpcUrl, deployments.multicall3);
   yield* verifyDevnetClients(clients, deployments.requiredAddresses);
   const configs = yield* createDevnetConfigs(deployments, clients);
+  const state = yield* createDevnetState(clients.testClient);
 
   return {
     accounts: devnetAccounts,
@@ -20,6 +22,7 @@ export const createDevnetEnvironment = Effect.fn("createDevnetEnvironment")(func
     configs,
     deployments,
     instance,
+    state,
   };
 });
 

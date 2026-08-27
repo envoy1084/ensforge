@@ -48,3 +48,4 @@ export {
 } from "./devnet/index.js";
 export { TestEnvironmentError, TestEnvironmentErrorCode } from "./errors/index.js";
 export { createDevnetEnvironment, type DevnetEnvironment } from "./environment.js";
+export { createDevnetState, type DevnetState, type DevnetStateClient } from "./state/index.js";
