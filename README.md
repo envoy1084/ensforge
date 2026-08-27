@@ -23,7 +23,9 @@ pnpm check
 ```text
 packages/
   contracts/   ENS contract ABIs, interfaces, and deployment metadata
+  core/        Effect-native ENS actions with Promise wrappers
   template/    Copy-ready starter for new packages
+  test-env/    Private local-contract integration-test infrastructure
 ```
 
 Klarity supplies the shared TypeScript, Oxfmt, Oxlint, tsdown, Vitest, Turbo, Lefthook, and
