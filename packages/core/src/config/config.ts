@@ -1,6 +1,7 @@
 import type { EnsV1Deployment, EnsV2Deployment } from "@ensforge/contracts/deployments";
 import type { PublicClient, WalletClient } from "viem";
 
+import type { EnsProtocol } from "../schemas/protocol.js";
 import type { EnsChainId, EnsNetwork } from "./network.js";
 
 export const EnsforgeConfigTypeId: unique symbol = Symbol.for("@ensforge/core/EnsforgeConfig");
@@ -9,17 +10,12 @@ export type EnsDeployment = EnsV1Deployment | EnsV2Deployment;
 
 export type EnsDeploymentProfile =
   | {
-      readonly phase: "v1";
+      readonly protocol: Extract<EnsProtocol, "v1">;
       readonly v1: EnsV1Deployment;
       readonly v2?: never;
     }
   | {
-      readonly phase: "v2-transition";
-      readonly v1: EnsV1Deployment;
-      readonly v2: EnsV2Deployment;
-    }
-  | {
-      readonly phase: "v2";
+      readonly protocol: Extract<EnsProtocol, "v2">;
       readonly v1?: EnsV1Deployment;
       readonly v2: EnsV2Deployment;
     };

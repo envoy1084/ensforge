@@ -14,10 +14,10 @@ The package is private while its initial configuration and action APIs are being
 
 ## Configuration
 
-One config targets one authoritative ENS network. Its discriminated deployment profile describes
-which protocol generations are available: mainnet is currently `v1`, while Sepolia is
-`v2-transition` with both V1 and V2 deployments. The profile does not choose a contract for a
-particular name; later action routing will inspect that name's state before selecting V1 or V2.
+One config targets one authoritative ENS network. Its discriminated deployment profile identifies
+the canonical protocol: mainnet is currently V1, while Sepolia is V2 with V1 deployment metadata
+retained for unmigrated names. The profile does not choose a contract for a particular name;
+actions inspect that name's state before selecting V1 or V2.
 
 ```ts
 import { createConfig } from "@ensforge/core";
@@ -32,7 +32,7 @@ const config = createConfig({
   }),
 });
 
-config.deployments.phase; // "v2-transition"
+config.deployments.protocol; // "v2"
 ```
 
 An optional chain-matched wallet client may be supplied for scripts. React integrations pass the
@@ -52,6 +52,25 @@ const ownerEffect = yield * getOwner.effect(config, { name: "example.eth" });
 Batchable reads expose pure `.request(parameters)` descriptors, and explicitly batchable writes
 expose pure `.call(parameters)` intents. Constructing either value performs no I/O.
 
+## Ownership
+
+`getOwner` presents one ownership model across ENSv1 and ENSv2. Mainnet reads the V1 registry,
+Base Registrar, and Name Wrapper. On a V2 network with V1 metadata, migrated names use the V2
+Universal Resolver while unmigrated reservations use their V1 ownership contracts.
+
+```ts
+import { Effect } from "effect";
+import { getOwner } from "@ensforge/core";
+
+const owner = await getOwner(config, { name: "example.eth" });
+const ownerEffect = getOwner.effect(config, { name: "example.eth" });
+const ownerFromEffect = await Effect.runPromise(ownerEffect);
+```
+
+The result identifies the protocol and ownership level and keeps the V1 registry controller
+(`owner`) separate from the Base Registrar NFT holder (`registrant`). An unowned name returns
+`null`; zero addresses are never exposed as owners.
+
 ## Names and records
 
 Pure ENS operations are synchronous and return Schema-branded domain values:
@@ -59,6 +78,7 @@ Pure ENS operations are synchronous and return Schema-branded domain values:
 ```ts
 import {
   NormalizedName,
+  analyzeName,
   decodeAddressRecord,
   dnsEncodeName,
   encodeAddressRecord,
@@ -67,8 +87,16 @@ import {
 } from "@ensforge/core";
 
 const name: NormalizedName = normalizeName("Example.eth");
+const analysis = analyzeName(name);
 const node = namehash(name);
 const dnsName = dnsEncodeName(name);
+
+const normalizedNameEffect = normalizeName.effect("Example.eth");
+const dnsNameEffect = dnsEncodeName.effect(name);
+
+analysis.kind; // "second-level"
+analysis.parent; // "eth"
+analysis.isSecondLevelEth; // true
 
 const addressData = encodeAddressRecord({
   coinType: 60n,
@@ -79,6 +107,10 @@ const address = decodeAddressRecord({ coinType: 60n, data: addressData });
 
 Record decoders return `null` for the empty `0x` value used by resolvers to represent an unset
 record.
+
+Normalization and DNS encoding keep their synchronous form for ordinary TypeScript while exposing
+the same typed operation through `.effect` for Effect programs. This avoids action-local wrappers
+around otherwise reusable name codecs.
 
 Schemas and their types deliberately share a name:
 

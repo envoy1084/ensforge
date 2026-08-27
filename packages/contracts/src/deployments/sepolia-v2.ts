@@ -4,7 +4,7 @@ import type { EnsV2Deployment } from "./types.js";
 export const sepoliaV2Deployment = {
   id: "sepolia-v2",
   chainId: 11155111,
-  phase: "v2-transition",
+  protocol: "v2",
   status: "beta",
   contracts: {
     universalResolver: "0xeEeEEEeE14D718C2B47D9923Deab1335E144EeEe",

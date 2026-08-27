@@ -72,10 +72,10 @@ export const decodeAddressRecord = ({
   }
 
   fromCoinType(coinType);
-  if (encodedAddress === "0x") return null;
+  if (encodedAddress.length === 2) return null;
 
   try {
-    return getAddressCoder(coinType).encode(hexToBytes(encodedAddress as `0x${string}`));
+    return getAddressCoder(coinType).encode(hexToBytes(encodedAddress));
   } catch (error) {
     if (error instanceof CodecError) throw error;
     throw new CodecError({

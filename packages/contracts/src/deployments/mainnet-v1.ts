@@ -4,7 +4,7 @@ import type { EnsV1Deployment } from "./types.js";
 export const mainnetV1Deployment = {
   id: "mainnet-v1",
   chainId: 1,
-  phase: "v1",
+  protocol: "v1",
   status: "active",
   contracts: {
     registry: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e",

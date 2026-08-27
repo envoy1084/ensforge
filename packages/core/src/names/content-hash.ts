@@ -60,7 +60,7 @@ export const decodeContentHash = (
     });
   }
 
-  if (encoded === "0x") return null;
+  if (encoded.length === 2) return null;
 
   const unprefixed = encoded.slice(2);
 

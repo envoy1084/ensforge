@@ -4,11 +4,19 @@ export {
   defineWriteAction,
   type EnsAction,
   type EnsActionEffect,
+  type BlockParameters,
   type EnsReadAction,
   type EnsReadRequest,
   type EnsWriteAction,
   type EnsWriteIntent,
 } from "./action/index.js";
+export {
+  getOwner,
+  OwnerResult,
+  OwnershipLevel,
+  type GetOwnerError,
+  type GetOwnerParameters,
+} from "./actions/index.js";
 export {
   createConfig,
   ensNetworks,
@@ -32,6 +40,7 @@ export {
   RpcErrorCode,
 } from "./errors/index.js";
 export {
+  analyzeName,
   decodeAddressRecord,
   decodeContentHash,
   dnsDecodeName,
@@ -49,6 +58,8 @@ export {
   type DecodedContentHash,
   type EncodeAddressRecordParameters,
   type EncodeContentHashParameters,
+  type NameAnalysis,
+  type NameKind,
 } from "./names/index.js";
 export {
   AddressRecordData,
@@ -57,6 +68,9 @@ export {
   ContentHash,
   ContentHashCodec,
   DnsEncodedName,
+  EnsProtocol,
+  EthereumAddress,
+  Hex,
   Labelhash,
   Namehash,
   NormalizedLabel,

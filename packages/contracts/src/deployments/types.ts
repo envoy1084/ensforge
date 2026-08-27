@@ -29,7 +29,7 @@ export interface EnsV1ContractAddresses {
 export interface EnsV1Deployment {
   readonly id: string;
   readonly chainId: number;
-  readonly phase: "v1";
+  readonly protocol: "v1";
   readonly status: EnsDeploymentStatus;
   readonly contracts: EnsV1ContractAddresses;
   readonly provenance: EnsDeploymentProvenance;
@@ -92,7 +92,7 @@ export interface EnsV2TestTokenAddresses {
 export interface EnsV2Deployment {
   readonly id: string;
   readonly chainId: number;
-  readonly phase: "v2-transition";
+  readonly protocol: "v2";
   readonly status: EnsDeploymentStatus;
   readonly contracts: EnsV2PublicContractAddresses;
   readonly implementations: EnsV2ImplementationAddresses;

@@ -1,6 +1,8 @@
 import { Schema } from "effect";
 
-const Bytes32 = Schema.String.pipe(
+import { Hex } from "./hex.js";
+
+const Bytes32 = Hex.pipe(
   Schema.check(
     Schema.isPattern(/^0x[0-9a-fA-F]{64}$/, {
       message: "Expected a 32-byte hexadecimal value",

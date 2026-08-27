@@ -1,25 +1,36 @@
-import { Schema } from "effect";
+import { Effect, Schema } from "effect";
 
 import { bytesToHex, bytesToString, hexToBytes, stringToBytes } from "viem";
 import { packetToBytes } from "viem/ens";
 
 import { CodecError } from "../errors/codec-error.js";
+import { defineSyncFunction } from "../internal/sync-function.js";
 import { DnsEncodedName, type DnsEncodedName as DnsEncodedNameValue } from "../schemas/dns.js";
 import type { NormalizedName as NormalizedNameValue } from "../schemas/name.js";
 import { normalizeName } from "./normalize.js";
 
-export const dnsEncodeName = (name: string | NormalizedNameValue): DnsEncodedNameValue => {
-  try {
-    const normalizedName = normalizeName(name);
-    return Schema.decodeSync(DnsEncodedName)(bytesToHex(packetToBytes(normalizedName)));
-  } catch (error) {
-    if (error instanceof CodecError) throw error;
-    throw new CodecError({
-      code: "INVALID_DNS_NAME",
-      message: `Unable to DNS-encode ENS name: ${name}`,
+export const dnsEncodeName = defineSyncFunction(
+  Effect.fn("dnsEncodeName")(function* (name: string | NormalizedNameValue) {
+    const normalizedName = yield* normalizeName.effect(name).pipe(
+      Effect.mapError(
+        () =>
+          new CodecError({
+            code: "INVALID_DNS_NAME",
+            message: `Unable to DNS-encode ENS name: ${name}`,
+          }),
+      ),
+    );
+
+    return yield* Effect.try({
+      try: () => Schema.decodeSync(DnsEncodedName)(bytesToHex(packetToBytes(normalizedName))),
+      catch: () =>
+        new CodecError({
+          code: "INVALID_DNS_NAME",
+          message: `Unable to DNS-encode ENS name: ${name}`,
+        }),
     });
-  }
-};
+  }),
+);
 
 export const dnsDecodeName = (
   encodedName: `0x${string}` | DnsEncodedNameValue,
@@ -28,7 +39,7 @@ export const dnsDecodeName = (
 
   try {
     const encoded = Schema.decodeSync(DnsEncodedName)(encodedName);
-    bytes = hexToBytes(encoded as `0x${string}`);
+    bytes = hexToBytes(encoded);
   } catch {
     throw new CodecError({
       code: "MALFORMED_DNS_PACKET",

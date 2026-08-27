@@ -35,7 +35,7 @@ describe("createConfig", () => {
     expect(config.chainId).toBe(1);
     expect(config.publicClient).toBe(publicClient);
     expect(config.walletClient).toBeUndefined();
-    expect(config.deployments.phase).toBe("v1");
+    expect(config.deployments.protocol).toBe("v1");
     expect(config.deployments.v1).toBe(mainnetV1Deployment);
     expect(config.deployments.v2).toBeUndefined();
   });
@@ -49,7 +49,7 @@ describe("createConfig", () => {
     expect(config.chainId).toBe(11155111);
     expect(config.publicClient).toBe(publicClient);
     expect(config.walletClient).toBe(walletClient);
-    expect(config.deployments.phase).toBe("v2-transition");
+    expect(config.deployments.protocol).toBe("v2");
     expect(config.deployments.v1).toBe(sepoliaV1Deployment);
     expect(config.deployments.v2).toBe(sepoliaV2Deployment);
   });

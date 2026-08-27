@@ -19,7 +19,7 @@ const config = createConfig(parameters);
 
 expectTypeOf(config).toEqualTypeOf<EnsforgeConfig>();
 expectTypeOf(config.chainId).toEqualTypeOf<1 | 11155111>();
-expectTypeOf(config.deployments.phase).toEqualTypeOf<"v1" | "v2-transition" | "v2">();
+expectTypeOf(config.deployments.protocol).toEqualTypeOf<"v1" | "v2">();
 
 const configErrorCode: ConfigErrorCode = "NETWORK_CLIENT_MISMATCH";
 

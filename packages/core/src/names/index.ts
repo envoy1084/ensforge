@@ -4,6 +4,7 @@ export {
   type DecodeAddressRecordParameters,
   type EncodeAddressRecordParameters,
 } from "./address-record.js";
+export { analyzeName, type NameAnalysis, type NameKind } from "./analyze.js";
 export { fromCoinType, toCoinType, type CoinTypeNamespace } from "./coin-type.js";
 export {
   decodeContentHash,

@@ -1,18 +1,12 @@
 import { Schema } from "effect";
 
-const HexBytes = Schema.String.pipe(
-  Schema.check(
-    Schema.isPattern(/^0x(?:[0-9a-fA-F]{2})*$/, {
-      message: "Expected byte-aligned hexadecimal data",
-    }),
-  ),
-);
+import { Hex } from "./hex.js";
 
-export const AddressRecordData = HexBytes.pipe(Schema.brand("AddressRecordData"));
+export const AddressRecordData = Hex.pipe(Schema.brand("AddressRecordData"));
 
 export type AddressRecordData = typeof AddressRecordData.Type;
 
-export const ContentHash = HexBytes.pipe(Schema.brand("ContentHash"));
+export const ContentHash = Hex.pipe(Schema.brand("ContentHash"));
 
 export type ContentHash = typeof ContentHash.Type;
 

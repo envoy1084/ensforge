@@ -38,11 +38,9 @@ const validateClientChain = (
 };
 
 const getProfileDeployments = (profile: EnsDeploymentProfile): readonly EnsDeployment[] => {
-  switch (profile.phase) {
+  switch (profile.protocol) {
     case "v1":
       return [profile.v1];
-    case "v2-transition":
-      return [profile.v1, profile.v2];
     case "v2":
       return profile.v1 === undefined ? [profile.v2] : [profile.v1, profile.v2];
   }
