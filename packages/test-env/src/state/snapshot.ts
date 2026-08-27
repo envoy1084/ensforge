@@ -13,6 +13,7 @@ export interface DevnetStateClient {
 
 export interface DevnetState {
   readonly advanceTime: (seconds: number) => Effect.Effect<void, TestEnvironmentError>;
+  readonly checkpoint: Effect.Effect<void, TestEnvironmentError>;
   readonly mine: (blocks?: number, interval?: number) => Effect.Effect<void, TestEnvironmentError>;
   readonly reset: Effect.Effect<void, TestEnvironmentError>;
 }
@@ -52,6 +53,12 @@ export const createDevnetState = Effect.fn("createDevnetState")(function* (
     }),
   );
 
+  const checkpoint = lock.withPermits(1)(
+    stateOperation("Unable to replace the ENS devnet baseline snapshot", () =>
+      client.snapshot(),
+    ).pipe(Effect.flatMap((replacement) => Ref.set(currentSnapshot, replacement))),
+  );
+
   const advanceTime = Effect.fn("DevnetState.advanceTime")(function* (seconds: number) {
     if (!Number.isSafeInteger(seconds) || seconds < 0) {
       return yield* new TestEnvironmentError({
@@ -86,5 +93,5 @@ export const createDevnetState = Effect.fn("createDevnetState")(function* (
     );
   });
 
-  return { advanceTime, mine, reset } satisfies DevnetState;
+  return { advanceTime, checkpoint, mine, reset } satisfies DevnetState;
 });

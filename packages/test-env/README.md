@@ -16,6 +16,7 @@ The package currently provides:
 - named Anvil accounts plus viem public, wallet, and test clients;
 - workspace-only v1 and v2 Ensforge configs over the same node;
 - revert-and-renew snapshot isolation plus deterministic time and block controls;
+- typed, invariant-checked ENS v1 ownership, wrapping, resolver, expiry, and reverse fixtures;
 - diagnostic log capture; and
 - scoped, idempotent container cleanup.
 
@@ -43,9 +44,9 @@ The default local build policy is `if-missing`. Use `always` when deliberately r
 pinned source. CI pulls `ensDevnetPublishedImage` by its immutable digest and starts it with the
 `never` build policy, so CI never checks out or compiles the contracts repositories.
 
-Integration suites call `environment.state.reset` from `beforeEach`. The reset immediately takes a
+Integration suites seed fixtures once, then call `environment.state.reset` from `beforeEach`. The reset immediately takes a
 replacement baseline because Anvil consumes snapshot identifiers on revert. Fixture seeding is
-implemented in the next phases.
+exposed through `seedV1Fixtures`; v2 and migration fixtures use the same typed manifest.
 
 ## Publishing the CI image
 

@@ -48,4 +48,12 @@ export {
 } from "./devnet/index.js";
 export { TestEnvironmentError, TestEnvironmentErrorCode } from "./errors/index.js";
 export { createDevnetEnvironment, type DevnetEnvironment } from "./environment.js";
+export {
+  seedV1Fixtures,
+  type EnsFixtureManifest,
+  type EnsNameFixture,
+  type EnsV1FixtureManifest,
+  type FixtureLifecycle,
+  type FixtureResolverState,
+} from "./fixtures/index.js";
 export { createDevnetState, type DevnetState, type DevnetStateClient } from "./state/index.js";

@@ -7,11 +7,14 @@ import { startDevnet } from "../../src/devnet/lifecycle.js";
 import { ensDevnetChainId, ensDevnetPublishedImage } from "../../src/devnet/source.js";
 import { createDevnetEnvironment } from "../../src/environment.js";
 import type { DevnetEnvironment } from "../../src/environment.js";
+import type { EnsFixtureManifest } from "../../src/fixtures/manifest.js";
+import { seedV1Fixtures } from "../../src/fixtures/v1.js";
 
 const image = process.env.ENSFORGE_TEST_IMAGE ?? ensDevnetPublishedImage;
 
 describe("published ENS devnet", () => {
   let environment: DevnetEnvironment;
+  let fixtures: EnsFixtureManifest;
   let scope: Scope.Closeable;
 
   beforeAll(async () => {
@@ -22,6 +25,7 @@ describe("published ENS devnet", () => {
         return yield* createDevnetEnvironment(instance);
       }).pipe(Effect.provideService(Scope.Scope, scope), Effect.provide(DockerEngine.layer)),
     );
+    fixtures = await Effect.runPromise(seedV1Fixtures(environment));
   }, 180_000);
 
   beforeEach(async () => {
@@ -54,6 +58,16 @@ describe("published ENS devnet", () => {
         address: environment.accounts.unauthorized,
       }),
     ).toBe(1n);
+  });
+
+  it("exposes verified v1 ownership, resolver, wrapping, expiry, and reverse fixtures", () => {
+    expect(fixtures.v1.activeUnwrapped.owner).toBe(environment.accounts.owner);
+    expect(fixtures.v1.activeWrapped.owner).toBe(environment.accounts.owner);
+    expect(fixtures.v1.wrappedSubname.owner).toBe(environment.accounts.owner2);
+    expect(fixtures.v1.noResolver.resolverState).toBe("missing");
+    expect(fixtures.v1.grace.lifecycle).toBe("grace");
+    expect(fixtures.v1.expired.lifecycle).toBe("expired");
+    expect(fixtures.v1.reverse.name).toBe("v1-unwrapped.eth");
   });
 
   it("restores the baseline before the next test", async () => {
