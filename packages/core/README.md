@@ -71,6 +71,23 @@ The result identifies the protocol and ownership level and keeps the V1 registry
 (`owner`) separate from the Base Registrar NFT holder (`registrant`). An unowned name returns
 `null`; zero addresses are never exposed as owners.
 
+## Resolver discovery
+
+`getResolver` finds the effective resolver for a name through the Universal Resolver configured
+for the selected deployment. This includes inherited resolvers and, on ENSv2 Sepolia, the V1
+resolver mirror used by unmigrated names. It returns `null` when no resolver is configured.
+
+```ts
+import { getResolver } from "@ensforge/core";
+
+const resolver = await getResolver(config, { name: "sub.example.eth" });
+const resolverEffect = getResolver.effect(config, { name: "sub.example.eth" });
+const resolverRequest = getResolver.request({ name: "sub.example.eth" });
+```
+
+The `.request` form can be combined with other semantic reads in `readBatch`; compatible primitive
+contract reads share one snapshot and Multicall3 execution.
+
 ## Names and records
 
 Pure ENS operations are synchronous and return Schema-branded domain values:

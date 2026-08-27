@@ -6,12 +6,15 @@ import {
   defineAction,
   defineReadAction,
   defineWriteAction,
+  getResolver,
   readBatch,
   readBatchSettled,
-  type ReadBatchOutcome,
   type EnsReadRequest,
   type EnsWriteIntent,
   type EnsforgeConfig,
+  type GetResolverError,
+  type GetResolverResult,
+  type ReadBatchOutcome,
   type RpcError,
 } from "../../src/index.js";
 
@@ -31,6 +34,15 @@ expectTypeOf(action.effect(config, { value: 1 })).toEqualTypeOf<
 >();
 expectTypeOf(readAction.request({ value: 1 })).toEqualTypeOf<EnsReadRequest<number, TestFailure>>();
 expectTypeOf(writeAction.call({ value: 1 })).toEqualTypeOf<EnsWriteIntent<number, TestFailure>>();
+expectTypeOf(getResolver(config, { name: "example.eth" })).toEqualTypeOf<
+  Promise<GetResolverResult>
+>();
+expectTypeOf(getResolver.effect(config, { name: "example.eth" })).toEqualTypeOf<
+  Effect.Effect<GetResolverResult, GetResolverError>
+>();
+expectTypeOf(getResolver.request({ name: "example.eth" })).toEqualTypeOf<
+  EnsReadRequest<GetResolverResult, GetResolverError>
+>();
 
 const readRequest = readAction.request({ value: 1 });
 const writeIntent = writeAction.call({ value: 1 });

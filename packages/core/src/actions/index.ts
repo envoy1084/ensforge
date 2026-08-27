@@ -6,6 +6,12 @@ export {
   type GetOwnerParameters,
 } from "./get-owner/index.js";
 export {
+  getResolver,
+  type GetResolverError,
+  type GetResolverParameters,
+  type GetResolverResult,
+} from "./get-resolver/index.js";
+export {
   readBatch,
   readBatchSettled,
   type ReadBatch,

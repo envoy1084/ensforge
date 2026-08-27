@@ -12,12 +12,16 @@ export {
 } from "./action/index.js";
 export {
   getOwner,
+  getResolver,
   OwnerResult,
   OwnershipLevel,
   readBatch,
   readBatchSettled,
   type GetOwnerError,
   type GetOwnerParameters,
+  type GetResolverError,
+  type GetResolverParameters,
+  type GetResolverResult,
   type ReadBatch,
   type ReadBatchError,
   type ReadBatchOptions,
