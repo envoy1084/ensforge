@@ -12,9 +12,9 @@ package. React providers and hooks belong in the future `@ensforge/react` packag
 
 The package is private while its initial configuration and action APIs are being implemented.
 
-## Planned API convention
+## API convention
 
-Finite asynchronous actions will expose one Promise-callable symbol with the canonical Effect on a
+Finite asynchronous actions expose one Promise-callable symbol with the canonical Effect on a
 readonly `.effect` property:
 
 ```ts
@@ -22,8 +22,8 @@ const owner = await getOwner(config, { name: "example.eth" });
 const owner = yield * getOwner.effect(config, { name: "example.eth" });
 ```
 
-Batchable reads will expose `.request(parameters)`, and explicitly batchable writes will expose
-`.call(parameters)`. No domain actions are exported by the scaffold phase.
+Batchable reads expose pure `.request(parameters)` descriptors, and explicitly batchable writes
+expose pure `.call(parameters)` intents. Constructing either value performs no I/O.
 
 ## Commands
 
