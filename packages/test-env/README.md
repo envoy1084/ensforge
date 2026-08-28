@@ -6,7 +6,8 @@ The package will manage a pinned combined ENS v1 and ENS v2 Anvil deployment, di
 addresses, seed deterministic names, and isolate tests with EVM snapshots. It is a workspace-only
 package and is never published.
 
-The package currently provides:
+The package provides one Promise-based entry point that starts the pinned devnet, validates its
+deployments, seeds deterministic fixtures, and captures the reset baseline before resolving.
 
 - verification of the exact contracts-v2 repository, commit, and recursive submodule state;
 - cached Docker image builds from the ignored `.repos/ens-contracts-v2` checkout;
@@ -23,34 +24,28 @@ The package currently provides:
 - scoped, idempotent container cleanup.
 
 ```ts
-import { createDevnetEnvironment, DockerEngine, startDevnet } from "@ensforge/test-env";
-import { Effect } from "effect";
+import { startEnsDevnet } from "@ensforge/test-env";
 
-const program = Effect.gen(function* () {
-  const devnet = yield* startDevnet();
-  const environment = yield* createDevnetEnvironment(devnet);
-  return {
-    owner: environment.accounts.owner,
-    publicClient: environment.clients.publicClient,
-    v1Config: environment.configs.v1,
-    v2Config: environment.configs.v2,
-  };
-});
+await using devnet = await startEnsDevnet();
 
-const result = await Effect.runPromise(
-  Effect.scoped(program).pipe(Effect.provide(DockerEngine.layer)),
-);
+const owner = devnet.accounts.owner;
+const publicClient = devnet.clients.publicClient;
+const v2Config = devnet.configs.v2;
+const activeName = devnet.fixtures.v2.active;
+
+await devnet.increaseTime(60);
+await devnet.mine();
+await devnet.reset();
 ```
 
 The default local build policy is `if-missing`. Use `always` when deliberately rebuilding a changed
 pinned source. CI pulls `ensDevnetPublishedImage` by its immutable digest and starts it with the
 `never` build policy, so CI never checks out or compiles the contracts repositories.
 
-Integration suites call `seedFixtures(environment)` once, then call `environment.state.reset` from
-`beforeEach`. The reset immediately takes a replacement baseline because Anvil consumes snapshot
-identifiers on revert. The returned typed manifest describes every seeded name, owner, protocol,
-resolver state, lifecycle state, and expiry. Focused `seedV1Fixtures` and `seedV2Fixtures` exports are
-also available when a suite needs only part of the topology.
+Integration suites normally call `devnet.reset()` from `beforeEach`. Reset immediately takes a
+replacement baseline because Anvil consumes snapshot identifiers on revert. `devnet.fixtures`
+describes every seeded name, owner, protocol, resolver state, lifecycle state, and expiry. The
+container is removed by `await using`, or explicitly with the idempotent `devnet.stop()` method.
 
 ## Publishing the CI image
 
