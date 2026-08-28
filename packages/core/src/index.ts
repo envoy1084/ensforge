@@ -62,6 +62,7 @@ export {
   AbiContentType,
   AbiRecordData,
   AddressRecordData,
+  Bytes32,
   CanonicalNameIdentity,
   CoinType,
   ContentHash,
