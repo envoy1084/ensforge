@@ -76,10 +76,42 @@ export interface ResolverRecordFixtureManifest {
   readonly v2: ResolverRecordsFixture;
 }
 
+export interface PermissionFixtureManifest {
+  readonly operator: Address;
+  readonly unauthorized: Address;
+  readonly v1: {
+    readonly resolverDelegate: { readonly name: string; readonly node: Hex };
+    readonly tokenApproval: { readonly name: string; readonly tokenId: bigint };
+    readonly wrapperOperator: true;
+  };
+  readonly v2: {
+    readonly registryOperator: true;
+    readonly resolverDelegate: { readonly name: string; readonly node: Hex };
+    readonly scopedRole: { readonly name: string; readonly role: bigint; readonly tokenId: bigint };
+  };
+}
+
+export interface ReverseFixture {
+  readonly address: Address;
+  readonly name?: string;
+  readonly forwardName?: string;
+  readonly verified?: boolean;
+}
+
+export interface ReverseFixtureManifest {
+  readonly verifiedV1: ReverseFixture;
+  readonly verifiedV2: ReverseFixture;
+  readonly unverified: ReverseFixture;
+  readonly missing: ReverseFixture;
+  readonly contractMissing: ReverseFixture;
+}
+
 export interface EnsFixtureManifest {
   readonly seededAt: bigint;
   readonly v1: EnsV1FixtureManifest;
   readonly v2?: EnsV2FixtureManifest;
   readonly migration?: EnsMigrationFixtureManifest;
   readonly records?: ResolverRecordFixtureManifest;
+  readonly permissions?: PermissionFixtureManifest;
+  readonly reverse?: ReverseFixtureManifest;
 }

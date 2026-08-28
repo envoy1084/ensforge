@@ -1,0 +1,58 @@
+import { Effect } from "effect";
+
+import { reverseRegistrarV1Abi } from "@ensforge/contracts/v1";
+import { defaultReverseRegistrarAdapterV2Abi } from "@ensforge/contracts/v2";
+
+import type { DevnetEnvironment } from "../environment.js";
+import { seedTransaction } from "./contract.js";
+import type { ReverseFixtureManifest } from "./manifest.js";
+
+export const seedReverseFixtures = Effect.fn("seedReverseFixtures")(function* (
+  environment: DevnetEnvironment,
+) {
+  yield* seedTransaction(
+    environment,
+    {
+      abi: defaultReverseRegistrarAdapterV2Abi,
+      address: environment.deployments.v2.contracts.defaultReverseRegistrarAdapter,
+      functionName: "setName",
+      args: [environment.accounts.owner2, "v2-owner2.eth"],
+    },
+    "Unable to seed the verified ENS v2 reverse record",
+    "owner2",
+  );
+  yield* seedTransaction(
+    environment,
+    {
+      abi: reverseRegistrarV1Abi,
+      address: environment.deployments.v1.contracts.reverseRegistrar,
+      functionName: "setName",
+      args: ["v1-unwrapped.eth"],
+    },
+    "Unable to seed the unverified ENS reverse record",
+    "operator",
+  );
+
+  return {
+    verifiedV1: {
+      address: environment.accounts.owner,
+      forwardName: "v1-unwrapped.eth",
+      name: "v1-unwrapped.eth",
+      verified: true,
+    },
+    verifiedV2: {
+      address: environment.accounts.owner2,
+      forwardName: "v2-owner2.eth",
+      name: "v2-owner2.eth",
+      verified: true,
+    },
+    unverified: {
+      address: environment.accounts.operator,
+      forwardName: "v1-unwrapped.eth",
+      name: "v1-unwrapped.eth",
+      verified: false,
+    },
+    missing: { address: environment.accounts.unauthorized },
+    contractMissing: { address: environment.deployments.v2.contracts.publicResolver },
+  } satisfies ReverseFixtureManifest;
+});

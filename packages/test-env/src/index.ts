@@ -28,4 +28,7 @@ export {
   type EnsV2FixtureManifest,
   type FixtureLifecycle,
   type FixtureResolverState,
+  type PermissionFixtureManifest,
+  type ReverseFixture,
+  type ReverseFixtureManifest,
 } from "./fixtures/index.js";

@@ -1,5 +1,7 @@
 export { seedFixtures } from "./seed.js";
 export { seedResolverRecordFixtures } from "./resolver-records.js";
+export { seedPermissionFixtures } from "./permissions.js";
+export { seedReverseFixtures } from "./reverse.js";
 export { seedV1Fixtures } from "./v1.js";
 export { seedV2Fixtures } from "./v2.js";
 export type {
@@ -12,4 +14,7 @@ export type {
   EnsV2FixtureManifest,
   FixtureLifecycle,
   FixtureResolverState,
+  PermissionFixtureManifest,
+  ReverseFixture,
+  ReverseFixtureManifest,
 } from "./manifest.js";
