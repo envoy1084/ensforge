@@ -14,12 +14,17 @@ import { DevnetDeploymentAddress, type DevnetDeploymentManifest } from "./schema
 const DevnetRequiredDeployments = Schema.Struct({
   BaseRegistrarImplementation: DevnetDeploymentAddress,
   BatchRegistrar: DevnetDeploymentAddress,
+  BatchGatewayProvider: DevnetDeploymentAddress,
   ContractNamer: DevnetDeploymentAddress,
   ContractNamer_Implementation: DevnetDeploymentAddress,
   DefaultReverseRegistrar: DevnetDeploymentAddress,
   DefaultReverseRegistrarAdapter: DevnetDeploymentAddress,
   DNSRegistrar: DevnetDeploymentAddress,
+  DNSAliasResolver: DevnetDeploymentAddress,
+  DNSSECGatewayProvider: DevnetDeploymentAddress,
   DNSSECImpl: DevnetDeploymentAddress,
+  DNSTLDResolver: DevnetDeploymentAddress,
+  DNSTXTResolver: DevnetDeploymentAddress,
   DNSV1MirrorRootBatchRegistrar: DevnetDeploymentAddress,
   ENSRegistry: DevnetDeploymentAddress,
   ENSV1Resolver: DevnetDeploymentAddress,
@@ -46,6 +51,7 @@ const DevnetRequiredDeployments = Schema.Struct({
   ReverseRegistrar: DevnetDeploymentAddress,
   ReverseRegistrarAdapter: DevnetDeploymentAddress,
   RootRegistry: DevnetDeploymentAddress,
+  SimplePublicSuffixList: DevnetDeploymentAddress,
   StandardRentPriceOracle: DevnetDeploymentAddress,
   StaticBulkRenewal: DevnetDeploymentAddress,
   UniversalResolver: DevnetDeploymentAddress,
@@ -62,6 +68,17 @@ export interface DevnetDeployments {
   readonly v2: EnsV2Deployment;
   readonly multicall3: Address;
   readonly requiredAddresses: ReadonlyArray<Address>;
+  readonly dns: {
+    readonly aliasResolver: Address;
+    readonly batchGatewayProvider: Address;
+    readonly dnssecGatewayProvider: Address;
+    readonly dnssecOracle: Address;
+    readonly registrar: Address;
+    readonly rootBatchRegistrar: Address;
+    readonly publicSuffixList: Address;
+    readonly tldResolver: Address;
+    readonly txtResolver: Address;
+  };
 }
 
 export const mapDevnetDeployments = Effect.fn("mapDevnetDeployments")(function* (
@@ -160,6 +177,17 @@ export const mapDevnetDeployments = Effect.fn("mapDevnetDeployments")(function* 
     v1,
     v2,
     multicall3: source.Multicall3,
+    dns: {
+      aliasResolver: source.DNSAliasResolver,
+      batchGatewayProvider: source.BatchGatewayProvider,
+      dnssecGatewayProvider: source.DNSSECGatewayProvider,
+      dnssecOracle: source.DNSSECImpl,
+      registrar: source.DNSRegistrar,
+      rootBatchRegistrar: source.DNSV1MirrorRootBatchRegistrar,
+      publicSuffixList: source.SimplePublicSuffixList,
+      tldResolver: source.DNSTLDResolver,
+      txtResolver: source.DNSTXTResolver,
+    },
     requiredAddresses: [...new Set(Object.values(source))],
   } satisfies DevnetDeployments;
 });

@@ -128,6 +128,39 @@ export interface RegistrationFixtureManifest {
   readonly v2: RegistrationCommitmentFixture;
 }
 
+export interface DnsFixtureManifest {
+  readonly contracts: {
+    readonly aliasResolver: Address;
+    readonly batchGatewayProvider: Address;
+    readonly dnssecGatewayProvider: Address;
+    readonly dnssecOracle: Address;
+    readonly registrar: Address;
+    readonly rootBatchRegistrar: Address;
+    readonly publicSuffixList: Address;
+    readonly tldResolver: Address;
+    readonly txtResolver: Address;
+  };
+  readonly localRecord: ResolverRecordsFixture["dns"];
+  readonly routedTlds: ReadonlyArray<string>;
+  readonly externalProofs: {
+    readonly deterministic: false;
+    readonly exampleNames: ReadonlyArray<string>;
+    readonly reason: string;
+  };
+}
+
+export interface EventFixtureManifest {
+  readonly contracts: Readonly<Record<string, Address>>;
+  readonly fromBlock: bigint;
+  readonly names: Readonly<
+    Record<
+      "commitment" | "migration" | "records" | "registration" | "subnames",
+      ReadonlyArray<string>
+    >
+  >;
+  readonly toBlock: bigint;
+}
+
 export interface EnsFixtureManifest {
   readonly seededAt: bigint;
   readonly v1: EnsV1FixtureManifest;
@@ -137,4 +170,6 @@ export interface EnsFixtureManifest {
   readonly permissions?: PermissionFixtureManifest;
   readonly reverse?: ReverseFixtureManifest;
   readonly registration?: RegistrationFixtureManifest;
+  readonly dns?: DnsFixtureManifest;
+  readonly events?: EventFixtureManifest;
 }

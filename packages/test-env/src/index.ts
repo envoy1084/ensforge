@@ -33,4 +33,6 @@ export {
   type ReverseFixtureManifest,
   type RegistrationCommitmentFixture,
   type RegistrationFixtureManifest,
+  type DnsFixtureManifest,
+  type EventFixtureManifest,
 } from "./fixtures/index.js";
