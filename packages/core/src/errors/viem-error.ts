@@ -53,6 +53,9 @@ const findCause = <ErrorClass extends Error>(
   );
 };
 
+export const isContractRevert = (cause: unknown, errorName: string): boolean =>
+  findCause(cause, ContractFunctionRevertedError)?.data?.errorName === errorName;
+
 const messageFromCause = (cause: unknown): string => {
   if (cause instanceof BaseError) {
     return cause.shortMessage;

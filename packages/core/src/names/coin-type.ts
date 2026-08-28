@@ -20,7 +20,7 @@ export type CoinTypeNamespace =
       readonly coinType: CoinTypeValue;
     };
 
-const decodeCoinType = (coinType: bigint): CoinTypeValue => {
+export const parseCoinType = (coinType: bigint): CoinTypeValue => {
   try {
     return Schema.decodeSync(CoinType)(coinType);
   } catch {
@@ -40,7 +40,7 @@ export const toCoinType = (chainId: number): CoinTypeValue => {
   }
 
   try {
-    return decodeCoinType(viemToCoinType(chainId));
+    return parseCoinType(viemToCoinType(chainId));
   } catch (error) {
     if (error instanceof CodecError) throw error;
     throw new CodecError({
@@ -51,7 +51,7 @@ export const toCoinType = (chainId: number): CoinTypeValue => {
 };
 
 export const fromCoinType = (coinType: bigint | CoinTypeValue): CoinTypeNamespace => {
-  const decodedCoinType = decodeCoinType(coinType);
+  const decodedCoinType = parseCoinType(coinType);
 
   if (decodedCoinType === 60n) {
     return Object.freeze({ namespace: "evm", chainId: 1 });

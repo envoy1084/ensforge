@@ -6,6 +6,7 @@ export * from "./dns-record.js";
 export * from "./dns-zone.js";
 export * from "./extended-resolver.js";
 export * from "./interface.js";
+export * from "./multicall.js";
 export * from "./name.js";
 export * from "./pubkey.js";
 export * from "./text.js";

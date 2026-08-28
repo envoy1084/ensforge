@@ -5,7 +5,7 @@ export default defineVitestConfig({
     conditions: ["workspace-source"],
   },
   ssr: {
-    noExternal: ["@ensforge/test-env"],
+    noExternal: [/^@ensforge\/contracts(?:\/.*)?$/, "@ensforge/test-env"],
   },
   test: {
     fileParallelism: false,

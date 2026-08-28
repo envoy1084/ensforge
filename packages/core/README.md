@@ -88,6 +88,27 @@ const resolverRequest = getResolver.request({ name: "sub.example.eth" });
 The `.request` form can be combined with other semantic reads in `readBatch`; compatible primitive
 contract reads share one snapshot and Multicall3 execution.
 
+## Addresses
+
+`getAddress` and `getAddresses` resolve address records through the deployment's Universal
+Resolver. V1 uses the V1 resolver, while V2 uses its canonical resolver for native, migrated, and
+RESERVED names. Direct Universal Resolver execution leaves viem's CCIP-Read handling active,
+including when an address request is part of `readBatch`.
+
+```ts
+import { getAddress, getAddresses } from "@ensforge/core";
+
+const eth = await getAddress(config, { name: "example.eth" });
+const records = await getAddresses(config, {
+  name: "example.eth",
+  coinTypes: [60n, 0n],
+});
+```
+
+Every result contains its coin type, decoded address, and raw resolver bytes. Unset records retain
+their requested coin type and return `null` for both `address` and `raw`. `getAddresses` deduplicates
+resolver calls internally and restores the caller's original order, including duplicates.
+
 ## Expiry
 
 `getExpiry` presents one lifecycle boundary across ENSv1, ENSv2, and unmigrated reserved names. It

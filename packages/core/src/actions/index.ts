@@ -1,4 +1,13 @@
 export {
+  AddressResult,
+  getAddress,
+  getAddresses,
+  type GetAddressError,
+  type GetAddressParameters,
+  type GetAddressesError,
+  type GetAddressesParameters,
+} from "./get-address/index.js";
+export {
   ExpiryResult,
   ExpirySource,
   getExpiry,

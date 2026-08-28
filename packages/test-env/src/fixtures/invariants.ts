@@ -22,6 +22,7 @@ export const verifyFixtureManifest = async (
     v2HasRole,
     v1CommitmentAt,
     v2CommitmentAt,
+    reservedAddress,
   ] = await Promise.all([
     environment.clients.publicClient.readContract({
       abi: baseRegistrarV1Abi,
@@ -75,6 +76,12 @@ export const verifyFixtureManifest = async (
       functionName: "commitmentAt",
       args: [fixtures.registration.v2.commitment],
     }),
+    environment.clients.publicClient.readContract({
+      abi: publicResolverV1Abi,
+      address: fixtures.records.reserved.resolver,
+      functionName: "addr",
+      args: [namehash(fixtures.records.reserved.name)],
+    }),
   ]);
 
   const invalid =
@@ -82,6 +89,7 @@ export const verifyFixtureManifest = async (
     !isAddressEqual(v2State.latestOwner, fixtures.v2.active.owner) ||
     v1Email !== fixtures.records.v1.texts.email ||
     v2Email !== fixtures.records.v2.texts.email ||
+    !isAddressEqual(reservedAddress, fixtures.records.reserved.addresses.eth) ||
     !isAddressEqual(v1Approved, fixtures.permissions.operator) ||
     !v2HasRole ||
     v1CommitmentAt === 0n ||
@@ -91,6 +99,7 @@ export const verifyFixtureManifest = async (
     throw new Error("The completed ENS fixture manifest failed invariant verification", {
       cause: {
         v1Approved,
+        reservedAddress,
         v1CommitmentAt,
         v1Email,
         v1Owner,

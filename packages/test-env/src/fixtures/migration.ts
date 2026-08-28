@@ -1,6 +1,11 @@
 import { Effect } from "effect";
 
-import { baseRegistrarV1Abi, nameWrapperFuses, nameWrapperV1Abi } from "@ensforge/contracts/v1";
+import {
+  baseRegistrarV1Abi,
+  ensRegistryV1Abi,
+  nameWrapperFuses,
+  nameWrapperV1Abi,
+} from "@ensforge/contracts/v1";
 import { ethRegistryV2Abi, wrapperRegistryV2Abi } from "@ensforge/contracts/v2";
 import { encodeAbiParameters, labelhash, namehash, zeroAddress, type Address } from "viem";
 
@@ -129,6 +134,20 @@ export const seedMigrationFixtures = Effect.fn("seedMigrationFixtures")(function
     "v2-reserved-unwrapped",
   );
   yield* reserveV2(environment, "v2-reserved-unwrapped", reservedUnwrappedExpiry);
+  yield* seedTransaction(
+    environment,
+    {
+      abi: ensRegistryV1Abi,
+      address: environment.deployments.v1.contracts.registry,
+      functionName: "setResolver",
+      args: [
+        namehash("v2-reserved-unwrapped.eth"),
+        environment.deployments.v1.contracts.publicResolver,
+      ],
+    },
+    "Unable to set the V1 resolver for the reserved ENS migration fixture",
+    "owner",
+  );
 
   const reservedWrappedExpiry = yield* registerV1MigrationName(environment, "v2-reserved-wrapped");
   yield* wrapV1(environment, "v2-reserved-wrapped", publicResolver);

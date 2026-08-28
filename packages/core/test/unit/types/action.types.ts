@@ -6,6 +6,8 @@ import {
   defineAction,
   defineReadAction,
   defineWriteAction,
+  getAddress,
+  getAddresses,
   getExpiry,
   getResolver,
   readBatch,
@@ -14,6 +16,9 @@ import {
   type EnsWriteIntent,
   type EnsforgeConfig,
   type ExpiryResult,
+  type AddressResult,
+  type GetAddressError,
+  type GetAddressesError,
   type GetExpiryError,
   type GetResolverError,
   type GetResolverResult,
@@ -45,6 +50,19 @@ expectTypeOf(getExpiry.effect(config, { name: "example.eth" })).toEqualTypeOf<
 >();
 expectTypeOf(getExpiry.request({ name: "example.eth" })).toEqualTypeOf<
   EnsReadRequest<ExpiryResult | null, GetExpiryError>
+>();
+expectTypeOf(getAddress(config, { name: "example.eth" })).toEqualTypeOf<Promise<AddressResult>>();
+expectTypeOf(getAddress.effect(config, { name: "example.eth" })).toEqualTypeOf<
+  Effect.Effect<AddressResult, GetAddressError>
+>();
+expectTypeOf(getAddress.request({ name: "example.eth" })).toEqualTypeOf<
+  EnsReadRequest<AddressResult, GetAddressError>
+>();
+expectTypeOf(getAddresses(config, { name: "example.eth", coinTypes: [60n] })).toEqualTypeOf<
+  Promise<ReadonlyArray<AddressResult>>
+>();
+expectTypeOf(getAddresses.effect(config, { name: "example.eth", coinTypes: [60n] })).toEqualTypeOf<
+  Effect.Effect<ReadonlyArray<AddressResult>, GetAddressesError>
 >();
 expectTypeOf(getResolver(config, { name: "example.eth" })).toEqualTypeOf<
   Promise<GetResolverResult>

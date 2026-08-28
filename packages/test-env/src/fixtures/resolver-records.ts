@@ -138,5 +138,10 @@ export const seedResolverRecordFixtures = Effect.fn("seedResolverRecordFixtures"
       "v2-migrated-locked.eth",
       environment.deployments.v2.contracts.publicResolver,
     ),
+    reserved: yield* seedResolverRecords(
+      environment,
+      "v2-reserved-unwrapped.eth",
+      environment.deployments.v1.contracts.publicResolver,
+    ),
   };
 });

@@ -76,6 +76,7 @@ export interface ResolverRecordsFixture {
 export interface ResolverRecordFixtureManifest {
   readonly v1: ResolverRecordsFixture;
   readonly v2: ResolverRecordsFixture;
+  readonly reserved: ResolverRecordsFixture;
 }
 
 export interface PermissionFixtureManifest {
