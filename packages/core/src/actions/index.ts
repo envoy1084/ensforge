@@ -8,6 +8,15 @@ export {
   type GetAddressesParameters,
 } from "./get-address/index.js";
 export {
+  getText,
+  getTexts,
+  TextResult,
+  type GetTextError,
+  type GetTextParameters,
+  type GetTextsError,
+  type GetTextsParameters,
+} from "./get-text/index.js";
+export {
   ExpiryResult,
   ExpirySource,
   getExpiry,

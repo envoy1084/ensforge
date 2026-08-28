@@ -109,6 +109,25 @@ Every result contains its coin type, decoded address, and raw resolver bytes. Un
 their requested coin type and return `null` for both `address` and `raw`. `getAddresses` deduplicates
 resolver calls internally and restores the caller's original order, including duplicates.
 
+## Text records
+
+`getText` and `getTexts` use the same V1/V2 Universal Resolver and CCIP-Read path as address
+records. Text keys are case-sensitive. Empty resolver strings and missing resolvers become
+structured `null` values rather than errors.
+
+```ts
+import { getText, getTexts } from "@ensforge/core";
+
+const email = await getText(config, { name: "example.eth", key: "email" });
+const profile = await getTexts(config, {
+  name: "example.eth",
+  keys: ["avatar", "description", "url"],
+});
+```
+
+`getTexts` deduplicates resolver calls while preserving the requested key order and duplicates in
+its returned `{ key, value }[]` result.
+
 ## Expiry
 
 `getExpiry` presents one lifecycle boundary across ENSv1, ENSv2, and unmigrated reserved names. It

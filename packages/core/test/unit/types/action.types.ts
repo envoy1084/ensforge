@@ -10,6 +10,8 @@ import {
   getAddresses,
   getExpiry,
   getResolver,
+  getText,
+  getTexts,
   readBatch,
   readBatchSettled,
   type EnsReadRequest,
@@ -22,8 +24,11 @@ import {
   type GetExpiryError,
   type GetResolverError,
   type GetResolverResult,
+  type GetTextError,
+  type GetTextsError,
   type ReadBatchOutcome,
   type RpcError,
+  type TextResult,
 } from "../../../src/index.js";
 
 type TestFailure = { readonly _tag: "TestFailure" };
@@ -72,6 +77,21 @@ expectTypeOf(getResolver.effect(config, { name: "example.eth" })).toEqualTypeOf<
 >();
 expectTypeOf(getResolver.request({ name: "example.eth" })).toEqualTypeOf<
   EnsReadRequest<GetResolverResult, GetResolverError>
+>();
+expectTypeOf(getText(config, { name: "example.eth", key: "email" })).toEqualTypeOf<
+  Promise<TextResult>
+>();
+expectTypeOf(getText.effect(config, { name: "example.eth", key: "email" })).toEqualTypeOf<
+  Effect.Effect<TextResult, GetTextError>
+>();
+expectTypeOf(getText.request({ name: "example.eth", key: "email" })).toEqualTypeOf<
+  EnsReadRequest<TextResult, GetTextError>
+>();
+expectTypeOf(getTexts(config, { name: "example.eth", keys: ["email"] })).toEqualTypeOf<
+  Promise<ReadonlyArray<TextResult>>
+>();
+expectTypeOf(getTexts.effect(config, { name: "example.eth", keys: ["email"] })).toEqualTypeOf<
+  Effect.Effect<ReadonlyArray<TextResult>, GetTextsError>
 >();
 
 const readRequest = readAction.request({ value: 1 });

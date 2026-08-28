@@ -1,24 +1,17 @@
 import { Effect, Schema } from "effect";
 
-import {
-  addressResolverAbi,
-  addrResolverAbi,
-  multicallResolverAbi,
-} from "@ensforge/contracts/resolver-profiles";
+import { addressResolverAbi, addrResolverAbi } from "@ensforge/contracts/resolver-profiles";
 import { decodeFunctionResult, encodeFunctionData, zeroAddress, type Hex } from "viem";
 
 import { CodecError } from "../../errors/codec-error.js";
 import { ContractError } from "../../errors/contract-error.js";
-import { isContractRevert } from "../../errors/viem-error.js";
-import { resolveName } from "../../internal/resolver/resolve-name.js";
+import { resolveRecords } from "../../internal/resolver/resolve-records.js";
 import { decodeAddressRecord } from "../../names/address-record.js";
 import { parseCoinType } from "../../names/coin-type.js";
-import { dnsEncodeName } from "../../names/dns.js";
 import { namehash } from "../../names/hashes.js";
 import type { CoinType } from "../../schemas/coin-type.js";
 import type { NormalizedName } from "../../schemas/name.js";
 import { AddressRecordData } from "../../schemas/records.js";
-import { DeploymentService } from "../../services/deployment.js";
 
 const decodeRecord = Effect.fn("decodeAddressResult")(function* (
   coinType: CoinType,
@@ -76,7 +69,6 @@ export const resolveAddresses = Effect.fn("resolveAddresses")(function* (
   name: NormalizedName,
   coinTypes: ReadonlyArray<bigint>,
 ) {
-  const deployment = yield* DeploymentService;
   const normalizedCoinTypes = yield* Effect.forEach(coinTypes, (coinType) =>
     Effect.try({
       try: () => parseCoinType(coinType),
@@ -96,7 +88,6 @@ export const resolveAddresses = Effect.fn("resolveAddresses")(function* (
   );
 
   const node = namehash(name);
-  const dnsName = yield* dnsEncodeName.effect(name);
   const calls = yield* Effect.try({
     try: () => uniqueCoinTypes.map((coinType) => encodeAddressCall(node, coinType)),
     catch: (cause) =>
@@ -108,66 +99,10 @@ export const resolveAddresses = Effect.fn("resolveAddresses")(function* (
             cause,
           }),
   });
-  const firstCall = calls[0];
-  if (firstCall === undefined) return [];
+  const results = yield* resolveRecords(name, calls);
 
-  const data =
-    calls.length === 1
-      ? firstCall
-      : yield* Effect.try({
-          try: () =>
-            encodeFunctionData({
-              abi: multicallResolverAbi,
-              functionName: "multicall",
-              args: [calls],
-            }),
-          catch: (cause) =>
-            new ContractError({
-              code: "ENCODE_FAILED",
-              message: "Unable to encode the resolver address multicall",
-              cause,
-            }),
-        });
-  const protocol = deployment.profile.protocol;
-  const universalResolver =
-    protocol === "v1"
-      ? deployment.profile.v1.contracts.universalResolver
-      : deployment.profile.v2.contracts.universalResolver;
-  const resolved = yield* resolveName({ universalResolver, protocol, name: dnsName, data }).pipe(
-    Effect.catchIf(
-      (error) => isContractRevert(error.cause, "ResolverNotFound"),
-      () => Effect.succeed(null),
-    ),
-  );
-
-  if (resolved === null) {
+  if (results === null) {
     return normalizedCoinTypes.map((coinType) => ({ coinType, address: null, raw: null }));
-  }
-
-  const [encodedResults] = resolved;
-  const results = yield* Effect.try({
-    try: () =>
-      calls.length === 1
-        ? [encodedResults]
-        : decodeFunctionResult({
-            abi: multicallResolverAbi,
-            functionName: "multicall",
-            data: encodedResults,
-          }),
-    catch: (cause) =>
-      new ContractError({
-        code: "DECODE_FAILED",
-        message: "Unable to decode ENS address resolver results",
-        cause,
-      }),
-  });
-
-  if (results.length !== uniqueCoinTypes.length) {
-    return yield* new ContractError({
-      code: "DECODE_FAILED",
-      message: "Resolver returned fewer address records than requested",
-      cause: { expected: uniqueCoinTypes.length, actual: results.length },
-    });
   }
 
   const uniqueResults = yield* Effect.forEach(uniqueCoinTypes, (coinType, index) => {
@@ -175,7 +110,7 @@ export const resolveAddresses = Effect.fn("resolveAddresses")(function* (
     return result === undefined
       ? new ContractError({
           code: "DECODE_FAILED",
-          message: "Resolver returned fewer address records than requested",
+          message: "Resolver returned an unexpected number of address records",
           cause: { index },
         })
       : decodeRecord(coinType, result);
