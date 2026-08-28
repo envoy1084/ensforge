@@ -3,6 +3,7 @@ import { Effect } from "effect";
 import {
   enhancedAccessControlRoles,
   ethRegistryV2Abi,
+  registryRoles,
   userRegistryV2Abi,
   verifiableFactoryV2Abi,
 } from "@ensforge/contracts/v2";
@@ -17,6 +18,7 @@ import { seedMigrationFixtures } from "./migration.js";
 const day = 86_400;
 const v2GracePeriod = 28 * day;
 const activeDuration = BigInt(365 * day);
+const v2OwnerRoles = enhancedAccessControlRoles.allRoles & ~registryRoles.wasReserved;
 
 const julyUserRegistryInitializeAbi = [
   {
@@ -67,7 +69,7 @@ const registerV2 = Effect.fn("registerV2")(function* (
       abi: ethRegistryV2Abi,
       address: environment.deployments.v2.contracts.ethRegistry,
       functionName: "register",
-      args: [label, owner, zeroAddress, resolver, enhancedAccessControlRoles.allRoles, expiry],
+      args: [label, owner, zeroAddress, resolver, v2OwnerRoles, expiry],
     },
     `Unable to register ${label}.eth in ENS v2`,
   );
@@ -193,7 +195,7 @@ export const seedV2Fixtures = Effect.fn("seedV2Fixtures")(function* (
         environment.accounts.owner,
         zeroAddress,
         publicResolver,
-        enhancedAccessControlRoles.allRoles,
+        v2OwnerRoles,
         activeExpiry,
       ],
     },
@@ -211,7 +213,7 @@ export const seedV2Fixtures = Effect.fn("seedV2Fixtures")(function* (
         environment.accounts.owner,
         zeroAddress,
         publicResolver,
-        enhancedAccessControlRoles.allRoles,
+        v2OwnerRoles,
         activeExpiry,
       ],
     },
@@ -229,7 +231,7 @@ export const seedV2Fixtures = Effect.fn("seedV2Fixtures")(function* (
         environment.accounts.owner2,
         zeroAddress,
         zeroAddress,
-        enhancedAccessControlRoles.allRoles,
+        v2OwnerRoles,
         activeExpiry,
       ],
     },
