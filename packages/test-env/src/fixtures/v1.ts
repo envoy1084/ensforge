@@ -9,6 +9,7 @@ import {
 } from "@ensforge/contracts/v1";
 import { labelhash, namehash, zeroAddress } from "viem";
 
+import type { DevnetAccountRole } from "../accounts/accounts.js";
 import type { DevnetEnvironment } from "../environment.js";
 import { TestEnvironmentError } from "../errors/test-environment-error.js";
 import { seedRead, seedTransaction } from "./contract.js";
@@ -48,6 +49,7 @@ const registerV1 = Effect.fn("registerV1")(function* (
   environment: DevnetEnvironment,
   label: string,
   duration: bigint,
+  owner = environment.accounts.owner,
 ) {
   yield* seedTransaction(
     environment,
@@ -55,7 +57,7 @@ const registerV1 = Effect.fn("registerV1")(function* (
       abi: baseRegistrarV1Abi,
       address: environment.deployments.v1.contracts.baseRegistrar,
       functionName: "register",
-      args: [BigInt(labelhash(label)), environment.accounts.owner, duration],
+      args: [BigInt(labelhash(label)), owner, duration],
     },
     `Unable to register ${label}.eth in ENS v1`,
   );
@@ -75,8 +77,10 @@ const activeV1Fixture = Effect.fn("activeV1Fixture")(function* (
   environment: DevnetEnvironment,
   label: string,
   resolver = environment.deployments.v1.contracts.publicResolver,
+  ownerRole: DevnetAccountRole = "owner",
 ) {
-  const expiry = yield* registerV1(environment, label, activeDuration);
+  const owner = environment.accounts[ownerRole];
+  const expiry = yield* registerV1(environment, label, activeDuration, owner);
   const node = namehash(`${label}.eth`);
   if (resolver !== zeroAddress) {
     yield* seedTransaction(
@@ -88,7 +92,7 @@ const activeV1Fixture = Effect.fn("activeV1Fixture")(function* (
         args: [node, resolver],
       },
       `Unable to set the resolver for ${label}.eth`,
-      "owner",
+      ownerRole,
     );
     yield* seedTransaction(
       environment,
@@ -96,10 +100,10 @@ const activeV1Fixture = Effect.fn("activeV1Fixture")(function* (
         abi: publicResolverV1Abi,
         address: resolver,
         functionName: "setAddr",
-        args: [node, environment.accounts.owner],
+        args: [node, owner],
       },
       `Unable to set the address record for ${label}.eth`,
-      "owner",
+      ownerRole,
     );
   }
   return { expiry, node };
@@ -137,6 +141,42 @@ export const seedV1Fixtures = Effect.fn("seedV1Fixtures")(function* (
   const activeUnwrapped = yield* activeV1Fixture(environment, "v1-unwrapped");
   const noResolver = yield* activeV1Fixture(environment, "v1-no-resolver", zeroAddress);
   const wrapped = yield* activeV1Fixture(environment, "v1-wrapped");
+  const differentOwner = yield* activeV1Fixture(
+    environment,
+    "v1-owner2",
+    environment.deployments.v1.contracts.publicResolver,
+    "owner2",
+  );
+  const writeReady = yield* activeV1Fixture(environment, "v1-write-ready", zeroAddress);
+
+  yield* seedTransaction(
+    environment,
+    {
+      abi: ensRegistryV1Abi,
+      address: environment.deployments.v1.contracts.registry,
+      functionName: "setSubnodeRecord",
+      args: [
+        namehash("v1-unwrapped.eth"),
+        labelhash("sub"),
+        environment.accounts.owner2,
+        environment.deployments.v1.contracts.publicResolver,
+        60n,
+      ],
+    },
+    "Unable to create the unwrapped ENS v1 subname",
+    "owner",
+  );
+  yield* seedTransaction(
+    environment,
+    {
+      abi: publicResolverV1Abi,
+      address: environment.deployments.v1.contracts.publicResolver,
+      functionName: "setAddr",
+      args: [namehash("sub.v1-unwrapped.eth"), environment.accounts.owner2],
+    },
+    "Unable to set the unwrapped ENS v1 subname address",
+    "owner2",
+  );
 
   yield* seedTransaction(
     environment,
@@ -196,6 +236,14 @@ export const seedV1Fixtures = Effect.fn("seedV1Fixtures")(function* (
       "Unable to read the seeded ENS v1 block",
     )).timestamp,
     v1: {
+      available: {
+        name: "v1-available.eth",
+        owner: zeroAddress,
+        protocol: "v1",
+        lifecycle: "available",
+        resolver: zeroAddress,
+        resolverState: "missing",
+      },
       activeUnwrapped: v1Fixture(
         "v1-unwrapped.eth",
         "active",
@@ -204,6 +252,20 @@ export const seedV1Fixtures = Effect.fn("seedV1Fixtures")(function* (
         owner,
       ),
       activeWrapped: v1Fixture("v1-wrapped.eth", "active", wrapped.expiry, publicResolver, owner),
+      differentOwner: v1Fixture(
+        "v1-owner2.eth",
+        "active",
+        differentOwner.expiry,
+        publicResolver,
+        environment.accounts.owner2,
+      ),
+      unwrappedSubname: v1Fixture(
+        "sub.v1-unwrapped.eth",
+        "active",
+        activeUnwrapped.expiry,
+        publicResolver,
+        environment.accounts.owner2,
+      ),
       wrappedSubname: v1Fixture(
         "sub.v1-wrapped.eth",
         "active",
@@ -212,6 +274,7 @@ export const seedV1Fixtures = Effect.fn("seedV1Fixtures")(function* (
         environment.accounts.owner2,
       ),
       noResolver: v1Fixture("v1-no-resolver.eth", "active", noResolver.expiry, zeroAddress, owner),
+      writeReady: v1Fixture("v1-write-ready.eth", "active", writeReady.expiry, zeroAddress, owner),
       grace: v1Fixture("v1-grace.eth", "grace", graceExpiry, zeroAddress, owner),
       expired: v1Fixture("v1-expired.eth", "expired", expiredExpiry, zeroAddress, owner),
       reverse: {

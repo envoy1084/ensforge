@@ -1,6 +1,6 @@
 import type { Address, Hex } from "viem";
 
-export type FixtureLifecycle = "active" | "grace" | "expired";
+export type FixtureLifecycle = "active" | "available" | "grace" | "expired";
 export type FixtureResolverState = "own" | "inherited" | "missing";
 
 export interface EnsNameFixture {
@@ -14,10 +14,14 @@ export interface EnsNameFixture {
 }
 
 export interface EnsV1FixtureManifest {
+  readonly available: EnsNameFixture;
   readonly activeUnwrapped: EnsNameFixture;
   readonly activeWrapped: EnsNameFixture;
+  readonly differentOwner: EnsNameFixture;
+  readonly unwrappedSubname: EnsNameFixture;
   readonly wrappedSubname: EnsNameFixture;
   readonly noResolver: EnsNameFixture;
+  readonly writeReady: EnsNameFixture;
   readonly grace: EnsNameFixture;
   readonly expired: EnsNameFixture;
   readonly reverse: {
@@ -27,10 +31,15 @@ export interface EnsV1FixtureManifest {
 }
 
 export interface EnsV2FixtureManifest {
+  readonly available: EnsNameFixture;
   readonly active: EnsNameFixture;
+  readonly differentOwner: EnsNameFixture;
+  readonly expiringSoon: EnsNameFixture;
   readonly nested: EnsNameFixture;
+  readonly nestedOwnResolver: EnsNameFixture;
   readonly inheritedResolver: EnsNameFixture;
   readonly noResolver: EnsNameFixture;
+  readonly writeReady: EnsNameFixture;
   readonly grace: EnsNameFixture;
   readonly expired: EnsNameFixture;
 }

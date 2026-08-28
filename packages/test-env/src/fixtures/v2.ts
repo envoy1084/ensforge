@@ -106,6 +106,15 @@ export const seedV2Fixtures = Effect.fn("seedV2Fixtures")(function* (
   const publicResolver = environment.deployments.v2.contracts.publicResolver;
   yield* registerV2(environment, "v2-active", activeExpiry, publicResolver);
   yield* registerV2(environment, "v2-no-resolver", activeExpiry, zeroAddress);
+  yield* registerV2(
+    environment,
+    "v2-owner2",
+    activeExpiry,
+    publicResolver,
+    environment.accounts.owner2,
+  );
+  yield* registerV2(environment, "v2-expiring-soon", activeBlock.timestamp + 3_600n, zeroAddress);
+  yield* registerV2(environment, "v2-write-ready", activeExpiry, zeroAddress);
 
   const existingEnsRegistry = yield* seedRead(
     () =>
@@ -203,6 +212,24 @@ export const seedV2Fixtures = Effect.fn("seedV2Fixtures")(function* (
       address: ensRegistry,
       functionName: "register",
       args: [
+        "owned",
+        environment.accounts.owner,
+        zeroAddress,
+        publicResolver,
+        enhancedAccessControlRoles.allRoles,
+        activeExpiry,
+      ],
+    },
+    "Unable to register owned.ens.eth",
+    "owner",
+  );
+  yield* seedTransaction(
+    environment,
+    {
+      abi: userRegistryV2Abi,
+      address: ensRegistry,
+      functionName: "register",
+      args: [
         "inherited",
         environment.accounts.owner2,
         zeroAddress,
@@ -275,6 +302,14 @@ export const seedV2Fixtures = Effect.fn("seedV2Fixtures")(function* (
   }
 
   const v2 = {
+    available: {
+      name: "v2-available.eth",
+      owner: zeroAddress,
+      protocol: "v2",
+      lifecycle: "available",
+      resolver: zeroAddress,
+      resolverState: "missing",
+    },
     active: v2Fixture(
       "v2-active.eth",
       "active",
@@ -282,8 +317,29 @@ export const seedV2Fixtures = Effect.fn("seedV2Fixtures")(function* (
       publicResolver,
       environment.accounts.owner,
     ),
+    differentOwner: v2Fixture(
+      "v2-owner2.eth",
+      "active",
+      activeExpiry,
+      publicResolver,
+      environment.accounts.owner2,
+    ),
+    expiringSoon: v2Fixture(
+      "v2-expiring-soon.eth",
+      "active",
+      activeBlock.timestamp + 3_600n,
+      zeroAddress,
+      environment.accounts.owner,
+    ),
     nested: v2Fixture(
       "native.ens.eth",
+      "active",
+      activeExpiry,
+      publicResolver,
+      environment.accounts.owner,
+    ),
+    nestedOwnResolver: v2Fixture(
+      "owned.ens.eth",
       "active",
       activeExpiry,
       publicResolver,
@@ -299,6 +355,13 @@ export const seedV2Fixtures = Effect.fn("seedV2Fixtures")(function* (
     ),
     noResolver: v2Fixture(
       "v2-no-resolver.eth",
+      "active",
+      activeExpiry,
+      zeroAddress,
+      environment.accounts.owner,
+    ),
+    writeReady: v2Fixture(
+      "v2-write-ready.eth",
       "active",
       activeExpiry,
       zeroAddress,
