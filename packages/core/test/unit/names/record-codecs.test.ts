@@ -37,21 +37,21 @@ describe("record codec boundaries", () => {
 
   it("preserves contenthash metadata around the official ENS codec", () => {
     const encoded = encodeContentHash({
-      codec: "ipfs",
+      protocol: "ipfs",
       value: "QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG",
     });
 
     const decoded = decodeContentHash(encoded);
 
-    expect(decoded?.codec).toBe("ipfs");
+    expect(decoded?.protocol).toBe("ipfs");
     expect(decoded?.value.length).toBeGreaterThan(0);
   });
 
   it("rejects unsupported contenthash codecs at the boundary", () => {
-    expect(() => encodeContentHash({ codec: "ftp" as "ipfs", value: "example" })).toThrow(
+    expect(() => encodeContentHash({ protocol: "ftp" as "ipfs", value: "example" })).toThrow(
       new CodecError({
-        code: "UNSUPPORTED_CONTENT_CODEC",
-        message: "Unsupported content hash codec: ftp",
+        code: "UNSUPPORTED_CONTENT_PROTOCOL",
+        message: "Unsupported content hash protocol: ftp",
       }),
     );
   });

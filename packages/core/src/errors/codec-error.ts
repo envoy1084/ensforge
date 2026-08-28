@@ -8,7 +8,7 @@ export const CodecErrorCode = Schema.Literals([
   "UNSUPPORTED_COIN_TYPE",
   "INVALID_ADDRESS_RECORD",
   "INVALID_CONTENT_HASH",
-  "UNSUPPORTED_CONTENT_CODEC",
+  "UNSUPPORTED_CONTENT_PROTOCOL",
 ]);
 
 export type CodecErrorCode = typeof CodecErrorCode.Type;

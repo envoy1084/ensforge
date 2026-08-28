@@ -17,7 +17,7 @@ import { seedTransaction } from "./contract.js";
 import type { ResolverRecordsFixture } from "./manifest.js";
 
 const contenthash =
-  "0xe301017012202da38c5f4d48f87c77960c0a4d1f6c86a0ad56f7a11e13f3c9f1f0b72f4b" as const;
+  "0xe301017012209d6c2be50f706953479ab9df2ce3edca90b68053c00b3004b7f0accbe1e8eedf" as const;
 const abiJson = '[{"type":"function","name":"hello","inputs":[],"outputs":[]}]';
 const pubkey = {
   x: "0x1111111111111111111111111111111111111111111111111111111111111111",

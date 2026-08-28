@@ -8,6 +8,7 @@ import {
   defineWriteAction,
   getAddress,
   getAddresses,
+  getContentHash,
   getExpiry,
   getResolver,
   getText,
@@ -19,8 +20,10 @@ import {
   type EnsforgeConfig,
   type ExpiryResult,
   type AddressResult,
+  type ContentHashResult,
   type GetAddressError,
   type GetAddressesError,
+  type GetContentHashError,
   type GetExpiryError,
   type GetResolverError,
   type GetResolverResult,
@@ -68,6 +71,15 @@ expectTypeOf(getAddresses(config, { name: "example.eth", coinTypes: [60n] })).to
 >();
 expectTypeOf(getAddresses.effect(config, { name: "example.eth", coinTypes: [60n] })).toEqualTypeOf<
   Effect.Effect<ReadonlyArray<AddressResult>, GetAddressesError>
+>();
+expectTypeOf(getContentHash(config, { name: "example.eth" })).toEqualTypeOf<
+  Promise<ContentHashResult>
+>();
+expectTypeOf(getContentHash.effect(config, { name: "example.eth" })).toEqualTypeOf<
+  Effect.Effect<ContentHashResult, GetContentHashError>
+>();
+expectTypeOf(getContentHash.request({ name: "example.eth" })).toEqualTypeOf<
+  EnsReadRequest<ContentHashResult, GetContentHashError>
 >();
 expectTypeOf(getResolver(config, { name: "example.eth" })).toEqualTypeOf<
   Promise<GetResolverResult>

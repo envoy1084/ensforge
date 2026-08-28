@@ -5,4 +5,4 @@ export { Hex } from "./hex.js";
 export { CanonicalNameIdentity, EthereumAddress, RegistryResource } from "./identity.js";
 export { NormalizedLabel, NormalizedName } from "./name.js";
 export { EnsProtocol } from "./protocol.js";
-export { AddressRecordData, ContentHash, ContentHashCodec } from "./records.js";
+export { AddressRecordData, ContentHash, ContentHashProtocol } from "./records.js";

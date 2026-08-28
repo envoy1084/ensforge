@@ -1,47 +1,42 @@
 import { Schema } from "effect";
 
-import {
-  decode,
-  encode,
-  getCodec,
-  type Codec as EnsContentHashCodec,
-} from "@ensdomains/content-hash";
+import { decode, encode, getCodec } from "@ensdomains/content-hash";
 
 import { CodecError } from "../errors/codec-error.js";
 import {
   ContentHash,
-  ContentHashCodec,
+  ContentHashProtocol,
   type ContentHash as ContentHashValue,
-  type ContentHashCodec as ContentHashCodecValue,
+  type ContentHashProtocol as ContentHashProtocolValue,
 } from "../schemas/records.js";
 
 export interface EncodeContentHashParameters {
-  readonly codec: ContentHashCodecValue;
+  readonly protocol: ContentHashProtocolValue;
   readonly value: string;
 }
 
 export interface DecodedContentHash {
-  readonly codec: ContentHashCodecValue;
+  readonly protocol: ContentHashProtocolValue;
   readonly value: string;
 }
 
 export const encodeContentHash = ({
-  codec,
+  protocol,
   value,
 }: EncodeContentHashParameters): ContentHashValue => {
-  if (!Schema.is(ContentHashCodec)(codec)) {
+  if (!Schema.is(ContentHashProtocol)(protocol)) {
     throw new CodecError({
-      code: "UNSUPPORTED_CONTENT_CODEC",
-      message: `Unsupported content hash codec: ${codec}`,
+      code: "UNSUPPORTED_CONTENT_PROTOCOL",
+      message: `Unsupported content hash protocol: ${protocol}`,
     });
   }
 
   try {
-    return Schema.decodeSync(ContentHash)(`0x${encode(codec as EnsContentHashCodec, value)}`);
+    return Schema.decodeSync(ContentHash)(`0x${encode(protocol, value)}`);
   } catch {
     throw new CodecError({
       code: "INVALID_CONTENT_HASH",
-      message: `Invalid ${codec} content hash value`,
+      message: `Invalid ${protocol} content hash value`,
     });
   }
 };
@@ -65,16 +60,16 @@ export const decodeContentHash = (
   const unprefixed = encoded.slice(2);
 
   try {
-    const codec = getCodec(unprefixed);
+    const protocol = getCodec(unprefixed);
 
-    if (codec === undefined || !Schema.is(ContentHashCodec)(codec)) {
+    if (protocol === undefined || !Schema.is(ContentHashProtocol)(protocol)) {
       throw new CodecError({
-        code: "UNSUPPORTED_CONTENT_CODEC",
-        message: "Unsupported encoded content hash codec",
+        code: "UNSUPPORTED_CONTENT_PROTOCOL",
+        message: "Unsupported encoded content hash protocol",
       });
     }
 
-    return Object.freeze({ codec, value: decode(unprefixed) });
+    return Object.freeze({ protocol, value: decode(unprefixed) });
   } catch (error) {
     if (error instanceof CodecError) throw error;
     throw new CodecError({

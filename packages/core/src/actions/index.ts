@@ -8,6 +8,12 @@ export {
   type GetAddressesParameters,
 } from "./get-address/index.js";
 export {
+  ContentHashResult,
+  getContentHash,
+  type GetContentHashError,
+  type GetContentHashParameters,
+} from "./get-content-hash/index.js";
+export {
   getText,
   getTexts,
   TextResult,

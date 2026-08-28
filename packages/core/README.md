@@ -128,6 +128,21 @@ const profile = await getTexts(config, {
 `getTexts` deduplicates resolver calls while preserving the requested key order and duplicates in
 its returned `{ key, value }[]` result.
 
+## Content hash
+
+`getContentHash` resolves and decodes the name's content hash while preserving the original
+resolver bytes:
+
+```ts
+import { getContentHash } from "@ensforge/core";
+
+const content = await getContentHash(config, { name: "example.eth" });
+// { protocol: "ipfs", value: "Qm...", raw: "0xe301..." }
+```
+
+An unset record returns `{ protocol: null, value: null, raw: null }`. The action supports V1, V2,
+RESERVED-name mirroring, CCIP-Read, and `readBatch` through the shared Universal Resolver path.
+
 ## Expiry
 
 `getExpiry` presents one lifecycle boundary across ENSv1, ENSv2, and unmigrated reserved names. It

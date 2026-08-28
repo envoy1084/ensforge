@@ -10,7 +10,7 @@ export const ContentHash = Hex.pipe(Schema.brand("ContentHash"));
 
 export type ContentHash = typeof ContentHash.Type;
 
-export const ContentHashCodec = Schema.Literals([
+export const ContentHashProtocol = Schema.Literals([
   "ipfs",
   "ipns",
   "swarm",
@@ -21,4 +21,4 @@ export const ContentHashCodec = Schema.Literals([
   "adnl",
 ]);
 
-export type ContentHashCodec = typeof ContentHashCodec.Type;
+export type ContentHashProtocol = typeof ContentHashProtocol.Type;

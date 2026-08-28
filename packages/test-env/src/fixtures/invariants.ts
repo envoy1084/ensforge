@@ -23,6 +23,7 @@ export const verifyFixtureManifest = async (
     v1CommitmentAt,
     v2CommitmentAt,
     reservedAddress,
+    v2Contenthash,
   ] = await Promise.all([
     environment.clients.publicClient.readContract({
       abi: baseRegistrarV1Abi,
@@ -82,6 +83,12 @@ export const verifyFixtureManifest = async (
       functionName: "addr",
       args: [namehash(fixtures.records.reserved.name)],
     }),
+    environment.clients.publicClient.readContract({
+      abi: publicResolverV2Abi,
+      address: fixtures.records.v2.resolver,
+      functionName: "contenthash",
+      args: [namehash(fixtures.records.v2.name)],
+    }),
   ]);
 
   const invalid =
@@ -90,6 +97,7 @@ export const verifyFixtureManifest = async (
     v1Email !== fixtures.records.v1.texts.email ||
     v2Email !== fixtures.records.v2.texts.email ||
     !isAddressEqual(reservedAddress, fixtures.records.reserved.addresses.eth) ||
+    v2Contenthash !== fixtures.records.v2.contenthash ||
     !isAddressEqual(v1Approved, fixtures.permissions.operator) ||
     !v2HasRole ||
     v1CommitmentAt === 0n ||
@@ -104,6 +112,7 @@ export const verifyFixtureManifest = async (
         v1Email,
         v1Owner,
         v2CommitmentAt,
+        v2Contenthash,
         v2Email,
         v2HasRole,
         v2Owner: v2State.latestOwner,
