@@ -134,6 +134,38 @@ export const seedMigrationFixtures = Effect.fn("seedMigrationFixtures")(function
   yield* wrapV1(environment, "v2-reserved-wrapped", publicResolver);
   yield* reserveV2(environment, "v2-reserved-wrapped", reservedWrappedExpiry);
 
+  const reservedApprovedExpiry = yield* registerV1MigrationName(
+    environment,
+    "v2-reserved-approved",
+  );
+  yield* seedTransaction(
+    environment,
+    {
+      abi: baseRegistrarV1Abi,
+      address: environment.deployments.v1.contracts.baseRegistrar,
+      functionName: "approve",
+      args: [
+        environment.deployments.v2.migration.unlockedMigrationController,
+        BigInt(labelhash("v2-reserved-approved")),
+      ],
+    },
+    "Unable to approve the unlocked ENS migration controller",
+    "owner",
+  );
+  yield* reserveV2(environment, "v2-reserved-approved", reservedApprovedExpiry);
+
+  const reservedWrappedLockedExpiry = yield* registerV1MigrationName(
+    environment,
+    "v2-reserved-wrapped-locked",
+  );
+  yield* wrapV1(
+    environment,
+    "v2-reserved-wrapped-locked",
+    publicResolver,
+    nameWrapperFuses.cannotUnwrap,
+  );
+  yield* reserveV2(environment, "v2-reserved-wrapped-locked", reservedWrappedLockedExpiry);
+
   const unlockedExpiry = yield* registerV1MigrationName(environment, "v2-migrated-unlocked");
   yield* reserveV2(environment, "v2-migrated-unlocked", unlockedExpiry);
   yield* seedTransaction(
@@ -273,6 +305,18 @@ export const seedMigrationFixtures = Effect.fn("seedMigrationFixtures")(function
     reservedWrapped: fixture(
       "v2-reserved-wrapped.eth",
       reservedWrappedExpiry,
+      environment.deployments.v2.migration.ensV1Resolver,
+      environment.accounts.owner,
+    ),
+    reservedUnwrappedApproved: fixture(
+      "v2-reserved-approved.eth",
+      reservedApprovedExpiry,
+      environment.deployments.v2.migration.ensV1Resolver,
+      environment.accounts.owner,
+    ),
+    reservedWrappedLocked: fixture(
+      "v2-reserved-wrapped-locked.eth",
+      reservedWrappedLockedExpiry,
       environment.deployments.v2.migration.ensV1Resolver,
       environment.accounts.owner,
     ),

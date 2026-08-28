@@ -46,7 +46,9 @@ export interface EnsV2FixtureManifest {
 
 export interface EnsMigrationFixtureManifest {
   readonly reservedUnwrapped: EnsNameFixture;
+  readonly reservedUnwrappedApproved: EnsNameFixture;
   readonly reservedWrapped: EnsNameFixture;
+  readonly reservedWrappedLocked: EnsNameFixture;
   readonly migratedUnlocked: EnsNameFixture;
   readonly migratedLocked: EnsNameFixture;
   readonly mirroredChild: EnsNameFixture;
