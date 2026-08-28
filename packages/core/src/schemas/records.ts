@@ -33,6 +33,17 @@ export const Abi = Schema.declare<ViemAbi>(
 
 export type Abi = typeof Abi.Type;
 
+export const InterfaceId = Hex.pipe(
+  Schema.check(
+    Schema.isPattern(/^0x[0-9a-fA-F]{8}$/, {
+      message: "Expected a 4-byte interface ID",
+    }),
+  ),
+  Schema.brand("InterfaceId"),
+);
+
+export type InterfaceId = typeof InterfaceId.Type;
+
 export const ContentHash = Hex.pipe(Schema.brand("ContentHash"));
 
 export type ContentHash = typeof ContentHash.Type;

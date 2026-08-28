@@ -10,7 +10,10 @@ import {
   getAddress,
   getAddresses,
   getContentHash,
+  getData,
   getExpiry,
+  getInterface,
+  getPubkey,
   getResolver,
   getText,
   getTexts,
@@ -23,17 +26,23 @@ import {
   type ExpiryResult,
   type AddressResult,
   type ContentHashResult,
+  type DataResult,
   type GetAbiError,
   type GetAddressError,
   type GetAddressesError,
   type GetContentHashError,
+  type GetDataError,
   type GetExpiryError,
+  type GetInterfaceError,
+  type GetPubkeyError,
   type GetResolverError,
   type GetResolverResult,
   type GetTextError,
   type GetTextsError,
   type ReadBatchOutcome,
   type RpcError,
+  type InterfaceResult,
+  type PubkeyResult,
   type TextResult,
 } from "../../../src/index.js";
 
@@ -90,6 +99,31 @@ expectTypeOf(getContentHash.effect(config, { name: "example.eth" })).toEqualType
 >();
 expectTypeOf(getContentHash.request({ name: "example.eth" })).toEqualTypeOf<
   EnsReadRequest<ContentHashResult, GetContentHashError>
+>();
+expectTypeOf(getData(config, { name: "example.eth", key: "com.example.data" })).toEqualTypeOf<
+  Promise<DataResult>
+>();
+expectTypeOf(
+  getData.effect(config, { name: "example.eth", key: "com.example.data" }),
+).toEqualTypeOf<Effect.Effect<DataResult, GetDataError>>();
+expectTypeOf(getData.request({ name: "example.eth", key: "com.example.data" })).toEqualTypeOf<
+  EnsReadRequest<DataResult, GetDataError>
+>();
+expectTypeOf(
+  getInterface(config, { name: "example.eth", interfaceId: "0x01ffc9a7" }),
+).toEqualTypeOf<Promise<InterfaceResult>>();
+expectTypeOf(
+  getInterface.effect(config, { name: "example.eth", interfaceId: "0x01ffc9a7" }),
+).toEqualTypeOf<Effect.Effect<InterfaceResult, GetInterfaceError>>();
+expectTypeOf(
+  getInterface.request({ name: "example.eth", interfaceId: "0x01ffc9a7" }),
+).toEqualTypeOf<EnsReadRequest<InterfaceResult, GetInterfaceError>>();
+expectTypeOf(getPubkey(config, { name: "example.eth" })).toEqualTypeOf<Promise<PubkeyResult>>();
+expectTypeOf(getPubkey.effect(config, { name: "example.eth" })).toEqualTypeOf<
+  Effect.Effect<PubkeyResult, GetPubkeyError>
+>();
+expectTypeOf(getPubkey.request({ name: "example.eth" })).toEqualTypeOf<
+  EnsReadRequest<PubkeyResult, GetPubkeyError>
 >();
 expectTypeOf(getResolver(config, { name: "example.eth" })).toEqualTypeOf<
   Promise<GetResolverResult>

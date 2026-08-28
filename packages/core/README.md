@@ -162,6 +162,30 @@ performing a network fetch. Every set result preserves the resolver bytes in `ra
 record returns `{ contentType: null, value: null, raw: null }`. The action supports the same V1,
 V2, RESERVED-name, CCIP-Read, and `readBatch` path as other resolver profile actions.
 
+## Public key, interface, and arbitrary data
+
+The remaining resolver profile actions use the same Universal Resolver path:
+
+```ts
+import { getData, getInterface, getPubkey } from "@ensforge/core";
+
+const pubkey = await getPubkey(config, { name: "example.eth" });
+const interfaceResult = await getInterface(config, {
+  name: "example.eth",
+  interfaceId: "0x01ffc9a7",
+});
+const data = await getData(config, {
+  name: "example.eth",
+  key: "com.example.account",
+});
+```
+
+`getPubkey` returns `{ x, y }` or `null` when both coordinates are zero. `getInterface` preserves
+the requested four-byte interface ID and maps the zero implementer address to `null`. `getData`
+preserves the requested key and returns its ordinary `Hex` value, mapping empty bytes to `null`.
+Arbitrary data remains undecoded because its application-specific key defines its meaning. All
+three actions provide `.effect` and `.request` forms and work inside `readBatch`.
+
 ## Expiry
 
 `getExpiry` presents one lifecycle boundary across ENSv1, ENSv2, and unmigrated reserved names. It

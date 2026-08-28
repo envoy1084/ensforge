@@ -15,6 +15,24 @@ export {
   type GetContentHashParameters,
 } from "./get-content-hash/index.js";
 export {
+  DataResult,
+  getData,
+  type GetDataError,
+  type GetDataParameters,
+} from "./get-data/index.js";
+export {
+  getInterface,
+  type GetInterfaceError,
+  type GetInterfaceParameters,
+  InterfaceResult,
+} from "./get-interface/index.js";
+export {
+  getPubkey,
+  type GetPubkeyError,
+  type GetPubkeyParameters,
+  PubkeyResult,
+} from "./get-pubkey/index.js";
+export {
   getText,
   getTexts,
   TextResult,

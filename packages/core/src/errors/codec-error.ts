@@ -11,6 +11,7 @@ export const CodecErrorCode = Schema.Literals([
   "UNSUPPORTED_CONTENT_PROTOCOL",
   "INVALID_ABI",
   "UNSUPPORTED_ABI_CONTENT_TYPE",
+  "INVALID_INTERFACE_ID",
 ]);
 
 export type CodecErrorCode = typeof CodecErrorCode.Type;

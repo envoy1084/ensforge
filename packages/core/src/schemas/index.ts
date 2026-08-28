@@ -12,4 +12,5 @@ export {
   AddressRecordData,
   ContentHash,
   ContentHashProtocol,
+  InterfaceId,
 } from "./records.js";
