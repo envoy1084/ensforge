@@ -1,8 +1,10 @@
 import { Effect } from "effect";
 
 import type { DevnetEnvironment } from "../environment.js";
+import { seedRead } from "./contract.js";
 import { createDnsFixtures } from "./dns.js";
 import { createEventFixtures } from "./events.js";
+import { verifyFixtureManifest } from "./invariants.js";
 import { seedPermissionFixtures } from "./permissions.js";
 import { seedRegistrationFixtures } from "./registration.js";
 import { seedResolverRecordFixtures } from "./resolver-records.js";
@@ -20,6 +22,11 @@ export const seedFixtures = Effect.fn("seedFixtures")(function* (environment: De
   const registration = yield* seedRegistrationFixtures(environment);
   const dns = createDnsFixtures(environment, records);
   const events = yield* Effect.promise(() => createEventFixtures(environment, fromBlock));
+  const manifest = { ...fixtures, dns, events, permissions, records, registration, reverse };
+  yield* seedRead(
+    () => verifyFixtureManifest(environment, manifest),
+    "The completed ENS fixture manifest failed verification",
+  );
   yield* environment.state.checkpoint;
-  return { ...fixtures, dns, events, permissions, records, registration, reverse };
+  return manifest;
 });

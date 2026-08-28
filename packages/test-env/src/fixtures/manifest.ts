@@ -164,12 +164,12 @@ export interface EventFixtureManifest {
 export interface EnsFixtureManifest {
   readonly seededAt: bigint;
   readonly v1: EnsV1FixtureManifest;
-  readonly v2?: EnsV2FixtureManifest;
-  readonly migration?: EnsMigrationFixtureManifest;
-  readonly records?: ResolverRecordFixtureManifest;
-  readonly permissions?: PermissionFixtureManifest;
-  readonly reverse?: ReverseFixtureManifest;
-  readonly registration?: RegistrationFixtureManifest;
-  readonly dns?: DnsFixtureManifest;
-  readonly events?: EventFixtureManifest;
+  readonly v2: EnsV2FixtureManifest;
+  readonly migration: EnsMigrationFixtureManifest;
+  readonly records: ResolverRecordFixtureManifest;
+  readonly permissions: PermissionFixtureManifest;
+  readonly reverse: ReverseFixtureManifest;
+  readonly registration: RegistrationFixtureManifest;
+  readonly dns: DnsFixtureManifest;
+  readonly events: EventFixtureManifest;
 }

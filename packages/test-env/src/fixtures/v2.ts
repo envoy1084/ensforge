@@ -11,12 +11,7 @@ import { encodeFunctionData, labelhash, zeroAddress, type Address } from "viem";
 import type { DevnetEnvironment } from "../environment.js";
 import { TestEnvironmentError } from "../errors/test-environment-error.js";
 import { seedRead, seedTransaction } from "./contract.js";
-import type {
-  EnsFixtureManifest,
-  EnsNameFixture,
-  EnsV1FixtureManifest,
-  EnsV2FixtureManifest,
-} from "./manifest.js";
+import type { EnsNameFixture, EnsV1FixtureManifest, EnsV2FixtureManifest } from "./manifest.js";
 import { seedMigrationFixtures } from "./migration.js";
 
 const day = 86_400;
@@ -382,5 +377,5 @@ export const seedV2Fixtures = Effect.fn("seedV2Fixtures")(function* (
   )).timestamp;
 
   yield* environment.state.checkpoint;
-  return { seededAt, v1, v2, migration } satisfies EnsFixtureManifest;
+  return { seededAt, v1, v2, migration };
 });

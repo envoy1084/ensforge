@@ -13,7 +13,7 @@ import type { DevnetAccountRole } from "../accounts/accounts.js";
 import type { DevnetEnvironment } from "../environment.js";
 import { TestEnvironmentError } from "../errors/test-environment-error.js";
 import { seedRead, seedTransaction } from "./contract.js";
-import type { EnsFixtureManifest, EnsNameFixture } from "./manifest.js";
+import type { EnsNameFixture, EnsV1FixtureManifest } from "./manifest.js";
 
 const day = 86_400;
 const v1GracePeriod = 90 * day;
@@ -281,8 +281,8 @@ export const seedV1Fixtures = Effect.fn("seedV1Fixtures")(function* (
         address: environment.accounts.owner,
         name: "v1-unwrapped.eth",
       },
-    },
-  } satisfies EnsFixtureManifest;
+    } satisfies EnsV1FixtureManifest,
+  };
 
   const [activeOwner, wrappedOwner, subnameOwner, resolver] = yield* seedRead(
     () =>
