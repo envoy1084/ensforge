@@ -16,7 +16,7 @@ export const seedReverseFixtures = Effect.fn("seedReverseFixtures")(function* (
       abi: defaultReverseRegistrarAdapterV2Abi,
       address: environment.deployments.v2.contracts.defaultReverseRegistrarAdapter,
       functionName: "setName",
-      args: [environment.accounts.owner2, "v2-owner2.eth"],
+      args: [environment.accounts.owner2, "v2-migrated-locked.eth"],
     },
     "Unable to seed the verified ENS v2 reverse record",
     "owner2",
@@ -42,8 +42,8 @@ export const seedReverseFixtures = Effect.fn("seedReverseFixtures")(function* (
     },
     verifiedV2: {
       address: environment.accounts.owner2,
-      forwardName: "v2-owner2.eth",
-      name: "v2-owner2.eth",
+      forwardName: "v2-migrated-locked.eth",
+      name: "v2-migrated-locked.eth",
       verified: true,
     },
     unverified: {
@@ -53,6 +53,11 @@ export const seedReverseFixtures = Effect.fn("seedReverseFixtures")(function* (
       verified: false,
     },
     missing: { address: environment.accounts.unauthorized },
-    contractMissing: { address: environment.deployments.v2.contracts.publicResolver },
+    verifiedContract: {
+      address: environment.deployments.v2.contracts.publicResolver,
+      forwardName: "public.resolver.ens.eth",
+      name: "public.resolver.ens.eth",
+      verified: true,
+    },
   } satisfies ReverseFixtureManifest;
 });

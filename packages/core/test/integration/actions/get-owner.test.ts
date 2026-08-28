@@ -14,8 +14,9 @@ describe("getOwner integration", () => {
         devnet.fixtures.migration.migratedUnlocked,
         devnet.fixtures.migration.migratedLocked,
       ];
-      const results = yield* Effect.promise(() =>
-        Promise.all(fixtures.map((fixture) => getOwner(devnet.configs.v2, { name: fixture.name }))),
+      const results = yield* Effect.all(
+        fixtures.map((fixture) => getOwner.effect(devnet.configs.v2, { name: fixture.name })),
+        { concurrency: "unbounded" },
       );
 
       for (const [index, fixture] of fixtures.entries()) {
@@ -35,8 +36,9 @@ describe("getOwner integration", () => {
         devnet.fixtures.v1.activeWrapped,
         devnet.fixtures.v1.wrappedSubname,
       ];
-      const results = yield* Effect.promise(() =>
-        Promise.all(fixtures.map((fixture) => getOwner(devnet.configs.v1, { name: fixture.name }))),
+      const results = yield* Effect.all(
+        fixtures.map((fixture) => getOwner.effect(devnet.configs.v1, { name: fixture.name })),
+        { concurrency: "unbounded" },
       );
 
       for (const [index, fixture] of fixtures.entries()) {
@@ -56,8 +58,9 @@ describe("getOwner integration", () => {
         devnet.fixtures.migration.reservedWrapped,
         devnet.fixtures.migration.reservedWrappedLocked,
       ];
-      const results = yield* Effect.promise(() =>
-        Promise.all(fixtures.map((fixture) => getOwner(devnet.configs.v2, { name: fixture.name }))),
+      const results = yield* Effect.all(
+        fixtures.map((fixture) => getOwner.effect(devnet.configs.v2, { name: fixture.name })),
+        { concurrency: "unbounded" },
       );
 
       for (const [index, fixture] of fixtures.entries()) {
@@ -72,35 +75,22 @@ describe("getOwner integration", () => {
   it.effect("returns null for names available in both protocols", () =>
     Effect.gen(function* () {
       const devnet = getIntegrationDevnet();
-      const result = yield* Effect.promise(() =>
-        getOwner(devnet.configs.v2, { name: devnet.fixtures.v2.available.name }),
-      );
+      const result = yield* getOwner.effect(devnet.configs.v2, {
+        name: devnet.fixtures.v2.available.name,
+      });
 
       assert.isNull(result);
-    }),
-  );
-
-  it.effect("keeps Promise and Effect APIs equivalent", () =>
-    Effect.gen(function* () {
-      const devnet = getIntegrationDevnet();
-      const parameters = { name: devnet.fixtures.migration.migratedLocked.name };
-      const promiseResult = yield* Effect.promise(() => getOwner(devnet.configs.v2, parameters));
-      const effectResult = yield* getOwner.effect(devnet.configs.v2, parameters);
-
-      assert.deepStrictEqual(effectResult, promiseResult);
     }),
   );
 
   it.effect("executes prepared owner requests through one semantic batch", () =>
     Effect.gen(function* () {
       const devnet = getIntegrationDevnet();
-      const result = yield* Effect.promise(() =>
-        readBatch(devnet.configs.v2, {
-          reserved: getOwner.request({ name: devnet.fixtures.migration.reservedUnwrapped.name }),
-          migrated: getOwner.request({ name: devnet.fixtures.migration.migratedLocked.name }),
-          native: getOwner.request({ name: devnet.fixtures.v2.active.name }),
-        }),
-      );
+      const result = yield* readBatch.effect(devnet.configs.v2, {
+        reserved: getOwner.request({ name: devnet.fixtures.migration.reservedUnwrapped.name }),
+        migrated: getOwner.request({ name: devnet.fixtures.migration.migratedLocked.name }),
+        native: getOwner.request({ name: devnet.fixtures.v2.active.name }),
+      });
 
       assert.strictEqual(result.reserved?.protocol, "v1");
       assert.strictEqual(result.migrated?.protocol, "v2");

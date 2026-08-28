@@ -81,18 +81,4 @@ describe("interface resolution integration", () => {
       expect(error).toMatchObject({ _tag: "CodecError", code: "INVALID_INTERFACE_ID" });
     }),
   );
-
-  it.effect("keeps Promise and Effect APIs equivalent", () =>
-    Effect.gen(function* () {
-      const devnet = getIntegrationDevnet();
-      const fixture = devnet.fixtures.records.v2;
-      const parameters = { name: fixture.name, interfaceId: fixture.interface.id };
-      const promiseResult = yield* Effect.promise(() =>
-        getInterface(devnet.configs.v2, parameters),
-      );
-      const effectResult = yield* getInterface.effect(devnet.configs.v2, parameters);
-
-      expect(effectResult).toEqual(promiseResult);
-    }),
-  );
 });

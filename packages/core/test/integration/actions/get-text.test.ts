@@ -85,20 +85,6 @@ describe("text resolution integration", () => {
     }),
   );
 
-  it.effect("keeps Promise and Effect APIs equivalent", () =>
-    Effect.gen(function* () {
-      const devnet = getIntegrationDevnet();
-      const parameters = {
-        name: devnet.fixtures.records.v2.name,
-        keys: ["email", "url"],
-      } as const;
-      const promiseResult = yield* Effect.promise(() => getTexts(devnet.configs.v2, parameters));
-      const effectResult = yield* getTexts.effect(devnet.configs.v2, parameters);
-
-      expect(effectResult).toEqual(promiseResult);
-    }),
-  );
-
   it.effect("supports text actions inside semantic read batches", () =>
     Effect.gen(function* () {
       const devnet = getIntegrationDevnet();

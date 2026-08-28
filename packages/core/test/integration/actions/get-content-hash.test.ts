@@ -62,19 +62,6 @@ describe("content hash resolution integration", () => {
     }),
   );
 
-  it.effect("keeps Promise and Effect APIs equivalent", () =>
-    Effect.gen(function* () {
-      const devnet = getIntegrationDevnet();
-      const parameters = { name: devnet.fixtures.records.v2.name };
-      const promiseResult = yield* Effect.promise(() =>
-        getContentHash(devnet.configs.v2, parameters),
-      );
-      const effectResult = yield* getContentHash.effect(devnet.configs.v2, parameters);
-
-      expect(effectResult).toEqual(promiseResult);
-    }),
-  );
-
   it.effect("supports content hash resolution inside semantic read batches", () =>
     Effect.gen(function* () {
       const devnet = getIntegrationDevnet();

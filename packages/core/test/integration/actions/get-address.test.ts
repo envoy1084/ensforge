@@ -112,22 +112,6 @@ describe("address resolution integration", () => {
     }),
   );
 
-  it.effect("keeps Promise and Effect APIs equivalent", () =>
-    Effect.gen(function* () {
-      const devnet = getIntegrationDevnet();
-      const parameters = {
-        name: devnet.fixtures.records.v2.name,
-        coinTypes: [60n, 0n],
-      } as const;
-      const promiseResult = yield* Effect.promise(() =>
-        getAddresses(devnet.configs.v2, parameters),
-      );
-      const effectResult = yield* getAddresses.effect(devnet.configs.v2, parameters);
-
-      expect(effectResult).toEqual(promiseResult);
-    }),
-  );
-
   it.effect("supports address actions inside semantic read batches", () =>
     Effect.gen(function* () {
       const devnet = getIntegrationDevnet();

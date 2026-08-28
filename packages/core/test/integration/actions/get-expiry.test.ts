@@ -13,10 +13,9 @@ describe("getExpiry integration", () => {
         devnet.fixtures.v1.grace,
         devnet.fixtures.v1.expired,
       ];
-      const results = yield* Effect.promise(() =>
-        Promise.all(
-          fixtures.map((fixture) => getExpiry(devnet.configs.v1, { name: fixture.name })),
-        ),
+      const results = yield* Effect.all(
+        fixtures.map((fixture) => getExpiry.effect(devnet.configs.v1, { name: fixture.name })),
+        { concurrency: "unbounded" },
       );
 
       for (const [index, fixture] of fixtures.entries()) {
@@ -33,9 +32,7 @@ describe("getExpiry integration", () => {
     Effect.gen(function* () {
       const devnet = getIntegrationDevnet();
       const fixture = devnet.fixtures.v1.wrappedSubname;
-      const result = yield* Effect.promise(() =>
-        getExpiry(devnet.configs.v1, { name: fixture.name }),
-      );
+      const result = yield* getExpiry.effect(devnet.configs.v1, { name: fixture.name });
 
       assert.deepStrictEqual(result, {
         expiry: fixture.expiry,
@@ -53,11 +50,12 @@ describe("getExpiry integration", () => {
       const devnet = getIntegrationDevnet();
       const reserved = devnet.fixtures.migration.reservedUnwrapped;
       const migrated = devnet.fixtures.migration.migratedLocked;
-      const [reservedResult, migratedResult] = yield* Effect.promise(() =>
-        Promise.all([
-          getExpiry(devnet.configs.v2, { name: reserved.name }),
-          getExpiry(devnet.configs.v2, { name: migrated.name }),
-        ]),
+      const [reservedResult, migratedResult] = yield* Effect.all(
+        [
+          getExpiry.effect(devnet.configs.v2, { name: reserved.name }),
+          getExpiry.effect(devnet.configs.v2, { name: migrated.name }),
+        ],
+        { concurrency: "unbounded" },
       );
 
       assert.strictEqual(reservedResult?.expiry, reserved.expiry);
@@ -73,10 +71,9 @@ describe("getExpiry integration", () => {
     Effect.gen(function* () {
       const devnet = getIntegrationDevnet();
       const fixtures = [devnet.fixtures.v2.active, devnet.fixtures.v2.nestedOwnResolver];
-      const results = yield* Effect.promise(() =>
-        Promise.all(
-          fixtures.map((fixture) => getExpiry(devnet.configs.v2, { name: fixture.name })),
-        ),
+      const results = yield* Effect.all(
+        fixtures.map((fixture) => getExpiry.effect(devnet.configs.v2, { name: fixture.name })),
+        { concurrency: "unbounded" },
       );
 
       for (const [index, fixture] of fixtures.entries()) {
@@ -92,35 +89,22 @@ describe("getExpiry integration", () => {
   it.effect("returns null for an available name", () =>
     Effect.gen(function* () {
       const devnet = getIntegrationDevnet();
-      const result = yield* Effect.promise(() =>
-        getExpiry(devnet.configs.v2, { name: devnet.fixtures.v2.available.name }),
-      );
+      const result = yield* getExpiry.effect(devnet.configs.v2, {
+        name: devnet.fixtures.v2.available.name,
+      });
 
       assert.isNull(result);
-    }),
-  );
-
-  it.effect("keeps Promise and Effect APIs equivalent", () =>
-    Effect.gen(function* () {
-      const devnet = getIntegrationDevnet();
-      const parameters = { name: devnet.fixtures.migration.migratedLocked.name };
-      const promiseResult = yield* Effect.promise(() => getExpiry(devnet.configs.v2, parameters));
-      const effectResult = yield* getExpiry.effect(devnet.configs.v2, parameters);
-
-      assert.deepStrictEqual(effectResult, promiseResult);
     }),
   );
 
   it.effect("executes prepared expiry requests through one semantic batch", () =>
     Effect.gen(function* () {
       const devnet = getIntegrationDevnet();
-      const result = yield* Effect.promise(() =>
-        readBatch(devnet.configs.v2, {
-          reserved: getExpiry.request({ name: devnet.fixtures.migration.reservedUnwrapped.name }),
-          migrated: getExpiry.request({ name: devnet.fixtures.migration.migratedLocked.name }),
-          native: getExpiry.request({ name: devnet.fixtures.v2.active.name }),
-        }),
-      );
+      const result = yield* readBatch.effect(devnet.configs.v2, {
+        reserved: getExpiry.request({ name: devnet.fixtures.migration.reservedUnwrapped.name }),
+        migrated: getExpiry.request({ name: devnet.fixtures.migration.migratedLocked.name }),
+        native: getExpiry.request({ name: devnet.fixtures.v2.active.name }),
+      });
 
       assert.strictEqual(result.reserved?.protocol, "v1");
       assert.strictEqual(result.migrated?.protocol, "v2");

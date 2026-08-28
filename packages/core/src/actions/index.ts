@@ -27,6 +27,18 @@ export {
   InterfaceResult,
 } from "./get-interface/index.js";
 export {
+  getName,
+  type GetNameError,
+  type GetNameParameters,
+  NameResult,
+} from "./get-name/index.js";
+export {
+  getPrimaryName,
+  type GetPrimaryNameError,
+  type GetPrimaryNameParameters,
+  PrimaryNameResult,
+} from "./get-primary-name/index.js";
+export {
   getPubkey,
   type GetPubkeyError,
   type GetPubkeyParameters,

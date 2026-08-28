@@ -72,6 +72,7 @@ const seedResolverRecords = Effect.fn("seedResolverRecordsForName")(function* (
   environment: DevnetEnvironment,
   name: string,
   resolver: Address,
+  ethAddress = environment.accounts.owner,
 ) {
   const node = namehash(name);
   const transaction = (
@@ -91,7 +92,7 @@ const seedResolverRecords = Effect.fn("seedResolverRecordsForName")(function* (
       "owner",
     );
 
-  yield* transaction("setAddr", [node, environment.accounts.owner], "ETH address");
+  yield* transaction("setAddr", [node, ethAddress], "ETH address");
   yield* transaction("setAddr", [node, 0n, bitcoinAddress], "coin-type address");
   yield* transaction("setText", [node, "email", "hello@ensforge.test"], "email text");
   yield* transaction("setText", [node, "avatar", "https://ensforge.test/avatar.png"], "avatar");
@@ -126,7 +127,7 @@ const seedResolverRecords = Effect.fn("seedResolverRecordsForName")(function* (
       uri: { contentType: 8n, raw: abiUriRaw, value: abiUri },
     },
     addresses: {
-      eth: environment.accounts.owner,
+      eth: ethAddress,
       bitcoin: { coinType: 0n, value: bitcoinAddress },
     },
     contenthash,
@@ -161,6 +162,7 @@ export const seedResolverRecordFixtures = Effect.fn("seedResolverRecordFixtures"
       environment,
       "v2-migrated-locked.eth",
       environment.deployments.v2.contracts.publicResolver,
+      environment.accounts.owner2,
     ),
     reserved: yield* seedResolverRecords(
       environment,

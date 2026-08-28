@@ -186,6 +186,28 @@ preserves the requested key and returns its ordinary `Hex` value, mapping empty 
 Arbitrary data remains undecoded because its application-specific key defines its meaning. All
 three actions provide `.effect` and `.request` forms and work inside `readBatch`.
 
+## Name records and reverse resolution
+
+`getName` reads the resolver's low-level `name(bytes32)` profile for any ENS node. `getPrimaryName`
+is the user-facing Ethereum reverse lookup and uses the selected V1 or V2 Universal Resolver's
+verified `reverse(address, 60)` flow:
+
+```ts
+import { getName, getPrimaryName } from "@ensforge/core";
+
+const record = await getName(config, {
+  name: "1234abcd.addr.reverse",
+});
+const primary = await getPrimaryName(config, {
+  address: "0x1234...",
+});
+```
+
+`getName` returns `{ name: string | null }` without treating the record as verified.
+`getPrimaryName` returns `{ name: NormalizedName, match: true }` only after the Universal Resolver
+forward-resolves the candidate name back to the requested address. Missing and mismatched records
+return `null`. Both actions support CCIP-Read and semantic `readBatch` composition.
+
 ## Expiry
 
 `getExpiry` presents one lifecycle boundary across ENSv1, ENSv2, and unmigrated reserved names. It

@@ -13,6 +13,8 @@ import {
   getData,
   getExpiry,
   getInterface,
+  getName,
+  getPrimaryName,
   getPubkey,
   getResolver,
   getText,
@@ -34,6 +36,8 @@ import {
   type GetDataError,
   type GetExpiryError,
   type GetInterfaceError,
+  type GetNameError,
+  type GetPrimaryNameError,
   type GetPubkeyError,
   type GetResolverError,
   type GetResolverResult,
@@ -42,6 +46,8 @@ import {
   type ReadBatchOutcome,
   type RpcError,
   type InterfaceResult,
+  type NameResult,
+  type PrimaryNameResult,
   type PubkeyResult,
   type TextResult,
 } from "../../../src/index.js";
@@ -124,6 +130,22 @@ expectTypeOf(getPubkey.effect(config, { name: "example.eth" })).toEqualTypeOf<
 >();
 expectTypeOf(getPubkey.request({ name: "example.eth" })).toEqualTypeOf<
   EnsReadRequest<PubkeyResult, GetPubkeyError>
+>();
+expectTypeOf(getName(config, { name: "1234.addr.reverse" })).toEqualTypeOf<Promise<NameResult>>();
+expectTypeOf(getName.effect(config, { name: "1234.addr.reverse" })).toEqualTypeOf<
+  Effect.Effect<NameResult, GetNameError>
+>();
+expectTypeOf(getName.request({ name: "1234.addr.reverse" })).toEqualTypeOf<
+  EnsReadRequest<NameResult, GetNameError>
+>();
+expectTypeOf(getPrimaryName(config, { address: "0x1234" })).toEqualTypeOf<
+  Promise<PrimaryNameResult>
+>();
+expectTypeOf(getPrimaryName.effect(config, { address: "0x1234" })).toEqualTypeOf<
+  Effect.Effect<PrimaryNameResult, GetPrimaryNameError>
+>();
+expectTypeOf(getPrimaryName.request({ address: "0x1234" })).toEqualTypeOf<
+  EnsReadRequest<PrimaryNameResult, GetPrimaryNameError>
 >();
 expectTypeOf(getResolver(config, { name: "example.eth" })).toEqualTypeOf<
   Promise<GetResolverResult>

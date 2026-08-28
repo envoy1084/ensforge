@@ -112,7 +112,7 @@ export interface ReverseFixtureManifest {
   readonly verifiedV2: ReverseFixture;
   readonly unverified: ReverseFixture;
   readonly missing: ReverseFixture;
-  readonly contractMissing: ReverseFixture;
+  readonly verifiedContract: ReverseFixture;
 }
 
 export interface RegistrationCommitmentFixture {

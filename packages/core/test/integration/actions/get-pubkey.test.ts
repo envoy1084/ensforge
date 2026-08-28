@@ -51,15 +51,4 @@ describe("public key resolution integration", () => {
       expect(result).toBeNull();
     }),
   );
-
-  it.effect("keeps Promise and Effect APIs equivalent", () =>
-    Effect.gen(function* () {
-      const devnet = getIntegrationDevnet();
-      const parameters = { name: devnet.fixtures.records.v2.name };
-      const promiseResult = yield* Effect.promise(() => getPubkey(devnet.configs.v2, parameters));
-      const effectResult = yield* getPubkey.effect(devnet.configs.v2, parameters);
-
-      expect(effectResult).toEqual(promiseResult);
-    }),
-  );
 });

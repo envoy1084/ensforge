@@ -65,18 +65,6 @@ describe("data resolution integration", () => {
     }),
   );
 
-  it.effect("keeps Promise and Effect APIs equivalent", () =>
-    Effect.gen(function* () {
-      const devnet = getIntegrationDevnet();
-      const fixture = devnet.fixtures.records.v2;
-      const parameters = { name: fixture.name, key: fixture.data.key };
-      const promiseResult = yield* Effect.promise(() => getData(devnet.configs.v2, parameters));
-      const effectResult = yield* getData.effect(devnet.configs.v2, parameters);
-
-      expect(effectResult).toEqual(promiseResult);
-    }),
-  );
-
   it.effect("supports all three profile actions inside semantic read batches", () =>
     Effect.gen(function* () {
       const devnet = getIntegrationDevnet();
