@@ -1,37 +1,26 @@
 # Ensforge
 
-Ensforge is an Effect-native TypeScript SDK for the Ethereum Name Service.
-
-The repository contains the tooling foundation, a reusable package template, and the scaffold for
-the contracts package. Protocol actions and React integrations will be added as complete vertical
-slices.
-
-## Requirements
-
-- Node.js 24 or newer
-- pnpm 11.10.0
-
-## Getting started
-
-```sh
-pnpm install
-pnpm check
-```
+Effect-native ENS SDK for TypeScript, with Promise APIs for applications that do not use Effect
+directly. Ensforge targets ENSv2 while preserving the ENSv1 and migration behavior applications need.
 
 ## Workspace
 
 ```text
 packages/
-  contracts/   ENS contract ABIs, interfaces, and deployment metadata
-  core/        Effect-native ENS actions with Promise wrappers
-  template/    Copy-ready starter for new packages
-  test-env/    Private local-contract integration-test infrastructure
+  contracts/   ENSv1/ENSv2 ABIs, interfaces, constants, and deployments
+  core/        Semantic ENS actions with Promise and Effect APIs
+  test-env/    Private deterministic ENS integration environment
+  template/    Starter for future packages
 ```
 
-Klarity supplies the shared TypeScript, Oxfmt, Oxlint, tsdown, Vitest, Turbo, Lefthook, and
-Commitlint configuration. Changesets manages publishable package versions.
+## Development
 
-See [`packages/template/README.md`](packages/template/README.md) before creating a package.
+Requires Node.js 24+ and pnpm 11.10.0.
+
+```sh
+pnpm install
+pnpm check
+```
 
 ## License
 
