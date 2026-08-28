@@ -15,9 +15,15 @@ catalogs:
     '@ensdomains/content-hash':
       specifier: 3.1.1
       version: 3.1.1
+    cborg:
+      specifier: 6.1.1
+      version: 6.1.1
     effect:
       specifier: 4.0.0-rc.112
       version: 4.0.0-rc.112
+    fflate:
+      specifier: 0.8.3
+      version: 0.8.3
     viem:
       specifier: 2.56.0
       version: 2.56.0
@@ -101,9 +107,15 @@ importers:
       '@ensforge/contracts':
         specifier: workspace:*
         version: link:../contracts
+      cborg:
+        specifier: 'catalog:'
+        version: 6.1.1
       effect:
         specifier: 'catalog:'
         version: 4.0.0-rc.112
+      fflate:
+        specifier: 'catalog:'
+        version: 0.8.3
       viem:
         specifier: 'catalog:'
         version: 2.56.0(typescript@6.0.3)
@@ -1073,6 +1085,10 @@ packages:
   callsites@3.1.0:
     resolution: {integrity: sha512-P8BjAsXvZS+VIDUI11hHCQEv74YT67YUi5JJFNWIqL235sBmjX4+qx9Muvls5ivyNENctx46xQLQ3aTuE7ssaQ==}
     engines: {node: '>=6'}
+
+  cborg@6.1.1:
+    resolution: {integrity: sha512-Ci8+V1OMFtqea8EXicsATqV+3kEqCGXCicM+5MEzpKTxqy58WMzhJUjtUqAjfWpKPZ0wpG8F+u5mC8Xy/0Zevg==}
+    hasBin: true
 
   chai@6.2.2:
     resolution: {integrity: sha512-NUPRluOfOiTKBKvWPtSD4PhFvWCqOi0BGStNWs57X9js7XGTprSmFoz5F0tWhR4WPjNeR9jXqdC7/UpSJTnlRg==}
@@ -2789,6 +2805,8 @@ snapshots:
   cac@7.0.0: {}
 
   callsites@3.1.0: {}
+
+  cborg@6.1.1: {}
 
   chai@6.2.2: {}
 

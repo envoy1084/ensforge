@@ -1,10 +1,37 @@
-import { Schema } from "effect";
+import { Predicate, Schema } from "effect";
+
+import type { Abi as ViemAbi } from "viem";
 
 import { Hex } from "./hex.js";
 
 export const AddressRecordData = Hex.pipe(Schema.brand("AddressRecordData"));
 
 export type AddressRecordData = typeof AddressRecordData.Type;
+
+export const AbiRecordData = Hex.pipe(Schema.brand("AbiRecordData"));
+
+export type AbiRecordData = typeof AbiRecordData.Type;
+
+export const AbiContentType = Schema.Literals(["json", "zlib-json", "cbor", "uri"]);
+
+export type AbiContentType = typeof AbiContentType.Type;
+
+export const Abi = Schema.declare<ViemAbi>(
+  (value): value is ViemAbi =>
+    Array.isArray(value) &&
+    value.every(
+      (entry) =>
+        Predicate.isObject(entry) &&
+        Predicate.hasProperty(entry, "type") &&
+        Predicate.isString(entry.type),
+    ),
+  {
+    identifier: "Abi",
+    description: "An Ethereum JSON ABI",
+  },
+);
+
+export type Abi = typeof Abi.Type;
 
 export const ContentHash = Hex.pipe(Schema.brand("ContentHash"));
 

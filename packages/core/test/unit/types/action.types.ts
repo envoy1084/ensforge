@@ -6,6 +6,7 @@ import {
   defineAction,
   defineReadAction,
   defineWriteAction,
+  getAbi,
   getAddress,
   getAddresses,
   getContentHash,
@@ -18,9 +19,11 @@ import {
   type EnsReadRequest,
   type EnsWriteIntent,
   type EnsforgeConfig,
+  type AbiResult,
   type ExpiryResult,
   type AddressResult,
   type ContentHashResult,
+  type GetAbiError,
   type GetAddressError,
   type GetAddressesError,
   type GetContentHashError,
@@ -58,6 +61,13 @@ expectTypeOf(getExpiry.effect(config, { name: "example.eth" })).toEqualTypeOf<
 >();
 expectTypeOf(getExpiry.request({ name: "example.eth" })).toEqualTypeOf<
   EnsReadRequest<ExpiryResult | null, GetExpiryError>
+>();
+expectTypeOf(getAbi(config, { name: "example.eth" })).toEqualTypeOf<Promise<AbiResult>>();
+expectTypeOf(
+  getAbi.effect(config, { name: "example.eth", contentTypes: ["json", "uri"] }),
+).toEqualTypeOf<Effect.Effect<AbiResult, GetAbiError>>();
+expectTypeOf(getAbi.request({ name: "example.eth" })).toEqualTypeOf<
+  EnsReadRequest<AbiResult, GetAbiError>
 >();
 expectTypeOf(getAddress(config, { name: "example.eth" })).toEqualTypeOf<Promise<AddressResult>>();
 expectTypeOf(getAddress.effect(config, { name: "example.eth" })).toEqualTypeOf<

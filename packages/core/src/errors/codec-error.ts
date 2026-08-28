@@ -9,6 +9,8 @@ export const CodecErrorCode = Schema.Literals([
   "INVALID_ADDRESS_RECORD",
   "INVALID_CONTENT_HASH",
   "UNSUPPORTED_CONTENT_PROTOCOL",
+  "INVALID_ABI",
+  "UNSUPPORTED_ABI_CONTENT_TYPE",
 ]);
 
 export type CodecErrorCode = typeof CodecErrorCode.Type;

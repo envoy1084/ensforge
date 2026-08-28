@@ -58,6 +58,8 @@
     "@ensdomains/address-encoder": "catalog:",
     "@ensdomains/content-hash": "catalog:",
     "@ensforge/contracts": "workspace:*",
+    "cborg": "catalog:",
+    "fflate": "catalog:",
     "viem": "catalog:"
   },
   "peerDependencies": {

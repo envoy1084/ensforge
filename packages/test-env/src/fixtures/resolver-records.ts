@@ -18,7 +18,22 @@ import type { ResolverRecordsFixture } from "./manifest.js";
 
 const contenthash =
   "0xe301017012209d6c2be50f706953479ab9df2ce3edca90b68053c00b3004b7f0accbe1e8eedf" as const;
-const abiJson = '[{"type":"function","name":"hello","inputs":[],"outputs":[]}]';
+const abiValue = [
+  {
+    type: "function",
+    name: "hello",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [],
+  },
+] as const;
+const abiJson = JSON.stringify(abiValue);
+const abiZlibJson =
+  "0x789c8bae562aa92c4855b2524a2bcd4b2ec9cccf53d251ca4bcc058964a4e6e4e403b9c5258925a9bea525894999399925954099b2ccd472a044665e416949b1925574ac8e527e69098c531b0b0002731db7" as const;
+const abiCbor =
+  "0x81a5646e616d656568656c6c6f64747970656866756e6374696f6e66696e7075747380676f757470757473806f73746174654d75746162696c6974796476696577" as const;
+const abiUri = "ipfs://bafybeigdyrzt5sfp7udm7hu76u3dgn4hz6l4n5yhzf3xj7o2k5v5z5z5zi";
+const abiUriRaw = stringToHex(abiUri);
 const pubkey = {
   x: "0x1111111111111111111111111111111111111111111111111111111111111111",
   y: "0x2222222222222222222222222222222222222222222222222222222222222222",
@@ -87,7 +102,10 @@ const seedResolverRecords = Effect.fn("seedResolverRecordsForName")(function* (
     "description",
   );
   yield* transaction("setContenthash", [node, contenthash], "contenthash");
-  yield* transaction("setABI", [node, 1n, stringToHex(abiJson)], "ABI");
+  yield* transaction("setABI", [node, 1n, stringToHex(abiJson)], "JSON ABI");
+  yield* transaction("setABI", [node, 2n, abiZlibJson], "zlib JSON ABI");
+  yield* transaction("setABI", [node, 4n, abiCbor], "CBOR ABI");
+  yield* transaction("setABI", [node, 8n, abiUriRaw], "URI ABI");
   yield* transaction("setPubkey", [node, pubkey.x, pubkey.y], "public key");
   yield* transaction("setInterface", [node, interfaceId, environment.accounts.owner2], "interface");
   yield* transaction("setName", [node, name], "name");
@@ -100,7 +118,13 @@ const seedResolverRecords = Effect.fn("seedResolverRecordsForName")(function* (
   );
 
   return {
-    abi: { contentType: 1n, value: stringToHex(abiJson) },
+    abi: {
+      value: abiValue,
+      json: { contentType: 1n, raw: stringToHex(abiJson) },
+      zlibJson: { contentType: 2n, raw: abiZlibJson },
+      cbor: { contentType: 4n, raw: abiCbor },
+      uri: { contentType: 8n, raw: abiUriRaw, value: abiUri },
+    },
     addresses: {
       eth: environment.accounts.owner,
       bitcoin: { coinType: 0n, value: bitcoinAddress },

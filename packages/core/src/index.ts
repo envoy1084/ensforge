@@ -11,10 +11,12 @@ export {
   type EnsWriteIntent,
 } from "./action/index.js";
 export {
+  AbiResult,
   AddressResult,
   ContentHashResult,
   ExpiryResult,
   ExpirySource,
+  getAbi,
   getAddress,
   getAddresses,
   getContentHash,
@@ -28,6 +30,8 @@ export {
   TextResult,
   readBatch,
   readBatchSettled,
+  type GetAbiError,
+  type GetAbiParameters,
   type GetExpiryError,
   type GetExpiryParameters,
   type GetAddressError,
@@ -98,6 +102,9 @@ export {
   type NameKind,
 } from "./names/index.js";
 export {
+  Abi,
+  AbiContentType,
+  AbiRecordData,
   AddressRecordData,
   CanonicalNameIdentity,
   CoinType,

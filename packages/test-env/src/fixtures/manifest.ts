@@ -55,7 +55,13 @@ export interface EnsMigrationFixtureManifest {
 }
 
 export interface ResolverRecordsFixture {
-  readonly abi: { readonly contentType: bigint; readonly value: Hex };
+  readonly abi: {
+    readonly value: ReadonlyArray<Record<string, unknown>>;
+    readonly json: { readonly contentType: 1n; readonly raw: Hex };
+    readonly zlibJson: { readonly contentType: 2n; readonly raw: Hex };
+    readonly cbor: { readonly contentType: 4n; readonly raw: Hex };
+    readonly uri: { readonly contentType: 8n; readonly raw: Hex; readonly value: string };
+  };
   readonly addresses: {
     readonly eth: Address;
     readonly bitcoin: { readonly coinType: bigint; readonly value: Hex };

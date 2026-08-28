@@ -143,6 +143,25 @@ const content = await getContentHash(config, { name: "example.eth" });
 An unset record returns `{ protocol: null, value: null, raw: null }`. The action supports V1, V2,
 RESERVED-name mirroring, CCIP-Read, and `readBatch` through the shared Universal Resolver path.
 
+## Contract ABI
+
+`getAbi` resolves EIP-205 contract ABI records. It accepts JSON, zlib-compressed JSON, CBOR, and URI
+records by default; the resolver selects the lowest supported content-type bit that has a value.
+
+```ts
+import { getAbi } from "@ensforge/core";
+
+const abi = await getAbi(config, {
+  name: "example.eth",
+  contentTypes: ["json", "zlib-json", "cbor", "uri"],
+});
+```
+
+Inline formats return a viem-compatible ABI in `value`; URI records return the URI string without
+performing a network fetch. Every set result preserves the resolver bytes in `raw`. An unavailable
+record returns `{ contentType: null, value: null, raw: null }`. The action supports the same V1,
+V2, RESERVED-name, CCIP-Read, and `readBatch` path as other resolver profile actions.
+
 ## Expiry
 
 `getExpiry` presents one lifecycle boundary across ENSv1, ENSv2, and unmigrated reserved names. It

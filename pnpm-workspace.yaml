@@ -6,7 +6,9 @@ catalog:
   "@ensdomains/address-encoder": "1.1.4"
   "@ensdomains/content-hash": "3.1.1"
   "@effect/vitest": "4.0.0-rc.112"
+  cborg: "6.1.1"
   effect: "4.0.0-rc.112"
+  fflate: "0.8.3"
   viem: "2.56.0"
   vitest: "4.1.11"
 

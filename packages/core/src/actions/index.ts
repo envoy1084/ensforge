@@ -1,3 +1,4 @@
+export { AbiResult, getAbi, type GetAbiError, type GetAbiParameters } from "./get-abi/index.js";
 export {
   AddressResult,
   getAddress,

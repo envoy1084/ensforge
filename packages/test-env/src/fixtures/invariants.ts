@@ -24,6 +24,10 @@ export const verifyFixtureManifest = async (
     v2CommitmentAt,
     reservedAddress,
     v2Contenthash,
+    v2AbiJson,
+    v2AbiZlibJson,
+    v2AbiCbor,
+    v2AbiUri,
   ] = await Promise.all([
     environment.clients.publicClient.readContract({
       abi: baseRegistrarV1Abi,
@@ -89,6 +93,30 @@ export const verifyFixtureManifest = async (
       functionName: "contenthash",
       args: [namehash(fixtures.records.v2.name)],
     }),
+    environment.clients.publicClient.readContract({
+      abi: publicResolverV2Abi,
+      address: fixtures.records.v2.resolver,
+      functionName: "ABI",
+      args: [namehash(fixtures.records.v2.name), 1n],
+    }),
+    environment.clients.publicClient.readContract({
+      abi: publicResolverV2Abi,
+      address: fixtures.records.v2.resolver,
+      functionName: "ABI",
+      args: [namehash(fixtures.records.v2.name), 2n],
+    }),
+    environment.clients.publicClient.readContract({
+      abi: publicResolverV2Abi,
+      address: fixtures.records.v2.resolver,
+      functionName: "ABI",
+      args: [namehash(fixtures.records.v2.name), 4n],
+    }),
+    environment.clients.publicClient.readContract({
+      abi: publicResolverV2Abi,
+      address: fixtures.records.v2.resolver,
+      functionName: "ABI",
+      args: [namehash(fixtures.records.v2.name), 8n],
+    }),
   ]);
 
   const invalid =
@@ -98,6 +126,14 @@ export const verifyFixtureManifest = async (
     v2Email !== fixtures.records.v2.texts.email ||
     !isAddressEqual(reservedAddress, fixtures.records.reserved.addresses.eth) ||
     v2Contenthash !== fixtures.records.v2.contenthash ||
+    v2AbiJson[0] !== fixtures.records.v2.abi.json.contentType ||
+    v2AbiJson[1] !== fixtures.records.v2.abi.json.raw ||
+    v2AbiZlibJson[0] !== fixtures.records.v2.abi.zlibJson.contentType ||
+    v2AbiZlibJson[1] !== fixtures.records.v2.abi.zlibJson.raw ||
+    v2AbiCbor[0] !== fixtures.records.v2.abi.cbor.contentType ||
+    v2AbiCbor[1] !== fixtures.records.v2.abi.cbor.raw ||
+    v2AbiUri[0] !== fixtures.records.v2.abi.uri.contentType ||
+    v2AbiUri[1] !== fixtures.records.v2.abi.uri.raw ||
     !isAddressEqual(v1Approved, fixtures.permissions.operator) ||
     !v2HasRole ||
     v1CommitmentAt === 0n ||
@@ -112,6 +148,10 @@ export const verifyFixtureManifest = async (
         v1Email,
         v1Owner,
         v2CommitmentAt,
+        v2AbiCbor,
+        v2AbiJson,
+        v2AbiUri,
+        v2AbiZlibJson,
         v2Contenthash,
         v2Email,
         v2HasRole,
