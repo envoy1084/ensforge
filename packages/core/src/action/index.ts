@@ -5,4 +5,10 @@ export type { BlockParameters } from "./block.js";
 export { defineReadAction } from "./read-request.js";
 export type { EnsReadAction, EnsReadRequest } from "./read-request.js";
 export { defineWriteAction } from "./write-intent.js";
-export type { EnsWriteAction, EnsWriteIntent } from "./write-intent.js";
+export type {
+  EnsWriteAction,
+  EnsWriteIntent,
+  EnsWriteIntentPreparer,
+  PreparedWriteCallDetails,
+  WritePreparationContext,
+} from "./write-intent.js";

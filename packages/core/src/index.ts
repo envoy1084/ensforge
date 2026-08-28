@@ -9,6 +9,9 @@ export {
   type EnsReadRequest,
   type EnsWriteAction,
   type EnsWriteIntent,
+  type EnsWriteIntentPreparer,
+  type PreparedWriteCallDetails,
+  type WritePreparationContext,
 } from "./action/index.js";
 export * from "./actions/index.js";
 export {
@@ -34,6 +37,12 @@ export {
   NameErrorCode,
   RpcError,
   RpcErrorCode,
+  TransactionError,
+  TransactionErrorCode,
+  WalletError,
+  WalletErrorCode,
+  WritePlanError,
+  WritePlanErrorCode,
 } from "./errors/index.js";
 export {
   analyzeName,
@@ -78,3 +87,4 @@ export {
   NormalizedName,
   RegistryResource,
 } from "./schemas/index.js";
+export * from "./write/index.js";
