@@ -31,6 +31,16 @@ export const dnsRecordResolverAbi = [
     ],
     outputs: [{ name: "", type: "bytes" }],
   },
+  {
+    type: "function",
+    name: "hasDNSRecords",
+    stateMutability: "view",
+    inputs: [
+      { name: "node", type: "bytes32" },
+      { name: "name", type: "bytes32" },
+    ],
+    outputs: [{ name: "", type: "bool" }],
+  },
 ] as const;
 
 export const dnsRecordResolverInterfaceId = "0xa8fa5682" as const;

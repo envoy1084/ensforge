@@ -20,9 +20,11 @@ import { RpcError } from "../../errors/rpc-error.js";
 export type ViemOperation =
   | "encodeFunctionData"
   | "getBlock"
+  | "getLogs"
   | "readContract"
   | "multicall"
   | "simulateContract"
+  | "watchEvent"
   | "writeContract";
 
 export type ViemError = ContractError | RpcError;
@@ -33,7 +35,10 @@ const fallbackCodes = {
   multicall: "MULTICALL_FAILED",
   simulateContract: "SIMULATION_FAILED",
   writeContract: "WRITE_FAILED",
-} as const satisfies Record<Exclude<ViemOperation, "getBlock">, ContractErrorCode>;
+} as const satisfies Record<
+  Exclude<ViemOperation, "getBlock" | "getLogs" | "watchEvent">,
+  ContractErrorCode
+>;
 
 const findCause = <ErrorClass extends Error>(
   cause: unknown,
@@ -74,10 +79,13 @@ const isDecodeError = (cause: unknown): boolean =>
   findCause(cause, AbiDecodingDataSizeTooSmallError) !== undefined ||
   findCause(cause, AbiDecodingZeroDataError) !== undefined;
 
-export function viemErrorToEffectError(cause: unknown, operation: "getBlock"): RpcError;
 export function viemErrorToEffectError(
   cause: unknown,
-  operation: Exclude<ViemOperation, "getBlock">,
+  operation: "getBlock" | "getLogs" | "watchEvent",
+): RpcError;
+export function viemErrorToEffectError(
+  cause: unknown,
+  operation: Exclude<ViemOperation, "getBlock" | "getLogs" | "watchEvent">,
 ): ViemError;
 export function viemErrorToEffectError(cause: unknown, operation: ViemOperation): ViemError {
   const timeout = findCause(cause, TimeoutError);
@@ -110,7 +118,7 @@ export function viemErrorToEffectError(cause: unknown, operation: ViemOperation)
     });
   }
 
-  if (operation === "getBlock") {
+  if (operation === "getBlock" || operation === "getLogs" || operation === "watchEvent") {
     return new RpcError({
       code: "REQUEST_FAILED",
       message: messageFromCause(cause),

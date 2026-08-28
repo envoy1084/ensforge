@@ -1,5 +1,7 @@
 export * from "./batch/index.js";
 export * from "./capabilities/index.js";
+export * from "./dns/index.js";
+export * from "./events/index.js";
 export * from "./migration/index.js";
 export * from "./name/index.js";
 export * from "./records/index.js";
