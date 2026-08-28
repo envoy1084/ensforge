@@ -22,6 +22,8 @@ export {
   type EnsFixtureManifest,
   type EnsMigrationFixtureManifest,
   type EnsNameFixture,
+  type ResolverRecordFixtureManifest,
+  type ResolverRecordsFixture,
   type EnsV1FixtureManifest,
   type EnsV2FixtureManifest,
   type FixtureLifecycle,
