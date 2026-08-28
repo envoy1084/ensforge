@@ -132,7 +132,7 @@ export const mapDevnetDeployments = Effect.fn("mapDevnetDeployments")(function* 
     protocol: "v2",
     status: "beta",
     contracts: {
-      universalResolver: source.UniversalResolver,
+      universalResolver: source.UniversalResolverV2,
       rootRegistry: source.RootRegistry,
       ethRegistry: source.ETHRegistry,
       ethRegistrar: source.ETHRegistrar,

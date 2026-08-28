@@ -322,13 +322,13 @@ export const seedMigrationFixtures = Effect.fn("seedMigrationFixtures")(function
     ),
     migratedUnlocked: fixture(
       "v2-migrated-unlocked.eth",
-      unlockedExpiry,
+      unlockedExpiry + premigrationBonus,
       publicResolver,
       environment.accounts.owner,
     ),
     migratedLocked: fixture(
       "v2-migrated-locked.eth",
-      lockedExpiry,
+      lockedExpiry + premigrationBonus,
       publicResolver,
       environment.accounts.owner,
     ),
