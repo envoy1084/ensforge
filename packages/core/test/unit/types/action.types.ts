@@ -17,6 +17,7 @@ import {
   getName,
   getPrimaryName,
   getPubkey,
+  getRecords,
   getResolver,
   getText,
   getTexts,
@@ -42,6 +43,7 @@ import {
   type GetNameError,
   type GetPrimaryNameError,
   type GetPubkeyError,
+  type GetRecordsError,
   type GetResolverError,
   type GetResolverResult,
   type GetTextError,
@@ -52,6 +54,7 @@ import {
   type NameResult,
   type PrimaryNameResult,
   type PubkeyResult,
+  type GetRecordsResult,
   type TextResult,
 } from "../../../src/index.js";
 
@@ -144,6 +147,31 @@ expectTypeOf(getPubkey.effect(config, { name: "example.eth" })).toEqualTypeOf<
 expectTypeOf(getPubkey.request({ name: "example.eth" })).toEqualTypeOf<
   EnsReadRequest<PubkeyResult, GetPubkeyError>
 >();
+const selectedRecords = {
+  addresses: [60n],
+  avatar: true,
+  texts: ["email"],
+} as const;
+expectTypeOf(getRecords(config, { name: "example.eth", records: selectedRecords })).toEqualTypeOf<
+  Promise<
+    GetRecordsResult<{
+      readonly addresses: readonly [60n];
+      readonly avatar: true;
+      readonly texts: readonly ["email"];
+    }>
+  >
+>();
+expectTypeOf(
+  getRecords.effect(config, { name: "example.eth", records: selectedRecords }),
+).toEqualTypeOf<Effect.Effect<GetRecordsResult<typeof selectedRecords>, GetRecordsError>>();
+expectTypeOf(getRecords.request({ name: "example.eth", records: selectedRecords })).toEqualTypeOf<
+  EnsReadRequest<GetRecordsResult<typeof selectedRecords>, GetRecordsError>
+>();
+const profile = {} as GetRecordsResult<typeof selectedRecords>;
+expectTypeOf(profile.avatar).toEqualTypeOf<AvatarResult>();
+expectTypeOf(profile.addresses).toEqualTypeOf<ReadonlyArray<AddressResult>>();
+// @ts-expect-error Unselected result fields are omitted.
+const unselectedPubkey = profile.pubkey;
 expectTypeOf(getName(config, { name: "1234.addr.reverse" })).toEqualTypeOf<Promise<NameResult>>();
 expectTypeOf(getName.effect(config, { name: "1234.addr.reverse" })).toEqualTypeOf<
   Effect.Effect<NameResult, GetNameError>
@@ -218,3 +246,4 @@ action.effect = implementation;
 
 void invalidReadRequest;
 void invalidWriteIntent;
+void unselectedPubkey;

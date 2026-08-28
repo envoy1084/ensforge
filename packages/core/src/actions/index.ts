@@ -45,6 +45,14 @@ export {
   PrimaryNameResult,
 } from "./get-primary-name/index.js";
 export {
+  getRecords,
+  type GetRecordsAction,
+  type GetRecordsError,
+  type GetRecordsParameters,
+  type GetRecordsResult,
+  type GetRecordsSelection,
+} from "./get-records/index.js";
+export {
   getPubkey,
   type GetPubkeyError,
   type GetPubkeyParameters,
