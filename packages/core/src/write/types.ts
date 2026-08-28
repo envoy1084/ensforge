@@ -52,7 +52,6 @@ export interface WalletOverrides {
 export interface PreparedWriteCall {
   readonly id: string;
   readonly operation: string;
-  readonly parameters: unknown;
   readonly protocol?: EnsProtocol;
   readonly account: Account | Address;
   readonly chainId: number;

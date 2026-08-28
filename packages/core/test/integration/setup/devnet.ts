@@ -1,4 +1,4 @@
-import { createPublicClient, defineChain, http } from "viem";
+import { createPublicClient, createWalletClient, defineChain, http } from "viem";
 import { inject } from "vitest";
 
 import type { EnsforgeConfig } from "../../../src/index.js";
@@ -26,9 +26,15 @@ export const getIntegrationDevnet = (): IntegrationDevnet => {
       },
     },
   });
+  const transport = http(context.rpcUrl, { retryCount: 0, timeout: 10_000 });
   const publicClient = createPublicClient({
     chain,
-    transport: http(context.rpcUrl, { retryCount: 0, timeout: 10_000 }),
+    transport,
+  });
+  const walletClient = createWalletClient({
+    account: context.accounts.owner,
+    chain,
+    transport,
   });
 
   return {
@@ -37,6 +43,7 @@ export const getIntegrationDevnet = (): IntegrationDevnet => {
       v1: createTestConfig({
         deployments: Object.freeze({ protocol: "v1", v1: context.deployments.v1 }),
         publicClient,
+        walletClient,
       }),
       v2: createTestConfig({
         deployments: Object.freeze({
@@ -45,6 +52,7 @@ export const getIntegrationDevnet = (): IntegrationDevnet => {
           v2: context.deployments.v2,
         }),
         publicClient,
+        walletClient,
       }),
     },
   };

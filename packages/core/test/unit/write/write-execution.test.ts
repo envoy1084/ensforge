@@ -222,4 +222,40 @@ describe("write execution", () => {
       assert.strictEqual(completed.completedStages[0]?.id, "write");
     }),
   );
+
+  it.effect("resumes only the unsubmitted calls of a partially completed stage", () =>
+    Effect.gen(function* () {
+      const harness = makeHarness();
+      vi.mocked(harness.walletClient.sendTransaction)
+        .mockReset()
+        .mockResolvedValueOnce(firstHash)
+        .mockRejectedValueOnce(new UserRejectedRequestError(new Error("rejected")));
+      const plan = {
+        id: "partial-plan",
+        stages: [
+          {
+            type: "calls",
+            id: "records",
+            mode: "sequential",
+            calls: [testWrite.call({ to: target }), testWrite.call({ to: target })],
+          },
+        ],
+      } as const;
+      const partial = yield* executeWritePlan.effect(harness.config, { plan });
+      assert.strictEqual(partial.status, "partial");
+
+      vi.mocked(harness.walletClient.sendTransaction).mockReset().mockResolvedValue(secondHash);
+      const completed = yield* executeWritePlan.effect(harness.config, {
+        plan,
+        resume: partial,
+      });
+
+      assert.strictEqual(completed.status, "completed");
+      assert.deepStrictEqual(
+        completed.completedStages[0]?.result.calls.map((call) => call.status),
+        ["confirmed", "confirmed"],
+      );
+      expect(harness.walletClient.sendTransaction).toHaveBeenCalledOnce();
+    }),
+  );
 });

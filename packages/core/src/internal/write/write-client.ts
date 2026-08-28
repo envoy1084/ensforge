@@ -18,7 +18,7 @@ import { TransactionError } from "../../errors/transaction-error.js";
 import type { WalletError } from "../../errors/wallet-error.js";
 import type { PreparedWriteCall } from "../../write/types.js";
 import { viemErrorToEffectError } from "../errors/viem-error.js";
-import { batchStatusError, walletRequestError } from "../errors/write-error.js";
+import { batchStatusError, receiptWaitError, walletRequestError } from "../errors/write-error.js";
 
 export interface WaitForReceiptOptions {
   readonly confirmations?: number;
@@ -101,7 +101,7 @@ export const makeWriteClient = (publicClient: PublicClient): WriteClientService 
               : { confirmations: options.confirmations }),
             ...(options.timeout === undefined ? {} : { timeout: options.timeout }),
           }),
-        catch: (cause) => viemErrorToEffectError(cause, "getBlock"),
+        catch: (cause) => receiptWaitError(cause, hash),
       }).pipe(
         Effect.flatMap((receipt) =>
           receipt.status === "success"

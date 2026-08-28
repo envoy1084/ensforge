@@ -48,7 +48,6 @@ export const prepareWriteIntents = Effect.fn("prepareWriteIntents")(function* (
             const call = {
               id,
               operation: intent.operation,
-              parameters: intent.parameters,
               account,
               chainId: config.chainId,
               to: details.to,

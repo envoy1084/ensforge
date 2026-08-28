@@ -5,6 +5,7 @@ import {
   MethodNotSupportedRpcError,
   UnauthorizedProviderError,
   UnsupportedChainIdError,
+  TimeoutError,
   UserRejectedRequestError,
 } from "viem";
 
@@ -74,8 +75,24 @@ export function walletRequestError(
 
 export const batchStatusError = (cause: unknown, batchId: string) =>
   new TransactionError({
-    code: "BATCH_STATUS_FAILED",
-    message: "Unable to read the wallet call-batch status",
+    code:
+      findViemErrorCause(cause, TimeoutError) === undefined
+        ? "BATCH_STATUS_FAILED"
+        : "CONFIRMATION_TIMEOUT",
+    message:
+      findViemErrorCause(cause, TimeoutError) === undefined
+        ? "Unable to read the wallet call-batch status"
+        : "Timed out while waiting for the wallet call batch",
     cause,
     batchId,
   });
+
+export const receiptWaitError = (cause: unknown, transactionHash: `0x${string}`) =>
+  findViemErrorCause(cause, TimeoutError) === undefined
+    ? viemErrorToEffectError(cause, "getBlock")
+    : new TransactionError({
+        code: "CONFIRMATION_TIMEOUT",
+        message: `Timed out while waiting for transaction ${transactionHash}`,
+        cause,
+        transactionHash,
+      });
