@@ -98,3 +98,20 @@ export {
   type ReadBatchSettled,
   type ReadBatchSettledResult,
 } from "./read-batch.js";
+export {
+  resolve,
+  ResolveResult,
+  resolveWithResolver,
+  ResolveWithResolverResult,
+  type ResolveError,
+  type ResolveParameters,
+  type ResolveWithResolverError,
+  type ResolveWithResolverParameters,
+} from "./resolve/index.js";
+export {
+  resolveBatch,
+  type ResolveBatchCall,
+  type ResolveBatchError,
+  type ResolveBatchParameters,
+  type ResolveBatchResult,
+} from "./resolve-batch/index.js";

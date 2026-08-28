@@ -23,6 +23,9 @@ import {
   getTexts,
   readBatch,
   readBatchSettled,
+  resolve,
+  resolveBatch,
+  resolveWithResolver,
   type EnsReadRequest,
   type EnsWriteIntent,
   type EnsforgeConfig,
@@ -50,6 +53,12 @@ import {
   type GetTextsError,
   type ReadBatchOutcome,
   type RpcError,
+  type ResolveBatchError,
+  type ResolveBatchResult,
+  type ResolveError,
+  type ResolveResult,
+  type ResolveWithResolverError,
+  type ResolveWithResolverResult,
   type InterfaceResult,
   type NameResult,
   type PrimaryNameResult,
@@ -212,6 +221,41 @@ expectTypeOf(getTexts(config, { name: "example.eth", keys: ["email"] })).toEqual
 expectTypeOf(getTexts.effect(config, { name: "example.eth", keys: ["email"] })).toEqualTypeOf<
   Effect.Effect<ReadonlyArray<TextResult>, GetTextsError>
 >();
+expectTypeOf(resolve(config, { name: "example.eth", data: "0x1234" })).toEqualTypeOf<
+  Promise<ResolveResult>
+>();
+expectTypeOf(resolve.effect(config, { name: "example.eth", data: "0x1234" })).toEqualTypeOf<
+  Effect.Effect<ResolveResult, ResolveError>
+>();
+expectTypeOf(resolve.request({ name: "example.eth", data: "0x1234" })).toEqualTypeOf<
+  EnsReadRequest<ResolveResult, ResolveError>
+>();
+expectTypeOf(
+  resolveWithResolver(config, {
+    name: "example.eth",
+    data: "0x1234",
+    resolverAddress: "0x1234",
+  }),
+).toEqualTypeOf<Promise<ResolveWithResolverResult>>();
+expectTypeOf(
+  resolveWithResolver.effect(config, {
+    name: "example.eth",
+    data: "0x1234",
+    resolverAddress: "0x1234",
+    gateways: ["https://gateway.example/{sender}/{data}.json"],
+  }),
+).toEqualTypeOf<Effect.Effect<ResolveWithResolverResult, ResolveWithResolverError>>();
+expectTypeOf(
+  resolveBatch(config, {
+    calls: [
+      { name: "alice.eth", data: "0x1234" },
+      { name: "bob.eth", data: "0xabcd", resolverAddress: "0x1234", gateways: [] },
+    ],
+  }),
+).toEqualTypeOf<Promise<ResolveBatchResult>>();
+expectTypeOf(
+  resolveBatch.effect(config, { calls: [{ name: "alice.eth", data: "0x1234" }] }),
+).toEqualTypeOf<Effect.Effect<ResolveBatchResult, ResolveBatchError>>();
 
 const readRequest = readAction.request({ value: 1 });
 const writeIntent = writeAction.call({ value: 1 });

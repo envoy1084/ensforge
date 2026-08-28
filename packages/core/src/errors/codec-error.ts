@@ -13,6 +13,7 @@ export const CodecErrorCode = Schema.Literals([
   "UNSUPPORTED_ABI_CONTENT_TYPE",
   "INVALID_INTERFACE_ID",
   "INVALID_ADDRESS",
+  "INVALID_HEX",
 ]);
 
 export type CodecErrorCode = typeof CodecErrorCode.Type;

@@ -15,6 +15,11 @@ export interface ResolveNameParameters {
   readonly data: Hex;
 }
 
+export interface ResolveNameWithResolverParameters extends ResolveNameParameters {
+  readonly resolver: Address;
+  readonly gateways: ReadonlyArray<string>;
+}
+
 export const resolveName = Effect.fn("resolveName")(function* ({
   universalResolver,
   protocol,
@@ -45,5 +50,40 @@ export const resolveName = Effect.fn("resolveName")(function* ({
     functionName: "resolve",
     args: [name, data],
     ...block,
+  });
+});
+
+export const resolveNameWithResolver = Effect.fn("resolveNameWithResolver")(function* ({
+  universalResolver,
+  resolver,
+  protocol,
+  name,
+  data,
+  gateways,
+}: ResolveNameWithResolverParameters): Effect.fn.Return<
+  Hex,
+  ViemError,
+  EthereumClient | ReadContext
+> {
+  const ethereum = yield* EthereumClient;
+  const context = yield* ReadContext;
+  const block = context.block;
+  const parameters = {
+    address: universalResolver,
+    functionName: "resolveWithResolver",
+    args: [resolver, name, data, gateways],
+    ...block,
+  } as const;
+
+  if (protocol === "v1") {
+    return yield* ethereum.readContractDirect({
+      ...parameters,
+      abi: universalResolverV1Abi,
+    });
+  }
+
+  return yield* ethereum.readContractDirect({
+    ...parameters,
+    abi: universalResolverV2Abi,
   });
 });
