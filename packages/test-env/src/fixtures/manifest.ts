@@ -97,6 +97,13 @@ export interface PermissionFixtureManifest {
     readonly registryOperator: true;
     readonly resolverDelegate: { readonly name: string; readonly node: Hex };
     readonly scopedRole: { readonly name: string; readonly role: bigint; readonly tokenId: bigint };
+    readonly permissionedResolver: {
+      readonly name: string;
+      readonly resolver: Address;
+      readonly resource: bigint;
+      readonly role: bigint;
+      readonly textKey: string;
+    };
   };
 }
 

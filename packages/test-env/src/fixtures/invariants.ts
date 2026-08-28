@@ -3,7 +3,12 @@ import {
   ethRegistrarControllerV1Abi,
   publicResolverV1Abi,
 } from "@ensforge/contracts/v1";
-import { ethRegistrarV2Abi, ethRegistryV2Abi, publicResolverV2Abi } from "@ensforge/contracts/v2";
+import {
+  ethRegistrarV2Abi,
+  ethRegistryV2Abi,
+  permissionedResolverV2Abi,
+  publicResolverV2Abi,
+} from "@ensforge/contracts/v2";
 import { isAddressEqual, labelhash, namehash } from "viem";
 
 import type { DevnetEnvironment } from "../environment.js";
@@ -28,6 +33,8 @@ export const verifyFixtureManifest = async (
     v2AbiZlibJson,
     v2AbiCbor,
     v2AbiUri,
+    permissionedResolver,
+    permissionedResolverHasRole,
   ] = await Promise.all([
     environment.clients.publicClient.readContract({
       abi: baseRegistrarV1Abi,
@@ -117,6 +124,22 @@ export const verifyFixtureManifest = async (
       functionName: "ABI",
       args: [namehash(fixtures.records.v2.name), 8n],
     }),
+    environment.clients.publicClient.readContract({
+      abi: ethRegistryV2Abi,
+      address: environment.deployments.v2.contracts.ethRegistry,
+      functionName: "getResolver",
+      args: ["v2-write-ready"],
+    }),
+    environment.clients.publicClient.readContract({
+      abi: permissionedResolverV2Abi,
+      address: fixtures.permissions.v2.permissionedResolver.resolver,
+      functionName: "hasRoles",
+      args: [
+        fixtures.permissions.v2.permissionedResolver.resource,
+        fixtures.permissions.v2.permissionedResolver.role,
+        fixtures.permissions.operator,
+      ],
+    }),
   ]);
 
   const invalid =
@@ -134,6 +157,8 @@ export const verifyFixtureManifest = async (
     v2AbiCbor[1] !== fixtures.records.v2.abi.cbor.raw ||
     v2AbiUri[0] !== fixtures.records.v2.abi.uri.contentType ||
     v2AbiUri[1] !== fixtures.records.v2.abi.uri.raw ||
+    !isAddressEqual(permissionedResolver, fixtures.permissions.v2.permissionedResolver.resolver) ||
+    !permissionedResolverHasRole ||
     !isAddressEqual(v1Approved, fixtures.permissions.operator) ||
     !v2HasRole ||
     v1CommitmentAt === 0n ||
@@ -156,6 +181,8 @@ export const verifyFixtureManifest = async (
         v2Email,
         v2HasRole,
         v2Owner: v2State.latestOwner,
+        permissionedResolver,
+        permissionedResolverHasRole,
       },
     });
   }
