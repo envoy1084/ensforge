@@ -3,7 +3,7 @@ import type { UserConfig } from "tsdown";
 
 export default defineConfig({
   alias: { "#/": "./src/" },
-  entry: { index: "src/index.ts" },
+  entry: { index: "src/index.ts", verify: "src/verify.ts" },
   exports: { devExports: "workspace-source" },
   platform: "node",
   unbundle: true,

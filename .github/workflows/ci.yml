@@ -44,5 +44,5 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - name: Pull pinned ENS devnet image
         run: docker pull "${ENSFORGE_TEST_IMAGE}"
-      - name: Run contract integration tests
+      - name: Verify seeded ENS devnet
         run: pnpm test:integration

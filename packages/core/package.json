@@ -28,7 +28,8 @@
     },
     "./package.json": "./package.json",
     "./testing": {
-      "workspace-source": "./src/testing/index.ts"
+      "workspace-source": "./src/testing/index.ts",
+      "default": "./dist/testing.js"
     }
   },
   "publishConfig": {

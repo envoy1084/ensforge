@@ -14,11 +14,16 @@
       "workspace-source": "./src/index.ts",
       "default": "./dist/index.js"
     },
+    "./verify": {
+      "workspace-source": "./src/verify.ts",
+      "default": "./dist/verify.js"
+    },
     "./package.json": "./package.json"
   },
   "publishConfig": {
     "exports": {
       ".": "./dist/index.js",
+      "./verify": "./dist/verify.js",
       "./package.json": "./package.json"
     }
   },
@@ -26,9 +31,7 @@
     "build": "tsdown",
     "dev": "tsdown --watch",
     "lint": "oxlint --deny-warnings .",
-    "test": "vitest run",
-    "test:integration": "vitest run --config vitest.integration.config.ts",
-    "test:watch": "vitest",
+    "verify": "pnpm --filter @ensforge/core build && pnpm build && node dist/verify.js",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

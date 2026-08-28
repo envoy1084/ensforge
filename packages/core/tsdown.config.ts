@@ -12,7 +12,10 @@ export default defineConfig({
         ? exports
         : {
             ...exports,
-            "./testing": { "workspace-source": "./src/testing/index.ts" },
+            "./testing": {
+              "workspace-source": "./src/testing/index.ts",
+              default: "./dist/testing.js",
+            },
           },
   },
   unbundle: true,
