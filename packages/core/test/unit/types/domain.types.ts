@@ -15,7 +15,7 @@ import {
   type NormalizedName,
   type RegistryResource,
   normalizeName,
-} from "../../src/index.js";
+} from "../../../src/index.js";
 expectTypeOf(normalizeName("example.eth")).toEqualTypeOf<NormalizedName>();
 expectTypeOf(decodeAddressRecord({ coinType: 60n, data: "0x" })).toEqualTypeOf<string | null>();
 expectTypeOf(decodeContentHash("0x")).toEqualTypeOf<DecodedContentHash | null>();

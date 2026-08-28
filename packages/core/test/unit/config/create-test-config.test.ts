@@ -2,7 +2,7 @@ import { mainnetV1Deployment, type EnsV1Deployment } from "@ensforge/contracts/d
 import { createPublicClient, createWalletClient, custom, defineChain, zeroAddress } from "viem";
 import { describe, expect, it } from "vitest";
 
-import { createTestConfig, ensTestChainId } from "../../src/testing/index.js";
+import { createTestConfig, ensTestChainId } from "../../../src/testing/index.js";
 
 const devnetChain = defineChain({
   id: ensTestChainId,

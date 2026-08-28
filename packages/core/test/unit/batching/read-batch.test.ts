@@ -11,7 +11,7 @@ import {
   readBatchSettled,
   RpcError,
   type EnsforgeConfig,
-} from "../../src/index.js";
+} from "../../../src/index.js";
 
 const makeConfig = (getBlock = vi.fn().mockResolvedValue({ number: 123n })) =>
   createConfig({

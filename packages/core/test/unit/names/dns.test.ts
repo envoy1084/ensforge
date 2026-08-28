@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { CodecError, dnsDecodeName, dnsEncodeName } from "../../src/index.js";
+import { CodecError, dnsDecodeName, dnsEncodeName } from "../../../src/index.js";
 
 describe("DNS name codecs", () => {
   it("decodes names encoded by the public encoder", () => {

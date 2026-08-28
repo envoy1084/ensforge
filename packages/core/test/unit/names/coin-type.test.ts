@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { CodecError, fromCoinType, toCoinType } from "../../src/index.js";
+import { CodecError, fromCoinType, toCoinType } from "../../../src/index.js";
 
 describe("fromCoinType", () => {
   it("distinguishes Ethereum, namespaced EVM chains, and SLIP-44 coins", () => {

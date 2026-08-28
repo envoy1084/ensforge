@@ -7,7 +7,7 @@ import {
   defineReadAction,
   defineWriteAction,
   type EnsforgeConfig,
-} from "../../src/index.js";
+} from "../../../src/index.js";
 
 const config = {} as EnsforgeConfig;
 

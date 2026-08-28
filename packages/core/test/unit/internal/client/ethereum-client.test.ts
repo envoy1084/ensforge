@@ -3,9 +3,9 @@ import { Effect } from "effect";
 import type { PublicClient } from "viem";
 import { describe, expect, it, vi } from "vitest";
 
-import { ContractError } from "../../../src/index.js";
-import { makeEthereumClient } from "../../../src/internal/client/ethereum-client.js";
-import { makeReadExecution, ReadContext } from "../../../src/internal/read/execution-context.js";
+import { ContractError } from "../../../../src/index.js";
+import { makeEthereumClient } from "../../../../src/internal/client/ethereum-client.js";
+import { makeReadExecution, ReadContext } from "../../../../src/internal/read/execution-context.js";
 
 const address = "0x0000000000000000000000000000000000000001";
 const ownerAbi = [

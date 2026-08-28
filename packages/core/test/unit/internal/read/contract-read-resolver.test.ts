@@ -3,12 +3,12 @@ import { Effect, Result } from "effect";
 import type { PublicClient } from "viem";
 import { describe, expect, it, vi } from "vitest";
 
-import { ContractError } from "../../../src/errors/contract-error.js";
+import { ContractError } from "../../../../src/errors/contract-error.js";
 import {
   executeContractRead,
   makeContractReadResolver,
-} from "../../../src/internal/read/contract-read-resolver.js";
-import { makeContractReadRequest } from "../../../src/internal/read/contract-read.js";
+} from "../../../../src/internal/read/contract-read-resolver.js";
+import { makeContractReadRequest } from "../../../../src/internal/read/contract-read.js";
 
 const registry = "0x0000000000000000000000000000000000000001";
 const alice = "0x0000000000000000000000000000000000000002";

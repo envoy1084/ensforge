@@ -6,7 +6,7 @@ import {
   decodeContentHash,
   encodeAddressRecord,
   encodeContentHash,
-} from "../../src/index.js";
+} from "../../../src/index.js";
 
 describe("record codec boundaries", () => {
   it("preserves an address through the official ENS address coder", () => {

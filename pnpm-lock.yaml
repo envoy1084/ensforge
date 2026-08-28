@@ -44,6 +44,9 @@ importers:
       '@effect/vitest':
         specifier: 'catalog:'
         version: 4.0.0-rc.112(effect@4.0.0-rc.112)(vitest@4.1.11)
+      '@ensforge/test-env':
+        specifier: workspace:*
+        version: link:packages/test-env
       '@types/node':
         specifier: 24.13.3
         version: 24.13.3

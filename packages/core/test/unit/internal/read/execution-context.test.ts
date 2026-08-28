@@ -3,10 +3,13 @@ import { Effect, Result } from "effect";
 import type { PublicClient } from "viem";
 import { describe, expect, it, vi } from "vitest";
 
-import { createConfig } from "../../../src/config/create-config.js";
-import { getConfigLayer } from "../../../src/config/internal.js";
-import { RpcError } from "../../../src/errors/rpc-error.js";
-import { ReadExecution, makeReadExecution } from "../../../src/internal/read/execution-context.js";
+import { createConfig } from "../../../../src/config/create-config.js";
+import { getConfigLayer } from "../../../../src/config/internal.js";
+import { RpcError } from "../../../../src/errors/rpc-error.js";
+import {
+  ReadExecution,
+  makeReadExecution,
+} from "../../../../src/internal/read/execution-context.js";
 import { makeSepoliaPublicClient } from "../../fixtures/client-fixtures.js";
 
 const makePublicClient = (getBlock: ReturnType<typeof vi.fn>) =>

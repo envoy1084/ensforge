@@ -19,7 +19,7 @@ import {
   type GetResolverResult,
   type ReadBatchOutcome,
   type RpcError,
-} from "../../src/index.js";
+} from "../../../src/index.js";
 
 type TestFailure = { readonly _tag: "TestFailure" };
 

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { NameError, normalizeLabel, normalizeName } from "../../src/index.js";
+import { NameError, normalizeLabel, normalizeName } from "../../../src/index.js";
 
 describe("name boundaries", () => {
   it("maps invalid names to the stable public error", () => {

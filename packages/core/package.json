@@ -50,6 +50,7 @@
     "pack:check": "publint && attw --pack . --profile esm-only --exclude-entrypoints ./testing",
     "prepack": "pnpm build",
     "test": "vitest run --passWithNoTests",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
     "test:watch": "vitest --passWithNoTests",
     "typecheck": "tsc --noEmit"
   },

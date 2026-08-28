@@ -5,7 +5,7 @@ import {
 } from "@ensforge/contracts/deployments";
 import { describe, expect, it, vi } from "vitest";
 
-import { createConfig, ConfigError, type ConfigErrorCode } from "../../src/index.js";
+import { createConfig, ConfigError, type ConfigErrorCode } from "../../../src/index.js";
 import {
   makeChainlessPublicClient,
   makeMainnetPublicClient,

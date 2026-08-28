@@ -16,7 +16,7 @@
     "prepare": "lefthook install",
     "release": "pnpm check && changeset publish",
     "test": "turbo run test",
-    "test:integration": "pnpm --filter @ensforge/test-env verify",
+    "test:integration": "pnpm --filter @ensforge/core test:integration",
     "test:watch": "turbo run test:watch",
     "typecheck": "turbo run typecheck",
     "version-packages": "changeset version"
@@ -27,6 +27,7 @@
     "@commitlint/cli": "21.2.2",
     "@commitlint/config-conventional": "21.2.2",
     "@effect/vitest": "catalog:",
+    "@ensforge/test-env": "workspace:*",
     "@types/node": "24.13.3",
     "@vitest/coverage-v8": "4.1.11",
     "effect": "catalog:",

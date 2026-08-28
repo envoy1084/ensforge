@@ -13,7 +13,7 @@ import {
   NormalizedLabel,
   NormalizedName,
   RegistryResource,
-} from "../../src/index.js";
+} from "../../../src/index.js";
 
 const zeroHash = `0x${"00".repeat(32)}`;
 

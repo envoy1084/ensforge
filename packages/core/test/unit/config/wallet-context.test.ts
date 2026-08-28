@@ -3,9 +3,9 @@ import { Cause, Effect, Exit, Option } from "effect";
 import type { WalletClient } from "viem";
 import { describe, expect, it } from "vitest";
 
-import { ConfigError } from "../../src/index.js";
-import { EnsNetworkService } from "../../src/services/network.js";
-import { resolveWalletContext, WalletClientService } from "../../src/services/wallet-client.js";
+import { ConfigError } from "../../../src/index.js";
+import { EnsNetworkService } from "../../../src/services/network.js";
+import { resolveWalletContext, WalletClientService } from "../../../src/services/wallet-client.js";
 import {
   makeMainnetWalletClient,
   makeSepoliaWalletClient,

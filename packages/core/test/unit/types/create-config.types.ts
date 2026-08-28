@@ -6,7 +6,7 @@ import {
   type ConfigErrorCode,
   type EnsNetwork,
   type EnsforgeConfig,
-} from "../../src/index.js";
+} from "../../../src/index.js";
 import { makeMainnetPublicClient } from "../fixtures/client-fixtures.js";
 
 expectTypeOf<EnsNetwork>().toEqualTypeOf<"mainnet" | "sepolia">();
