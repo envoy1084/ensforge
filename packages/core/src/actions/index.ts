@@ -1,5 +1,11 @@
 export { AbiResult, getAbi, type GetAbiError, type GetAbiParameters } from "./get-abi/index.js";
 export {
+  AvatarResult,
+  getAvatar,
+  type GetAvatarError,
+  type GetAvatarParameters,
+} from "./get-avatar/index.js";
+export {
   AddressResult,
   getAddress,
   getAddresses,

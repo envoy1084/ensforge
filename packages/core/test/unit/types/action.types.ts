@@ -9,6 +9,7 @@ import {
   getAbi,
   getAddress,
   getAddresses,
+  getAvatar,
   getContentHash,
   getData,
   getExpiry,
@@ -27,11 +28,13 @@ import {
   type AbiResult,
   type ExpiryResult,
   type AddressResult,
+  type AvatarResult,
   type ContentHashResult,
   type DataResult,
   type GetAbiError,
   type GetAddressError,
   type GetAddressesError,
+  type GetAvatarError,
   type GetContentHashError,
   type GetDataError,
   type GetExpiryError,
@@ -96,6 +99,16 @@ expectTypeOf(getAddresses(config, { name: "example.eth", coinTypes: [60n] })).to
 >();
 expectTypeOf(getAddresses.effect(config, { name: "example.eth", coinTypes: [60n] })).toEqualTypeOf<
   Effect.Effect<ReadonlyArray<AddressResult>, GetAddressesError>
+>();
+expectTypeOf(getAvatar(config, { name: "example.eth" })).toEqualTypeOf<Promise<AvatarResult>>();
+expectTypeOf(
+  getAvatar.effect(config, {
+    name: "example.eth",
+    gatewayUrls: { ipfs: "https://ipfs.example" },
+  }),
+).toEqualTypeOf<Effect.Effect<AvatarResult, GetAvatarError>>();
+expectTypeOf(getAvatar.request({ name: "example.eth" })).toEqualTypeOf<
+  EnsReadRequest<AvatarResult, GetAvatarError>
 >();
 expectTypeOf(getContentHash(config, { name: "example.eth" })).toEqualTypeOf<
   Promise<ContentHashResult>

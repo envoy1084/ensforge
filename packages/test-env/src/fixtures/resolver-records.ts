@@ -42,6 +42,7 @@ const interfaceId = "0x01ffc9a7" as const;
 const zonehash = "0x3333333333333333333333333333333333333333333333333333333333333333";
 const customData = stringToHex("ensforge fixture data");
 const bitcoinAddress = "0x00112233445566778899aabbccddeeff00112233" as const;
+const avatar = "data:image/png;base64,iVBORw0KGgo=";
 
 const encodeDnsName = (name: string): Hex =>
   concatHex([
@@ -95,7 +96,7 @@ const seedResolverRecords = Effect.fn("seedResolverRecordsForName")(function* (
   yield* transaction("setAddr", [node, ethAddress], "ETH address");
   yield* transaction("setAddr", [node, 0n, bitcoinAddress], "coin-type address");
   yield* transaction("setText", [node, "email", "hello@ensforge.test"], "email text");
-  yield* transaction("setText", [node, "avatar", "https://ensforge.test/avatar.png"], "avatar");
+  yield* transaction("setText", [node, "avatar", avatar], "avatar");
   yield* transaction("setText", [node, "url", "https://ensforge.test"], "URL text");
   yield* transaction(
     "setText",
@@ -140,7 +141,7 @@ const seedResolverRecords = Effect.fn("seedResolverRecordsForName")(function* (
     pubkey,
     resolver,
     texts: {
-      avatar: "https://ensforge.test/avatar.png",
+      avatar,
       description: "Ensforge integration fixture",
       email: "hello@ensforge.test",
       url: "https://ensforge.test",
