@@ -1,9 +1,9 @@
 import { Effect, Option } from "effect";
 
 import type { EnsforgeConfig } from "../../config/config.js";
-import { provideConfig } from "../../config/internal.js";
 import type { RpcError } from "../../errors/rpc-error.js";
-import type { EnsforgeServices } from "../../services/context.js";
+import { provideConfig } from "../config/context.js";
+import type { EnsforgeServices } from "../services/context.js";
 import {
   ReadContext,
   ReadExecution,

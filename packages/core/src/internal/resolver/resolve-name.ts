@@ -4,8 +4,8 @@ import { universalResolverV1Abi } from "@ensforge/contracts/v1";
 import { universalResolverV2Abi } from "@ensforge/contracts/v2";
 import type { Address, Hex } from "viem";
 
-import type { ViemError } from "../../errors/viem-error.js";
 import { EthereumClient } from "../client/ethereum-client.js";
+import type { ViemError } from "../errors/viem-error.js";
 import { ReadContext } from "../read/execution-context.js";
 
 export interface ResolveNameParameters {

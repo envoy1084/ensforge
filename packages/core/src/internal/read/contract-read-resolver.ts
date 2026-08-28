@@ -3,7 +3,7 @@ import { Effect, Exit, RequestResolver, Result } from "effect";
 import type { PublicClient } from "viem";
 
 import { ContractError } from "../../errors/contract-error.js";
-import { viemErrorToEffectError, type ViemError } from "../../errors/viem-error.js";
+import { viemErrorToEffectError, type ViemError } from "../errors/viem-error.js";
 import type { ContractReadRequest } from "./contract-read.js";
 
 export interface ContractReadResolverOptions {

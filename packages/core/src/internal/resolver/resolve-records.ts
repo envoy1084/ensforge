@@ -4,10 +4,10 @@ import { multicallResolverAbi } from "@ensforge/contracts/resolver-profiles";
 import { decodeFunctionResult, encodeFunctionData, type Hex } from "viem";
 
 import { ContractError } from "../../errors/contract-error.js";
-import { isContractRevert } from "../../errors/viem-error.js";
 import { dnsEncodeName } from "../../names/dns.js";
 import type { NormalizedName } from "../../schemas/name.js";
-import { DeploymentService } from "../../services/deployment.js";
+import { isContractRevert } from "../errors/viem-error.js";
+import { DeploymentService } from "../services/deployment.js";
 import { resolveName } from "./resolve-name.js";
 
 export const resolveRecords = Effect.fn("resolveRecords")(function* (

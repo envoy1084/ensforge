@@ -2,13 +2,13 @@ import { Effect, Layer, Option } from "effect";
 
 import { describe, expect, it } from "vitest";
 
-import { getConfigLayer, provideConfig } from "../../../src/config/internal.js";
 import { defineAction, createConfig, type EnsforgeConfig } from "../../../src/index.js";
 import { EthereumClient } from "../../../src/internal/client/ethereum-client.js";
-import { DeploymentService } from "../../../src/services/deployment.js";
-import { EnsNetworkService } from "../../../src/services/network.js";
-import { PublicClientService } from "../../../src/services/public-client.js";
-import { WalletClientService } from "../../../src/services/wallet-client.js";
+import { getConfigLayer, provideConfig } from "../../../src/internal/config/context.js";
+import { DeploymentService } from "../../../src/internal/services/deployment.js";
+import { EnsNetworkService } from "../../../src/internal/services/network.js";
+import { PublicClientService } from "../../../src/internal/services/public-client.js";
+import { WalletClientService } from "../../../src/internal/services/wallet-client.js";
 import { makeSepoliaPublicClient, makeSepoliaWalletClient } from "../fixtures/client-fixtures.js";
 
 const inspectServices = Effect.gen(function* () {

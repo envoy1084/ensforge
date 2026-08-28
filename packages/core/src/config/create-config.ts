@@ -1,17 +1,17 @@
 import { Schema } from "effect";
 
 import { ConfigError } from "../errors/config-error.js";
-import type { EnsforgeServiceValues } from "../services/context.js";
-import { makeServicesContext } from "../services/context.js";
+import { attachConfigContext } from "../internal/config/context.js";
+import { getNetworkProfile } from "../internal/config/network-profile.js";
+import { validateClientChain, validateDeployments } from "../internal/config/validation.js";
+import type { EnsforgeServiceValues } from "../internal/services/context.js";
+import { makeServicesContext } from "../internal/services/context.js";
 import {
   EnsforgeConfigTypeId,
   type CreateConfigParameters,
   type EnsforgeConfig,
 } from "./config.js";
-import { attachConfigContext } from "./internal.js";
-import { getNetworkProfile } from "./network-profile.js";
 import { ensChainIds, EnsNetworkSchema } from "./network.js";
-import { validateClientChain, validateDeployments } from "./validation.js";
 
 export const createConfig = (parameters: CreateConfigParameters): EnsforgeConfig => {
   if (!Schema.is(EnsNetworkSchema)(parameters.network)) {

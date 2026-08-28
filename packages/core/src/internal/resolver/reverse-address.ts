@@ -4,10 +4,10 @@ import { universalResolverV1Abi } from "@ensforge/contracts/v1";
 import { universalResolverV2Abi } from "@ensforge/contracts/v2";
 import type { Address } from "viem";
 
-import type { ViemError } from "../../errors/viem-error.js";
-import { DeploymentService } from "../../services/deployment.js";
 import { EthereumClient } from "../client/ethereum-client.js";
+import type { ViemError } from "../errors/viem-error.js";
 import { ReadContext } from "../read/execution-context.js";
+import { DeploymentService } from "../services/deployment.js";
 
 export const reverseAddress = Effect.fn("reverseAddress")(function* (
   address: Address,

@@ -1,8 +1,8 @@
 import { BaseError, ContractFunctionRevertedError, TimeoutError } from "viem";
 import { describe, expect, it } from "vitest";
 
-import { viemErrorToEffectError } from "../../../src/errors/viem-error.js";
 import { ContractError, RpcError } from "../../../src/index.js";
+import { viemErrorToEffectError } from "../../../src/internal/errors/viem-error.js";
 
 describe("Viem error translation", () => {
   it("preserves a decoded contract revert as the cause", () => {

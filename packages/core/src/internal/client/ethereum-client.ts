@@ -12,8 +12,8 @@ import type {
   ReadContractReturnType,
 } from "viem";
 
-import type { ViemError } from "../../errors/viem-error.js";
-import { viemErrorToEffectError } from "../../errors/viem-error.js";
+import type { ViemError } from "../errors/viem-error.js";
+import { viemErrorToEffectError } from "../errors/viem-error.js";
 import { executeContractRead } from "../read/contract-read-resolver.js";
 import { makeContractReadRequest, type ContractReadParameters } from "../read/contract-read.js";
 import { ReadContext } from "../read/execution-context.js";

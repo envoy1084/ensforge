@@ -4,8 +4,8 @@ import type { PublicClient } from "viem";
 import { describe, expect, it, vi } from "vitest";
 
 import { createConfig } from "../../../../src/config/create-config.js";
-import { getConfigLayer } from "../../../../src/config/internal.js";
 import { RpcError } from "../../../../src/errors/rpc-error.js";
+import { getConfigLayer } from "../../../../src/internal/config/context.js";
 import {
   ReadExecution,
   makeReadExecution,

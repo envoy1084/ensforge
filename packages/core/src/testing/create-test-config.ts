@@ -2,9 +2,9 @@ import type { PublicClient, WalletClient } from "viem";
 
 import type { EnsDeploymentProfile, EnsforgeConfig } from "../config/config.js";
 import { EnsforgeConfigTypeId } from "../config/config.js";
-import { attachConfigContext } from "../config/internal.js";
-import { validateClientChain, validateDeployments } from "../config/validation.js";
-import { makeServicesContext } from "../services/context.js";
+import { attachConfigContext } from "../internal/config/context.js";
+import { validateClientChain, validateDeployments } from "../internal/config/validation.js";
+import { makeServicesContext } from "../internal/services/context.js";
 
 export const ensTestChainId = 31337 as const;
 

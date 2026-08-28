@@ -4,7 +4,7 @@ import type { PublicClient } from "viem";
 
 import { getBlockReference, type BlockParameters } from "../../action/block.js";
 import { RpcError } from "../../errors/rpc-error.js";
-import { viemErrorToEffectError } from "../../errors/viem-error.js";
+import { viemErrorToEffectError } from "../errors/viem-error.js";
 import { makeContractReadResolver, type ContractReadResolver } from "./contract-read-resolver.js";
 
 export type ReadConsistency = "snapshot" | "best-effort";

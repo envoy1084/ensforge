@@ -11,7 +11,7 @@ import {
 } from "viem";
 
 import type { BlockParameters } from "../../action/block.js";
-import { viemErrorToEffectError, type ViemError } from "../../errors/viem-error.js";
+import { viemErrorToEffectError, type ViemError } from "../errors/viem-error.js";
 
 export type ContractReadParameters<
   abi extends Abi = Abi,
