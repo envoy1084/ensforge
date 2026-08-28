@@ -18,6 +18,7 @@ export {
   type WriteError,
   type WritePlan,
   type WritePlanProgress,
+  type WriteReceipt,
   type WriteStage,
   type WriteStageResult,
   type WriteWaitCondition,

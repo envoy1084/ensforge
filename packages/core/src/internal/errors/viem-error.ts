@@ -40,7 +40,7 @@ const fallbackCodes = {
   ContractErrorCode
 >;
 
-const findCause = <ErrorClass extends Error>(
+export const findViemErrorCause = <ErrorClass extends Error>(
   cause: unknown,
   errorClass: abstract new (...args: never[]) => ErrorClass,
 ): ErrorClass | undefined => {
@@ -59,7 +59,7 @@ const findCause = <ErrorClass extends Error>(
 };
 
 export const isContractRevert = (cause: unknown, errorName: string): boolean =>
-  findCause(cause, ContractFunctionRevertedError)?.data?.errorName === errorName;
+  findViemErrorCause(cause, ContractFunctionRevertedError)?.data?.errorName === errorName;
 
 const messageFromCause = (cause: unknown): string => {
   if (cause instanceof BaseError) {
@@ -74,10 +74,10 @@ const messageFromCause = (cause: unknown): string => {
 };
 
 const isDecodeError = (cause: unknown): boolean =>
-  findCause(cause, ContractFunctionZeroDataError) !== undefined ||
-  findCause(cause, AbiDecodingDataSizeInvalidError) !== undefined ||
-  findCause(cause, AbiDecodingDataSizeTooSmallError) !== undefined ||
-  findCause(cause, AbiDecodingZeroDataError) !== undefined;
+  findViemErrorCause(cause, ContractFunctionZeroDataError) !== undefined ||
+  findViemErrorCause(cause, AbiDecodingDataSizeInvalidError) !== undefined ||
+  findViemErrorCause(cause, AbiDecodingDataSizeTooSmallError) !== undefined ||
+  findViemErrorCause(cause, AbiDecodingZeroDataError) !== undefined;
 
 export function viemErrorToEffectError(
   cause: unknown,
@@ -88,7 +88,7 @@ export function viemErrorToEffectError(
   operation: Exclude<ViemOperation, "getBlock" | "getLogs" | "watchEvent">,
 ): ViemError;
 export function viemErrorToEffectError(cause: unknown, operation: ViemOperation): ViemError {
-  const timeout = findCause(cause, TimeoutError);
+  const timeout = findViemErrorCause(cause, TimeoutError);
 
   if (timeout !== undefined) {
     return new RpcError({
@@ -98,7 +98,8 @@ export function viemErrorToEffectError(cause: unknown, operation: ViemOperation)
     });
   }
 
-  const request = findCause(cause, RpcRequestError) ?? findCause(cause, HttpRequestError);
+  const request =
+    findViemErrorCause(cause, RpcRequestError) ?? findViemErrorCause(cause, HttpRequestError);
 
   if (request !== undefined) {
     return new RpcError({
@@ -108,7 +109,9 @@ export function viemErrorToEffectError(cause: unknown, operation: ViemOperation)
     });
   }
 
-  const transport = findCause(cause, WebSocketRequestError) ?? findCause(cause, SocketClosedError);
+  const transport =
+    findViemErrorCause(cause, WebSocketRequestError) ??
+    findViemErrorCause(cause, SocketClosedError);
 
   if (transport !== undefined) {
     return new RpcError({
@@ -126,7 +129,7 @@ export function viemErrorToEffectError(cause: unknown, operation: ViemOperation)
     });
   }
 
-  const reverted = findCause(cause, ContractFunctionRevertedError);
+  const reverted = findViemErrorCause(cause, ContractFunctionRevertedError);
 
   if (reverted !== undefined) {
     return new ContractError({

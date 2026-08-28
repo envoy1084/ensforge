@@ -1,0 +1,154 @@
+import { Context, Effect } from "effect";
+
+import type {
+  Account,
+  Address,
+  CallReturnType,
+  GetCallsStatusReturnType,
+  Hex,
+  PublicClient,
+  SendCallsReturnType,
+  TransactionReceipt,
+  WalletClient,
+} from "viem";
+
+import type { ContractError } from "../../errors/contract-error.js";
+import type { RpcError } from "../../errors/rpc-error.js";
+import { TransactionError } from "../../errors/transaction-error.js";
+import type { WalletError } from "../../errors/wallet-error.js";
+import type { PreparedWriteCall } from "../../write/types.js";
+import { viemErrorToEffectError } from "../errors/viem-error.js";
+import { batchStatusError, walletRequestError } from "../errors/write-error.js";
+
+export interface WaitForReceiptOptions {
+  readonly confirmations?: number;
+  readonly timeout?: number;
+}
+
+export interface SendNativeCallsOptions {
+  readonly forceAtomic: boolean;
+  readonly capabilities?: Readonly<Record<string, unknown>>;
+}
+
+export interface WriteClientService {
+  readonly simulate: (
+    call: PreparedWriteCall,
+  ) => Effect.Effect<CallReturnType, ContractError | RpcError>;
+  readonly sendTransaction: (
+    walletClient: WalletClient,
+    call: PreparedWriteCall,
+  ) => Effect.Effect<Hex, ContractError | RpcError | WalletError>;
+  readonly waitForReceipt: (
+    hash: Hex,
+    options: WaitForReceiptOptions,
+  ) => Effect.Effect<TransactionReceipt, RpcError | TransactionError>;
+  readonly getCapabilities: (
+    walletClient: WalletClient,
+    account: Account | Address,
+    chainId: number,
+  ) => Effect.Effect<Readonly<Record<string, unknown>>, WalletError>;
+  readonly sendCalls: (
+    walletClient: WalletClient,
+    account: Account | Address,
+    calls: ReadonlyArray<PreparedWriteCall>,
+    options: SendNativeCallsOptions,
+  ) => Effect.Effect<SendCallsReturnType, WalletError>;
+  readonly waitForCallsStatus: (
+    walletClient: WalletClient,
+    id: string,
+    options: WaitForReceiptOptions,
+  ) => Effect.Effect<GetCallsStatusReturnType, TransactionError>;
+}
+
+export class WriteClient extends Context.Service<WriteClient, WriteClientService>()(
+  "@ensforge/core/internal/write/WriteClient",
+) {}
+
+export const makeWriteClient = (publicClient: PublicClient): WriteClientService =>
+  WriteClient.of({
+    simulate: Effect.fn("WriteClient.simulate")((call) =>
+      Effect.tryPromise({
+        try: () =>
+          publicClient.call({
+            account: typeof call.account === "string" ? call.account : call.account.address,
+            to: call.to,
+            ...(call.data === undefined ? {} : { data: call.data }),
+            ...(call.value === 0n ? {} : { value: call.value }),
+          }),
+        catch: (cause) => viemErrorToEffectError(cause, "simulateContract"),
+      }),
+    ),
+    sendTransaction: Effect.fn("WriteClient.sendTransaction")((walletClient, call) =>
+      Effect.tryPromise({
+        try: () =>
+          walletClient.sendTransaction({
+            account: call.account,
+            chain: walletClient.chain,
+            to: call.to,
+            ...(call.data === undefined ? {} : { data: call.data }),
+            ...(call.value === 0n ? {} : { value: call.value }),
+          }),
+        catch: (cause) => walletRequestError(cause, "sendTransaction"),
+      }),
+    ),
+    waitForReceipt: Effect.fn("WriteClient.waitForReceipt")((hash, options) =>
+      Effect.tryPromise({
+        try: () =>
+          publicClient.waitForTransactionReceipt({
+            hash,
+            ...(options.confirmations === undefined
+              ? {}
+              : { confirmations: options.confirmations }),
+            ...(options.timeout === undefined ? {} : { timeout: options.timeout }),
+          }),
+        catch: (cause) => viemErrorToEffectError(cause, "getBlock"),
+      }).pipe(
+        Effect.flatMap((receipt) =>
+          receipt.status === "success"
+            ? Effect.succeed(receipt)
+            : Effect.fail(
+                new TransactionError({
+                  code: "RECEIPT_REVERTED",
+                  message: `Transaction ${hash} reverted`,
+                  cause: receipt,
+                  transactionHash: hash,
+                }),
+              ),
+        ),
+      ),
+    ),
+    getCapabilities: Effect.fn("WriteClient.getCapabilities")((walletClient, account, chainId) =>
+      Effect.tryPromise({
+        try: () => walletClient.getCapabilities({ account, chainId }),
+        catch: (cause) => walletRequestError(cause, "capabilities"),
+      }),
+    ),
+    sendCalls: Effect.fn("WriteClient.sendCalls")((walletClient, account, calls, options) =>
+      Effect.tryPromise({
+        try: () =>
+          walletClient.sendCalls({
+            account,
+            chain: walletClient.chain,
+            calls: calls.map((call) => ({
+              to: call.to,
+              ...(call.data === undefined ? {} : { data: call.data }),
+              ...(call.value === 0n ? {} : { value: call.value }),
+            })),
+            forceAtomic: options.forceAtomic,
+            ...(options.capabilities === undefined ? {} : { capabilities: options.capabilities }),
+          }),
+        catch: (cause) => walletRequestError(cause, "sendCalls"),
+      }),
+    ),
+    waitForCallsStatus: Effect.fn("WriteClient.waitForCallsStatus")((walletClient, id, options) =>
+      Effect.tryPromise({
+        try: () =>
+          walletClient.waitForCallsStatus({
+            id,
+            throwOnFailure: false,
+            ...(options.timeout === undefined ? {} : { timeout: options.timeout }),
+          }),
+        catch: (cause) => batchStatusError(cause, id),
+      }),
+    ),
+  });

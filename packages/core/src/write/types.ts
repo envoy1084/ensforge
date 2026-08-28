@@ -1,6 +1,13 @@
 import { Schema } from "effect";
 
-import type { Account, Address, Hex, TransactionReceipt, WalletClient } from "viem";
+import type {
+  Account,
+  Address,
+  Hex,
+  TransactionReceipt,
+  WalletCallReceipt,
+  WalletClient,
+} from "viem";
 
 import type { EnsWriteIntent } from "../action/write-intent.js";
 import type { ConfigError } from "../errors/config-error.js";
@@ -59,6 +66,8 @@ export interface SimulatedWriteCall {
   readonly result: Hex | undefined;
 }
 
+export type WriteReceipt = TransactionReceipt | WalletCallReceipt<bigint, "success" | "reverted">;
+
 export type CallExecutionResult =
   | {
       readonly id: string;
@@ -71,15 +80,15 @@ export type CallExecutionResult =
       readonly id: string;
       readonly operation: string;
       readonly status: "submitted";
-      readonly hash: Hex;
+      readonly hash: Hex | null;
       readonly receipt: null;
     }
   | {
       readonly id: string;
       readonly operation: string;
       readonly status: "confirmed";
-      readonly hash: Hex;
-      readonly receipt: TransactionReceipt;
+      readonly hash: Hex | null;
+      readonly receipt: WriteReceipt | null;
     };
 
 export interface WalletCapabilitiesResult {
@@ -104,14 +113,14 @@ export interface NativeBatchResult {
   readonly status: "submitted" | "confirmed";
   readonly id: string;
   readonly calls: ReadonlyArray<CallExecutionResult>;
-  readonly receipts: ReadonlyArray<TransactionReceipt>;
+  readonly receipts: ReadonlyArray<WriteReceipt>;
   readonly capabilities: WalletCapabilitiesResult;
 }
 
 export type SendCallsResult = SequentialCallsResult | NativeBatchResult;
 
 export interface PrepareCallsParameters extends WalletOverrides {
-  readonly calls: ReadonlyArray<EnsWriteIntent<unknown, unknown>>;
+  readonly calls: ReadonlyArray<EnsWriteIntent<unknown, WriteError>>;
 }
 
 export interface SimulateCallsParameters extends PrepareCallsParameters {}
@@ -133,7 +142,7 @@ export type WriteStage =
   | {
       readonly type: "calls";
       readonly id: string;
-      readonly calls: ReadonlyArray<EnsWriteIntent<unknown, unknown>>;
+      readonly calls: ReadonlyArray<EnsWriteIntent<unknown, WriteError>>;
       readonly mode?: WriteMode;
       readonly atomicity?: WriteAtomicity;
       readonly confirmation?: ConfirmationPolicy;

@@ -9,6 +9,7 @@ import type {
 } from "../../config/config.js";
 import { EthereumClient, makeEthereumClient } from "../client/ethereum-client.js";
 import { ReadExecution, makeReadExecution } from "../read/execution-context.js";
+import { WriteClient, makeWriteClient } from "../write/write-client.js";
 import { DeploymentService } from "./deployment.js";
 import { EnsNetworkService } from "./network.js";
 import { PublicClientService } from "./public-client.js";
@@ -18,6 +19,7 @@ export type EnsforgeServices =
   | DeploymentService
   | EthereumClient
   | ReadExecution
+  | WriteClient
   | EnsNetworkService
   | PublicClientService
   | WalletClientService;
@@ -40,6 +42,7 @@ export const makeServicesContext = (
     Context.add(PublicClientService, { client: values.publicClient }),
     Context.add(EthereumClient, makeEthereumClient({ publicClient: values.publicClient })),
     Context.add(ReadExecution, makeReadExecution({ publicClient: values.publicClient })),
+    Context.add(WriteClient, makeWriteClient(values.publicClient)),
     Context.add(WalletClientService, {
       client: Option.fromNullishOr(values.walletClient),
     }),
