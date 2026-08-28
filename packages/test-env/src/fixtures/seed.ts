@@ -2,6 +2,7 @@ import { Effect } from "effect";
 
 import type { DevnetEnvironment } from "../environment.js";
 import { seedPermissionFixtures } from "./permissions.js";
+import { seedRegistrationFixtures } from "./registration.js";
 import { seedResolverRecordFixtures } from "./resolver-records.js";
 import { seedReverseFixtures } from "./reverse.js";
 import { seedV1Fixtures } from "./v1.js";
@@ -13,6 +14,7 @@ export const seedFixtures = Effect.fn("seedFixtures")(function* (environment: De
   const records = yield* seedResolverRecordFixtures(environment);
   const permissions = yield* seedPermissionFixtures(environment);
   const reverse = yield* seedReverseFixtures(environment);
+  const registration = yield* seedRegistrationFixtures(environment);
   yield* environment.state.checkpoint;
-  return { ...fixtures, permissions, records, reverse };
+  return { ...fixtures, permissions, records, registration, reverse };
 });

@@ -106,6 +106,26 @@ export interface ReverseFixtureManifest {
   readonly contractMissing: ReverseFixture;
 }
 
+export interface RegistrationCommitmentFixture {
+  readonly commitment: Hex;
+  readonly controller: Address;
+  readonly label: string;
+  readonly maxCommitmentAge: bigint;
+  readonly minCommitmentAge: bigint;
+  readonly secret: Hex;
+}
+
+export interface RegistrationFixtureManifest {
+  readonly paymentTokens: Readonly<
+    Record<
+      "dai" | "usdc",
+      { readonly address: Address; readonly balance: bigint; readonly decimals: number }
+    >
+  >;
+  readonly v1: RegistrationCommitmentFixture;
+  readonly v2: RegistrationCommitmentFixture;
+}
+
 export interface EnsFixtureManifest {
   readonly seededAt: bigint;
   readonly v1: EnsV1FixtureManifest;
@@ -114,4 +134,5 @@ export interface EnsFixtureManifest {
   readonly records?: ResolverRecordFixtureManifest;
   readonly permissions?: PermissionFixtureManifest;
   readonly reverse?: ReverseFixtureManifest;
+  readonly registration?: RegistrationFixtureManifest;
 }

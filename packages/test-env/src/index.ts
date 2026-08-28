@@ -31,4 +31,6 @@ export {
   type PermissionFixtureManifest,
   type ReverseFixture,
   type ReverseFixtureManifest,
+  type RegistrationCommitmentFixture,
+  type RegistrationFixtureManifest,
 } from "./fixtures/index.js";
