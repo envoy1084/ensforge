@@ -1,6 +1,12 @@
 import { defineVitestConfig } from "klarity/vitest";
 
 export default defineVitestConfig({
+  resolve: {
+    conditions: ["workspace-source"],
+  },
+  ssr: {
+    noExternal: ["@ensforge/test-env"],
+  },
   test: {
     fileParallelism: false,
     globalSetup: ["./test/integration/setup/global.ts"],
