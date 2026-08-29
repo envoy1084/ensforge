@@ -1,9 +1,21 @@
 export {
+  AliasResult,
+  getAlias,
+  type GetAliasError,
+  type GetAliasParameters,
+} from "./get-alias/index.js";
+export {
   getResolver,
   type GetResolverError,
   type GetResolverParameters,
   type GetResolverResult,
 } from "./get-resolver/index.js";
+export {
+  getResolverVersion,
+  ResolverVersionResult,
+  type GetResolverVersionError,
+  type GetResolverVersionParameters,
+} from "./get-resolver-version/index.js";
 export {
   resolve,
   ResolveResult,
