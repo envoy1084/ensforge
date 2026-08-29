@@ -19,7 +19,9 @@ import { hcaAuthorizerV2Abi } from "@ensforge/contracts/v2/experimental/hca";
 
 ## Usage
 
-```ts
+::: code-group
+
+```ts [contract.ts]
 import { getContract } from "viem";
 
 const contract = getContract({
@@ -28,6 +30,10 @@ const contract = getContract({
   client: publicClient,
 });
 ```
+
+<<< @/snippets/contracts/client.ts
+
+:::
 
 ## Exports
 
@@ -40,3 +46,15 @@ const contract = getContract({
 `@ensforge/contracts/v2/experimental/hca`
 
 The values are immutable and can be passed directly to viem contract, log, and encoding utilities.
+
+## When to use
+
+This export belongs to the experimental ENSv2 surface. Pin the package version and verify the selected deployment before using it in production.
+
+## Type Safety
+
+Exports retain literal TypeScript types, so viem can infer valid function names, arguments, return values, and event fields without a manual cast.
+
+```ts
+type Export = typeof hcaAuthorizerV2Abi;
+```
