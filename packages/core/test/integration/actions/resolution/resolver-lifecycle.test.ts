@@ -5,7 +5,10 @@ import { zeroAddress } from "viem";
 
 import {
   AuthorizationError,
+  createResolver,
   getResolver,
+  getResolverCapabilities,
+  predictResolverAddress,
   setResolver,
   simulateCalls,
 } from "../../../../src/index.js";
@@ -48,6 +51,29 @@ describe("resolver lifecycle integration", () => {
       assert.strictEqual(v1, devnet.deployments.v1.contracts.publicResolver);
       assert.strictEqual(v2, permissionedResolver);
       assert.isNull(cleared);
+    }),
+  );
+
+  it.effect("predicts and deploys a standard Permissioned Resolver proxy", () =>
+    Effect.gen(function* () {
+      const devnet = getIntegrationDevnet();
+      const name = devnet.fixtures.v2.resolverLifecycle.name;
+      const parameters = { salt: 12_001n } as const;
+      const predicted = yield* predictResolverAddress.effect(devnet.configs.v2, parameters);
+      const created = yield* createResolver.effect(devnet.configs.v2, parameters);
+
+      yield* setResolver.effect(devnet.configs.v2, { name, resolver: created.resolver });
+      const capabilities = yield* getResolverCapabilities.effect(devnet.configs.v2, { name });
+      yield* setResolver.effect(devnet.configs.v2, { name, resolver: zeroAddress });
+
+      assert.strictEqual(created.status, "deployed");
+      assert.strictEqual(created.resolver, predicted);
+      assert.strictEqual(
+        created.implementation,
+        devnet.deployments.v2.implementations.permissionedResolver,
+      );
+      assert.strictEqual(created.factory, devnet.deployments.v2.contracts.verifiableFactory);
+      assert.isTrue(capabilities.permissioned);
     }),
   );
 });

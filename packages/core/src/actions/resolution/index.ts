@@ -1,4 +1,12 @@
 export {
+  createResolver,
+  predictResolverAddress,
+  type CreateResolverError,
+  type CreateResolverIntent,
+  type CreateResolverParameters,
+  type CreateResolverResult,
+} from "./create-resolver/index.js";
+export {
   AliasResult,
   getAlias,
   type GetAliasError,
