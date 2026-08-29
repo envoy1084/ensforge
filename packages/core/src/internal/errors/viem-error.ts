@@ -12,6 +12,7 @@ import {
   SocketClosedError,
   TimeoutError,
   WebSocketRequestError,
+  type Hex,
 } from "viem";
 
 import { ContractError, type ContractErrorCode } from "../../errors/contract-error.js";
@@ -60,6 +61,20 @@ export const findViemErrorCause = <ErrorClass extends Error>(
 
 export const isContractRevert = (cause: unknown, errorName: string): boolean =>
   findViemErrorCause(cause, ContractFunctionRevertedError)?.data?.errorName === errorName;
+
+export const isContractRevertWithData = (
+  cause: unknown,
+  errorName: string,
+  selector: Hex,
+): boolean => {
+  const revert = findViemErrorCause(cause, ContractFunctionRevertedError)?.data;
+  const nestedData = revert?.args?.at(0);
+  return (
+    revert?.errorName === errorName &&
+    Predicate.isString(nestedData) &&
+    nestedData.startsWith(selector)
+  );
+};
 
 const messageFromCause = (cause: unknown): string => {
   if (cause instanceof BaseError) {

@@ -1,8 +1,17 @@
-import { BaseError, ContractFunctionRevertedError, TimeoutError } from "viem";
+import {
+  BaseError,
+  ContractFunctionRevertedError,
+  encodeErrorResult,
+  TimeoutError,
+  toFunctionSelector,
+} from "viem";
 import { describe, expect, it } from "vitest";
 
 import { ContractError, RpcError } from "../../../src/index.js";
-import { viemErrorToEffectError } from "../../../src/internal/errors/viem-error.js";
+import {
+  isContractRevertWithData,
+  viemErrorToEffectError,
+} from "../../../src/internal/errors/viem-error.js";
 
 describe("Viem error translation", () => {
   it("preserves a decoded contract revert as the cause", () => {
@@ -38,6 +47,39 @@ describe("Viem error translation", () => {
         cause,
       }),
     );
+  });
+
+  it("recognizes a specific error nested inside resolver revert data", () => {
+    const nestedAbi = [
+      { type: "error", name: "UnreachableName", inputs: [{ name: "name", type: "bytes" }] },
+    ] as const;
+    const outerAbi = [
+      { type: "error", name: "ResolverError", inputs: [{ name: "errorData", type: "bytes" }] },
+    ] as const;
+    const cause = new ContractFunctionRevertedError({
+      abi: outerAbi,
+      data: encodeErrorResult({
+        abi: outerAbi,
+        errorName: "ResolverError",
+        args: [encodeErrorResult({ abi: nestedAbi, errorName: "UnreachableName", args: ["0x00"] })],
+      }),
+      functionName: "reverse",
+    });
+
+    expect(
+      isContractRevertWithData(
+        cause,
+        "ResolverError",
+        toFunctionSelector("UnreachableName(bytes)"),
+      ),
+    ).toBe(true);
+    expect(
+      isContractRevertWithData(
+        cause,
+        "ResolverError",
+        toFunctionSelector("ResolverNotFound(bytes)"),
+      ),
+    ).toBe(false);
   });
 
   it("uses an operation-specific fallback without discarding the cause", () => {

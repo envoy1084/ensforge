@@ -209,6 +209,9 @@ expectTypeOf(getPrimaryName.effect(config, { address: "0x1234" })).toEqualTypeOf
 expectTypeOf(getPrimaryName.request({ address: "0x1234" })).toEqualTypeOf<
   EnsReadRequest<PrimaryNameResult, GetPrimaryNameError>
 >();
+expectTypeOf(getPrimaryName.effect(config, { address: "bc1qexample", coinType: 0n })).toEqualTypeOf<
+  Effect.Effect<PrimaryNameResult, GetPrimaryNameError>
+>();
 expectTypeOf(getResolver(config, { name: "example.eth" })).toEqualTypeOf<
   Promise<GetResolverResult>
 >();

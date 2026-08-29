@@ -41,6 +41,7 @@ const pubkey = {
 const interfaceId = "0x01ffc9a7" as const;
 const zonehash = "0x3333333333333333333333333333333333333333333333333333333333333333";
 const customData = stringToHex("ensforge fixture data");
+const defaultEvmCoinType = 0x8000_0000n;
 const bitcoinAddress = "0x00112233445566778899aabbccddeeff00112233" as const;
 const avatar = "data:image/png;base64,iVBORw0KGgo=";
 
@@ -94,6 +95,7 @@ const seedResolverRecords = Effect.fn("seedResolverRecordsForName")(function* (
     );
 
   yield* transaction("setAddr", [node, ethAddress], "ETH address");
+  yield* transaction("setAddr", [node, defaultEvmCoinType, ethAddress], "default EVM address");
   yield* transaction("setAddr", [node, 0n, bitcoinAddress], "coin-type address");
   yield* transaction("setText", [node, "email", "hello@ensforge.test"], "email text");
   yield* transaction("setText", [node, "avatar", avatar], "avatar");
@@ -129,6 +131,7 @@ const seedResolverRecords = Effect.fn("seedResolverRecordsForName")(function* (
     },
     addresses: {
       eth: ethAddress,
+      defaultEvm: { coinType: defaultEvmCoinType, value: ethAddress },
       bitcoin: { coinType: 0n, value: bitcoinAddress },
     },
     contenthash,

@@ -83,6 +83,7 @@ export interface ResolverRecordsFixture {
   };
   readonly addresses: {
     readonly eth: Address;
+    readonly defaultEvm: { readonly coinType: bigint; readonly value: Address };
     readonly bitcoin: { readonly coinType: bigint; readonly value: Hex };
   };
   readonly contenthash: Hex;
@@ -133,9 +134,15 @@ export interface ReverseFixture {
   readonly verified?: boolean;
 }
 
+export interface CoinTypeReverseFixture extends ReverseFixture {
+  readonly coinType: bigint;
+}
+
 export interface ReverseFixtureManifest {
   readonly verifiedV1: ReverseFixture;
   readonly verifiedV2: ReverseFixture;
+  readonly verifiedDefaultV1: CoinTypeReverseFixture;
+  readonly verifiedDefaultV2: CoinTypeReverseFixture;
   readonly unverified: ReverseFixture;
   readonly missing: ReverseFixture;
   readonly verifiedContract: ReverseFixture;

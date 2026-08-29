@@ -18,6 +18,7 @@ export type PrimaryNameResult = typeof PrimaryNameResult.Type;
 
 export type GetPrimaryNameParameters = {
   readonly address: string;
+  readonly coinType?: bigint;
 } & BlockParameters;
 
 export type GetPrimaryNameError = CodecError | ContractError | NameError | RpcError;

@@ -2,7 +2,7 @@ import { Effect } from "effect";
 
 import { universalResolverV1Abi } from "@ensforge/contracts/v1";
 import { universalResolverV2Abi } from "@ensforge/contracts/v2";
-import type { Address } from "viem";
+import type { Address, Hex } from "viem";
 
 import { EthereumClient } from "../client/ethereum-client.js";
 import type { ViemError } from "../errors/viem-error.js";
@@ -10,7 +10,8 @@ import { ReadContext } from "../read/execution-context.js";
 import { DeploymentService } from "../services/deployment.js";
 
 export const reverseAddress = Effect.fn("reverseAddress")(function* (
-  address: Address,
+  address: Hex,
+  coinType: bigint,
 ): Effect.fn.Return<
   readonly [string, Address, Address],
   ViemError,
@@ -30,7 +31,7 @@ export const reverseAddress = Effect.fn("reverseAddress")(function* (
       address: universalResolver,
       abi: universalResolverV1Abi,
       functionName: "reverse",
-      args: [address, 60n],
+      args: [address, coinType],
       ...context.block,
     });
   }
@@ -39,7 +40,7 @@ export const reverseAddress = Effect.fn("reverseAddress")(function* (
     address: universalResolver,
     abi: universalResolverV2Abi,
     functionName: "reverse",
-    args: [address, 60n],
+    args: [address, coinType],
     ...context.block,
   });
 });
