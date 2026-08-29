@@ -2,6 +2,8 @@ import { Schema } from "effect";
 
 export const ConfigErrorCode = Schema.Literals([
   "UNSUPPORTED_NETWORK",
+  "INVALID_CLIENT_CONFIGURATION",
+  "PUBLIC_CLIENT_UNAVAILABLE",
   "CLIENT_CHAIN_UNAVAILABLE",
   "NETWORK_CLIENT_MISMATCH",
   "DEPLOYMENT_CHAIN_MISMATCH",

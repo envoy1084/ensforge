@@ -9,8 +9,33 @@ export class WalletClientService extends Context.Service<
   WalletClientService,
   {
     readonly client: Option.Option<WalletClient>;
+    readonly resolve: () => Effect.Effect<WalletClient, ConfigError>;
   }
 >()("@ensforge/core/WalletClientService") {}
+
+export type WalletClientResolver = () => Effect.Effect<WalletClient, ConfigError>;
+
+export const makeWalletClientService = (
+  walletClient?: WalletClient,
+  resolver?: WalletClientResolver,
+): WalletClientService["Service"] => {
+  const client = Option.fromNullishOr(walletClient);
+
+  return WalletClientService.of({
+    client,
+    resolve:
+      resolver ??
+      (() =>
+        Option.match(client, {
+          onNone: () =>
+            new ConfigError({
+              code: "WALLET_CLIENT_UNAVAILABLE",
+              message: "A wallet client is required for this operation",
+            }),
+          onSome: Effect.succeed,
+        })),
+  });
+};
 
 export interface ResolveWalletContextParameters {
   readonly walletClient?: WalletClient;
@@ -27,14 +52,10 @@ export const resolveWalletContext = Effect.fn("ensforge.resolveWalletContext")(f
 ): Effect.fn.Return<ResolvedWalletContext, ConfigError, WalletClientService | EnsNetworkService> {
   const walletService = yield* WalletClientService;
   const networkService = yield* EnsNetworkService;
-  const walletClient = parameters.walletClient ?? Option.getOrUndefined(walletService.client);
-
-  if (walletClient === undefined) {
-    return yield* new ConfigError({
-      code: "WALLET_CLIENT_UNAVAILABLE",
-      message: "A wallet client is required for this operation",
-    });
-  }
+  const walletClient =
+    parameters.walletClient === undefined
+      ? yield* walletService.resolve()
+      : parameters.walletClient;
 
   if (walletClient.chain === undefined) {
     return yield* new ConfigError({

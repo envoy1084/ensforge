@@ -30,6 +30,7 @@
     "@ensforge/test-env": "workspace:*",
     "@types/node": "24.13.3",
     "@vitest/coverage-v8": "4.1.11",
+    "@wagmi/core": "catalog:",
     "effect": "catalog:",
     "klarity": "0.2.0",
     "lefthook": "2.1.10",

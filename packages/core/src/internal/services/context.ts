@@ -1,4 +1,4 @@
-import { Context, Layer, Option, Semaphore } from "effect";
+import { Context, Layer, Semaphore } from "effect";
 
 import type { PublicClient, WalletClient } from "viem";
 
@@ -16,7 +16,11 @@ import { WriteClient, makeWriteClient } from "../write/write-client.js";
 import { DeploymentService } from "./deployment.js";
 import { EnsNetworkService } from "./network.js";
 import { PublicClientService } from "./public-client.js";
-import { WalletClientService } from "./wallet-client.js";
+import {
+  makeWalletClientService,
+  WalletClientService,
+  type WalletClientResolver,
+} from "./wallet-client.js";
 
 export type EnsforgeServices =
   | DeploymentService
@@ -34,6 +38,7 @@ export interface EnsforgeServiceValues {
   readonly reads: ResolvedReadOptions;
   readonly gateways: ResolvedGatewayOptions;
   readonly walletClient?: WalletClient;
+  readonly walletClientResolver?: WalletClientResolver;
   readonly deployments: EnsDeploymentProfile;
 }
 
@@ -58,9 +63,10 @@ export const makeServicesContext = (
       }),
     ),
     Context.add(WriteClient, makeWriteClient(values.publicClient, readSemaphore)),
-    Context.add(WalletClientService, {
-      client: Option.fromNullishOr(values.walletClient),
-    }),
+    Context.add(
+      WalletClientService,
+      makeWalletClientService(values.walletClient, values.walletClientResolver),
+    ),
     Context.add(DeploymentService, { profile: values.deployments }),
   );
 };

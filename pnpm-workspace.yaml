@@ -3,6 +3,7 @@ packages:
   - "packages/*"
 
 catalog:
+  "@wagmi/core": "3.6.5"
   "@ensdomains/address-encoder": "1.1.4"
   "@ensdomains/content-hash": "3.1.1"
   "@effect/vitest": "4.0.0-rc.112"

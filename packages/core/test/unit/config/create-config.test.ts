@@ -5,7 +5,12 @@ import {
 } from "@ensforge/contracts/deployments";
 import { describe, expect, it, vi } from "vitest";
 
-import { createConfig, ConfigError, type ConfigErrorCode } from "../../../src/index.js";
+import {
+  createConfig,
+  ConfigError,
+  type ConfigErrorCode,
+  type CreateConfigParameters,
+} from "../../../src/index.js";
 import {
   makeChainlessPublicClient,
   makeMainnetPublicClient,
@@ -230,6 +235,23 @@ describe("createConfig", () => {
           publicClient: makeMainnetPublicClient(),
         }),
       "UNSUPPORTED_NETWORK",
+    );
+  });
+
+  it("requires exactly one client source at the runtime boundary", () => {
+    expectConfigError(
+      () => createConfig({ network: "mainnet" } as CreateConfigParameters),
+      "INVALID_CLIENT_CONFIGURATION",
+    );
+
+    expectConfigError(
+      () =>
+        createConfig({
+          network: "mainnet",
+          publicClient: makeMainnetPublicClient(),
+          wagmiConfig: {},
+        } as unknown as CreateConfigParameters),
+      "INVALID_CLIENT_CONFIGURATION",
     );
   });
 });

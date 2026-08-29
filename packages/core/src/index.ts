@@ -22,6 +22,8 @@ export {
   defaultWriteOptions,
   ensNetworks,
   type CreateConfigParameters,
+  type CreateViemConfigParameters,
+  type CreateWagmiConfigParameters,
   type EnsChainId,
   type EnsDeployment,
   type EnsDeploymentProfile,

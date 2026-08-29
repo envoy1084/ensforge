@@ -9,7 +9,8 @@
     "ethereum",
     "sdk",
     "typescript",
-    "viem"
+    "viem",
+    "wagmi"
   ],
   "homepage": "https://github.com/envoy1084/ensforge#readme",
   "bugs": "https://github.com/envoy1084/ensforge/issues",
@@ -70,6 +71,7 @@
     "viem": "catalog:"
   },
   "peerDependencies": {
+    "@wagmi/core": "catalog:",
     "effect": "catalog:"
   }
 }

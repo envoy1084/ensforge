@@ -6,7 +6,7 @@ ENSv2, transition routing, resolver records, CCIP-Read, and typed read compositi
 ## Installation
 
 ```sh
-pnpm add @ensforge/core effect viem
+pnpm add @ensforge/core effect viem @wagmi/core
 ```
 
 ## Usage
@@ -28,6 +28,15 @@ const address = await Effect.runPromise(getAddress.effect(config, { name: "ens.e
 const profile = await readBatch(config, {
   owner: getOwner.request({ name: "ens.eth" }),
   address: getAddress.request({ name: "ens.eth" }),
+});
+```
+
+A Wagmi config can provide both clients instead:
+
+```ts
+const config = createConfig({
+  network: "mainnet",
+  wagmiConfig,
 });
 ```
 

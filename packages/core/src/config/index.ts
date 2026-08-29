@@ -1,5 +1,7 @@
 export type {
   CreateConfigParameters,
+  CreateViemConfigParameters,
+  CreateWagmiConfigParameters,
   EnsDeployment,
   EnsDeploymentProfile,
   EnsforgeConfig,

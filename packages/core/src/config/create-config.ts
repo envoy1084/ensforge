@@ -4,6 +4,10 @@ import { ConfigError } from "../errors/config-error.js";
 import { attachConfigContext } from "../internal/config/context.js";
 import { getNetworkProfile } from "../internal/config/network-profile.js";
 import { validateClientChain, validateDeployments } from "../internal/config/validation.js";
+import {
+  getWagmiPublicClient,
+  makeWagmiWalletClientResolver,
+} from "../internal/config/wagmi-clients.js";
 import type { EnsforgeServiceValues } from "../internal/services/context.js";
 import { makeServicesContext } from "../internal/services/context.js";
 import {
@@ -30,11 +34,39 @@ export const createConfig = (parameters: CreateConfigParameters): EnsforgeConfig
   const reads = resolveReadOptions(parameters.reads);
   const writes = resolveWriteOptions(parameters.writes);
   const gateways = resolveGatewayOptions(parameters.gateways);
+  const wagmiConfig = parameters.wagmiConfig;
 
-  validateClientChain(parameters.publicClient, "public", network, chainId);
+  if (
+    wagmiConfig !== undefined &&
+    (parameters.publicClient !== undefined || parameters.walletClient !== undefined)
+  ) {
+    throw new ConfigError({
+      code: "INVALID_CLIENT_CONFIGURATION",
+      message: "Provide either a Wagmi config or Viem clients, not both",
+    });
+  }
 
-  if (parameters.walletClient !== undefined) {
-    validateClientChain(parameters.walletClient, "wallet", network, chainId);
+  if (wagmiConfig === undefined && parameters.publicClient === undefined) {
+    throw new ConfigError({
+      code: "INVALID_CLIENT_CONFIGURATION",
+      message: "Provide either a Wagmi config or a Viem public client",
+    });
+  }
+
+  const publicClient =
+    wagmiConfig === undefined
+      ? parameters.publicClient
+      : getWagmiPublicClient(wagmiConfig, network, chainId);
+  const walletClient = parameters.walletClient;
+  const walletClientResolver =
+    wagmiConfig === undefined
+      ? undefined
+      : makeWagmiWalletClientResolver(wagmiConfig, network, chainId);
+
+  validateClientChain(publicClient, "public", network, chainId);
+
+  if (walletClient !== undefined) {
+    validateClientChain(walletClient, "wallet", network, chainId);
   }
 
   validateDeployments(deployments, chainId);
@@ -42,23 +74,24 @@ export const createConfig = (parameters: CreateConfigParameters): EnsforgeConfig
   const serviceValues: EnsforgeServiceValues = {
     network,
     chainId,
-    publicClient: parameters.publicClient,
+    publicClient,
     reads,
     gateways,
     deployments,
-    ...(parameters.walletClient === undefined ? {} : { walletClient: parameters.walletClient }),
+    ...(walletClient === undefined ? {} : { walletClient }),
+    ...(walletClientResolver === undefined ? {} : { walletClientResolver }),
   };
   const config = attachConfigContext(
     {
       [EnsforgeConfigTypeId]: EnsforgeConfigTypeId,
       network,
       chainId,
-      publicClient: parameters.publicClient,
+      publicClient,
       reads,
       writes,
       gateways,
       deployments,
-      ...(parameters.walletClient === undefined ? {} : { walletClient: parameters.walletClient }),
+      ...(walletClient === undefined ? {} : { walletClient }),
     },
     makeServicesContext(serviceValues),
   );

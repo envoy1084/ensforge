@@ -6,6 +6,7 @@ import { describe, expect, it } from "vitest";
 import { ConfigError } from "../../../src/index.js";
 import { EnsNetworkService } from "../../../src/internal/services/network.js";
 import {
+  makeWalletClientService,
   resolveWalletContext,
   WalletClientService,
 } from "../../../src/internal/services/wallet-client.js";
@@ -22,7 +23,10 @@ const provideSepoliaWallet = <Success, Failure>(
 ) =>
   effect.pipe(
     Effect.provideService(EnsNetworkService, { network: "sepolia", chainId: 11155111 }),
-    Effect.provideService(WalletClientService, { client: walletClient }),
+    Effect.provideService(
+      WalletClientService,
+      makeWalletClientService(Option.getOrUndefined(walletClient)),
+    ),
   );
 
 const getFailure = <Success, Failure>(exit: Exit.Exit<Success, Failure>): Failure => {

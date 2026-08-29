@@ -1,4 +1,5 @@
 import type { EnsV1Deployment, EnsV2Deployment } from "@ensforge/contracts/deployments";
+import type { Config as WagmiConfig } from "@wagmi/core";
 import type { PublicClient, WalletClient } from "viem";
 
 import type { EnsProtocol } from "../schemas/protocol.js";
@@ -23,14 +24,26 @@ export type EnsDeploymentProfile =
       readonly v2: EnsV2Deployment;
     };
 
-export interface CreateConfigParameters {
+interface SharedCreateConfigParameters {
   readonly network: EnsNetwork;
-  readonly publicClient: PublicClient;
-  readonly walletClient?: WalletClient;
   readonly reads?: ReadOptions;
   readonly writes?: WriteOptions;
   readonly gateways?: GatewayOptions;
 }
+
+export interface CreateViemConfigParameters extends SharedCreateConfigParameters {
+  readonly publicClient: PublicClient;
+  readonly walletClient?: WalletClient;
+  readonly wagmiConfig?: never;
+}
+
+export interface CreateWagmiConfigParameters extends SharedCreateConfigParameters {
+  readonly wagmiConfig: WagmiConfig;
+  readonly publicClient?: never;
+  readonly walletClient?: never;
+}
+
+export type CreateConfigParameters = CreateViemConfigParameters | CreateWagmiConfigParameters;
 
 export type EnsRuntimeNetwork = EnsNetwork | "devnet";
 export type EnsRuntimeChainId = EnsChainId | 31337;
