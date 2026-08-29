@@ -29,8 +29,8 @@ const implementation = Effect.fn("ensforge.getOrCreateResolver")(function* (
   const compatible =
     capabilities.address !== null &&
     !capabilities.inherited &&
-    capabilities.authorization !== "unknown" &&
-    (protocol === "v1" || capabilities.permissioned);
+    capabilities.authorization !== "none" &&
+    capabilities.authorization !== "unknown";
   if (compatible && capabilities.address !== null) {
     return {
       status: "existing",

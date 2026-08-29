@@ -44,6 +44,14 @@ export {
   type SetResolverResult,
 } from "./set-resolver/index.js";
 export {
+  setResolverAndRecords,
+  type ResolverSource,
+  type SetResolverAndRecordsError,
+  type SetResolverAndRecordsParameters,
+  type SetResolverAndRecordsProgress,
+  type SetResolverAndRecordsResult,
+} from "./set-resolver-and-records/index.js";
+export {
   resolve,
   ResolveResult,
   resolveWithResolver,

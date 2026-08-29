@@ -38,7 +38,7 @@ import type {
   SetRecordsResult,
 } from "./types.js";
 
-const recordIntents = (
+export const getSetRecordIntents = (
   name: string,
   records: ReadonlyArray<SetRecordInput>,
 ): ReadonlyArray<EnsWriteIntent<CallExecutionResult, WriteError>> =>
@@ -82,7 +82,7 @@ const recordIntents = (
 const resolverMulticallPreparer: EnsWriteIntentPreparer<SetRecordsParameters, SetRecordsError> =
   Effect.fn("ensforge.setRecords.prepare")(function* (config, parameters, context) {
     const name = yield* normalizeName.effect(parameters.name);
-    const intents = recordIntents(name, parameters.records);
+    const intents = getSetRecordIntents(name, parameters.records);
     if (intents.length === 0) {
       return yield* new WritePlanError({
         code: "INVALID_CALL_PLAN",
@@ -215,7 +215,7 @@ const setRecordsEffect = Effect.fn("ensforge.setRecords")(function* (
     });
   }
   return yield* sendCalls.effect(config, {
-    calls: recordIntents(parameters.name, parameters.records),
+    calls: getSetRecordIntents(parameters.name, parameters.records),
     ...(parameters.walletClient === undefined ? {} : { walletClient: parameters.walletClient }),
     ...(parameters.account === undefined ? {} : { account: parameters.account }),
     ...(parameters.mode === undefined ? {} : { mode: parameters.mode }),
