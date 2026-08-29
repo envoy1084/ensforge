@@ -18,9 +18,9 @@ Create requests through methods in any group, then execute them through `sdk.bat
 import { sdk } from "./client";
 
 const profile = await sdk.batch.readBatch({
-  owner: sdk.name.getOwner.request({ name: "ens.eth" }),
-  resolver: sdk.resolution.getResolver.request({ name: "ens.eth" }),
-  avatar: sdk.records.getAvatar.request({ name: "ens.eth" }),
+  owner: sdk.name.getOwner.request({ name: "sdk.eth" }),
+  resolver: sdk.resolution.getResolver.request({ name: "sdk.eth" }),
+  avatar: sdk.records.getAvatar.request({ name: "sdk.eth" }),
 });
 
 profile.owner;

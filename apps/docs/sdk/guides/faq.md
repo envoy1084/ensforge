@@ -28,11 +28,11 @@ convenience wrapper around the same Effect implementation.
 
 ```ts
 import { Effect } from "effect";
-import { ens } from "./client";
+import { sdk } from "./client";
 
 const program = Effect.all({
-  owner: ens.name.getOwner.effect({ name: "example.eth" }),
-  avatar: ens.records.getAvatar.effect({ name: "example.eth" }),
+  owner: sdk.name.getOwner.effect({ name: "example.eth" }),
+  avatar: sdk.records.getAvatar.effect({ name: "example.eth" }),
 });
 ```
 

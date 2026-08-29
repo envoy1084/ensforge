@@ -18,9 +18,9 @@ import { Ensforge } from "@ensforge/sdk";
 ::: code-group
 
 ```ts [index.ts]
-import { ens } from "./client";
+import { sdk } from "./client";
 
-const result = await ens.batch.executeWritePlan({
+const result = await sdk.batch.executeWritePlan({
   plan: { id: "profile", stages: [] },
 });
 ```
@@ -80,9 +80,9 @@ Use `.effect` when composing the method in an Effect program. The success and er
 
 ```ts
 import { Effect } from "effect";
-import { ens } from "./client";
+import { sdk } from "./client";
 
-const program = ens.batch.executeWritePlan.effect(parameters);
+const program = sdk.batch.executeWritePlan.effect(parameters);
 
 type Success = Effect.Effect.Success<typeof program>;
 type Failure = Effect.Effect.Error<typeof program>;

@@ -18,9 +18,9 @@ import { Ensforge } from "@ensforge/sdk";
 ::: code-group
 
 ```ts [index.ts]
-import { ens } from "./client";
+import { sdk } from "./client";
 
-const result = await ens.dns.getDnsImportPlan({
+const result = await sdk.dns.getDnsImportPlan({
   name: "example.eth",
 });
 ```
@@ -76,9 +76,9 @@ Use `.effect` when composing the method in an Effect program. The success and er
 
 ```ts
 import { Effect } from "effect";
-import { ens } from "./client";
+import { sdk } from "./client";
 
-const program = ens.dns.getDnsImportPlan.effect(parameters);
+const program = sdk.dns.getDnsImportPlan.effect(parameters);
 
 type Success = Effect.Effect.Success<typeof program>;
 type Failure = Effect.Effect.Error<typeof program>;
@@ -91,7 +91,7 @@ const result = await Effect.runPromise(program);
 Use `.request` to describe the read without executing it, then include it in a typed [read batch](/core/guides/batching).
 
 ```ts
-const request = ens.dns.getDnsImportPlan.request(parameters);
+const request = sdk.dns.getDnsImportPlan.request(parameters);
 ```
 
 ## Error

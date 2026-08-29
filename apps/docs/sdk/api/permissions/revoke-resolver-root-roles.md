@@ -18,9 +18,9 @@ import { Ensforge } from "@ensforge/sdk";
 ::: code-group
 
 ```ts [index.ts]
-import { ens } from "./client";
+import { sdk } from "./client";
 
-const result = await ens.permissions.revokeResolverRootRoles({
+const result = await sdk.permissions.revokeResolverRootRoles({
   name: "example.eth",
   account: "value",
   roles: 1n,
@@ -75,9 +75,9 @@ Use `.effect` when composing the method in an Effect program. The success and er
 
 ```ts
 import { Effect } from "effect";
-import { ens } from "./client";
+import { sdk } from "./client";
 
-const program = ens.permissions.revokeResolverRootRoles.effect(parameters);
+const program = sdk.permissions.revokeResolverRootRoles.effect(parameters);
 
 type Success = Effect.Effect.Success<typeof program>;
 type Failure = Effect.Effect.Error<typeof program>;
@@ -90,7 +90,7 @@ const result = await Effect.runPromise(program);
 Use `.call` to prepare this write for simulation, wallet batching, or a custom execution policy.
 
 ```ts
-const call = ens.permissions.revokeResolverRootRoles.call(parameters);
+const call = sdk.permissions.revokeResolverRootRoles.call(parameters);
 ```
 
 ## Error

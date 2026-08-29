@@ -14,10 +14,10 @@ Import the error classes you want to handle from `@ensforge/sdk`.
 
 ```ts [index.ts]
 import { ContractError, NameError, RpcError } from "@ensforge/sdk";
-import { ens } from "./client";
+import { sdk } from "./client";
 
 try {
-  const owner = await ens.name.getOwner({ name: "example.eth" });
+  const owner = await sdk.name.getOwner({ name: "example.eth" });
   console.log(owner.address);
 } catch (error) {
   if (error instanceof NameError) {
@@ -44,9 +44,9 @@ error without hiding the remaining failures.
 
 ```ts [index.ts]
 import { Effect } from "effect";
-import { ens } from "./client";
+import { sdk } from "./client";
 
-const owner = ens.name.getOwner.effect({ name: "example.eth" }).pipe(
+const owner = sdk.name.getOwner.effect({ name: "example.eth" }).pipe(
   Effect.catchTag("NameError", (error) =>
     Effect.logWarning(`Invalid name: ${error.code}`).pipe(Effect.as(null)),
   ),

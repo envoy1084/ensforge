@@ -18,9 +18,9 @@ import { Ensforge } from "@ensforge/sdk";
 ::: code-group
 
 ```ts [index.ts]
-import { ens } from "./client";
+import { sdk } from "./client";
 
-const result = await ens.dns.setDnsRecords({
+const result = await sdk.dns.setDnsRecords({
   name: "example.eth",
   data: "0x",
 });
@@ -68,9 +68,9 @@ Use `.effect` when composing the method in an Effect program. The success and er
 
 ```ts
 import { Effect } from "effect";
-import { ens } from "./client";
+import { sdk } from "./client";
 
-const program = ens.dns.setDnsRecords.effect(parameters);
+const program = sdk.dns.setDnsRecords.effect(parameters);
 
 type Success = Effect.Effect.Success<typeof program>;
 type Failure = Effect.Effect.Error<typeof program>;
@@ -83,7 +83,7 @@ const result = await Effect.runPromise(program);
 Use `.call` to prepare this write for simulation, wallet batching, or a custom execution policy.
 
 ```ts
-const call = ens.dns.setDnsRecords.call(parameters);
+const call = sdk.dns.setDnsRecords.call(parameters);
 ```
 
 ## Error

@@ -18,9 +18,9 @@ import { Ensforge } from "@ensforge/sdk";
 ::: code-group
 
 ```ts [index.ts]
-import { ens } from "./client";
+import { sdk } from "./client";
 
-const result = await ens.capabilities.getOperatorApproval({
+const result = await sdk.capabilities.getOperatorApproval({
   name: "example.eth",
   owner: "0x0000000000000000000000000000000000000001",
   operator: "0x0000000000000000000000000000000000000001",
@@ -85,9 +85,9 @@ Use `.effect` when composing the method in an Effect program. The success and er
 
 ```ts
 import { Effect } from "effect";
-import { ens } from "./client";
+import { sdk } from "./client";
 
-const program = ens.capabilities.getOperatorApproval.effect(parameters);
+const program = sdk.capabilities.getOperatorApproval.effect(parameters);
 
 type Success = Effect.Effect.Success<typeof program>;
 type Failure = Effect.Effect.Error<typeof program>;
@@ -100,7 +100,7 @@ const result = await Effect.runPromise(program);
 Use `.request` to describe the read without executing it, then include it in a typed [read batch](/core/guides/batching).
 
 ```ts
-const request = ens.capabilities.getOperatorApproval.request(parameters);
+const request = sdk.capabilities.getOperatorApproval.request(parameters);
 ```
 
 ## Error

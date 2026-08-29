@@ -18,9 +18,9 @@ import { Ensforge } from "@ensforge/sdk";
 ::: code-group
 
 ```ts [index.ts]
-import { ens } from "./client";
+import { sdk } from "./client";
 
-const unwatch = await ens.events.watchEnsEvents(
+const unwatch = await sdk.events.watchEnsEvents(
   { fromBlock: 22_000_000n },
   console.log,
   console.error,
@@ -86,7 +86,7 @@ Returns `() => void`.
 Use `.stream` to consume events as an Effect stream with typed failures and interruption.
 
 ```ts
-const stream = ens.events.watchEnsEvents.stream(parameters);
+const stream = sdk.events.watchEnsEvents.stream(parameters);
 ```
 
 ## Error

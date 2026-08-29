@@ -27,9 +27,9 @@ export const ens = new Ensforge({ network: "mainnet", publicClient, walletClient
 ```
 
 ```ts [profile.ts]
-import { ens } from "./client";
+import { sdk } from "./client";
 
-const result = await ens.records.setText({
+const result = await sdk.records.setText({
   name: "example.eth",
   key: "url",
   value: "https://example.com",
@@ -50,7 +50,7 @@ Write methods accept common execution controls in addition to their action-speci
 - `account` and `walletClient` override the configured wallet for one call.
 
 ```ts
-const result = await ens.records.setText({
+const result = await sdk.records.setText({
   name: "example.eth",
   key: "com.github",
   value: "envoy1084",
@@ -68,14 +68,14 @@ Write methods expose `.call` when the operation can be represented as a prepared
 useful for previews, custom wallet flows, and [`sendCalls`](/sdk/api/batch/send-calls).
 
 ```ts
-const call = ens.records.setText.call({
+const call = sdk.records.setText.call({
   name: "example.eth",
   key: "url",
   value: "https://example.com",
 });
 
-const prepared = await ens.batch.prepareCalls({ calls: [call] });
-const simulation = await ens.batch.simulateCalls(prepared);
+const prepared = await sdk.batch.prepareCalls({ calls: [call] });
+const simulation = await sdk.batch.simulateCalls(prepared);
 ```
 
 ## Resumable workflows
@@ -84,7 +84,7 @@ Registration and migration can span several transactions or a protocol waiting p
 result is a progress snapshot that can be persisted and passed back as `resume`.
 
 ```ts
-const progress = await ens.registration.registerName({
+const progress = await sdk.registration.registerName({
   name: "example.eth",
   owner: account.address,
   duration: 365n * 24n * 60n * 60n,
@@ -92,7 +92,7 @@ const progress = await ens.registration.registerName({
 });
 
 if (progress.status !== "completed") {
-  const completed = await ens.registration.registerName({
+  const completed = await sdk.registration.registerName({
     name: "example.eth",
     owner: account.address,
     duration: 365n * 24n * 60n * 60n,

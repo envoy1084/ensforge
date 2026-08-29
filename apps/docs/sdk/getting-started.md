@@ -17,7 +17,7 @@ Create a viem `PublicClient`, then pass it to `Ensforge`.
 ```ts [index.ts]
 import { sdk } from "./client";
 
-const owner = await sdk.name.getOwner({ name: "ens.eth" });
+const owner = await sdk.name.getOwner({ name: "sdk.eth" });
 
 if (owner === null) {
   console.log("The name has no owner");
@@ -43,9 +43,9 @@ Methods are grouped by the ENS capability they operate on.
 import { sdk } from "./client";
 
 const [address, avatar, url] = await Promise.all([
-  sdk.records.getAddress({ name: "ens.eth" }),
-  sdk.records.getAvatar({ name: "ens.eth" }),
-  sdk.records.getText({ name: "ens.eth", key: "url" }),
+  sdk.records.getAddress({ name: "sdk.eth" }),
+  sdk.records.getAvatar({ name: "sdk.eth" }),
+  sdk.records.getText({ name: "sdk.eth", key: "url" }),
 ]);
 ```
 
@@ -67,8 +67,8 @@ import { Effect } from "effect";
 import { sdk } from "./client";
 
 const profile = Effect.gen(function* () {
-  const owner = yield* sdk.name.getOwner.effect({ name: "ens.eth" });
-  const avatar = yield* sdk.records.getAvatar.effect({ name: "ens.eth" });
+  const owner = yield* sdk.name.getOwner.effect({ name: "sdk.eth" });
+  const avatar = yield* sdk.records.getAvatar.effect({ name: "sdk.eth" });
 
   return { owner, avatar };
 });

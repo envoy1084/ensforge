@@ -18,9 +18,9 @@ import { Ensforge } from "@ensforge/sdk";
 ::: code-group
 
 ```ts [index.ts]
-import { ens } from "./client";
+import { sdk } from "./client";
 
-const result = await ens.reverse.setPrimaryNameForAddress({
+const result = await sdk.reverse.setPrimaryNameForAddress({
   address: "0x0000000000000000000000000000000000000001",
   name: "example.eth",
 });
@@ -74,9 +74,9 @@ Use `.effect` when composing the method in an Effect program. The success and er
 
 ```ts
 import { Effect } from "effect";
-import { ens } from "./client";
+import { sdk } from "./client";
 
-const program = ens.reverse.setPrimaryNameForAddress.effect(parameters);
+const program = sdk.reverse.setPrimaryNameForAddress.effect(parameters);
 
 type Success = Effect.Effect.Success<typeof program>;
 type Failure = Effect.Effect.Error<typeof program>;
@@ -89,7 +89,7 @@ const result = await Effect.runPromise(program);
 Use `.call` to prepare this write for simulation, wallet batching, or a custom execution policy.
 
 ```ts
-const call = ens.reverse.setPrimaryNameForAddress.call(parameters);
+const call = sdk.reverse.setPrimaryNameForAddress.call(parameters);
 ```
 
 ## Error

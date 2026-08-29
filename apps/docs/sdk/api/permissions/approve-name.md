@@ -18,9 +18,9 @@ import { Ensforge } from "@ensforge/sdk";
 ::: code-group
 
 ```ts [index.ts]
-import { ens } from "./client";
+import { sdk } from "./client";
 
-const result = await ens.permissions.approveName({
+const result = await sdk.permissions.approveName({
   name: "example.eth",
   approved: true,
 });
@@ -68,9 +68,9 @@ Use `.effect` when composing the method in an Effect program. The success and er
 
 ```ts
 import { Effect } from "effect";
-import { ens } from "./client";
+import { sdk } from "./client";
 
-const program = ens.permissions.approveName.effect(parameters);
+const program = sdk.permissions.approveName.effect(parameters);
 
 type Success = Effect.Effect.Success<typeof program>;
 type Failure = Effect.Effect.Error<typeof program>;
@@ -83,7 +83,7 @@ const result = await Effect.runPromise(program);
 Use `.call` to prepare this write for simulation, wallet batching, or a custom execution policy.
 
 ```ts
-const call = ens.permissions.approveName.call(parameters);
+const call = sdk.permissions.approveName.call(parameters);
 ```
 
 ## Error

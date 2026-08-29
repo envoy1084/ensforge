@@ -32,9 +32,9 @@ predictable without changing action behavior or result types.
 ```ts [profile.ts]
 import { sdk } from "./client";
 
-const state = await sdk.name.getNameState({ name: "ens.eth" });
-const resolver = await sdk.resolution.getResolver({ name: "ens.eth" });
-const avatar = await sdk.records.getAvatar({ name: "ens.eth" });
+const state = await sdk.name.getNameState({ name: "sdk.eth" });
+const resolver = await sdk.resolution.getResolver({ name: "sdk.eth" });
+const avatar = await sdk.records.getAvatar({ name: "sdk.eth" });
 ```
 
 <<< @/snippets/sdk/client.ts[client.ts]

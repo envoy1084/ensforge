@@ -18,9 +18,9 @@ import { Ensforge } from "@ensforge/sdk";
 ::: code-group
 
 ```ts [index.ts]
-import { ens } from "./client";
+import { sdk } from "./client";
 
-const result = await ens.reverse.getPrimaryName({
+const result = await sdk.reverse.getPrimaryName({
   address: "0x0000000000000000000000000000000000000001",
 });
 ```
@@ -76,9 +76,9 @@ Use `.effect` when composing the method in an Effect program. The success and er
 
 ```ts
 import { Effect } from "effect";
-import { ens } from "./client";
+import { sdk } from "./client";
 
-const program = ens.reverse.getPrimaryName.effect(parameters);
+const program = sdk.reverse.getPrimaryName.effect(parameters);
 
 type Success = Effect.Effect.Success<typeof program>;
 type Failure = Effect.Effect.Error<typeof program>;
@@ -91,7 +91,7 @@ const result = await Effect.runPromise(program);
 Use `.request` to describe the read without executing it, then include it in a typed [read batch](/core/guides/batching).
 
 ```ts
-const request = ens.reverse.getPrimaryName.request(parameters);
+const request = sdk.reverse.getPrimaryName.request(parameters);
 ```
 
 ## Error

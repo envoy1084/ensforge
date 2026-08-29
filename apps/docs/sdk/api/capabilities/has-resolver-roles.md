@@ -18,9 +18,9 @@ import { Ensforge } from "@ensforge/sdk";
 ::: code-group
 
 ```ts [index.ts]
-import { ens } from "./client";
+import { sdk } from "./client";
 
-const result = await ens.capabilities.hasResolverRoles({
+const result = await sdk.capabilities.hasResolverRoles({
   name: "example.eth",
   account: {},
   roles: 1n,
@@ -96,9 +96,9 @@ Use `.effect` when composing the method in an Effect program. The success and er
 
 ```ts
 import { Effect } from "effect";
-import { ens } from "./client";
+import { sdk } from "./client";
 
-const program = ens.capabilities.hasResolverRoles.effect(parameters);
+const program = sdk.capabilities.hasResolverRoles.effect(parameters);
 
 type Success = Effect.Effect.Success<typeof program>;
 type Failure = Effect.Effect.Error<typeof program>;
@@ -111,7 +111,7 @@ const result = await Effect.runPromise(program);
 Use `.request` to describe the read without executing it, then include it in a typed [read batch](/core/guides/batching).
 
 ```ts
-const request = ens.capabilities.hasResolverRoles.request(parameters);
+const request = sdk.capabilities.hasResolverRoles.request(parameters);
 ```
 
 ## Error

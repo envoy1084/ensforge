@@ -18,9 +18,9 @@ import { Ensforge } from "@ensforge/sdk";
 ::: code-group
 
 ```ts [index.ts]
-import { ens } from "./client";
+import { sdk } from "./client";
 
-const result = await ens.permissions.setOperatorApproval({
+const result = await sdk.permissions.setOperatorApproval({
   name: "example.eth",
   target: "0x0000000000000000000000000000000000000001",
   operator: "0x0000000000000000000000000000000000000001",
@@ -82,9 +82,9 @@ Use `.effect` when composing the method in an Effect program. The success and er
 
 ```ts
 import { Effect } from "effect";
-import { ens } from "./client";
+import { sdk } from "./client";
 
-const program = ens.permissions.setOperatorApproval.effect(parameters);
+const program = sdk.permissions.setOperatorApproval.effect(parameters);
 
 type Success = Effect.Effect.Success<typeof program>;
 type Failure = Effect.Effect.Error<typeof program>;
@@ -97,7 +97,7 @@ const result = await Effect.runPromise(program);
 Use `.call` to prepare this write for simulation, wallet batching, or a custom execution policy.
 
 ```ts
-const call = ens.permissions.setOperatorApproval.call(parameters);
+const call = sdk.permissions.setOperatorApproval.call(parameters);
 ```
 
 ## Error

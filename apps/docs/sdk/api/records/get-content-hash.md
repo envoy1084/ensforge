@@ -18,9 +18,9 @@ import { Ensforge } from "@ensforge/sdk";
 ::: code-group
 
 ```ts [index.ts]
-import { ens } from "./client";
+import { sdk } from "./client";
 
-const result = await ens.records.getContentHash({
+const result = await sdk.records.getContentHash({
   name: "example.eth",
 });
 ```
@@ -71,9 +71,9 @@ Use `.effect` when composing the method in an Effect program. The success and er
 
 ```ts
 import { Effect } from "effect";
-import { ens } from "./client";
+import { sdk } from "./client";
 
-const program = ens.records.getContentHash.effect(parameters);
+const program = sdk.records.getContentHash.effect(parameters);
 
 type Success = Effect.Effect.Success<typeof program>;
 type Failure = Effect.Effect.Error<typeof program>;
@@ -86,7 +86,7 @@ const result = await Effect.runPromise(program);
 Use `.request` to describe the read without executing it, then include it in a typed [read batch](/core/guides/batching).
 
 ```ts
-const request = ens.records.getContentHash.request(parameters);
+const request = sdk.records.getContentHash.request(parameters);
 ```
 
 ## Error

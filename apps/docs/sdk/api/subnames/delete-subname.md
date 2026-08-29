@@ -18,9 +18,9 @@ import { Ensforge } from "@ensforge/sdk";
 ::: code-group
 
 ```ts [index.ts]
-import { ens } from "./client";
+import { sdk } from "./client";
 
-const result = await ens.subnames.deleteSubname({
+const result = await sdk.subnames.deleteSubname({
   name: "example.eth",
 });
 ```
@@ -32,7 +32,7 @@ const result = await ens.subnames.deleteSubname({
 ## Parameters
 
 ```ts
-type Parameters = Parameters<typeof ens.subnames.deleteSubname>[0];
+type Parameters = Parameters<typeof sdk.subnames.deleteSubname>[0];
 ```
 
 ### name
@@ -61,9 +61,9 @@ Use `.effect` when composing the method in an Effect program. The success and er
 
 ```ts
 import { Effect } from "effect";
-import { ens } from "./client";
+import { sdk } from "./client";
 
-const program = ens.subnames.deleteSubname.effect(parameters);
+const program = sdk.subnames.deleteSubname.effect(parameters);
 
 type Success = Effect.Effect.Success<typeof program>;
 type Failure = Effect.Effect.Error<typeof program>;
@@ -76,7 +76,7 @@ const result = await Effect.runPromise(program);
 Use `.call` to prepare this write for simulation, wallet batching, or a custom execution policy.
 
 ```ts
-const call = ens.subnames.deleteSubname.call(parameters);
+const call = sdk.subnames.deleteSubname.call(parameters);
 ```
 
 ## Error

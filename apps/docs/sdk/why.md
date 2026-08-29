@@ -11,9 +11,9 @@ changing the behavior or types of Core actions.
 ```ts
 const sdk = new Ensforge({ network: "mainnet", publicClient });
 
-await sdk.name.getOwner({ name: "ens.eth" });
-await sdk.records.getAvatar({ name: "ens.eth" });
-await sdk.registration.getRenewalPrice({ name: "ens.eth", duration });
+await sdk.name.getOwner({ name: "sdk.eth" });
+await sdk.records.getAvatar({ name: "sdk.eth" });
+await sdk.registration.getRenewalPrice({ name: "sdk.eth", duration });
 ```
 
 Methods are grouped by ENS capability: name, records, registration, resolution, ownership,

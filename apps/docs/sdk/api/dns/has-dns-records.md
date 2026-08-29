@@ -18,9 +18,9 @@ import { Ensforge } from "@ensforge/sdk";
 ::: code-group
 
 ```ts [index.ts]
-import { ens } from "./client";
+import { sdk } from "./client";
 
-const result = await ens.dns.hasDnsRecords({
+const result = await sdk.dns.hasDnsRecords({
   name: "example.eth",
   recordName: "_ens.example.com",
 });
@@ -79,9 +79,9 @@ Use `.effect` when composing the method in an Effect program. The success and er
 
 ```ts
 import { Effect } from "effect";
-import { ens } from "./client";
+import { sdk } from "./client";
 
-const program = ens.dns.hasDnsRecords.effect(parameters);
+const program = sdk.dns.hasDnsRecords.effect(parameters);
 
 type Success = Effect.Effect.Success<typeof program>;
 type Failure = Effect.Effect.Error<typeof program>;
@@ -94,7 +94,7 @@ const result = await Effect.runPromise(program);
 Use `.request` to describe the read without executing it, then include it in a typed [read batch](/core/guides/batching).
 
 ```ts
-const request = ens.dns.hasDnsRecords.request(parameters);
+const request = sdk.dns.hasDnsRecords.request(parameters);
 ```
 
 ## Error

@@ -28,10 +28,10 @@ export const ens = new Ensforge({ network: "mainnet", publicClient });
 ```
 
 ```ts [index.ts]
-import { ens } from "./client";
+import { sdk } from "./client";
 
-const owner = await ens.name.getOwner({ name: "example.eth" });
-const avatar = await ens.records.getAvatar({ name: "example.eth" });
+const owner = await sdk.name.getOwner({ name: "example.eth" });
+const avatar = await sdk.records.getAvatar({ name: "example.eth" });
 ```
 
 ## Parameters

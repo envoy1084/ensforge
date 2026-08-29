@@ -18,8 +18,8 @@ import { Effect } from "effect";
 import { sdk } from "./client";
 
 const getProfile = Effect.gen(function* () {
-  const owner = yield* sdk.name.getOwner.effect({ name: "ens.eth" });
-  const avatar = yield* sdk.records.getAvatar.effect({ name: "ens.eth" });
+  const owner = yield* sdk.name.getOwner.effect({ name: "sdk.eth" });
+  const avatar = yield* sdk.records.getAvatar.effect({ name: "sdk.eth" });
 
   return { owner, avatar };
 });
@@ -86,7 +86,7 @@ idempotent and its submission state is known.
 ## Promise interop
 
 ```ts
-const promise = Effect.runPromise(sdk.records.getText.effect({ name: "ens.eth", key: "url" }));
+const promise = Effect.runPromise(sdk.records.getText.effect({ name: "sdk.eth", key: "url" }));
 ```
 
 Calling `sdk.records.getText(...)` is equivalent at the boundary and is usually clearer when no

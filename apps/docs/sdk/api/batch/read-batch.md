@@ -18,10 +18,10 @@ import { Ensforge } from "@ensforge/sdk";
 ::: code-group
 
 ```ts [index.ts]
-import { ens } from "./client";
+import { sdk } from "./client";
 
-const result = await ens.batch.readBatch({
-  owner: ens.name.getOwner.request({ name: "ens.eth" }),
+const result = await sdk.batch.readBatch({
+  owner: sdk.name.getOwner.request({ name: "sdk.eth" }),
 });
 ```
 
@@ -32,7 +32,7 @@ const result = await ens.batch.readBatch({
 ## Parameters
 
 ```ts
-type Parameters = Parameters<typeof ens.batch.readBatch>[0];
+type Parameters = Parameters<typeof sdk.batch.readBatch>[0];
 ```
 
 ### requests
@@ -67,9 +67,9 @@ Use `.effect` when composing the method in an Effect program. The success and er
 
 ```ts
 import { Effect } from "effect";
-import { ens } from "./client";
+import { sdk } from "./client";
 
-const program = ens.batch.readBatch.effect(parameters);
+const program = sdk.batch.readBatch.effect(parameters);
 
 type Success = Effect.Effect.Success<typeof program>;
 type Failure = Effect.Effect.Error<typeof program>;
