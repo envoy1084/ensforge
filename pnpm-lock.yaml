@@ -132,6 +132,21 @@ importers:
         specifier: ^3.0.0
         version: 3.7.7(@tanstack/query-core@5.102.8)(@tanstack/react-query@5.102.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)(viem@2.56.0(typescript@6.0.3))
 
+  packages/sdk:
+    dependencies:
+      '@ensforge/core':
+        specifier: workspace:*
+        version: link:../core
+      effect:
+        specifier: ^4.0.0-rc.112
+        version: 4.0.0-rc.112
+      viem:
+        specifier: ^2.56.0
+        version: 2.56.0(typescript@6.0.3)
+      wagmi:
+        specifier: ^3.0.0
+        version: 3.7.7(@tanstack/query-core@5.102.8)(@tanstack/react-query@5.102.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)(viem@2.56.0(typescript@6.0.3))
+
   packages/template:
     dependencies:
       effect:
