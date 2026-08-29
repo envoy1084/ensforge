@@ -111,6 +111,7 @@ export const seedV2Fixtures = Effect.fn("seedV2Fixtures")(function* (
     environment.accounts.owner2,
   );
   yield* registerV2(environment, "v2-expiring-soon", activeBlock.timestamp + 3_600n, zeroAddress);
+  yield* registerV2(environment, "v2-resolver-lifecycle", activeExpiry, zeroAddress);
   yield* registerV2(environment, "v2-write-ready", activeExpiry, zeroAddress);
 
   const existingEnsRegistry = yield* seedRead(
@@ -352,6 +353,13 @@ export const seedV2Fixtures = Effect.fn("seedV2Fixtures")(function* (
     ),
     noResolver: v2Fixture(
       "v2-no-resolver.eth",
+      "active",
+      activeExpiry,
+      zeroAddress,
+      environment.accounts.owner,
+    ),
+    resolverLifecycle: v2Fixture(
+      "v2-resolver-lifecycle.eth",
       "active",
       activeExpiry,
       zeroAddress,

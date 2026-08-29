@@ -22,6 +22,7 @@ export interface EnsV1FixtureManifest {
   readonly wrappedSubname: EnsNameFixture;
   readonly noResolver: EnsNameFixture;
   readonly recordWrites: EnsNameFixture;
+  readonly resolverLifecycle: EnsNameFixture;
   readonly writeReady: EnsNameFixture;
   readonly grace: EnsNameFixture;
   readonly expired: EnsNameFixture;
@@ -40,6 +41,7 @@ export interface EnsV2FixtureManifest {
   readonly nestedOwnResolver: EnsNameFixture;
   readonly inheritedResolver: EnsNameFixture;
   readonly noResolver: EnsNameFixture;
+  readonly resolverLifecycle: EnsNameFixture;
   readonly writeReady: EnsNameFixture;
   readonly grace: EnsNameFixture;
   readonly expired: EnsNameFixture;

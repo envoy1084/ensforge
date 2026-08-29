@@ -17,6 +17,12 @@ export {
   type GetResolverVersionParameters,
 } from "./get-resolver-version/index.js";
 export {
+  setResolver,
+  type SetResolverError,
+  type SetResolverParameters,
+  type SetResolverResult,
+} from "./set-resolver/index.js";
+export {
   resolve,
   ResolveResult,
   resolveWithResolver,
