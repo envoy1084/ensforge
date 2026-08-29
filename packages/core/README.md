@@ -1,7 +1,16 @@
 # `@ensforge/core`
 
-Type-safe ENSv2 actions and utilities for names, records, registration, renewals, migration, wrapping,
-and reverse resolution. ENSv1 compatibility and protocol routing are handled automatically.
+Type-safe actions and utilities for building ENS applications.
+
+## Features
+
+- Unified reads and writes across supported ENS deployments
+- Automatic protocol and migration-state routing
+- Names, records, registration, renewal, migration, wrapping, DNS, and reverse resolution
+- Batched reads and wallet-aware write execution
+- CCIP-Read support through viem
+- Name normalization, hashing, DNS encoding, and record codecs
+- Bring your own viem clients or Wagmi config
 
 ## Installation
 
@@ -9,7 +18,7 @@ and reverse resolution. ENSv1 compatibility and protocol routing are handled aut
 pnpm add @ensforge/core
 ```
 
-## Usage
+## Overview
 
 ```ts
 import { createConfig, getAddress, getOwner } from "@ensforge/core";
@@ -25,7 +34,8 @@ const owner = await getOwner(config, { name: "ens.eth" });
 const address = await getAddress(config, { name: "ens.eth" });
 ```
 
-A Wagmi config can be used in place of viem clients:
+Every action uses the same config and returns typed results. For applications already using Wagmi,
+pass its config directly:
 
 ```ts
 const config = createConfig({
@@ -33,3 +43,19 @@ const config = createConfig({
   wagmiConfig,
 });
 ```
+
+Compose compatible reads into one request with `readBatch`:
+
+```ts
+import { getAvatar, readBatch } from "@ensforge/core";
+
+const profile = await readBatch(config, {
+  owner: getOwner.request({ name: "ens.eth" }),
+  address: getAddress.request({ name: "ens.eth" }),
+  avatar: getAvatar.request({ name: "ens.eth" }),
+});
+```
+
+## License
+
+Apache-2.0

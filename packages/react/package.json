@@ -1,14 +1,13 @@
 {
   "name": "@ensforge/react",
   "version": "0.1.0-beta.0",
-  "description": "React providers and hooks for ENSv2 applications",
+  "description": "Reactive React hooks for ENS",
   "keywords": [
-    "effect",
-    "effect-atom",
     "ens",
-    "ensv2",
     "ethereum",
+    "hooks",
     "react",
+    "sdk",
     "typescript",
     "viem",
     "wagmi"

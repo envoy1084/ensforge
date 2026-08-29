@@ -1,12 +1,11 @@
 {
   "name": "@ensforge/contracts",
   "version": "0.1.0-beta.0",
-  "description": "ENSv2 contract ABIs, deployment addresses, and resolver interfaces",
+  "description": "Type-safe contract ABIs, deployment addresses, and interfaces for ENS",
   "keywords": [
     "abi",
     "contracts",
     "ens",
-    "ensv2",
     "ethereum",
     "typescript",
     "viem"

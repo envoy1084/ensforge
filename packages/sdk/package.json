@@ -1,16 +1,16 @@
 {
   "name": "@ensforge/sdk",
   "version": "0.1.0-beta.0",
-  "description": "A config-bound TypeScript SDK for ENSv2 reads, writes, and workflows",
+  "description": "A type-safe TypeScript SDK for ENS",
   "keywords": [
-    "effect",
     "ens",
-    "ensv2",
     "ethereum",
+    "name-service",
     "sdk",
     "typescript",
     "viem",
-    "wagmi"
+    "wagmi",
+    "web3"
   ],
   "homepage": "https://github.com/envoy1084/ensforge#readme",
   "bugs": "https://github.com/envoy1084/ensforge/issues",
