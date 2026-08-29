@@ -26,8 +26,8 @@ export default defineConfig({
       markdown.use(groupIconMdPlugin);
     },
     theme: {
-      dark: "github-dark-default",
-      light: "github-light-default",
+      dark: "vitesse-dark",
+      light: "vitesse-light",
     },
   },
   sitemap: { hostname: siteUrl },
