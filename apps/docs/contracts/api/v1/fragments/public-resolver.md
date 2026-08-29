@@ -1,0 +1,70 @@
+---
+title: Public Resolver
+description: Focused, tree-shakable ABI fragments for Public Resolver.
+---
+
+# Public Resolver
+
+Focused, tree-shakable ABI fragments for Public Resolver.
+
+## Import
+
+```ts
+import {
+  publicResolverV1ApproveAbi,
+  publicResolverV1ClearRecordsAbi,
+  publicResolverV1IsApprovedForAbi,
+  publicResolverV1IsApprovedForAllAbi,
+  publicResolverV1MulticallAbi,
+  publicResolverV1MulticallWithNodeCheckAbi,
+  publicResolverV1SetABIAbi,
+  publicResolverV1SetAddrAbi,
+  publicResolverV1SetContenthashAbi,
+  publicResolverV1SetDNSRecordsAbi,
+  publicResolverV1SetDataAbi,
+  publicResolverV1SetInterfaceAbi,
+  publicResolverV1SetNameAbi,
+  publicResolverV1SetPubkeyAbi,
+  publicResolverV1SetTextAbi,
+  publicResolverV1SetZonehashAbi,
+} from "@ensforge/contracts/v1";
+```
+
+## Usage
+
+```ts
+import { getContract } from "viem";
+
+const contract = getContract({
+  address,
+  abi: publicResolverV1ApproveAbi,
+  client: publicClient,
+});
+```
+
+## Exports
+
+| Export                                      | Description                                             |
+| ------------------------------------------- | ------------------------------------------------------- |
+| `publicResolverV1ApproveAbi`                | Immutable ABI value with viem-compatible literal types. |
+| `publicResolverV1ClearRecordsAbi`           | Immutable ABI value with viem-compatible literal types. |
+| `publicResolverV1IsApprovedForAbi`          | Immutable ABI value with viem-compatible literal types. |
+| `publicResolverV1IsApprovedForAllAbi`       | Immutable ABI value with viem-compatible literal types. |
+| `publicResolverV1MulticallAbi`              | Immutable ABI value with viem-compatible literal types. |
+| `publicResolverV1MulticallWithNodeCheckAbi` | Immutable ABI value with viem-compatible literal types. |
+| `publicResolverV1SetABIAbi`                 | Immutable ABI value with viem-compatible literal types. |
+| `publicResolverV1SetAddrAbi`                | Immutable ABI value with viem-compatible literal types. |
+| `publicResolverV1SetContenthashAbi`         | Immutable ABI value with viem-compatible literal types. |
+| `publicResolverV1SetDNSRecordsAbi`          | Immutable ABI value with viem-compatible literal types. |
+| `publicResolverV1SetDataAbi`                | Immutable ABI value with viem-compatible literal types. |
+| `publicResolverV1SetInterfaceAbi`           | Immutable ABI value with viem-compatible literal types. |
+| `publicResolverV1SetNameAbi`                | Immutable ABI value with viem-compatible literal types. |
+| `publicResolverV1SetPubkeyAbi`              | Immutable ABI value with viem-compatible literal types. |
+| `publicResolverV1SetTextAbi`                | Immutable ABI value with viem-compatible literal types. |
+| `publicResolverV1SetZonehashAbi`            | Immutable ABI value with viem-compatible literal types. |
+
+## Entrypoint
+
+`@ensforge/contracts/v1`
+
+The values are immutable and can be passed directly to viem contract, log, and encoding utilities.
