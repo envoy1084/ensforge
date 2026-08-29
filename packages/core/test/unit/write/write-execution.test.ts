@@ -258,4 +258,50 @@ describe("write execution", () => {
       expect(harness.walletClient.sendTransaction).toHaveBeenCalledOnce();
     }),
   );
+
+  it.effect("preserves completed stages when the next stage fails", () =>
+    Effect.gen(function* () {
+      const harness = makeHarness();
+      vi.mocked(harness.walletClient.sendTransaction)
+        .mockReset()
+        .mockResolvedValueOnce(firstHash)
+        .mockRejectedValueOnce(new UserRejectedRequestError(new Error("rejected")));
+      const plan = {
+        id: "dependent-stage-plan",
+        stages: [
+          {
+            type: "calls",
+            id: "deploy",
+            mode: "sequential",
+            calls: [testWrite.call({ to: target })],
+          },
+          {
+            type: "calls",
+            id: "configure",
+            mode: "sequential",
+            calls: [testWrite.call({ to: target })],
+          },
+        ],
+      } as const;
+      const partial = yield* executeWritePlan.effect(harness.config, { plan });
+
+      assert.strictEqual(partial.status, "partial");
+      assert.strictEqual(partial.currentStage, "configure");
+      assert.strictEqual(partial.completedStages[0]?.id, "deploy");
+      assert.instanceOf(partial.failure, WalletError);
+
+      vi.mocked(harness.walletClient.sendTransaction).mockReset().mockResolvedValue(secondHash);
+      const completed = yield* executeWritePlan.effect(harness.config, {
+        plan,
+        resume: partial,
+      });
+
+      assert.strictEqual(completed.status, "completed");
+      assert.deepStrictEqual(
+        completed.completedStages.map((stage) => stage.id),
+        ["deploy", "configure"],
+      );
+      expect(harness.walletClient.sendTransaction).toHaveBeenCalledOnce();
+    }),
+  );
 });

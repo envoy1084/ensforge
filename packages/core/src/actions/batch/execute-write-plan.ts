@@ -1,4 +1,4 @@
-import { Effect } from "effect";
+import { Effect, Result } from "effect";
 
 import { defineAction } from "../../action/action.js";
 import type { EnsforgeConfig } from "../../config/config.js";
@@ -118,10 +118,10 @@ const executeWritePlanEffect = Effect.fn("ensforge.executeWritePlan")(function* 
         : undefined;
     const confirmed = partial?.calls.filter((call) => call.status !== "not-started") ?? [];
     const remainingCalls = stage.calls.slice(confirmed.length);
-    const result =
+    const execution = yield* Effect.result(
       partial === undefined
-        ? yield* sendCalls.effect(config, stageParameters(stage, parameters))
-        : yield* executeSequential(
+        ? sendCalls.effect(config, stageParameters(stage, parameters))
+        : executeSequential(
             config,
             { ...stageParameters(stage, parameters), calls: remainingCalls, mode: "sequential" },
             confirmed.length,
@@ -133,7 +133,20 @@ const executeWritePlanEffect = Effect.fn("ensforge.executeWritePlan")(function* 
               calls: [...confirmed, ...resumed.calls] as ReadonlyArray<CallExecutionResult>,
               failure: resumed.failure,
             })),
-          );
+          ),
+    );
+    if (Result.isFailure(execution)) {
+      if (completed.length === 0) return yield* execution.failure;
+      return {
+        planId: parameters.plan.id,
+        status: "partial",
+        completedStages: completed,
+        currentStage: stage.id,
+        nextActionAt: null,
+        failure: execution.failure,
+      };
+    }
+    const result = execution.success;
     const stageResult = { id: stage.id, result } satisfies WriteStageResult;
     if (previousIndex === -1) completed.push(stageResult);
     else completed[previousIndex] = stageResult;
