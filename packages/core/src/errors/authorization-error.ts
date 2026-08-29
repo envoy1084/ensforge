@@ -3,6 +3,7 @@ import { Schema } from "effect";
 export const AuthorizationErrorCode = Schema.Literals([
   "WRITE_TARGET_UNAVAILABLE",
   "RECORD_UNSUPPORTED",
+  "SCOPE_WIDENING_REQUIRED",
   "UNAUTHORIZED",
 ]);
 
