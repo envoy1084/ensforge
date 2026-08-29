@@ -93,16 +93,15 @@ export default defineConfig({
   titleTemplate: ":title | ensforge",
   transformHead({ pageData }) {
     const canonicalUrl = new URL(pageData.relativePath.replace(/index\.md$/, ""), `${siteUrl}/`);
+    const socialTitle = pageData.title === "ensforge" ? "ensforge" : `${pageData.title} | ensforge`;
+    const socialDescription =
+      pageData.description || "Type-safe tools for building applications on ENS.";
     return [
       ["link", { href: canonicalUrl.href.replace(/\.md$/, ""), rel: "canonical" }],
-      ["meta", { content: pageData.title, property: "og:title" }],
-      [
-        "meta",
-        {
-          content: pageData.description || "Type-safe tools for building applications on ENS.",
-          property: "og:description",
-        },
-      ],
+      ["meta", { content: socialTitle, property: "og:title" }],
+      ["meta", { content: socialDescription, property: "og:description" }],
+      ["meta", { content: socialTitle, name: "twitter:title" }],
+      ["meta", { content: socialDescription, name: "twitter:description" }],
     ];
   },
   vite: {
