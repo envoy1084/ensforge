@@ -1,4 +1,17 @@
 export {
+  claimDnsName,
+  type ClaimDnsNameError,
+  type ClaimDnsNameIntent,
+  type ClaimDnsNameParameters,
+  type ClaimDnsNameResult,
+} from "./claim-dns-name/index.js";
+export {
+  importDnsName,
+  type ImportDnsNameError,
+  type ImportDnsNameParameters,
+  type ImportDnsNameResult,
+} from "./import-dns-name/index.js";
+export {
   setDnsRecords,
   type SetDnsRecordsError,
   type SetDnsRecordsParameters,
@@ -35,6 +48,8 @@ export {
 export {
   DnsClaimStatus,
   DnsImportPlan,
+  DnssecProof,
+  DnssecProofChain,
   DnsRecordResult,
   DnsRecordsExistence,
   DnsRecordsResult,

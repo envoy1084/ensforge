@@ -14,6 +14,7 @@ import type { AuthorizationError } from "../errors/authorization-error.js";
 import type { CodecError } from "../errors/codec-error.js";
 import type { ConfigError } from "../errors/config-error.js";
 import type { ContractError } from "../errors/contract-error.js";
+import type { DnsImportError } from "../errors/dns-import-error.js";
 import type { MigrationError } from "../errors/migration-error.js";
 import type { NameError } from "../errors/name-error.js";
 import type { RegistrationError } from "../errors/registration-error.js";
@@ -48,6 +49,7 @@ export type WriteError =
   | CodecError
   | ConfigError
   | ContractError
+  | DnsImportError
   | NameError
   | MigrationError
   | RpcError

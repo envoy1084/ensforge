@@ -1,6 +1,9 @@
 import { Schema } from "effect";
 
+import type { Account, Address, WalletClient } from "viem";
+
 import type { BlockParameters } from "../../action/block.js";
+import type { EnsWriteIntent } from "../../action/write-intent.js";
 import type { CodecError } from "../../errors/codec-error.js";
 import type { ContractError } from "../../errors/contract-error.js";
 import type { NameError } from "../../errors/name-error.js";
@@ -9,8 +12,67 @@ import { DnsEncodedName } from "../../schemas/dns.js";
 import { Hex } from "../../schemas/hex.js";
 import { EthereumAddress } from "../../schemas/identity.js";
 import { NormalizedName } from "../../schemas/name.js";
+import type {
+  CallExecutionResult,
+  ConfirmationPolicy,
+  WriteError,
+  WriteMode,
+  WritePlanProgress,
+} from "../../write/types.js";
 
 export type DnsReadError = CodecError | ContractError | NameError | RpcError;
+
+export const DnssecProof = Schema.Struct({
+  rrset: Hex,
+  sig: Hex,
+});
+export type DnssecProof = typeof DnssecProof.Type;
+
+export const DnssecProofChain = Schema.Array(DnssecProof).pipe(
+  Schema.check(Schema.isMinLength(1, { message: "Expected at least one signed DNS RRSET" })),
+);
+export type DnssecProofChain = typeof DnssecProofChain.Type;
+
+interface DnsWriteWalletParameters {
+  readonly walletClient?: WalletClient;
+  readonly account?: Account | Address;
+  readonly mode?: WriteMode;
+  readonly confirmation?: ConfirmationPolicy;
+}
+
+export interface ClaimDnsNameParameters {
+  readonly name: string;
+  readonly proof: ReadonlyArray<DnssecProof>;
+  readonly resolver?: string;
+  readonly address?: string;
+}
+
+export type ClaimDnsNameResult = CallExecutionResult;
+export type ClaimDnsNameError = WriteError;
+export type ClaimDnsNameIntent = EnsWriteIntent<ClaimDnsNameResult, ClaimDnsNameError>;
+
+export type ImportDnsNameParameters = ClaimDnsNameParameters &
+  DnsWriteWalletParameters & {
+    readonly resume?: ImportDnsNameResult;
+  };
+
+export type ImportDnsNameResult =
+  | {
+      readonly status: "completed" | "not-required";
+      readonly name: NormalizedName;
+      readonly owner: EthereumAddress;
+      readonly resolver: EthereumAddress | null;
+      readonly write: WritePlanProgress | null;
+    }
+  | {
+      readonly status: "partial";
+      readonly name: NormalizedName;
+      readonly owner: null;
+      readonly resolver: null;
+      readonly write: WritePlanProgress;
+    };
+
+export type ImportDnsNameError = WriteError;
 
 export const DnsResource = Schema.Int.pipe(
   Schema.check(
