@@ -1,12 +1,12 @@
 # `@ensforge/contracts`
 
-Runtime-neutral ENSv1 and ENSv2 ABIs, interfaces, constants, resolver profiles, and deployment
-metadata for viem and other TypeScript tooling.
+ENSv2 contract ABIs, deployment addresses, resolver profiles, and shared interfaces. ENSv1 exports
+are included for applications that need transition and migration support.
 
 ## Installation
 
 ```sh
-pnpm add @ensforge/contracts viem
+pnpm add @ensforge/contracts
 ```
 
 ## Usage
@@ -18,13 +18,4 @@ import { ensRegistryV1Abi } from "@ensforge/contracts/v1";
 import { ethRegistrarV2Abi } from "@ensforge/contracts/v2";
 ```
 
-Available subpaths include `deployments`, `shared`, `resolver-profiles`, `v1`, `v2`, and the explicit
-experimental `v2/experimental/hca` entrypoint.
-
-## Development
-
-```sh
-pnpm --filter @ensforge/contracts typecheck
-pnpm --filter @ensforge/contracts test
-pnpm --filter @ensforge/contracts build
-```
+Exports are organized under `deployments`, `resolver-profiles`, `shared`, `v1`, and `v2`.

@@ -1,7 +1,7 @@
 {
   "name": "@ensforge/core",
   "version": "0.1.0-beta.0",
-  "description": "Effect-native ENS actions, workflows, and Promise APIs for JavaScript and TypeScript",
+  "description": "Type-safe ENSv2 actions, workflows, and utilities for JavaScript and TypeScript",
   "keywords": [
     "effect",
     "ens",

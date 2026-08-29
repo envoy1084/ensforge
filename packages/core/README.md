@@ -1,19 +1,18 @@
 # `@ensforge/core`
 
-Framework-independent, Effect-native ENS actions with Promise facades. The package handles ENSv1,
-ENSv2, transition routing, resolver records, CCIP-Read, and typed read composition using viem clients.
+Type-safe ENSv2 actions and utilities for names, records, registration, renewals, migration, wrapping,
+and reverse resolution. ENSv1 compatibility and protocol routing are handled automatically.
 
 ## Installation
 
 ```sh
-pnpm add @ensforge/core effect viem wagmi
+pnpm add @ensforge/core
 ```
 
 ## Usage
 
 ```ts
-import { createConfig, getAddress, getOwner, readBatch } from "@ensforge/core";
-import { Effect } from "effect";
+import { createConfig, getAddress, getOwner } from "@ensforge/core";
 import { createPublicClient, http } from "viem";
 import { mainnet } from "viem/chains";
 
@@ -23,30 +22,14 @@ const config = createConfig({
 });
 
 const owner = await getOwner(config, { name: "ens.eth" });
-const address = await Effect.runPromise(getAddress.effect(config, { name: "ens.eth" }));
-
-const profile = await readBatch(config, {
-  owner: getOwner.request({ name: "ens.eth" }),
-  address: getAddress.request({ name: "ens.eth" }),
-});
+const address = await getAddress(config, { name: "ens.eth" });
 ```
 
-A Wagmi config can provide both clients instead:
+A Wagmi config can be used in place of viem clients:
 
 ```ts
 const config = createConfig({
   network: "mainnet",
   wagmiConfig,
 });
-```
-
-Pure helpers such as `normalizeName`, `namehash`, DNS encoding, and record codecs are also exported
-from the package root.
-
-## Development
-
-```sh
-pnpm --filter @ensforge/core typecheck
-pnpm --filter @ensforge/core test
-pnpm --filter @ensforge/core build
 ```

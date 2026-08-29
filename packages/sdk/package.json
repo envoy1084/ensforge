@@ -1,7 +1,7 @@
 {
   "name": "@ensforge/sdk",
   "version": "0.1.0-beta.0",
-  "description": "Config-bound ENSv1 and ENSv2 SDK with Promise and Effect APIs",
+  "description": "A config-bound TypeScript SDK for ENSv2 reads, writes, and workflows",
   "keywords": [
     "effect",
     "ens",

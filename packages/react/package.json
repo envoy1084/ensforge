@@ -1,7 +1,7 @@
 {
   "name": "@ensforge/react",
   "version": "0.1.0-beta.0",
-  "description": "Effect Atom-powered React hooks for ENSv1 and ENSv2",
+  "description": "React providers and hooks for ENSv2 applications",
   "keywords": [
     "effect",
     "effect-atom",

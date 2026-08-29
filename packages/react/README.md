@@ -1,11 +1,11 @@
 # `@ensforge/react`
 
-Effect Atom-powered React hooks for Ensforge.
+React providers and hooks for building ENSv2 applications with Ensforge.
 
 ## Installation
 
 ```sh
-pnpm add @ensforge/react effect react scheduler viem wagmi
+pnpm add @ensforge/react
 ```
 
 ## Provider
@@ -25,7 +25,7 @@ import { EnsforgeProvider } from "@ensforge/react";
 </EnsforgeProvider>;
 ```
 
-An existing SDK can be supplied instead:
+You can also provide an existing SDK instance:
 
 ```tsx
 <EnsforgeProvider sdk={sdk}>
@@ -33,10 +33,7 @@ An existing SDK can be supplied instead:
 </EnsforgeProvider>
 ```
 
-The provider treats `config`, `sdk`, and defaults as initialization values. Remount it with a new
-React `key` when switching the configured ENS network.
-
-## Queries and mutations
+## Hooks
 
 ```tsx
 import { useOwner, useSetText } from "@ensforge/react";
@@ -47,12 +44,9 @@ const owner = useOwner({
 });
 
 const setText = useSetText();
-setText.mutate({
+await setText.mutateAsync({
   name: "ens.eth",
   key: "url",
   value: "https://ens.domains",
 });
 ```
-
-Every query exposes its native Effect Atom `AsyncResult`. Mutations can be run with `mutate`,
-`mutateAsync`, or `mutateEffect`.
