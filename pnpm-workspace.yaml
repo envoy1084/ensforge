@@ -27,6 +27,9 @@ allowBuilds:
   lefthook: true
   msgpackr-extract: true
 
+overrides:
+  "vite@<6.4.3": "6.4.3"
+
 minimumReleaseAgeExclude:
   - viem@2.56.0
   - happy-dom@20.12.0
