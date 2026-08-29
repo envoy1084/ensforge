@@ -103,6 +103,24 @@ export interface WalletCapabilitiesResult {
   readonly raw: Readonly<Record<string, unknown>>;
 }
 
+export interface GetCallsStatusParameters extends WalletOverrides {
+  readonly id: string;
+}
+
+export interface CallsStatusResult {
+  readonly id: string;
+  readonly chainId: number;
+  readonly status: "pending" | "success" | "failure" | "unknown";
+  readonly statusCode: number;
+  readonly atomic: boolean;
+  readonly receipts: ReadonlyArray<WriteReceipt>;
+}
+
+export interface ResumeCallsParameters extends WalletOverrides {
+  readonly batch: NativeBatchResult;
+  readonly confirmation?: ConfirmationPolicy;
+}
+
 export interface SequentialCallsResult {
   readonly mode: "sequential";
   readonly atomic: false;
@@ -210,7 +228,7 @@ export interface WriteStageResult {
 
 export interface WritePlanProgress {
   readonly planId: string;
-  readonly status: "completed" | "waiting" | "partial";
+  readonly status: "completed" | "waiting" | "partial" | "submitted";
   readonly completedStages: ReadonlyArray<WriteStageResult>;
   readonly currentStage: string | null;
   readonly nextActionAt: bigint | null;

@@ -6,7 +6,7 @@ import { executeNativeBatch } from "../../internal/write/execute-native-batch.js
 import { executeSequential } from "../../internal/write/execute-sequential.js";
 import { redactSensitiveWriteError } from "../../internal/write/redact-sensitive-error.js";
 import type { SendCallsParameters, SendCallsResult, WriteError } from "../../write/types.js";
-import { getWalletCapabilities } from "./get-wallet-capabilities.js";
+import { getWalletCapabilities, validateRequestedCapabilities } from "./get-wallet-capabilities.js";
 
 const sendCallsEffect = Effect.fn("ensforge.sendCalls")(function* (
   config: EnsforgeConfig,
@@ -16,6 +16,8 @@ const sendCallsEffect = Effect.fn("ensforge.sendCalls")(function* (
   if (mode === "sequential") return yield* executeSequential(config, parameters);
 
   const capabilities = yield* getWalletCapabilities.effect(config, parameters);
+  const invalidCapabilities = validateRequestedCapabilities(parameters.capabilities, capabilities);
+  if (invalidCapabilities !== undefined) return yield* invalidCapabilities;
   if (mode === "auto" && !capabilities.nativeCalls) {
     return yield* executeSequential(config, parameters);
   }

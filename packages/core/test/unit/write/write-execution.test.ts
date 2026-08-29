@@ -19,9 +19,11 @@ import {
   executeWritePlan,
   estimateCalls,
   getWalletCapabilities,
+  getCallsStatus,
   prepareCalls,
   sendCalls,
   simulateCalls,
+  resumeCalls,
   WalletError,
   type WriteOptions,
 } from "../../../src/index.js";
@@ -71,6 +73,15 @@ const makeHarness = (writes?: WriteOptions) => {
       .mockResolvedValueOnce(firstHash)
       .mockResolvedValueOnce(secondHash),
     sendCalls: vi.fn(async () => ({ id: "batch-1" })),
+    getCallsStatus: vi.fn(async () => ({
+      atomic: true,
+      chainId: ensTestChainId,
+      id: "batch-1",
+      receipts: [receipt(firstHash)],
+      status: "success" as const,
+      statusCode: 200,
+      version: "2.0.0",
+    })),
     waitForCallsStatus: vi.fn(async () => ({
       atomic: true,
       chainId: ensTestChainId,
@@ -247,6 +258,76 @@ describe("write execution", () => {
       assert.strictEqual(result.mode, "batch");
       assert.isTrue(result.atomic);
       assert.strictEqual(result.status, "confirmed");
+      expect(harness.walletClient.sendCalls).toHaveBeenCalledOnce();
+    }),
+  );
+
+  it.effect("rejects capabilities that the wallet does not advertise", () =>
+    Effect.gen(function* () {
+      const harness = makeHarness();
+      const error = yield* sendCalls
+        .effect(harness.config, {
+          calls: [testWrite.call({ to: target })],
+          mode: "batch",
+          capabilities: { paymasterService: { url: "https://paymaster.example" } },
+        })
+        .pipe(Effect.flip);
+
+      assert.instanceOf(error, WalletError);
+      assert.strictEqual(error.code, "CAPABILITY_UNAVAILABLE");
+      expect(harness.walletClient.sendCalls).not.toHaveBeenCalled();
+    }),
+  );
+
+  it.effect("reads and resumes a persisted native batch", () =>
+    Effect.gen(function* () {
+      const harness = makeHarness();
+      const submitted = yield* sendCalls.effect(harness.config, {
+        calls: [testWrite.call({ to: target })],
+        mode: "batch",
+        confirmation: { type: "submitted" },
+      });
+      assert.strictEqual(submitted.mode, "batch");
+      if (submitted.mode !== "batch") return;
+
+      const status = yield* getCallsStatus.effect(harness.config, { id: submitted.id });
+      const resumed = yield* resumeCalls.effect(harness.config, { batch: submitted });
+
+      assert.strictEqual(status.status, "success");
+      assert.strictEqual(resumed.status, "confirmed");
+      assert.strictEqual(resumed.calls[0]?.hash, firstHash);
+      expect(harness.walletClient.sendCalls).toHaveBeenCalledOnce();
+    }),
+  );
+
+  it.effect("resumes a submitted native write-plan stage without resubmitting", () =>
+    Effect.gen(function* () {
+      const harness = makeHarness();
+      const plan = {
+        id: "native-resume-plan",
+        stages: [
+          {
+            type: "calls",
+            id: "batch",
+            mode: "batch",
+            confirmation: { type: "submitted" },
+            calls: [testWrite.call({ to: target })],
+          },
+        ],
+      } as const;
+      const submitted = yield* executeWritePlan.effect(harness.config, { plan });
+      assert.strictEqual(submitted.status, "submitted");
+
+      const completed = yield* executeWritePlan.effect(harness.config, {
+        plan: {
+          ...plan,
+          stages: [{ ...plan.stages[0], confirmation: { type: "confirmed" } }],
+        },
+        resume: submitted,
+      });
+
+      assert.strictEqual(completed.status, "completed");
+      assert.strictEqual(completed.completedStages[0]?.result.status, "confirmed");
       expect(harness.walletClient.sendCalls).toHaveBeenCalledOnce();
     }),
   );

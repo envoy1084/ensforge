@@ -65,6 +65,10 @@ export interface WriteClientService {
     id: string,
     options: WaitForReceiptOptions,
   ) => Effect.Effect<GetCallsStatusReturnType, TransactionError>;
+  readonly getCallsStatus: (
+    walletClient: WalletClient,
+    id: string,
+  ) => Effect.Effect<GetCallsStatusReturnType, TransactionError>;
 }
 
 export class WriteClient extends Context.Service<WriteClient, WriteClientService>()(
@@ -197,6 +201,12 @@ export const makeWriteClient = (
             throwOnFailure: false,
             ...(options.timeout === undefined ? {} : { timeout: options.timeout }),
           }),
+        catch: (cause) => batchStatusError(cause, id),
+      }),
+    ),
+    getCallsStatus: Effect.fn("WriteClient.getCallsStatus")((walletClient, id) =>
+      Effect.tryPromise({
+        try: () => walletClient.getCallsStatus({ id }),
         catch: (cause) => batchStatusError(cause, id),
       }),
     ),

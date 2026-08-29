@@ -265,7 +265,7 @@ export type RegisterNameParameters = Omit<RegistrationCommitmentWriteParameters,
 export type AvailableRegistrationPrice = Extract<RegistrationPriceResult, { status: "available" }>;
 
 export interface RegisterNameResult {
-  readonly status: "waiting" | "partial" | "completed";
+  readonly status: "waiting" | "partial" | "submitted" | "completed";
   readonly name: NormalizedName;
   readonly protocol: typeof EnsProtocol.Type;
   readonly commitment: Bytes32;
@@ -290,7 +290,7 @@ export interface RegisterNamesParameters extends RegistrationWalletParameters {
 }
 
 export interface RegisterNamesResult {
-  readonly status: "waiting" | "partial" | "completed";
+  readonly status: "waiting" | "partial" | "submitted" | "completed";
   readonly registrations: ReadonlyArray<RegisterNameResult>;
   readonly nextActionAt: bigint | null;
 }

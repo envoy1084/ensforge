@@ -16,6 +16,7 @@ import type {
   WriteStageResult,
   WriteWaitCondition,
 } from "../../write/types.js";
+import { resumeCalls } from "./resume-calls.js";
 import { sendCalls } from "./send-calls.js";
 
 const waitIsComplete = Effect.fn("waitIsComplete")(function* (condition: WriteWaitCondition) {
@@ -74,7 +75,7 @@ const stageParameters = (
   calls: stage.calls,
   mode: stage.mode ?? "auto",
   atomicity: stage.atomicity ?? "preferred",
-  confirmation: stage.confirmation ?? ({ type: "confirmed" } as const),
+  ...(stage.confirmation === undefined ? {} : { confirmation: stage.confirmation }),
   ...(parameters.walletClient === undefined ? {} : { walletClient: parameters.walletClient }),
   ...(parameters.account === undefined ? {} : { account: parameters.account }),
 });
@@ -89,7 +90,11 @@ const executeWritePlanEffect = Effect.fn("ensforge.executeWritePlan")(function* 
   const completed = [...(parameters.resume?.completedStages ?? [])];
   const completedIds = new Set(
     completed
-      .filter((stage) => stage.result.mode !== "sequential" || stage.result.status !== "partial")
+      .filter(
+        (stage) =>
+          (stage.result.mode !== "sequential" || stage.result.status !== "partial") &&
+          (stage.result.mode !== "batch" || stage.result.status !== "submitted"),
+      )
       .map((stage) => stage.id),
   );
 
@@ -116,24 +121,37 @@ const executeWritePlanEffect = Effect.fn("ensforge.executeWritePlan")(function* 
       previous?.result.mode === "sequential" && previous.result.status === "partial"
         ? previous.result
         : undefined;
+    const submittedBatch =
+      previous?.result.mode === "batch" && previous.result.status === "submitted"
+        ? previous.result
+        : undefined;
     const confirmed = partial?.calls.filter((call) => call.status !== "not-started") ?? [];
     const remainingCalls = stage.calls.slice(confirmed.length);
     const execution = yield* Effect.result(
-      partial === undefined
-        ? sendCalls.effect(config, stageParameters(stage, parameters))
-        : executeSequential(
-            config,
-            { ...stageParameters(stage, parameters), calls: remainingCalls, mode: "sequential" },
-            confirmed.length,
-          ).pipe(
-            Effect.map((resumed) => ({
-              mode: "sequential" as const,
-              atomic: false as const,
-              status: resumed.status,
-              calls: [...confirmed, ...resumed.calls] as ReadonlyArray<CallExecutionResult>,
-              failure: resumed.failure,
-            })),
-          ),
+      submittedBatch !== undefined
+        ? resumeCalls.effect(config, {
+            batch: submittedBatch,
+            confirmation: stage.confirmation ?? config.writes.confirmation,
+            ...(parameters.walletClient === undefined
+              ? {}
+              : { walletClient: parameters.walletClient }),
+            ...(parameters.account === undefined ? {} : { account: parameters.account }),
+          })
+        : partial === undefined
+          ? sendCalls.effect(config, stageParameters(stage, parameters))
+          : executeSequential(
+              config,
+              { ...stageParameters(stage, parameters), calls: remainingCalls, mode: "sequential" },
+              confirmed.length,
+            ).pipe(
+              Effect.map((resumed) => ({
+                mode: "sequential" as const,
+                atomic: false as const,
+                status: resumed.status,
+                calls: [...confirmed, ...resumed.calls] as ReadonlyArray<CallExecutionResult>,
+                failure: resumed.failure,
+              })),
+            ),
     );
     if (Result.isFailure(execution)) {
       if (completed.length === 0) return yield* execution.failure;
@@ -158,6 +176,16 @@ const executeWritePlanEffect = Effect.fn("ensforge.executeWritePlan")(function* 
         currentStage: stage.id,
         nextActionAt: null,
         failure: result.failure,
+      };
+    }
+    if (result.mode === "batch" && result.status === "submitted") {
+      return {
+        planId: parameters.plan.id,
+        status: "submitted",
+        completedStages: completed,
+        currentStage: stage.id,
+        nextActionAt: null,
+        failure: null,
       };
     }
   }

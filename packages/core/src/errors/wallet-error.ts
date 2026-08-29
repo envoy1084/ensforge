@@ -6,6 +6,7 @@ export const WalletErrorCode = Schema.Literals([
   "BATCH_UNSUPPORTED",
   "ATOMICITY_UNAVAILABLE",
   "CAPABILITY_REQUEST_FAILED",
+  "CAPABILITY_UNAVAILABLE",
   "BATCH_SUBMISSION_FAILED",
 ]);
 export type WalletErrorCode = typeof WalletErrorCode.Type;
