@@ -7,8 +7,10 @@ import type {
   EnsRuntimeChainId,
   EnsRuntimeNetwork,
 } from "../../config/config.js";
+import type { ResolvedGatewayOptions } from "../../config/gateway-options.js";
 import type { ResolvedReadOptions } from "../../config/read-options.js";
 import { EthereumClient, makeEthereumClient } from "../client/ethereum-client.js";
+import { withGatewayPolicy } from "../gateway/ccip-request.js";
 import { ReadExecution, makeReadExecution } from "../read/execution-context.js";
 import { WriteClient, makeWriteClient } from "../write/write-client.js";
 import { DeploymentService } from "./deployment.js";
@@ -30,6 +32,7 @@ export interface EnsforgeServiceValues {
   readonly chainId: EnsRuntimeChainId;
   readonly publicClient: PublicClient;
   readonly reads: ResolvedReadOptions;
+  readonly gateways: ResolvedGatewayOptions;
   readonly walletClient?: WalletClient;
   readonly deployments: EnsDeploymentProfile;
 }
@@ -38,16 +41,14 @@ export const makeServicesContext = (
   values: EnsforgeServiceValues,
 ): Context.Context<EnsforgeServices> => {
   const readSemaphore = Semaphore.makeUnsafe(values.reads.concurrency);
+  const ccipClient = withGatewayPolicy(values.publicClient, values.gateways);
 
   return Context.make(EnsNetworkService, {
     network: values.network,
     chainId: values.chainId,
   }).pipe(
     Context.add(PublicClientService, { client: values.publicClient }),
-    Context.add(
-      EthereumClient,
-      makeEthereumClient({ publicClient: values.publicClient, readSemaphore }),
-    ),
+    Context.add(EthereumClient, makeEthereumClient({ publicClient: ccipClient, readSemaphore })),
     Context.add(
       ReadExecution,
       makeReadExecution({

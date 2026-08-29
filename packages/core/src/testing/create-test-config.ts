@@ -40,6 +40,7 @@ export const createTestConfig = (parameters: CreateTestConfigParameters): Ensfor
     chainId: ensTestChainId,
     publicClient: parameters.publicClient,
     reads,
+    gateways,
     deployments: parameters.deployments,
     ...(parameters.walletClient === undefined ? {} : { walletClient: parameters.walletClient }),
   } as const;

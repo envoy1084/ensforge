@@ -29,14 +29,14 @@ describe("avatar gateway policy", () => {
   it.effect("rejects denied and non-allowlisted gateway hosts", () =>
     Effect.gen(function* () {
       const denied = yield* validateGatewayUrl("https://blocked.example/ipfs/value", {
+        ...defaultGatewayOptions,
         allowedHosts: null,
         deniedHosts: ["blocked.example"],
-        timeout: 1_000,
       }).pipe(Effect.flip);
       const unlisted = yield* validateGatewayUrl("https://other.example/value", {
+        ...defaultGatewayOptions,
         allowedHosts: ["gateway.example"],
         deniedHosts: [],
-        timeout: 1_000,
       }).pipe(Effect.flip);
 
       assert.instanceOf(denied, GatewayError);

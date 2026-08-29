@@ -41,7 +41,13 @@ describe("createConfig", () => {
       confirmation: { type: "confirmed" },
       statusRetries: 0,
     });
-    expect(config.gateways).toEqual({ allowedHosts: null, deniedHosts: [], timeout: 10_000 });
+    expect(config.gateways).toEqual({
+      allowedHosts: null,
+      deniedHosts: [],
+      timeout: 10_000,
+      maxResponseSize: 1_048_576,
+      maxRedirects: 3,
+    });
     expect(config.deployments.protocol).toBe("v1");
     expect(config.deployments.v1).toBe(mainnetV1Deployment);
     expect(config.deployments.v2).toBeUndefined();
@@ -92,6 +98,8 @@ describe("createConfig", () => {
         allowedHosts: ["gateway.example"],
         deniedHosts: ["blocked.example"],
         timeout: 5_000,
+        maxResponseSize: 2_048,
+        maxRedirects: 1,
       },
     });
 
@@ -99,6 +107,8 @@ describe("createConfig", () => {
       allowedHosts: ["gateway.example"],
       deniedHosts: ["blocked.example"],
       timeout: 5_000,
+      maxResponseSize: 2_048,
+      maxRedirects: 1,
     });
   });
 

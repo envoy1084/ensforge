@@ -44,6 +44,7 @@ export const createConfig = (parameters: CreateConfigParameters): EnsforgeConfig
     chainId,
     publicClient: parameters.publicClient,
     reads,
+    gateways,
     deployments,
     ...(parameters.walletClient === undefined ? {} : { walletClient: parameters.walletClient }),
   };
