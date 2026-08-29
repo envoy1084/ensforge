@@ -11,7 +11,7 @@ hero:
   actions:
     - theme: brand
       text: Get started
-      link: /guide/getting-started
+      link: /core/getting-started
     - theme: alt
       text: Explore the SDK
       link: /sdk/

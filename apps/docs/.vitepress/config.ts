@@ -48,16 +48,22 @@ export default defineConfig({
       light: "/brand/wordmark-light.svg",
     },
     nav: [
-      { link: "/guide/getting-started", text: "Learn" },
-      { link: "/core/", text: "Core" },
-      { link: "/sdk/", text: "SDK" },
-      { link: "/react/", text: "React" },
-      { link: "/contracts/", text: "Contracts" },
+      { link: "/core/getting-started", text: "Core" },
+      { link: "/sdk/getting-started", text: "SDK" },
+      { link: "/react/getting-started", text: "React" },
+      { link: "/contracts/getting-started", text: "Contracts" },
       {
         items: [
+          {
+            link: "https://github.com/envoy1084/ensforge",
+            text: '<span class="nav-brand-link nav-github">GitHub</span>',
+          },
+          {
+            link: "https://www.npmjs.com/org/ensforge",
+            text: '<span class="nav-brand-link nav-npm">npm</span>',
+          },
           { link: "https://github.com/envoy1084/ensforge/releases", text: "Releases" },
-          { link: "https://github.com/envoy1084/ensforge", text: "Repository" },
-          { link: "https://www.npmjs.com/org/ensforge", text: "npm" },
+          { link: "https://github.com/envoy1084/ensforge/discussions", text: "Discussions" },
         ],
         text: "More",
       },
