@@ -18,12 +18,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: pnpm/setup@v2
-        with:
-          runtime: node@24.18.0
-          cache: true
-          install: false
-      - run: pnpm install --frozen-lockfile
+      - name: Setup pnpm and Node.js
+        uses: ./.github/actions/setup
       - run: pnpm check
       - run: pnpm pack:check
 
@@ -36,13 +32,11 @@ jobs:
       ENSFORGE_TEST_IMAGE: ghcr.io/envoy1084/ensforge-devnet@sha256:5efb35e1f12153c605d37a913a162580749f56fe4a270466f7c62fbf927bcfeb
     steps:
       - uses: actions/checkout@v7
-      - uses: pnpm/setup@v2
-        with:
-          runtime: node@24.18.0
-          cache: true
-          install: false
-      - run: pnpm install --frozen-lockfile
+      - name: Setup pnpm and Node.js
+        uses: ./.github/actions/setup
       - name: Pull pinned ENS devnet image
         run: docker pull "${ENSFORGE_TEST_IMAGE}"
+      - name: Build integration dependencies
+        run: pnpm --filter @ensforge/test-env... build
       - name: Verify seeded ENS devnet
         run: pnpm test:integration
