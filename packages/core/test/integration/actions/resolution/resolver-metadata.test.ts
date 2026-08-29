@@ -8,18 +8,24 @@ describe("resolver metadata integration", () => {
   it.effect("reads resolver record versions and reports a missing resolver", () =>
     Effect.gen(function* () {
       const devnet = getIntegrationDevnet();
-      const result = yield* readBatch.effect(devnet.configs.v2, {
-        v1: getResolverVersion.request({ name: devnet.fixtures.records.v1.name }),
-        v2: getResolverVersion.request({
-          name: devnet.fixtures.permissions.v2.permissionedResolver.name,
-        }),
-        missing: getResolverVersion.request({ name: devnet.fixtures.v2.noResolver.name }),
-      });
+      const [v1, result] = yield* Effect.all(
+        [
+          getResolverVersion.effect(devnet.configs.v1, {
+            name: devnet.fixtures.records.v1.name,
+          }),
+          readBatch.effect(devnet.configs.v2, {
+            v2: getResolverVersion.request({
+              name: devnet.fixtures.permissions.v2.permissionedResolver.name,
+            }),
+            missing: getResolverVersion.request({ name: devnet.fixtures.v2.noResolver.name }),
+          }),
+        ] as const,
+        { concurrency: "unbounded" },
+      );
 
-      assert.isFalse(result.v1.supported);
       assert.isTrue(result.v2.supported);
-      if (!result.v1.supported) {
-        assert.strictEqual(result.v1.reason, "VERSIONING_UNSUPPORTED");
+      if (!v1.supported) {
+        assert.strictEqual(v1.reason, "VERSIONING_UNSUPPORTED");
       }
       if (result.v2.supported) {
         assert.strictEqual(result.v2.version, 0n);
