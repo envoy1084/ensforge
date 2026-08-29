@@ -3,9 +3,9 @@ description: Install the repository's pnpm and Node.js versions, restore the pnp
 
 inputs:
   registry-url:
-    description: npm registry used for package authentication.
+    description: Optional npm registry used when token-based authentication is required.
     required: false
-    default: https://registry.npmjs.org
+    default: ""
 
 runs:
   using: composite
