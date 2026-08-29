@@ -5,43 +5,23 @@ description: Configure ensforge Core and read your first ENS name.
 
 # Getting Started
 
-## Create a public client
-
-ensforge uses a viem `PublicClient` for contract and RPC reads.
-
-```ts
-import { createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
-
-const publicClient = createPublicClient({
-  chain: mainnet,
-  transport: http(),
-});
-```
-
-For production, pass an authenticated RPC URL to `http`. Public endpoints are useful for local
-development but are commonly rate-limited.
-
 ## Create the config
 
-Pass the network and public client to `createConfig`.
+ensforge uses a viem `PublicClient` for contract and RPC reads. Create it and the Core config in one
+shared module.
 
-```ts
-import { createConfig } from "@ensforge/core";
-
-export const config = createConfig({
-  network: "mainnet",
-  publicClient,
-});
-```
+<<< @/snippets/core/config.ts
 
 The client chain must match the selected network. ensforge supports `mainnet` and `sepolia`.
+For production, pass an authenticated RPC URL to `http`; public endpoints are commonly rate-limited.
 
 ## Read a name
 
 Actions accept the config first and an action-specific parameter object second.
 
-```ts
+::: code-group
+
+```ts [index.ts]
 import { getNameState, getOwner } from "@ensforge/core";
 import { config } from "./config";
 
@@ -49,13 +29,19 @@ const owner = await getOwner(config, { name: "ens.eth" });
 const state = await getNameState(config, { name: "ens.eth" });
 ```
 
+<<< @/snippets/core/config.ts
+
+:::
+
 Names are normalized before they are used. Invalid names fail with a typed `NameError`.
 
 ## Use an existing Wagmi config
 
 If your application already uses Wagmi, pass its config instead of creating separate viem clients.
 
-```ts
+::: code-group
+
+```ts [config.ts]
 import { createConfig as createEnsforgeConfig } from "@ensforge/core";
 import { wagmiConfig } from "./wagmi";
 
@@ -64,6 +50,10 @@ export const config = createEnsforgeConfig({
   wagmiConfig,
 });
 ```
+
+<<< @/snippets/wagmi/config.ts
+
+:::
 
 Reads use Wagmi's public client. Writes resolve the active wallet client when the action executes, so
 account changes do not require recreating the ensforge config.

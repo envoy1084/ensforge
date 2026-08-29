@@ -17,21 +17,13 @@ import { createConfig } from "@ensforge/core";
 
 ### viem
 
-```ts
-import { createConfig } from "@ensforge/core";
-import { createPublicClient, createWalletClient, http } from "viem";
-import { mainnet } from "viem/chains";
-
-const config = createConfig({
-  network: "mainnet",
-  publicClient: createPublicClient({ chain: mainnet, transport: http() }),
-  walletClient: createWalletClient({ chain: mainnet, transport: http() }),
-});
-```
+<<< @/snippets/core/config.ts
 
 ### Wagmi
 
-```ts
+::: code-group
+
+```ts [config.ts]
 import { createConfig as createEnsforgeConfig } from "@ensforge/core";
 import { wagmiConfig } from "./wagmi";
 
@@ -40,6 +32,10 @@ const config = createEnsforgeConfig({
   wagmiConfig,
 });
 ```
+
+<<< @/snippets/wagmi/config.ts
+
+:::
 
 Provide either `wagmiConfig` or viem clients. The two configuration modes cannot be combined.
 
