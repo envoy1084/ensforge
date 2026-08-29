@@ -1,6 +1,6 @@
 ---
 title: Getting Started
-description: Create an Ensforge SDK instance and call grouped ENS methods.
+description: Create an ensforge SDK instance and call grouped ENS methods.
 ---
 
 # Getting Started

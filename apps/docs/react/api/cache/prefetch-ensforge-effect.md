@@ -1,6 +1,6 @@
 ---
 title: prefetchEnsforgeEffect
-description: Prefetch an Ensforge query atom as an Effect.
+description: Prefetch an ensforge query atom as an Effect.
 ---
 
 # prefetchEnsforgeEffect

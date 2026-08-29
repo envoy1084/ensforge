@@ -1,11 +1,11 @@
 ---
-title: Why Ensforge
+title: Why ensforge
 description: Learn how the contracts package organizes ENS contract definitions.
 ---
 
-# Why Ensforge
+# Why ensforge
 
-The contracts package provides a stable, typed view of the contracts used by Ensforge. Exports are
+The contracts package provides a stable, typed view of the contracts used by ensforge. Exports are
 organized by ENS generation and responsibility instead of exposing one monolithic ABI bundle.
 
 - Complete ABIs support advanced reads, event decoding, and tooling.

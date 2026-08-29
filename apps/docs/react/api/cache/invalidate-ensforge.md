@@ -1,6 +1,6 @@
 ---
 title: invalidateEnsforge
-description: Invalidate matching Ensforge queries in an Effect Atom registry.
+description: Invalidate matching ensforge queries in an Effect Atom registry.
 ---
 
 # invalidateEnsforge
@@ -25,7 +25,7 @@ await invalidateEnsforge(registry, sdk, {
 ## Parameters
 
 `EnsforgeInvalidation` supports `all`, `group`, `name`, `names`, and `address`. An empty selector
-invalidates every Ensforge query for the SDK network.
+invalidates every ensforge query for the SDK network.
 
 ## Return Type
 

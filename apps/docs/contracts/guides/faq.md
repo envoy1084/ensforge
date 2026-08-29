@@ -1,6 +1,6 @@
 ---
 title: FAQ
-description: Common questions about Ensforge contract definitions.
+description: Common questions about ensforge contract definitions.
 ---
 
 # FAQ

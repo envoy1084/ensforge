@@ -1,6 +1,6 @@
 ---
 title: Query Result
-description: Understand the result returned by Ensforge query hooks.
+description: Understand the result returned by ensforge query hooks.
 ---
 
 # Query Result

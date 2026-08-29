@@ -1,4 +1,4 @@
-# Ensforge docs
+# ensforge docs
 
 The documentation site is built with VitePress.
 

@@ -16,7 +16,7 @@ export const getIntegrationDevnet = (): IntegrationDevnet => {
   const context = inject("ensDevnet");
   const chain = defineChain({
     id: 31_337,
-    name: "Ensforge integration devnet",
+    name: "ensforge integration devnet",
     nativeCurrency: { decimals: 18, name: "Ether", symbol: "ETH" },
     rpcUrls: { default: { http: [context.rpcUrl] } },
     contracts: {

@@ -1,11 +1,11 @@
 ---
 title: Batching
-description: Batch typed reads and wallet writes with Ensforge Core.
+description: Batch typed reads and wallet writes with ensforge Core.
 ---
 
 # Batching
 
-Ensforge supports two different forms of batching: aggregated RPC reads and wallet-aware write calls.
+ensforge supports two different forms of batching: aggregated RPC reads and wallet-aware write calls.
 They use different execution rules because reads are stateless while writes depend on account and
 wallet capabilities.
 
@@ -26,7 +26,7 @@ const profile = await readBatch(config, {
 The object keys are preserved in the result. Each value keeps the return type and failure type of its
 source action.
 
-Ensforge groups calls by execution requirements. Compatible onchain reads use Multicall3. CCIP Read,
+ensforge groups calls by execution requirements. Compatible onchain reads use Multicall3. CCIP Read,
 resolver-specific aggregation, or other non-Multicall work is executed through the required path.
 
 ### Settled results
@@ -67,7 +67,7 @@ const result = await sendCalls(config, {
 });
 ```
 
-In `auto` mode, Ensforge uses wallet call batching when supported and falls back to sequential
+In `auto` mode, ensforge uses wallet call batching when supported and falls back to sequential
 transactions. Set an explicit atomicity requirement when the operation must not be partially applied.
 
 Complex operations such as registration use staged write plans. See [Writes](/core/guides/writes).

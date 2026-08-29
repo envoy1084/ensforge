@@ -1,6 +1,6 @@
 ---
 title: Query Options
-description: Configure Ensforge React query execution and caching.
+description: Configure ensforge React query execution and caching.
 ---
 
 # Query Options

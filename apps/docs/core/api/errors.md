@@ -1,6 +1,6 @@
 ---
 title: Errors
-description: Tagged error classes and stable error codes exported by Ensforge Core.
+description: Tagged error classes and stable error codes exported by ensforge Core.
 ---
 
 # Errors
@@ -40,6 +40,6 @@ program.pipe(
 ## Cause
 
 Errors retain the original `cause` when it is safe and useful. Use it for diagnostics, not control
-flow. Client-library messages and nested error shapes can change independently of Ensforge.
+flow. Client-library messages and nested error shapes can change independently of ensforge.
 
 See [Error Handling](/core/guides/error-handling) for Promise and Effect examples.

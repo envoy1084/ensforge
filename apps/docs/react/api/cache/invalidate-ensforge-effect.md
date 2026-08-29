@@ -1,11 +1,11 @@
 ---
 title: invalidateEnsforgeEffect
-description: Invalidate matching Ensforge queries as an Effect.
+description: Invalidate matching ensforge queries as an Effect.
 ---
 
 # invalidateEnsforgeEffect
 
-Returns the Effect that refreshes matching Ensforge query atoms.
+Returns the Effect that refreshes matching ensforge query atoms.
 
 ## Import
 

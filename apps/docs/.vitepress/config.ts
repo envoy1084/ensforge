@@ -38,12 +38,12 @@ export default defineConfig({
       text: "Edit this page on GitHub",
     },
     footer: {
-      copyright: "Copyright © 2026 Ensforge contributors",
+      copyright: "Copyright © 2026 ensforge contributors",
       message:
         'Released under the <a href="https://github.com/envoy1084/ensforge/blob/main/LICENSE">Apache-2.0 License</a>.',
     },
     logo: {
-      alt: "Ensforge",
+      alt: "ensforge",
       dark: "/brand/wordmark-dark.svg",
       light: "/brand/wordmark-light.svg",
     },
@@ -86,8 +86,8 @@ export default defineConfig({
     siteTitle: false,
     socialLinks: [{ icon: "github", link: "https://github.com/envoy1084/ensforge" }],
   },
-  title: "Ensforge",
-  titleTemplate: ":title · Ensforge",
+  title: "ensforge",
+  titleTemplate: ":title · ensforge",
   transformHead({ pageData }) {
     const canonicalUrl = new URL(pageData.relativePath.replace(/index\.md$/, ""), `${siteUrl}/`);
     return [

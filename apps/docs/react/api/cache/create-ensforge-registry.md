@@ -1,6 +1,6 @@
 ---
 title: createEnsforgeRegistry
-description: Create an Effect Atom registry configured for Ensforge React.
+description: Create an Effect Atom registry configured for ensforge React.
 ---
 
 # createEnsforgeRegistry

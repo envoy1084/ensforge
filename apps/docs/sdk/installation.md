@@ -1,6 +1,6 @@
 ---
 title: Installation
-description: Install the grouped Ensforge SDK.
+description: Install the grouped ensforge SDK.
 ---
 
 # Installation
@@ -8,19 +8,19 @@ description: Install the grouped Ensforge SDK.
 ::: code-group
 
 ```sh [pnpm]
-pnpm add @ensforge/sdk effect viem
+pnpm add @ensforge/sdk effect@rc viem
 ```
 
 ```sh [npm]
-npm install @ensforge/sdk effect viem
+npm install @ensforge/sdk effect@rc viem
 ```
 
 ```sh [yarn]
-yarn add @ensforge/sdk effect viem
+yarn add @ensforge/sdk effect@rc viem
 ```
 
 ```sh [bun]
-bun add @ensforge/sdk effect viem
+bun add @ensforge/sdk effect@rc viem
 ```
 
 :::

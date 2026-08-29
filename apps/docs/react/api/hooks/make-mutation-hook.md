@@ -1,6 +1,6 @@
 ---
 title: makeMutationHook
-description: Create a React mutation hook from an Ensforge mutation atom factory.
+description: Create a React mutation hook from an ensforge mutation atom factory.
 ---
 
 # makeMutationHook

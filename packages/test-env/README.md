@@ -1,6 +1,6 @@
 # `@ensforge/test-env`
 
-Private integration-test infrastructure for Ensforge. It starts a pinned combined ENSv1 and ENSv2
+Private integration-test infrastructure for ensforge. It starts a pinned combined ENSv1 and ENSv2
 Anvil deployment, seeds deterministic names and resolver records, and isolates tests with snapshots.
 
 ## Usage

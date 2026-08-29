@@ -1,5 +1,5 @@
 ---
-title: Ensforge
+title: ensforge
 description: Create an immutable, config-bound ENS client.
 ---
 

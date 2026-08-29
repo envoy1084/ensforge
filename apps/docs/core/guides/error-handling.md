@@ -1,11 +1,11 @@
 ---
 title: Error Handling
-description: Handle typed Ensforge errors with Promise and Effect APIs.
+description: Handle typed ensforge errors with Promise and Effect APIs.
 ---
 
 # Error Handling
 
-Ensforge translates client, contract, codec, and workflow failures into a small set of tagged domain
+ensforge translates client, contract, codec, and workflow failures into a small set of tagged domain
 errors. Each error includes a stable uppercase `code`, a readable `message`, and the original `cause`
 when one is available.
 

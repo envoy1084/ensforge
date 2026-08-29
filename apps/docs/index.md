@@ -1,11 +1,11 @@
 ---
 layout: home
-title: Ensforge
+title: ensforge
 titleTemplate: false
 description: Type-safe tools for reading, writing, and building applications on ENS.
 
 hero:
-  name: Ensforge
+  name: ensforge
   text: ENS, forged into an SDK.
   tagline: One typed interface for names, records, registration, migration, batching, and React applications.
   actions:
@@ -20,7 +20,7 @@ hero:
       link: https://github.com/envoy1084/ensforge
   image:
     src: /brand/wordmark-light.svg
-    alt: Ensforge
+    alt: ensforge
 
 features:
   - icon: 🔨

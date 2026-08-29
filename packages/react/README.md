@@ -4,17 +4,17 @@ Reactive React hooks for building ENS applications.
 
 ## Features
 
-- Queries and mutations for the full Ensforge action surface
+- Queries and mutations for the full ensforge action surface
 - Request caching, deduplication, retries, and stale-time controls
 - Refetching and Suspense variants for read hooks
 - Typed loading, success, and error states
-- Provider setup from an Ensforge config or existing SDK instance
+- Provider setup from an ensforge config or existing SDK instance
 - Shared cache primitives for prefetching and advanced composition
 
 ## Installation
 
 ```sh
-pnpm add @ensforge/react
+pnpm add @ensforge/react react effect@rc viem
 ```
 
 ## Overview

@@ -65,7 +65,7 @@ const resumed = await registerName(config, {
 });
 ```
 
-Resume with the same semantic inputs. Ensforge validates the plan identity before continuing and
+Resume with the same semantic inputs. ensforge validates the plan identity before continuing and
 does not repeat stages already recorded as complete.
 
 ## User rejection

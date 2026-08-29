@@ -1,6 +1,6 @@
 ---
 title: Schemas
-description: Runtime schemas and branded domain values exported by Ensforge Core.
+description: Runtime schemas and branded domain values exported by ensforge Core.
 ---
 
 # Schemas

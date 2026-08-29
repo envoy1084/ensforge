@@ -1,6 +1,6 @@
 ---
 title: Protocol Routing
-description: Understand how Ensforge selects ENSv1 and ENSv2 contracts.
+description: Understand how ensforge selects ENSv1 and ENSv2 contracts.
 ---
 
 # Protocol Routing

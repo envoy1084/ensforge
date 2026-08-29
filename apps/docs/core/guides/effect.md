@@ -1,11 +1,11 @@
 ---
 title: Effect Guide
-description: Compose, retry, interrupt, and observe Ensforge actions with Effect.
+description: Compose, retry, interrupt, and observe ensforge actions with Effect.
 ---
 
 # Effect
 
-Ensforge actions are Effects at their execution boundary. This keeps failures typed and makes
+ensforge actions are Effects at their execution boundary. This keeps failures typed and makes
 concurrency, timeouts, retries, and cancellation explicit.
 
 ## Build one program
@@ -73,5 +73,5 @@ controller.abort();
 ## Preserve spans
 
 Core actions add named spans and ENS attributes to their internal effects. Install your preferred
-Effect tracer at the application boundary to export them; no separate Ensforge tracing API is
+Effect tracer at the application boundary to export them; no separate ensforge tracing API is
 required.

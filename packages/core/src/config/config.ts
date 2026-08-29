@@ -48,7 +48,7 @@ export type CreateConfigParameters = CreateViemConfigParameters | CreateWagmiCon
 export type EnsRuntimeNetwork = EnsNetwork | "devnet";
 export type EnsRuntimeChainId = EnsChainId | 31337;
 
-/** Immutable, single-network configuration consumed by every Ensforge action. */
+/** Immutable, single-network configuration consumed by every ensforge action. */
 export interface EnsforgeConfig {
   readonly [EnsforgeConfigTypeId]: typeof EnsforgeConfigTypeId;
   readonly network: EnsNetwork;

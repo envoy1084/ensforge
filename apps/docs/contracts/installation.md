@@ -1,6 +1,6 @@
 ---
 title: Installation
-description: Install Ensforge contract definitions.
+description: Install ensforge contract definitions.
 ---
 
 # Installation

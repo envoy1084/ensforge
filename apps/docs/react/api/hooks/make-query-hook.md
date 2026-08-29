@@ -1,11 +1,11 @@
 ---
 title: makeQueryHook
-description: Create a React query hook from an Ensforge query atom factory.
+description: Create a React query hook from an ensforge query atom factory.
 ---
 
 # makeQueryHook
 
-Creates a hook with Ensforge query options and `EnsQueryResult` state from a query atom factory.
+Creates a hook with ensforge query options and `EnsQueryResult` state from a query atom factory.
 
 ## Import
 

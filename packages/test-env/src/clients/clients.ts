@@ -35,7 +35,7 @@ export interface DevnetVerificationClients {
 export const createDevnetClients = (rpcUrl: string, multicall3: Address): DevnetClients => {
   const chain = defineChain({
     id: ensDevnetChainId,
-    name: "Ensforge devnet",
+    name: "ensforge devnet",
     nativeCurrency: {
       decimals: 18,
       name: "Ether",

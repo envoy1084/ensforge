@@ -45,7 +45,7 @@ Read actions expose `.request`. It captures parameters and the typed decoder wit
 const request = getAddress.request({ name: "ens.eth" });
 ```
 
-Pass requests to `readBatch` or `readBatchSettled`. Ensforge decides which requests can share a
+Pass requests to `readBatch` or `readBatchSettled`. ensforge decides which requests can share a
 Multicall and which require another path such as CCIP Read.
 
 ## Write intents

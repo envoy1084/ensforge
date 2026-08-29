@@ -642,7 +642,7 @@ export const sidebar: DefaultTheme.Sidebar = {
   "/core/": [
     {
       items: [
-        { link: "/core/why", text: "Why Ensforge" },
+        { link: "/core/why", text: "Why ensforge" },
         { link: "/core/installation", text: "Installation" },
         { link: "/core/getting-started", text: "Getting Started" },
         { link: "/core/effect", text: "Effect" },
@@ -714,7 +714,7 @@ export const sidebar: DefaultTheme.Sidebar = {
   "/sdk/": [
     {
       items: [
-        { link: "/sdk/why", text: "Why Ensforge" },
+        { link: "/sdk/why", text: "Why ensforge" },
         { link: "/sdk/installation", text: "Installation" },
         { link: "/sdk/getting-started", text: "Getting Started" },
         { link: "/sdk/effect", text: "Effect" },
@@ -750,7 +750,7 @@ export const sidebar: DefaultTheme.Sidebar = {
   "/react/": [
     {
       items: [
-        { link: "/react/why", text: "Why Ensforge" },
+        { link: "/react/why", text: "Why ensforge" },
         { link: "/react/installation", text: "Installation" },
         { link: "/react/getting-started", text: "Getting Started" },
         { link: "/react/effect", text: "Effect" },
@@ -831,7 +831,7 @@ export const sidebar: DefaultTheme.Sidebar = {
   "/contracts/": [
     {
       items: [
-        { link: "/contracts/why", text: "Why Ensforge" },
+        { link: "/contracts/why", text: "Why ensforge" },
         { link: "/contracts/installation", text: "Installation" },
         { link: "/contracts/getting-started", text: "Getting Started" },
       ],

@@ -1,11 +1,11 @@
 ---
 title: useEnsforge
-description: Returns the Ensforge SDK from the nearest provider.
+description: Returns the ensforge SDK from the nearest provider.
 ---
 
 # useEnsforge
 
-Returns the Ensforge SDK from the nearest provider.
+Returns the ensforge SDK from the nearest provider.
 
 ## Import
 

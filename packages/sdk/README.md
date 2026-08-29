@@ -13,7 +13,7 @@ A type-safe client for building ENS applications.
 ## Installation
 
 ```sh
-pnpm add @ensforge/sdk
+pnpm add @ensforge/sdk effect@rc viem
 ```
 
 ## Overview

@@ -102,7 +102,7 @@ const seedResolverRecords = Effect.fn("seedResolverRecordsForName")(function* (
   yield* transaction("setText", [node, "url", "https://ensforge.test"], "URL text");
   yield* transaction(
     "setText",
-    [node, "description", "Ensforge integration fixture"],
+    [node, "description", "ensforge integration fixture"],
     "description",
   );
   yield* transaction("setContenthash", [node, contenthash], "contenthash");
@@ -145,7 +145,7 @@ const seedResolverRecords = Effect.fn("seedResolverRecordsForName")(function* (
     resolver,
     texts: {
       avatar,
-      description: "Ensforge integration fixture",
+      description: "ensforge integration fixture",
       email: "hello@ensforge.test",
       url: "https://ensforge.test",
     },

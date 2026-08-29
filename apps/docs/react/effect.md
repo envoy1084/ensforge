@@ -1,11 +1,11 @@
 ---
 title: Effect
-description: Use Effect values exposed by Ensforge React hooks and atoms.
+description: Use Effect values exposed by ensforge React hooks and atoms.
 ---
 
 # Effect
 
-Ensforge React keeps Effect available at the UI boundary. Query results expose `refetchEffect`, and
+ensforge React keeps Effect available at the UI boundary. Query results expose `refetchEffect`, and
 mutation results expose `mutateEffect`.
 
 ```tsx

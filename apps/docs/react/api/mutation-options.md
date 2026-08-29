@@ -1,6 +1,6 @@
 ---
 title: Mutation Options
-description: Configure callbacks and retries for Ensforge mutation hooks.
+description: Configure callbacks and retries for ensforge mutation hooks.
 ---
 
 # Mutation Options

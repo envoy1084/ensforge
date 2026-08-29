@@ -12,4 +12,4 @@ const owner = useOwner({ name: "ens.eth" });
 const setText = useSetText();
 ```
 
-Start with [Why Ensforge](/react/why) or [Getting Started](/react/getting-started).
+Start with [Why ensforge](/react/why) or [Getting Started](/react/getting-started).

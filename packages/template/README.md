@@ -1,6 +1,6 @@
-# Ensforge package template
+# ensforge package template
 
-Copy this directory when starting an Ensforge package, then:
+Copy this directory when starting an ensforge package, then:
 
 1. Rename the directory and replace `@ensforge/template` in `package.json` and the smoke test.
 2. Replace the package description and this README with its real ownership boundary.

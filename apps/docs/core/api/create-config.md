@@ -1,6 +1,6 @@
 ---
 title: createConfig
-description: Create an immutable Ensforge Core configuration.
+description: Create an immutable ensforge Core configuration.
 ---
 
 # createConfig
@@ -73,7 +73,7 @@ per action where supported.
 
 `Config | undefined`
 
-Existing Wagmi config. Ensforge reads the public client for `network` and resolves the active wallet
+Existing Wagmi config. ensforge reads the public client for `network` and resolves the active wallet
 client when a write runs.
 
 ### reads

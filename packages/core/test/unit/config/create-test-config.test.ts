@@ -6,7 +6,7 @@ import { createTestConfig, ensTestChainId } from "../../../src/testing/index.js"
 
 const devnetChain = defineChain({
   id: ensTestChainId,
-  name: "Ensforge devnet",
+  name: "ensforge devnet",
   nativeCurrency: { decimals: 18, name: "Ether", symbol: "ETH" },
   rpcUrls: { default: { http: ["http://127.0.0.1:8545"] } },
 });

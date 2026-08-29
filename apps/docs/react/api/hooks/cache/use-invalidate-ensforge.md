@@ -1,11 +1,11 @@
 ---
 title: useInvalidateEnsforge
-description: Hook for invalidating cached Ensforge queries.
+description: Hook for invalidating cached ensforge queries.
 ---
 
 # useInvalidateEnsforge
 
-Hook for invalidating cached Ensforge queries.
+Hook for invalidating cached ensforge queries.
 
 ## Import
 

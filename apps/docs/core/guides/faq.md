@@ -1,6 +1,6 @@
 ---
 title: FAQ
-description: Common questions about Ensforge Core.
+description: Common questions about ensforge Core.
 ---
 
 # FAQ
@@ -10,9 +10,9 @@ description: Common questions about Ensforge Core.
 Usually, no. Public actions route from the configured network and current name state. Use
 `getNameState` when the distinction matters to your interface.
 
-## Does Ensforge replace viem?
+## Does ensforge replace viem?
 
-No. Ensforge uses viem clients and primitives. It provides ENS-specific actions, routing, codecs,
+No. ensforge uses viem clients and primitives. It provides ENS-specific actions, routing, codecs,
 batching, and workflows.
 
 ## Do I have to use Effect?

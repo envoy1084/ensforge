@@ -1,6 +1,6 @@
 ---
 title: SSR and Frameworks
-description: Use Ensforge React with server-rendered React applications.
+description: Use ensforge React with server-rendered React applications.
 ---
 
 # SSR and Frameworks

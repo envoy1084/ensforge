@@ -1,19 +1,19 @@
 ---
-title: Why Ensforge
-description: Learn why Ensforge Core exists and when to use it.
+title: Why ensforge
+description: Learn why ensforge Core exists and when to use it.
 ---
 
-# Why Ensforge
+# Why ensforge
 
 ENS applications need to work with names in different protocol states. A name may still use ENSv1,
 be reserved for migration, or already use ENSv2. The correct registry, registrar, resolver, and write
 route can change with that state.
 
-Ensforge presents those states through one typed API.
+ensforge presents those states through one typed API.
 
 ## One action per intent
 
-You call `getOwner`, `renewName`, or `setText`. Ensforge normalizes the name, discovers its current
+You call `getOwner`, `renewName`, or `setText`. ensforge normalizes the name, discovers its current
 state, and selects the supported contract path. Application code does not need separate V1 and V2
 branches.
 
@@ -65,7 +65,7 @@ hiding intermediate transactions.
 
 ## Built on focused primitives
 
-Ensforge uses viem for Ethereum clients and encoding, Wagmi when you provide an existing Wagmi
+ensforge uses viem for Ethereum clients and encoding, Wagmi when you provide an existing Wagmi
 configuration, and Effect for its execution model. It does not replace those libraries. It adds the
 ENS-specific routing and domain model on top of them.
 

@@ -1,6 +1,6 @@
 ---
 title: Config
-description: Configure the SDK and query defaults used by Ensforge React.
+description: Configure the SDK and query defaults used by ensforge React.
 ---
 
 # Config

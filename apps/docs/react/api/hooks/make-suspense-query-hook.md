@@ -1,6 +1,6 @@
 ---
 title: makeSuspenseQueryHook
-description: Create a Suspense query hook from an Ensforge query atom factory.
+description: Create a Suspense query hook from an ensforge query atom factory.
 ---
 
 # makeSuspenseQueryHook

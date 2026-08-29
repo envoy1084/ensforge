@@ -16,7 +16,7 @@ describe("setText integration", () => {
       const devnet = getIntegrationDevnet();
       const name = devnet.fixtures.v1.activeUnwrapped.name;
       const key = "com.ensforge.set-text.v1";
-      const value = "written through Ensforge";
+      const value = "written through ensforge";
 
       const result = yield* setText.effect(devnet.configs.v1, { name, key, value });
       const record = yield* getText.effect(devnet.configs.v1, { name, key });

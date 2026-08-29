@@ -1,6 +1,6 @@
 ---
 title: EnsforgeProvider
-description: Provide an Ensforge SDK and Effect Atom registry to React hooks.
+description: Provide an ensforge SDK and Effect Atom registry to React hooks.
 ---
 
 # EnsforgeProvider
@@ -43,7 +43,7 @@ Creates one SDK instance on the provider's first render.
 
 ### sdk
 
-`Ensforge | undefined`
+`ensforge | undefined`
 
 Existing SDK instance to share.
 
@@ -69,7 +69,7 @@ Idle lifetime passed to the internally created registry.
 
 `ReactNode`
 
-React subtree that can use Ensforge hooks.
+React subtree that can use ensforge hooks.
 
 ## Context
 

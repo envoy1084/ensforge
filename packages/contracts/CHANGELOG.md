@@ -4,4 +4,4 @@
 
 ### Minor Changes
 
-- 4f93c0d: Release the initial production-ready Ensforge packages.
+- 4f93c0d: Release the initial production-ready ensforge packages.

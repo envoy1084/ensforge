@@ -1,6 +1,6 @@
 ---
 title: Effect Atom
-description: Compose the atoms that power Ensforge React hooks.
+description: Compose the atoms that power ensforge React hooks.
 ---
 
 # Effect Atom

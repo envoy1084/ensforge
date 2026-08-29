@@ -1,11 +1,11 @@
 ---
 title: FAQ
-description: Common questions about Ensforge React.
+description: Common questions about ensforge React.
 ---
 
 # FAQ
 
-## Does Ensforge React use TanStack Query?
+## Does ensforge React use TanStack Query?
 
 No. It uses Effect Atom and exposes `AsyncResult` while providing familiar query and mutation state.
 

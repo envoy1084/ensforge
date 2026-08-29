@@ -1,11 +1,11 @@
 ---
-title: Why Ensforge
-description: Learn how Ensforge brings ENS queries and mutations to React.
+title: Why ensforge
+description: Learn how ensforge brings ENS queries and mutations to React.
 ---
 
-# Why Ensforge
+# Why ensforge
 
-Ensforge React turns the complete SDK action surface into reactive hooks and Effect Atom primitives.
+ensforge React turns the complete SDK action surface into reactive hooks and Effect Atom primitives.
 It provides caching, deduplication, retries, selection, refetching, Suspense, mutation state, and
 invalidation without introducing a second ENS execution model.
 

@@ -1,6 +1,6 @@
 ---
 title: Config
-description: Configure reads, writes, gateways, clients, and networks in Ensforge Core.
+description: Configure reads, writes, gateways, clients, and networks in ensforge Core.
 ---
 
 # Config
@@ -14,7 +14,7 @@ description: Configure reads, writes, gateways, clients, and networks in Ensforg
 type EnsNetwork = "mainnet" | "sepolia";
 ```
 
-The network selects both the expected chain ID and the deployment profile. Ensforge rejects clients
+The network selects both the expected chain ID and the deployment profile. ensforge rejects clients
 connected to a different chain instead of silently reading the wrong deployment.
 
 ## Clients

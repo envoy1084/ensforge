@@ -1,6 +1,6 @@
 ---
 title: Installation
-description: Install Ensforge Core and its peer dependencies.
+description: Install ensforge Core and its peer dependencies.
 ---
 
 # Installation
@@ -10,19 +10,19 @@ Install `@ensforge/core` with Effect and the Ethereum client you use.
 ::: code-group
 
 ```sh [pnpm]
-pnpm add @ensforge/core effect viem
+pnpm add @ensforge/core effect@rc viem
 ```
 
 ```sh [npm]
-npm install @ensforge/core effect viem
+npm install @ensforge/core effect@rc viem
 ```
 
 ```sh [yarn]
-yarn add @ensforge/core effect viem
+yarn add @ensforge/core effect@rc viem
 ```
 
 ```sh [bun]
-bun add @ensforge/core effect viem
+bun add @ensforge/core effect@rc viem
 ```
 
 :::
@@ -48,7 +48,7 @@ All public Core APIs are available from the package entrypoint.
 import { createConfig, getOwner, readBatch } from "@ensforge/core";
 ```
 
-Ensforge is ESM-only and fully typed. No TypeScript plugin or code generation step is required.
+ensforge is ESM-only and fully typed. No TypeScript plugin or code generation step is required.
 
 ## Next steps
 

@@ -13,4 +13,4 @@ const avatar = await sdk.records.getAvatar({ name: "ens.eth" });
 ```
 
 The SDK exposes the complete Core action surface while binding configuration once. Start with
-[Why Ensforge](/sdk/why) or [Getting Started](/sdk/getting-started).
+[Why ensforge](/sdk/why) or [Getting Started](/sdk/getting-started).

@@ -1,11 +1,11 @@
 ---
 title: makeInvalidationKeys
-description: Build Effect reactivity keys for an Ensforge invalidation selector.
+description: Build Effect reactivity keys for an ensforge invalidation selector.
 ---
 
 # makeInvalidationKeys
 
-Converts a public invalidation selector into the network-scoped reactivity keys used by Ensforge
+Converts a public invalidation selector into the network-scoped reactivity keys used by ensforge
 atoms.
 
 ## Import
@@ -27,4 +27,4 @@ const keys = makeInvalidationKeys(sdk, {
 `EnsforgeReactivityKeys`
 
 Most applications should call `invalidateEnsforge` or `useInvalidateEnsforge`. Use this function when
-integrating Ensforge keys with another Effect reactivity operation.
+integrating ensforge keys with another Effect reactivity operation.

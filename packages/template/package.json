@@ -2,7 +2,7 @@
   "name": "@ensforge/template",
   "version": "0.0.0",
   "private": true,
-  "description": "Starter template for Ensforge packages",
+  "description": "Starter template for ensforge packages",
   "license": "Apache-2.0",
   "files": [
     "dist"

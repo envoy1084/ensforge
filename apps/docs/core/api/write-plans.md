@@ -44,7 +44,7 @@ const resumed = await executeWritePlan(config, {
 });
 ```
 
-The plan ID and completed stage identities must match. Ensforge does not replay completed stages.
+The plan ID and completed stage identities must match. ensforge does not replay completed stages.
 
 ## Status
 

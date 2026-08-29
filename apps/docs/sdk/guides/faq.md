@@ -1,6 +1,6 @@
 ---
 title: FAQ
-description: Common questions about the Ensforge SDK.
+description: Common questions about the ensforge SDK.
 ---
 
 # FAQ

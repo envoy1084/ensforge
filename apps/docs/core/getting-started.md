@@ -1,13 +1,13 @@
 ---
 title: Getting Started
-description: Configure Ensforge Core and read your first ENS name.
+description: Configure ensforge Core and read your first ENS name.
 ---
 
 # Getting Started
 
 ## Create a public client
 
-Ensforge uses a viem `PublicClient` for contract and RPC reads.
+ensforge uses a viem `PublicClient` for contract and RPC reads.
 
 ```ts
 import { createPublicClient, http } from "viem";
@@ -35,7 +35,7 @@ export const config = createConfig({
 });
 ```
 
-The client chain must match the selected network. Ensforge supports `mainnet` and `sepolia`.
+The client chain must match the selected network. ensforge supports `mainnet` and `sepolia`.
 
 ## Read a name
 
@@ -66,7 +66,7 @@ export const config = createEnsforgeConfig({
 ```
 
 Reads use Wagmi's public client. Writes resolve the active wallet client when the action executes, so
-account changes do not require recreating the Ensforge config.
+account changes do not require recreating the ensforge config.
 
 ## Add writes
 

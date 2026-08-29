@@ -1,11 +1,11 @@
 ---
-title: Why Ensforge
-description: Learn when to use the grouped Ensforge SDK.
+title: Why ensforge
+description: Learn when to use the grouped ensforge SDK.
 ---
 
-# Why Ensforge
+# Why ensforge
 
-The SDK is the config-bound interface to Ensforge. It keeps large applications organized without
+The SDK is the config-bound interface to ensforge. It keeps large applications organized without
 changing the behavior or types of Core actions.
 
 ```ts

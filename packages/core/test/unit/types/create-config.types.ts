@@ -23,7 +23,7 @@ expectTypeOf(config.deployments.protocol).toEqualTypeOf<"v1" | "v2">();
 
 const configErrorCode: ConfigErrorCode = "NETWORK_CLIENT_MISMATCH";
 
-// @ts-expect-error Ensforge intentionally supports one production or test ENS network per config.
+// @ts-expect-error ensforge intentionally supports one production or test ENS network per config.
 const unsupportedNetwork: EnsNetwork = "holesky";
 // @ts-expect-error Config error codes are uppercase schema literals.
 const unsupportedConfigErrorCode: ConfigErrorCode = "network_client_mismatch";

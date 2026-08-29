@@ -5,7 +5,7 @@ description: Control Effect Atom caching, prefetching, and invalidation.
 
 # Caching and Invalidation
 
-Ensforge creates stable query atoms from the SDK instance, action group, action name, and parameters.
+ensforge creates stable query atoms from the SDK instance, action group, action name, and parameters.
 Components requesting the same key share work and cached state.
 
 ## Invalidate from React
@@ -16,7 +16,7 @@ const invalidate = useInvalidateEnsforge();
 await invalidate({ name: "example.eth" });
 ```
 
-Call `invalidate()` without parameters, or with `{ all: true }`, to refresh every Ensforge query in
+Call `invalidate()` without parameters, or with `{ all: true }`, to refresh every ensforge query in
 the current registry.
 
 ## Prefetch outside components

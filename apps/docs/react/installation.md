@@ -1,6 +1,6 @@
 ---
 title: Installation
-description: Install Ensforge React and its peer dependencies.
+description: Install ensforge React and its peer dependencies.
 ---
 
 # Installation
@@ -8,19 +8,19 @@ description: Install Ensforge React and its peer dependencies.
 ::: code-group
 
 ```sh [pnpm]
-pnpm add @ensforge/react react effect viem
+pnpm add @ensforge/react react effect@rc viem
 ```
 
 ```sh [npm]
-npm install @ensforge/react react effect viem
+npm install @ensforge/react react effect@rc viem
 ```
 
 ```sh [yarn]
-yarn add @ensforge/react react effect viem
+yarn add @ensforge/react react effect@rc viem
 ```
 
 ```sh [bun]
-bun add @ensforge/react react effect viem
+bun add @ensforge/react react effect@rc viem
 ```
 
 :::

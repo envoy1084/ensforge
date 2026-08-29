@@ -1,6 +1,6 @@
 ---
 title: Effect
-description: Use the Effect interface exposed by every Ensforge Core action.
+description: Use the Effect interface exposed by every ensforge Core action.
 ---
 
 # Effect

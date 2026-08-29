@@ -1,6 +1,6 @@
 ---
 title: prefetchEnsforge
-description: Prefetch an Ensforge query atom into a registry.
+description: Prefetch an ensforge query atom into a registry.
 ---
 
 # prefetchEnsforge

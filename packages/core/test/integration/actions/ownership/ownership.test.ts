@@ -22,7 +22,7 @@ import { getIntegrationDevnet, type IntegrationDevnet } from "../../setup/devnet
 const configFor = (devnet: IntegrationDevnet, protocol: "v1" | "v2", account: `0x${string}`) => {
   const chain = defineChain({
     id: 31_337,
-    name: "Ensforge integration devnet",
+    name: "ensforge integration devnet",
     nativeCurrency: { decimals: 18, name: "Ether", symbol: "ETH" },
     rpcUrls: { default: { http: [devnet.rpcUrl] } },
     contracts: { multicall3: { address: devnet.deployments.multicall3, blockCreated: 0 } },

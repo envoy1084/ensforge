@@ -1,6 +1,6 @@
 ---
 title: Mutation Result
-description: Understand the result returned by Ensforge mutation hooks.
+description: Understand the result returned by ensforge mutation hooks.
 ---
 
 # Mutation Result

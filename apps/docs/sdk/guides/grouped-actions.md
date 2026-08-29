@@ -1,6 +1,6 @@
 ---
 title: Grouped Actions
-description: Navigate the capability groups on an Ensforge SDK instance.
+description: Navigate the capability groups on an ensforge SDK instance.
 ---
 
 # Grouped Actions
