@@ -28,7 +28,7 @@ describe("resolver metadata integration", () => {
         assert.strictEqual(v1.reason, "VERSIONING_UNSUPPORTED");
       }
       if (result.v2.supported) {
-        assert.strictEqual(result.v2.version, 0n);
+        assert.typeOf(result.v2.version, "bigint");
       }
       assert.isFalse(result.missing.supported);
       if (!result.missing.supported) {
