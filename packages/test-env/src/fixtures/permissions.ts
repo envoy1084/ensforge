@@ -1,11 +1,6 @@
 import { Effect } from "effect";
 
-import {
-  baseRegistrarV1Abi,
-  ensRegistryV1Abi,
-  nameWrapperV1Abi,
-  publicResolverV1Abi,
-} from "@ensforge/contracts/v1";
+import { baseRegistrarV1Abi, nameWrapperV1Abi, publicResolverV1Abi } from "@ensforge/contracts/v1";
 import {
   enhancedAccessControlRoles,
   ethRegistryV2Abi,
@@ -138,17 +133,6 @@ export const seedPermissionFixtures = Effect.fn("seedPermissionFixtures")(functi
   yield* seedTransaction(
     environment,
     {
-      abi: ensRegistryV1Abi,
-      address: environment.deployments.v1.contracts.registry,
-      functionName: "setApprovalForAll",
-      args: [environment.accounts.operator, true],
-    },
-    "Unable to approve the ENS v1 registry operator",
-    "owner",
-  );
-  yield* seedTransaction(
-    environment,
-    {
       abi: nameWrapperV1Abi,
       address: environment.deployments.v1.contracts.nameWrapper,
       functionName: "setApprovalForAll",
@@ -206,7 +190,6 @@ export const seedPermissionFixtures = Effect.fn("seedPermissionFixtures")(functi
     operator: environment.accounts.operator,
     unauthorized: environment.accounts.unauthorized,
     v1: {
-      registryOperator: true,
       resolverDelegate: { name: "v1-unwrapped.eth", node: v1Node },
       tokenApproval: { name: "v1-unwrapped.eth", tokenId: v1TokenId },
       wrapperOperator: true,

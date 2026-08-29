@@ -108,7 +108,6 @@ export interface PermissionFixtureManifest {
   readonly operator: Address;
   readonly unauthorized: Address;
   readonly v1: {
-    readonly registryOperator: true;
     readonly resolverDelegate: { readonly name: string; readonly node: Hex };
     readonly tokenApproval: { readonly name: string; readonly tokenId: bigint };
     readonly wrapperOperator: true;

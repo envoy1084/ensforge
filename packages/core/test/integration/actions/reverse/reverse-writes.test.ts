@@ -10,6 +10,7 @@ import {
   prepareCalls,
   ReverseNameError,
   setContractPrimaryName,
+  setOperatorApproval,
   setPrimaryName,
   setPrimaryNameForAddress,
 } from "../../../../src/index.js";
@@ -112,18 +113,37 @@ describe("reverse-name writes integration", () => {
       if (fixture.name === undefined) {
         return yield* Effect.die(new Error("The verified V1 reverse fixture has no name"));
       }
+      const name = fixture.name;
       const operatorConfig = configFor(devnet, "v1", devnet.accounts.operator);
 
-      const result = yield* setPrimaryNameForAddress.effect(operatorConfig, {
-        address: fixture.address,
-        name: fixture.name,
-      });
+      const result = yield* Effect.acquireUseRelease(
+        setOperatorApproval.effect(devnet.configs.v1, {
+          name,
+          target: "registry",
+          operator: devnet.accounts.operator,
+          approved: true,
+        }),
+        () =>
+          setPrimaryNameForAddress.effect(operatorConfig, {
+            address: fixture.address,
+            name,
+          }),
+        () =>
+          setOperatorApproval
+            .effect(devnet.configs.v1, {
+              name,
+              target: "registry",
+              operator: devnet.accounts.operator,
+              approved: false,
+            })
+            .pipe(Effect.asVoid),
+      );
       const primaryName = yield* getPrimaryName.effect(devnet.configs.v1, {
         address: fixture.address,
       });
 
       assert.strictEqual(result.status, "confirmed");
-      assert.deepStrictEqual(primaryName, { name: fixture.name, match: true });
+      assert.deepStrictEqual(primaryName, { name, match: true });
     }),
   );
 
