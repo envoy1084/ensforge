@@ -37,6 +37,8 @@ export {
   GatewayErrorCode,
   NameError,
   NameErrorCode,
+  MigrationError,
+  MigrationErrorCode,
   RpcError,
   RpcErrorCode,
   RegistrationError,

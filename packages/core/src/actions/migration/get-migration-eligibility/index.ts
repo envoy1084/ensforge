@@ -40,7 +40,8 @@ const getMigrationEligibilityEffect = Effect.fn("ensforge.getMigrationEligibilit
       );
       const blockers: Array<MigrationBlocker> = [];
       if (!target.supported) {
-        if (status.status === "unsupported") blockers.push(status.reason);
+        if (status.status === "locked-child-pending-parent") blockers.push("PARENT_NOT_MIGRATED");
+        else if (status.status === "unsupported") blockers.push(status.reason);
         else if (status.status === "migrated-unlocked" || status.status === "migrated-locked") {
           blockers.push("NAME_ALREADY_MIGRATED");
         } else blockers.push("NAME_AVAILABLE");

@@ -44,6 +44,12 @@ const getMigrationStatusEffect = Effect.fn("ensforge.getMigrationStatus")(functi
           args: [namehash(name)],
         });
         if (wrapped) {
+          const [, fuses] = yield* ethereum.readContract({
+            address: v1.contracts.nameWrapper,
+            abi: nameWrapperV1Abi,
+            functionName: "getData",
+            args: [BigInt(namehash(name))],
+          });
           const parentRegistry = yield* ethereum.readContract({
             address: profile.v2.contracts.universalResolver,
             abi: universalResolverV2Abi,
@@ -51,14 +57,14 @@ const getMigrationStatusEffect = Effect.fn("ensforge.getMigrationStatus")(functi
             args: [yield* dnsEncodeName.effect(analysis.parent)],
           });
           if (!isAddressEqual(parentRegistry, zeroAddress)) {
-            const [, fuses] = yield* ethereum.readContract({
-              address: v1.contracts.nameWrapper,
-              abi: nameWrapperV1Abi,
-              functionName: "getData",
-              args: [BigInt(namehash(name))],
-            });
             return { status: "mirrored-child", name, parentRegistry, fuses } as const;
           }
+          return {
+            status: "locked-child-pending-parent",
+            name,
+            parent: analysis.parent,
+            fuses,
+          } as const;
         }
       }
 

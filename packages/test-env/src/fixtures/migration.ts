@@ -125,6 +125,25 @@ const encodedMigrationData = (label: string, owner: Address, resolver: Address) 
     [{ label, owner, subregistry: zeroAddress, resolver }],
   );
 
+const seedReservedWriteName = Effect.fn("seedReservedWriteName")(function* (
+  environment: DevnetEnvironment,
+  label: string,
+  publicResolver: Address,
+  wrapping: "unwrapped" | "wrapped" | "locked",
+) {
+  const expiry = yield* registerV1MigrationName(environment, label);
+  if (wrapping !== "unwrapped") {
+    yield* wrapV1(
+      environment,
+      label,
+      publicResolver,
+      wrapping === "locked" ? nameWrapperFuses.cannotUnwrap : nameWrapperFuses.canDoEverything,
+    );
+  }
+  yield* reserveV2(environment, label, expiry);
+  return expiry;
+});
+
 export const seedMigrationFixtures = Effect.fn("seedMigrationFixtures")(function* (
   environment: DevnetEnvironment,
   publicResolver: Address,
@@ -193,6 +212,60 @@ export const seedMigrationFixtures = Effect.fn("seedMigrationFixtures")(function
     "v2-renewal-reserved-batch",
   );
   yield* reserveV2(environment, "v2-renewal-reserved-batch", renewalReservedBatchExpiry);
+
+  const writeUnwrappedExpiry = yield* seedReservedWriteName(
+    environment,
+    "v2-write-migrate-unwrapped",
+    publicResolver,
+    "unwrapped",
+  );
+  const writeWrappedExpiry = yield* seedReservedWriteName(
+    environment,
+    "v2-write-migrate-wrapped",
+    publicResolver,
+    "wrapped",
+  );
+  const writeWrappedLockedExpiry = yield* seedReservedWriteName(
+    environment,
+    "v2-write-migrate-locked",
+    publicResolver,
+    "locked",
+  );
+  const writeBatchUnwrappedExpiry = yield* seedReservedWriteName(
+    environment,
+    "v2-write-migrate-batch-unwrapped",
+    publicResolver,
+    "unwrapped",
+  );
+  const writeBatchWrappedExpiry = yield* seedReservedWriteName(
+    environment,
+    "v2-write-migrate-batch-wrapped",
+    publicResolver,
+    "wrapped",
+  );
+  const writeParentLockedExpiry = yield* seedReservedWriteName(
+    environment,
+    "v2-write-migrate-parent",
+    publicResolver,
+    "locked",
+  );
+  yield* seedTransaction(
+    environment,
+    {
+      abi: nameWrapperV1Abi,
+      address: environment.deployments.v1.contracts.nameWrapper,
+      functionName: "setSubnodeOwner",
+      args: [
+        namehash("v2-write-migrate-parent.eth"),
+        "child",
+        environment.accounts.owner,
+        nameWrapperFuses.parentCannotControl,
+        writeParentLockedExpiry,
+      ],
+    },
+    "Unable to seed the parent-first migration child",
+    "owner",
+  );
 
   const unlockedExpiry = yield* registerV1MigrationName(environment, "v2-migrated-unlocked");
   yield* reserveV2(environment, "v2-migrated-unlocked", unlockedExpiry);
@@ -359,6 +432,49 @@ export const seedMigrationFixtures = Effect.fn("seedMigrationFixtures")(function
       renewalReservedBatchExpiry,
       environment.deployments.v2.migration.ensV1Resolver,
       environment.accounts.owner,
+    ),
+    writeUnwrapped: fixture(
+      "v2-write-migrate-unwrapped.eth",
+      writeUnwrappedExpiry,
+      environment.deployments.v2.migration.ensV1Resolver,
+      environment.accounts.owner,
+    ),
+    writeWrapped: fixture(
+      "v2-write-migrate-wrapped.eth",
+      writeWrappedExpiry,
+      environment.deployments.v2.migration.ensV1Resolver,
+      environment.accounts.owner,
+    ),
+    writeWrappedLocked: fixture(
+      "v2-write-migrate-locked.eth",
+      writeWrappedLockedExpiry,
+      environment.deployments.v2.migration.ensV1Resolver,
+      environment.accounts.owner,
+    ),
+    writeBatchUnwrapped: fixture(
+      "v2-write-migrate-batch-unwrapped.eth",
+      writeBatchUnwrappedExpiry,
+      environment.deployments.v2.migration.ensV1Resolver,
+      environment.accounts.owner,
+    ),
+    writeBatchWrapped: fixture(
+      "v2-write-migrate-batch-wrapped.eth",
+      writeBatchWrappedExpiry,
+      environment.deployments.v2.migration.ensV1Resolver,
+      environment.accounts.owner,
+    ),
+    writeParentLocked: fixture(
+      "v2-write-migrate-parent.eth",
+      writeParentLockedExpiry,
+      environment.deployments.v2.migration.ensV1Resolver,
+      environment.accounts.owner,
+    ),
+    writeLockedChild: fixture(
+      "child.v2-write-migrate-parent.eth",
+      writeParentLockedExpiry,
+      publicResolver,
+      environment.accounts.owner,
+      "inherited",
     ),
     migratedUnlocked: fixture(
       "v2-migrated-unlocked.eth",

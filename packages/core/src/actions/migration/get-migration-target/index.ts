@@ -23,6 +23,7 @@ const getMigrationTargetEffect = Effect.fn("ensforge.getMigrationTarget")(functi
       if (
         status.status === "unsupported" ||
         status.status === "not-required" ||
+        status.status === "locked-child-pending-parent" ||
         status.status === "migrated-unlocked" ||
         status.status === "migrated-locked"
       ) {
@@ -30,7 +31,11 @@ const getMigrationTargetEffect = Effect.fn("ensforge.getMigrationTarget")(functi
           supported: false,
           name,
           reason:
-            status.status === "unsupported" ? "MIGRATION_UNSUPPORTED" : "MIGRATION_NOT_REQUIRED",
+            status.status === "locked-child-pending-parent"
+              ? "PARENT_NOT_MIGRATED"
+              : status.status === "unsupported"
+                ? "MIGRATION_UNSUPPORTED"
+                : "MIGRATION_NOT_REQUIRED",
         } as const;
       }
 

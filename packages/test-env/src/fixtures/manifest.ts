@@ -61,6 +61,13 @@ export interface EnsMigrationFixtureManifest {
   readonly reservedWrappedLocked: EnsNameFixture;
   readonly renewalReserved: EnsNameFixture;
   readonly renewalReservedBatch: EnsNameFixture;
+  readonly writeUnwrapped: EnsNameFixture;
+  readonly writeWrapped: EnsNameFixture;
+  readonly writeWrappedLocked: EnsNameFixture;
+  readonly writeBatchUnwrapped: EnsNameFixture;
+  readonly writeBatchWrapped: EnsNameFixture;
+  readonly writeParentLocked: EnsNameFixture;
+  readonly writeLockedChild: EnsNameFixture;
   readonly migratedUnlocked: EnsNameFixture;
   readonly migratedLocked: EnsNameFixture;
   readonly mirroredChild: EnsNameFixture;
