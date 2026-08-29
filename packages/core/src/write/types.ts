@@ -140,6 +140,46 @@ export interface PrepareCallsParameters extends WalletOverrides {
 
 export interface SimulateCallsParameters extends PrepareCallsParameters {}
 
+export type FeeEstimate =
+  | {
+      readonly type: "eip1559";
+      readonly maxFeePerGas: bigint;
+      readonly maxPriorityFeePerGas: bigint;
+    }
+  | {
+      readonly type: "legacy";
+      readonly gasPrice: bigint;
+    };
+
+export type CallEstimate =
+  | {
+      readonly status: "estimated";
+      readonly call: PreparedWriteCall;
+      readonly gas: bigint;
+      readonly fee: bigint;
+      readonly value: bigint;
+      readonly maximumCost: bigint;
+    }
+  | {
+      readonly status: "unavailable";
+      readonly call: PreparedWriteCall;
+      readonly error: ContractError | RpcError;
+    };
+
+export interface EstimateCallsParameters extends PrepareCallsParameters {}
+
+export interface EstimateCallsResult {
+  readonly blockNumber: bigint;
+  readonly fee: FeeEstimate;
+  readonly calls: ReadonlyArray<CallEstimate>;
+  readonly totals: {
+    readonly gas: bigint;
+    readonly fee: bigint;
+    readonly value: bigint;
+    readonly maximumCost: bigint;
+  };
+}
+
 export interface SendCallsParameters extends PrepareCallsParameters {
   readonly mode?: WriteMode;
   readonly atomicity?: WriteAtomicity;

@@ -17,6 +17,7 @@ import { expect, vi } from "vitest";
 import {
   defineWriteAction,
   executeWritePlan,
+  estimateCalls,
   getWalletCapabilities,
   prepareCalls,
   sendCalls,
@@ -53,6 +54,11 @@ const makeHarness = () => {
     getBlock: vi.fn(async () => ({ number: blockNumber, timestamp })),
     multicall: vi.fn(),
     call: vi.fn(async () => ({ data: "0x" as Hex })),
+    estimateGas: vi.fn(async () => 21_000n),
+    estimateFeesPerGas: vi.fn(async () => ({
+      maxFeePerGas: 10n,
+      maxPriorityFeePerGas: 2n,
+    })),
     waitForTransactionReceipt: vi.fn(async ({ hash }: { readonly hash: Hex }) => receipt(hash)),
   } as unknown as PublicClient;
   const walletClient = {
@@ -118,6 +124,33 @@ describe("write execution", () => {
       assert.strictEqual(prepared[0]?.data, "0x1234");
       assert.strictEqual(simulated[0]?.result, "0x");
       expect(harness.walletClient.sendTransaction).not.toHaveBeenCalled();
+    }),
+  );
+
+  it.effect("estimates calls and aggregates maximum costs", () =>
+    Effect.gen(function* () {
+      const harness = makeHarness();
+      const result = yield* estimateCalls.effect(harness.config, {
+        calls: [testWrite.call({ to: target }), testWrite.call({ to: target })],
+      });
+
+      assert.strictEqual(result.blockNumber, 10n);
+      assert.deepStrictEqual(result.fee, {
+        type: "eip1559",
+        maxFeePerGas: 10n,
+        maxPriorityFeePerGas: 2n,
+      });
+      assert.deepStrictEqual(
+        result.calls.map(({ status }) => status),
+        ["estimated", "estimated"],
+      );
+      assert.deepStrictEqual(result.totals, {
+        gas: 42_000n,
+        fee: 420_000n,
+        value: 0n,
+        maximumCost: 420_000n,
+      });
+      expect(harness.publicClient.estimateGas).toHaveBeenCalledTimes(2);
     }),
   );
 

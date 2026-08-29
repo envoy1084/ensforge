@@ -10,6 +10,7 @@ export {
   type ReadBatchSettledResult,
 } from "./read-batch.js";
 export { executeWritePlan } from "./execute-write-plan.js";
+export { estimateCalls } from "./estimate-calls.js";
 export { getWalletCapabilities } from "./get-wallet-capabilities.js";
 export { prepareCalls } from "./prepare-calls.js";
 export { sendCalls } from "./send-calls.js";

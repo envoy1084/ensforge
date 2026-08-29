@@ -6,6 +6,7 @@ import type { Address } from "viem";
 import {
   WalletError,
   defineWriteAction,
+  estimateCalls,
   executeWritePlan,
   getWalletCapabilities,
   prepareCalls,
@@ -29,9 +30,10 @@ describe("write execution integration", () => {
     Effect.gen(function* () {
       const devnet = getIntegrationDevnet();
       const intent = transfer.call({ to: devnet.accounts.owner2 });
-      const [prepared, simulated] = yield* Effect.all([
+      const [prepared, simulated, estimated] = yield* Effect.all([
         prepareCalls.effect(devnet.configs.v2, { calls: [intent] }),
         simulateCalls.effect(devnet.configs.v2, { calls: [intent] }),
+        estimateCalls.effect(devnet.configs.v2, { calls: [intent] }),
       ] as const);
       const result = yield* sendCalls.effect(devnet.configs.v2, {
         calls: [intent],
@@ -40,6 +42,8 @@ describe("write execution integration", () => {
 
       assert.strictEqual(prepared[0]?.to, devnet.accounts.owner2);
       assert.strictEqual(simulated[0]?.call.operation, "integrationTransfer");
+      assert.strictEqual(estimated.calls[0]?.status, "estimated");
+      assert.isTrue(estimated.totals.gas > 0n);
       assert.strictEqual(result.mode, "sequential");
       assert.strictEqual(result.status, "completed");
       assert.strictEqual(result.calls[0]?.status, "confirmed");

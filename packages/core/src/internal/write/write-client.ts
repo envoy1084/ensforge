@@ -1,5 +1,6 @@
-import { Context, Effect } from "effect";
+import { Context, Effect, Semaphore } from "effect";
 
+import { Eip1559FeesNotSupportedError } from "viem";
 import type {
   Account,
   Address,
@@ -12,12 +13,13 @@ import type {
   WalletClient,
 } from "viem";
 
+import { defaultReadOptions } from "../../config/read-options.js";
 import type { ContractError } from "../../errors/contract-error.js";
 import type { RpcError } from "../../errors/rpc-error.js";
 import { TransactionError } from "../../errors/transaction-error.js";
 import type { WalletError } from "../../errors/wallet-error.js";
-import type { PreparedWriteCall } from "../../write/types.js";
-import { viemErrorToEffectError } from "../errors/viem-error.js";
+import type { FeeEstimate, PreparedWriteCall } from "../../write/types.js";
+import { findViemErrorCause, viemErrorToEffectError } from "../errors/viem-error.js";
 import { batchStatusError, receiptWaitError, walletRequestError } from "../errors/write-error.js";
 
 export interface WaitForReceiptOptions {
@@ -34,6 +36,11 @@ export interface WriteClientService {
   readonly simulate: (
     call: PreparedWriteCall,
   ) => Effect.Effect<CallReturnType, ContractError | RpcError>;
+  readonly estimateGas: (
+    call: PreparedWriteCall,
+    blockNumber: bigint,
+  ) => Effect.Effect<bigint, ContractError | RpcError>;
+  readonly estimateFeesPerGas: () => Effect.Effect<FeeEstimate, RpcError>;
   readonly sendTransaction: (
     walletClient: WalletClient,
     call: PreparedWriteCall,
@@ -64,19 +71,61 @@ export class WriteClient extends Context.Service<WriteClient, WriteClientService
   "@ensforge/core/internal/write/WriteClient",
 ) {}
 
-export const makeWriteClient = (publicClient: PublicClient): WriteClientService =>
+export const makeWriteClient = (
+  publicClient: PublicClient,
+  readSemaphore = Semaphore.makeUnsafe(defaultReadOptions.concurrency),
+): WriteClientService =>
   WriteClient.of({
     simulate: Effect.fn("WriteClient.simulate")((call) =>
-      Effect.tryPromise({
-        try: () =>
-          publicClient.call({
-            account: typeof call.account === "string" ? call.account : call.account.address,
-            to: call.to,
-            ...(call.data === undefined ? {} : { data: call.data }),
-            ...(call.value === 0n ? {} : { value: call.value }),
-          }),
-        catch: (cause) => viemErrorToEffectError(cause, "simulateContract"),
-      }),
+      readSemaphore.withPermit(
+        Effect.tryPromise({
+          try: () =>
+            publicClient.call({
+              account: typeof call.account === "string" ? call.account : call.account.address,
+              to: call.to,
+              ...(call.data === undefined ? {} : { data: call.data }),
+              ...(call.value === 0n ? {} : { value: call.value }),
+            }),
+          catch: (cause) => viemErrorToEffectError(cause, "simulateContract"),
+        }),
+      ),
+    ),
+    estimateGas: Effect.fn("WriteClient.estimateGas")((call, blockNumber) =>
+      readSemaphore.withPermit(
+        Effect.tryPromise({
+          try: () =>
+            publicClient.estimateGas({
+              account: typeof call.account === "string" ? call.account : call.account.address,
+              to: call.to,
+              blockNumber,
+              ...(call.data === undefined ? {} : { data: call.data }),
+              ...(call.value === 0n ? {} : { value: call.value }),
+            }),
+          catch: (cause) => viemErrorToEffectError(cause, "estimateGas"),
+        }),
+      ),
+    ),
+    estimateFeesPerGas: Effect.fn("WriteClient.estimateFeesPerGas")(() =>
+      readSemaphore.withPermit(
+        Effect.tryPromise({
+          try: () => publicClient.estimateFeesPerGas(),
+          catch: (cause) => cause,
+        }).pipe(
+          Effect.map(({ maxFeePerGas, maxPriorityFeePerGas }): FeeEstimate => ({
+            type: "eip1559",
+            maxFeePerGas,
+            maxPriorityFeePerGas,
+          })),
+          Effect.catch((cause) =>
+            findViemErrorCause(cause, Eip1559FeesNotSupportedError) === undefined
+              ? Effect.fail(viemErrorToEffectError(cause, "estimateFeesPerGas"))
+              : Effect.tryPromise({
+                  try: () => publicClient.getGasPrice(),
+                  catch: (legacyCause) => viemErrorToEffectError(legacyCause, "estimateFeesPerGas"),
+                }).pipe(Effect.map((gasPrice): FeeEstimate => ({ type: "legacy", gasPrice }))),
+          ),
+        ),
+      ),
     ),
     sendTransaction: Effect.fn("WriteClient.sendTransaction")((walletClient, call) =>
       Effect.tryPromise({

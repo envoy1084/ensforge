@@ -21,6 +21,8 @@ import { RpcError } from "../../errors/rpc-error.js";
 export type ViemOperation =
   | "encodeFunctionData"
   | "getBlock"
+  | "estimateFeesPerGas"
+  | "estimateGas"
   | "getLogs"
   | "readContract"
   | "multicall"
@@ -35,9 +37,10 @@ const fallbackCodes = {
   readContract: "READ_FAILED",
   multicall: "MULTICALL_FAILED",
   simulateContract: "SIMULATION_FAILED",
+  estimateGas: "SIMULATION_FAILED",
   writeContract: "WRITE_FAILED",
 } as const satisfies Record<
-  Exclude<ViemOperation, "getBlock" | "getLogs" | "watchEvent">,
+  Exclude<ViemOperation, "getBlock" | "getLogs" | "watchEvent" | "estimateFeesPerGas">,
   ContractErrorCode
 >;
 
@@ -96,11 +99,11 @@ const isDecodeError = (cause: unknown): boolean =>
 
 export function viemErrorToEffectError(
   cause: unknown,
-  operation: "getBlock" | "getLogs" | "watchEvent",
+  operation: "getBlock" | "getLogs" | "watchEvent" | "estimateFeesPerGas",
 ): RpcError;
 export function viemErrorToEffectError(
   cause: unknown,
-  operation: Exclude<ViemOperation, "getBlock" | "getLogs" | "watchEvent">,
+  operation: Exclude<ViemOperation, "getBlock" | "getLogs" | "watchEvent" | "estimateFeesPerGas">,
 ): ViemError;
 export function viemErrorToEffectError(cause: unknown, operation: ViemOperation): ViemError {
   const timeout = findViemErrorCause(cause, TimeoutError);
@@ -136,7 +139,12 @@ export function viemErrorToEffectError(cause: unknown, operation: ViemOperation)
     });
   }
 
-  if (operation === "getBlock" || operation === "getLogs" || operation === "watchEvent") {
+  if (
+    operation === "getBlock" ||
+    operation === "getLogs" ||
+    operation === "watchEvent" ||
+    operation === "estimateFeesPerGas"
+  ) {
     return new RpcError({
       code: "REQUEST_FAILED",
       message: messageFromCause(cause),

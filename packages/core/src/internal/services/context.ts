@@ -56,7 +56,7 @@ export const makeServicesContext = (
         multicallBatchSize: values.reads.multicallBatchSize,
       }),
     ),
-    Context.add(WriteClient, makeWriteClient(values.publicClient)),
+    Context.add(WriteClient, makeWriteClient(values.publicClient, readSemaphore)),
     Context.add(WalletClientService, {
       client: Option.fromNullishOr(values.walletClient),
     }),
