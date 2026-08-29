@@ -9,6 +9,7 @@ import {
   ContractFunctionZeroDataError,
   HttpRequestError,
   RpcRequestError,
+  RawContractError,
   SocketClosedError,
   TimeoutError,
   WebSocketRequestError,
@@ -159,6 +160,21 @@ export function viemErrorToEffectError(cause: unknown, operation: ViemOperation)
       code: "REVERTED",
       message: reverted.shortMessage,
       cause,
+      revert: {
+        ...(reverted.data?.errorName === undefined ? {} : { name: reverted.data.errorName }),
+        ...(reverted.data?.args === undefined ? {} : { args: [...reverted.data.args] }),
+      },
+    });
+  }
+
+  const raw = findViemErrorCause(cause, RawContractError)?.data;
+  const rawData = typeof raw === "string" ? raw : raw?.data;
+  if (rawData !== undefined) {
+    return new ContractError({
+      code: "REVERTED",
+      message: messageFromCause(cause),
+      cause,
+      revert: { data: rawData },
     });
   }
 

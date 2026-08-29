@@ -53,7 +53,9 @@ export const executeNativeBatch = Effect.fn("executeNativeBatch")(function* (
   }
 
   const calls = yield* prepareWriteIntents(config, parameters);
-  yield* provideConfig(config, simulatePreparedCalls(calls));
+  if ((parameters.simulation ?? config.writes.simulation) === "required") {
+    yield* provideConfig(config, simulatePreparedCalls(calls, config.reads.concurrency));
+  }
   const { walletClient, account } = yield* provideConfig(config, resolveWalletContext(parameters));
   const client = yield* provideConfig(config, WriteClient);
   const forceAtomic =
@@ -64,7 +66,7 @@ export const executeNativeBatch = Effect.fn("executeNativeBatch")(function* (
       ? { forceAtomic }
       : { forceAtomic, capabilities: parameters.capabilities };
   const submission = yield* client.sendCalls(walletClient, account, calls, sendOptions);
-  const confirmation: ConfirmationPolicy = parameters.confirmation ?? { type: "confirmed" };
+  const confirmation: ConfirmationPolicy = parameters.confirmation ?? config.writes.confirmation;
 
   if (confirmation.type === "submitted") {
     return {
@@ -79,7 +81,9 @@ export const executeNativeBatch = Effect.fn("executeNativeBatch")(function* (
   }
 
   const waitOptions = confirmation.timeout === undefined ? {} : { timeout: confirmation.timeout };
-  const status = yield* client.waitForCallsStatus(walletClient, submission.id, waitOptions);
+  const status = yield* client
+    .waitForCallsStatus(walletClient, submission.id, waitOptions)
+    .pipe(Effect.retry({ times: config.writes.statusRetries }));
   if (status.status !== "success") {
     return yield* new TransactionError({
       code: status.status === undefined ? "INVALID_BATCH_STATUS" : "BATCH_STATUS_FAILED",

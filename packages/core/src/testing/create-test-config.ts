@@ -4,6 +4,8 @@ import type { EnsDeploymentProfile, EnsforgeConfig } from "../config/config.js";
 import { EnsforgeConfigTypeId } from "../config/config.js";
 import type { ReadOptions } from "../config/read-options.js";
 import { resolveReadOptions } from "../config/read-options.js";
+import type { WriteOptions } from "../config/write-options.js";
+import { resolveWriteOptions } from "../config/write-options.js";
 import { attachConfigContext } from "../internal/config/context.js";
 import { validateClientChain, validateDeployments } from "../internal/config/validation.js";
 import { makeServicesContext } from "../internal/services/context.js";
@@ -15,6 +17,7 @@ export interface CreateTestConfigParameters {
   readonly publicClient: PublicClient;
   readonly walletClient?: WalletClient;
   readonly reads?: ReadOptions;
+  readonly writes?: WriteOptions;
 }
 
 export const createTestConfig = (parameters: CreateTestConfigParameters): EnsforgeConfig => {
@@ -26,6 +29,7 @@ export const createTestConfig = (parameters: CreateTestConfigParameters): Ensfor
 
   validateDeployments(parameters.deployments, ensTestChainId);
   const reads = resolveReadOptions(parameters.reads);
+  const writes = resolveWriteOptions(parameters.writes);
 
   const serviceValues = {
     network: "devnet",
@@ -43,6 +47,7 @@ export const createTestConfig = (parameters: CreateTestConfigParameters): Ensfor
       {
         [EnsforgeConfigTypeId]: EnsforgeConfigTypeId,
         ...serviceValues,
+        writes,
       } as unknown as EnsforgeConfig,
       makeServicesContext(serviceValues),
     ),

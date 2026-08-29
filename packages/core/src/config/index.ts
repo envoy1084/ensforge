@@ -9,3 +9,5 @@ export { ensNetworks } from "./network.js";
 export type { EnsChainId, EnsNetwork } from "./network.js";
 export { defaultReadOptions } from "./read-options.js";
 export type { ReadOptions, ResolvedReadOptions } from "./read-options.js";
+export { ConfirmationPolicy, defaultWriteOptions, SimulationPolicy } from "./write-options.js";
+export type { ResolvedWriteOptions, WriteOptions } from "./write-options.js";

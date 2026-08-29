@@ -4,6 +4,7 @@ import type { PublicClient, WalletClient } from "viem";
 import type { EnsProtocol } from "../schemas/protocol.js";
 import type { EnsChainId, EnsNetwork } from "./network.js";
 import type { ReadOptions, ResolvedReadOptions } from "./read-options.js";
+import type { ResolvedWriteOptions, WriteOptions } from "./write-options.js";
 
 export const EnsforgeConfigTypeId: unique symbol = Symbol.for("@ensforge/core/EnsforgeConfig");
 
@@ -26,6 +27,7 @@ export interface CreateConfigParameters {
   readonly publicClient: PublicClient;
   readonly walletClient?: WalletClient;
   readonly reads?: ReadOptions;
+  readonly writes?: WriteOptions;
 }
 
 export type EnsRuntimeNetwork = EnsNetwork | "devnet";
@@ -39,5 +41,6 @@ export interface EnsforgeConfig {
   readonly publicClient: PublicClient;
   readonly walletClient?: WalletClient;
   readonly reads: ResolvedReadOptions;
+  readonly writes: ResolvedWriteOptions;
   readonly deployments: EnsDeploymentProfile;
 }

@@ -23,6 +23,7 @@ import {
   sendCalls,
   simulateCalls,
   WalletError,
+  type WriteOptions,
 } from "../../../src/index.js";
 import { createTestConfig, ensTestChainId } from "../../../src/testing/index.js";
 
@@ -46,7 +47,7 @@ const deployment = {
 const receipt = (transactionHash: Hex) =>
   ({ status: "success", transactionHash }) as TransactionReceipt;
 
-const makeHarness = () => {
+const makeHarness = (writes?: WriteOptions) => {
   let blockNumber = 10n;
   let timestamp = 100n;
   const publicClient = {
@@ -83,6 +84,7 @@ const makeHarness = () => {
     deployments: { protocol: "v1", v1: deployment },
     publicClient,
     walletClient,
+    ...(writes === undefined ? {} : { writes }),
   });
   return {
     config,
@@ -170,6 +172,41 @@ describe("write execution", () => {
       );
       expect(harness.publicClient.call).toHaveBeenCalledTimes(2);
       expect(harness.walletClient.sendTransaction).toHaveBeenCalledTimes(2);
+    }),
+  );
+
+  it.effect("applies configured simulation and confirmation policies", () =>
+    Effect.gen(function* () {
+      const harness = makeHarness({
+        simulation: "skip",
+        confirmation: { type: "submitted" },
+      });
+      const result = yield* sendCalls.effect(harness.config, {
+        calls: [testWrite.call({ to: target })],
+        mode: "sequential",
+      });
+
+      assert.strictEqual(result.calls[0]?.status, "submitted");
+      expect(harness.publicClient.call).not.toHaveBeenCalled();
+      expect(harness.publicClient.waitForTransactionReceipt).not.toHaveBeenCalled();
+    }),
+  );
+
+  it.effect("retries only idempotent confirmation polling", () =>
+    Effect.gen(function* () {
+      const harness = makeHarness({ statusRetries: 1 });
+      vi.mocked(harness.publicClient.waitForTransactionReceipt)
+        .mockRejectedValueOnce(new Error("temporary receipt failure"))
+        .mockResolvedValueOnce(receipt(firstHash));
+
+      const result = yield* sendCalls.effect(harness.config, {
+        calls: [testWrite.call({ to: target })],
+        mode: "sequential",
+      });
+
+      assert.strictEqual(result.calls[0]?.status, "confirmed");
+      expect(harness.walletClient.sendTransaction).toHaveBeenCalledOnce();
+      expect(harness.publicClient.waitForTransactionReceipt).toHaveBeenCalledTimes(2);
     }),
   );
 

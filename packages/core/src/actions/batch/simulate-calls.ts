@@ -13,7 +13,7 @@ const simulateCallsEffect = Effect.fn("ensforge.simulateCalls")(function* (
   parameters: SimulateCallsParameters,
 ) {
   const calls = yield* prepareWriteIntents(config, parameters);
-  return yield* provideConfig(config, simulatePreparedCalls(calls)).pipe(
+  return yield* provideConfig(config, simulatePreparedCalls(calls, config.reads.concurrency)).pipe(
     Effect.mapError((error) => redactSensitiveWriteError(parameters.calls, error)),
   );
 });

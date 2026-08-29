@@ -16,7 +16,9 @@ export {
 export * from "./actions/index.js";
 export {
   createConfig,
+  ConfirmationPolicy,
   defaultReadOptions,
+  defaultWriteOptions,
   ensNetworks,
   type CreateConfigParameters,
   type EnsChainId,
@@ -26,6 +28,9 @@ export {
   type EnsNetwork,
   type ReadOptions,
   type ResolvedReadOptions,
+  type ResolvedWriteOptions,
+  SimulationPolicy,
+  type WriteOptions,
 } from "./config/index.js";
 export {
   AuthorizationError,

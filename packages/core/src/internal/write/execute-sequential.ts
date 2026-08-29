@@ -1,6 +1,7 @@
 import { Effect, Result } from "effect";
 
 import type { EnsforgeConfig } from "../../config/config.js";
+import { RpcError } from "../../errors/rpc-error.js";
 import { WritePlanError } from "../../errors/write-plan-error.js";
 import type {
   CallExecutionResult,
@@ -29,7 +30,8 @@ export const executeSequential = Effect.fn("executeSequential")(function* (
   parameters: SendCallsParameters,
   startIndex = 0,
 ): Effect.fn.Return<SequentialCallsResult, WriteError> {
-  const confirmation: ConfirmationPolicy = parameters.confirmation ?? { type: "confirmed" };
+  const confirmation: ConfirmationPolicy = parameters.confirmation ?? config.writes.confirmation;
+  const simulation = parameters.simulation ?? config.writes.simulation;
   const completed: Array<CallExecutionResult> = [];
 
   for (const [localIndex, intent] of parameters.calls.entries()) {
@@ -52,7 +54,9 @@ export const executeSequential = Effect.fn("executeSequential")(function* (
             cause: intent,
           });
         }
-        yield* provideConfig(config, simulatePreparedCalls([call]));
+        if (simulation === "required") {
+          yield* provideConfig(config, simulatePreparedCalls([call], 1));
+        }
         const { walletClient } = yield* provideConfig(config, resolveWalletContext(parameters));
         const client = yield* provideConfig(config, WriteClient);
         const hash = yield* client.sendTransaction(walletClient, call);
@@ -65,12 +69,19 @@ export const executeSequential = Effect.fn("executeSequential")(function* (
             receipt: null,
           } satisfies CallExecutionResult;
         }
-        const receipt = yield* client.waitForReceipt(hash, {
-          ...(confirmation.confirmations === undefined
-            ? {}
-            : { confirmations: confirmation.confirmations }),
-          ...(confirmation.timeout === undefined ? {} : { timeout: confirmation.timeout }),
-        });
+        const receipt = yield* client
+          .waitForReceipt(hash, {
+            ...(confirmation.confirmations === undefined
+              ? {}
+              : { confirmations: confirmation.confirmations }),
+            ...(confirmation.timeout === undefined ? {} : { timeout: confirmation.timeout }),
+          })
+          .pipe(
+            Effect.retry({
+              times: config.writes.statusRetries,
+              while: (error) => error instanceof RpcError,
+            }),
+          );
         return {
           id: call.id,
           operation: call.operation,

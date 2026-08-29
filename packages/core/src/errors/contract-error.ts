@@ -1,5 +1,7 @@
 import { Schema } from "effect";
 
+import { Hex } from "../schemas/hex.js";
+
 export const ContractErrorCode = Schema.Literals([
   "REVERTED",
   "READ_FAILED",
@@ -16,4 +18,11 @@ export class ContractError extends Schema.TaggedError<ContractError>()("Contract
   code: ContractErrorCode,
   message: Schema.String,
   cause: Schema.Defect(),
+  revert: Schema.optional(
+    Schema.Struct({
+      name: Schema.optional(Schema.String),
+      args: Schema.optional(Schema.Array(Schema.Unknown)),
+      data: Schema.optional(Hex),
+    }),
+  ),
 }) {}

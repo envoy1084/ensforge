@@ -32,6 +32,7 @@ describe("Viem error translation", () => {
         code: "REVERTED",
         message: cause.shortMessage,
         cause,
+        revert: { name: "Unauthorized" },
       }),
     );
   });

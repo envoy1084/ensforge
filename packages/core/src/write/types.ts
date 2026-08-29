@@ -1,5 +1,3 @@
-import { Schema } from "effect";
-
 import type {
   Account,
   Address,
@@ -10,6 +8,7 @@ import type {
 } from "viem";
 
 import type { EnsWriteIntent } from "../action/write-intent.js";
+import type { ConfirmationPolicy } from "../config/write-options.js";
 import type { AuthorizationError } from "../errors/authorization-error.js";
 import type { CodecError } from "../errors/codec-error.js";
 import type { ConfigError } from "../errors/config-error.js";
@@ -26,23 +25,13 @@ import type { WalletError } from "../errors/wallet-error.js";
 import type { WritePlanError } from "../errors/write-plan-error.js";
 import type { EnsProtocol } from "../schemas/protocol.js";
 
+export type { ConfirmationPolicy } from "../config/write-options.js";
+
 export const WriteMode = Schema.Literals(["auto", "batch", "sequential"]);
 export type WriteMode = typeof WriteMode.Type;
 
 export const WriteAtomicity = Schema.Literals(["none", "preferred", "required"]);
 export type WriteAtomicity = typeof WriteAtomicity.Type;
-
-const PositiveNumber = Schema.Number.check(Schema.isGreaterThan(0));
-
-export const ConfirmationPolicy = Schema.Union([
-  Schema.Struct({ type: Schema.Literal("submitted") }),
-  Schema.Struct({
-    type: Schema.Literal("confirmed"),
-    confirmations: Schema.optional(PositiveNumber),
-    timeout: Schema.optional(PositiveNumber),
-  }),
-]);
-export type ConfirmationPolicy = typeof ConfirmationPolicy.Type;
 
 export type WriteError =
   | AuthorizationError
@@ -184,6 +173,7 @@ export interface SendCallsParameters extends PrepareCallsParameters {
   readonly mode?: WriteMode;
   readonly atomicity?: WriteAtomicity;
   readonly confirmation?: ConfirmationPolicy;
+  readonly simulation?: "required" | "skip";
   readonly capabilities?: Readonly<Record<string, unknown>>;
 }
 
@@ -231,3 +221,4 @@ export interface ExecuteWritePlanParameters extends WalletOverrides {
   readonly plan: WritePlan;
   readonly resume?: WritePlanProgress;
 }
+import { Schema } from "effect";

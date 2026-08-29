@@ -1,5 +1,4 @@
 export {
-  ConfirmationPolicy,
   WriteAtomicity,
   WriteMode,
   type CallExecutionResult,
@@ -27,3 +26,4 @@ export {
   type WriteStageResult,
   type WriteWaitCondition,
 } from "./types.js";
+export { ConfirmationPolicy, SimulationPolicy } from "../config/write-options.js";

@@ -36,6 +36,11 @@ describe("createConfig", () => {
     expect(config.publicClient).toBe(publicClient);
     expect(config.walletClient).toBeUndefined();
     expect(config.reads).toEqual({ concurrency: 8, multicallBatchSize: 1024 });
+    expect(config.writes).toEqual({
+      simulation: "required",
+      confirmation: { type: "confirmed" },
+      statusRetries: 0,
+    });
     expect(config.deployments.protocol).toBe("v1");
     expect(config.deployments.v1).toBe(mainnetV1Deployment);
     expect(config.deployments.v2).toBeUndefined();
@@ -73,6 +78,43 @@ describe("createConfig", () => {
     expect(Object.isFrozen(config)).toBe(true);
     expect(Object.isFrozen(config.deployments)).toBe(true);
     expect(Object.isFrozen(config.reads)).toBe(true);
+    expect(Object.isFrozen(config.writes)).toBe(true);
+    expect(Object.isFrozen(config.writes.confirmation)).toBe(true);
+  });
+
+  it("accepts custom write policies", () => {
+    const config = createConfig({
+      network: "mainnet",
+      publicClient: makeMainnetPublicClient(),
+      writes: {
+        simulation: "skip",
+        confirmation: { type: "confirmed", confirmations: 2, timeout: 30_000 },
+        statusRetries: 2,
+      },
+    });
+
+    expect(config.writes).toEqual({
+      simulation: "skip",
+      confirmation: { type: "confirmed", confirmations: 2, timeout: 30_000 },
+      statusRetries: 2,
+    });
+  });
+
+  it.each([
+    { simulation: "sometimes" },
+    { confirmation: { type: "confirmed", confirmations: 0 } },
+    { statusRetries: -1 },
+    { statusRetries: 1.5 },
+  ])("rejects invalid write policies: %o", (writes) => {
+    expectConfigError(
+      () =>
+        createConfig({
+          network: "mainnet",
+          publicClient: makeMainnetPublicClient(),
+          writes: writes as never,
+        }),
+      "INVALID_WRITE_OPTIONS",
+    );
   });
 
   it("accepts custom read limits", () => {
