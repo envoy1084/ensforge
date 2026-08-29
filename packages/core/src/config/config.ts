@@ -1,6 +1,6 @@
 import type { EnsV1Deployment, EnsV2Deployment } from "@ensforge/contracts/deployments";
-import type { Config as WagmiConfig } from "@wagmi/core";
 import type { PublicClient, WalletClient } from "viem";
+import type { Config as WagmiConfig } from "wagmi";
 
 import type { EnsProtocol } from "../schemas/protocol.js";
 import type { GatewayOptions, ResolvedGatewayOptions } from "./gateway-options.js";

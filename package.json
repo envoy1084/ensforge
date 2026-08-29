@@ -30,7 +30,6 @@
     "@ensforge/test-env": "workspace:*",
     "@types/node": "24.13.3",
     "@vitest/coverage-v8": "4.1.11",
-    "@wagmi/core": "catalog:",
     "effect": "catalog:",
     "klarity": "0.2.0",
     "lefthook": "2.1.10",
@@ -40,7 +39,9 @@
     "tsdown": "0.22.14",
     "turbo": "2.10.12",
     "typescript": "6.0.3",
-    "vitest": "catalog:"
+    "viem": "catalog:",
+    "vitest": "catalog:",
+    "wagmi": "catalog:"
   },
   "engines": {
     "node": ">=24"

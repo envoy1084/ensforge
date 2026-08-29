@@ -67,12 +67,11 @@
     "@ensdomains/content-hash": "catalog:",
     "@ensforge/contracts": "workspace:*",
     "cborg": "catalog:",
-    "fflate": "catalog:",
-    "viem": "catalog:",
-    "wagmi": "^3.7.7"
+    "fflate": "catalog:"
   },
   "peerDependencies": {
-    "@wagmi/core": "catalog:",
-    "effect": "catalog:"
+    "effect": "^4.0.0-rc.112",
+    "viem": "^2.56.0",
+    "wagmi": "^3.0.0"
   }
 }

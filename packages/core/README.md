@@ -6,7 +6,7 @@ ENSv2, transition routing, resolver records, CCIP-Read, and typed read compositi
 ## Installation
 
 ```sh
-pnpm add @ensforge/core effect viem @wagmi/core
+pnpm add @ensforge/core effect viem wagmi
 ```
 
 ## Usage

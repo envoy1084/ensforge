@@ -1,9 +1,10 @@
 import { it } from "@effect/vitest";
 import { Cause, Effect, Exit, Option } from "effect";
 
-import { connect, createConfig as createWagmiConfig, custom, mock } from "@wagmi/core";
 import { mainnet, sepolia } from "viem/chains";
 import { describe, expect } from "vitest";
+import { createConfig as createWagmiConfig, custom, mock } from "wagmi";
+import { connect } from "wagmi/actions";
 
 import { ConfigError, createConfig } from "../../../src/index.js";
 import { getConfigLayer } from "../../../src/internal/config/context.js";

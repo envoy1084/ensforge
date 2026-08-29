@@ -15,9 +15,6 @@ catalogs:
     '@ensdomains/content-hash':
       specifier: 3.1.1
       version: 3.1.1
-    '@wagmi/core':
-      specifier: 3.6.5
-      version: 3.6.5
     cborg:
       specifier: 6.1.1
       version: 6.1.1
@@ -33,6 +30,9 @@ catalogs:
     vitest:
       specifier: 4.1.11
       version: 4.1.11
+    wagmi:
+      specifier: 3.7.7
+      version: 3.7.7
 
 importers:
 
@@ -62,9 +62,6 @@ importers:
       '@vitest/coverage-v8':
         specifier: 4.1.11
         version: 4.1.11(vitest@4.1.11)
-      '@wagmi/core':
-        specifier: 'catalog:'
-        version: 3.6.5(@tanstack/query-core@5.102.8)(react@19.2.8)(typescript@6.0.3)(use-sync-external-store@1.4.0(react@19.2.8))(viem@2.56.0(typescript@6.0.3))
       effect:
         specifier: 'catalog:'
         version: 4.0.0-rc.112
@@ -92,9 +89,15 @@ importers:
       typescript:
         specifier: 6.0.3
         version: 6.0.3
+      viem:
+        specifier: 'catalog:'
+        version: 2.56.0(typescript@6.0.3)
       vitest:
         specifier: 'catalog:'
         version: 4.1.11(@types/node@24.13.3)(@vitest/coverage-v8@4.1.11)(vite@8.2.2(@types/node@24.13.3)(jiti@2.6.1)(yaml@2.9.0))
+      wagmi:
+        specifier: 'catalog:'
+        version: 3.7.7(@tanstack/query-core@5.102.8)(@tanstack/react-query@5.102.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)(viem@2.56.0(typescript@6.0.3))
 
   packages/contracts:
     dependencies:
@@ -113,23 +116,20 @@ importers:
       '@ensforge/contracts':
         specifier: workspace:*
         version: link:../contracts
-      '@wagmi/core':
-        specifier: 'catalog:'
-        version: 3.6.5(@tanstack/query-core@5.102.8)(react@19.2.8)(typescript@6.0.3)(use-sync-external-store@1.4.0(react@19.2.8))(viem@2.56.0(typescript@6.0.3))
       cborg:
         specifier: 'catalog:'
         version: 6.1.1
       effect:
-        specifier: 'catalog:'
+        specifier: ^4.0.0-rc.112
         version: 4.0.0-rc.112
       fflate:
         specifier: 'catalog:'
         version: 0.8.3
       viem:
-        specifier: 'catalog:'
+        specifier: ^2.56.0
         version: 2.56.0(typescript@6.0.3)
       wagmi:
-        specifier: ^3.7.7
+        specifier: ^3.0.0
         version: 3.7.7(@tanstack/query-core@5.102.8)(@tanstack/react-query@5.102.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)(viem@2.56.0(typescript@6.0.3))
 
   packages/template:
