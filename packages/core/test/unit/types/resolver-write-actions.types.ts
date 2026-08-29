@@ -4,20 +4,28 @@ import { expectTypeOf } from "vitest";
 
 import {
   clearAvatar,
+  clearRecords,
   setAbi,
   setAddress,
   setAddresses,
+  setAlias,
   setAvatar,
   setContentHash,
   setData,
+  setDnsRecords,
   setInterface,
   setName,
   setPubkey,
+  setRecords,
   setTexts,
+  setZoneHash,
+  type CallExecutionResult,
   type EnsWriteIntent,
   type EnsforgeConfig,
   type SetAddressError,
   type SetAddressResult,
+  type SetRecordsError,
+  type SetRecordsResult,
 } from "../../../src/index.js";
 
 const config = {} as EnsforgeConfig;
@@ -55,3 +63,22 @@ setData.call({ name: "example.eth", key: "profile", value: "0x" });
 setName.call({ name: "example.eth", value: "primary.eth" });
 setAvatar.call({ name: "example.eth", value: "https://example.com/avatar.png" });
 clearAvatar.call({ name: "example.eth" });
+clearRecords.call({ name: "example.eth" });
+setAlias.call({ name: "example.eth", target: "target.eth" });
+setDnsRecords.call({ name: "example.eth", data: "0x" });
+setZoneHash.call({ name: "example.eth", value: "0x" });
+
+const recordsParameters = {
+  name: "example.eth",
+  records: [
+    { type: "clear" as const },
+    { type: "text" as const, key: "url", value: "https://example.com" },
+  ],
+};
+expectTypeOf(setRecords(config, recordsParameters)).toEqualTypeOf<Promise<SetRecordsResult>>();
+expectTypeOf(setRecords.effect(config, recordsParameters)).toEqualTypeOf<
+  Effect.Effect<SetRecordsResult, SetRecordsError>
+>();
+expectTypeOf(setRecords.call(recordsParameters)).toEqualTypeOf<
+  EnsWriteIntent<CallExecutionResult, SetRecordsError>
+>();

@@ -49,6 +49,12 @@ const profileSupported = (profiles: ResolverProfiles, record: RecordOperation): 
       return profiles.name;
     case "data":
       return profiles.data;
+    case "dnsRecord":
+      return profiles.dnsRecord;
+    case "dnsZone":
+      return profiles.dnsZone;
+    case "alias":
+      return false;
     case "clear":
       return true;
   }
@@ -120,7 +126,10 @@ const getRecordPermissionsEffect = Effect.fn("ensforge.getRecordPermissions")(fu
       const records = yield* Effect.forEach(
         parameters.records,
         Effect.fn("ensforge.getRecordPermissions.record")(function* (record) {
-          const supported = profileSupported(resolver.profiles, record);
+          const supported =
+            record.type === "alias"
+              ? resolver.permissioned
+              : profileSupported(resolver.profiles, record);
           const requiredRole = resolverRecordRole(record);
           if (!supported) {
             return {
@@ -168,15 +177,17 @@ const getRecordPermissionsEffect = Effect.fn("ensforge.getRecordPermissions")(fu
 
           const part = resolverRecordPart(record);
           const node = namehash(name);
-          const exact = resolverResource(node, part);
+          const exact = record.type === "alias" ? 0n : resolverResource(node, part);
           const resources =
-            BigInt(part) === 0n
-              ? [exact]
-              : [
-                  exact,
-                  resolverResource(namehash(""), part),
-                  resolverResource(node, resolverRecordPart({ type: "clear" })),
-                ];
+            record.type === "alias"
+              ? [0n]
+              : BigInt(part) === 0n
+                ? [exact]
+                : [
+                    exact,
+                    resolverResource(namehash(""), part),
+                    resolverResource(node, resolverRecordPart({ type: "clear" })),
+                  ];
           const checks = yield* Effect.all(
             resources.map((resource) =>
               ethereum.readContract({

@@ -1,4 +1,16 @@
 export {
+  setDnsRecords,
+  type SetDnsRecordsError,
+  type SetDnsRecordsParameters,
+  type SetDnsRecordsResult,
+} from "./set-dns-records/index.js";
+export {
+  setZoneHash,
+  type SetZoneHashError,
+  type SetZoneHashParameters,
+  type SetZoneHashResult,
+} from "./set-zone-hash/index.js";
+export {
   getDnsClaimStatus,
   type GetDnsClaimStatusError,
   type GetDnsClaimStatusParameters,

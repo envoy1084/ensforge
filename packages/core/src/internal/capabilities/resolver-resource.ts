@@ -11,6 +11,9 @@ export type ResolverRecord =
   | { readonly type: "interface"; readonly interfaceId?: Hex | undefined }
   | { readonly type: "name" }
   | { readonly type: "data"; readonly key: string }
+  | { readonly type: "alias" }
+  | { readonly type: "dnsRecord" }
+  | { readonly type: "dnsZone" }
   | { readonly type: "clear" };
 
 export const isResolverRecord = (operation: {
@@ -24,6 +27,9 @@ export const isResolverRecord = (operation: {
   operation.type === "interface" ||
   operation.type === "name" ||
   operation.type === "data" ||
+  operation.type === "alias" ||
+  operation.type === "dnsRecord" ||
+  operation.type === "dnsZone" ||
   operation.type === "clear";
 
 export const resolverRecordRole = (record: ResolverRecord): bigint => {
@@ -42,10 +48,15 @@ export const resolverRecordRole = (record: ResolverRecord): bigint => {
       return 1n << 20n;
     case "name":
       return 1n << 24n;
+    case "alias":
+      return 1n << 28n;
     case "clear":
       return 1n << 32n;
     case "data":
       return 1n << 36n;
+    case "dnsRecord":
+    case "dnsZone":
+      return 0n;
   }
 };
 
@@ -61,6 +72,9 @@ export const resolverRecordPart = (record: ResolverRecord): Hex => {
     case "contentHash":
     case "pubkey":
     case "name":
+    case "alias":
+    case "dnsRecord":
+    case "dnsZone":
     case "clear":
       return toHex(0n, { size: 32 });
     default:

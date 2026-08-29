@@ -1,5 +1,17 @@
 export { AbiResult, getAbi, type GetAbiError, type GetAbiParameters } from "./get-abi/index.js";
 export {
+  clearRecords,
+  type ClearRecordsError,
+  type ClearRecordsParameters,
+  type ClearRecordsResult,
+} from "./clear-records/index.js";
+export {
+  setAlias,
+  type SetAliasError,
+  type SetAliasParameters,
+  type SetAliasResult,
+} from "./set-alias/index.js";
+export {
   AddressResult,
   getAddress,
   getAddresses,
@@ -61,6 +73,15 @@ export {
   type GetTextsError,
   type GetTextsParameters,
 } from "./get-text/index.js";
+export {
+  setRecords,
+  type ResolverMulticallResult,
+  type SetRecordInput,
+  type SetRecordsAction,
+  type SetRecordsError,
+  type SetRecordsParameters,
+  type SetRecordsResult,
+} from "./set-records/index.js";
 export {
   setText,
   type SetTextError,

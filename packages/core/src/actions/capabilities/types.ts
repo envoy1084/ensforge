@@ -125,6 +125,9 @@ export const RecordOperation = Schema.Union([
   Schema.Struct({ type: Schema.Literal("interface"), interfaceId: Schema.optional(InterfaceId) }),
   Schema.Struct({ type: Schema.Literal("name") }),
   Schema.Struct({ type: Schema.Literal("data"), key: Schema.String }),
+  Schema.Struct({ type: Schema.Literal("alias") }),
+  Schema.Struct({ type: Schema.Literal("dnsRecord") }),
+  Schema.Struct({ type: Schema.Literal("dnsZone") }),
   Schema.Struct({ type: Schema.Literal("clear") }),
 ]);
 export type RecordOperation = typeof RecordOperation.Type;
