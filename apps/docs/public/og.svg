@@ -1,11 +1,21 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none">
   <rect width="1200" height="630" fill="#090C14"/>
   <circle cx="1000" cy="80" r="430" fill="url(#a)" fill-opacity=".44"/>
-  <rect x="90" y="92" width="72" height="72" rx="20" fill="#315CF5"/>
-  <path d="M111 111h32v9h-23v11h20v9h-20v5h23v9h-32v-43Z" fill="white"/>
+  <g transform="translate(90 92) scale(.75)">
+    <path fill="url(#steel)" d="M20 8h50l14 14-14 14H34v8h28l12 12-12 12H34v8h36l14 14H20C12.268 90 6 83.732 6 76V22C6 14.268 12.268 8 20 8Z"/>
+    <path fill="url(#ember)" d="m83 1 9 9-9 9-9-9 9-9Z"/>
+  </g>
   <text x="90" y="277" fill="#F4F6FF" font-family="Arial, sans-serif" font-size="82" font-weight="700">Ensforge</text>
   <text x="90" y="352" fill="#A9B6DA" font-family="Arial, sans-serif" font-size="34">Type-safe tools for building on ENS.</text>
   <rect x="90" y="432" width="422" height="72" rx="16" fill="#111827" stroke="#32446E"/>
   <text x="118" y="478" fill="#7895FF" font-family="monospace" font-size="24">ens.eth → resolved</text>
-  <defs><radialGradient id="a"><stop stop-color="#315CF5"/><stop offset="1" stop-color="#315CF5" stop-opacity="0"/></radialGradient></defs>
+  <defs>
+    <radialGradient id="a"><stop stop-color="#646CFF"/><stop offset="1" stop-color="#315CF5" stop-opacity="0"/></radialGradient>
+    <linearGradient id="steel" x1="8" y1="8" x2="88" y2="90" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8B72FF"/><stop offset=".5" stop-color="#646CFF"/><stop offset="1" stop-color="#315CF5"/>
+    </linearGradient>
+    <linearGradient id="ember" x1="76" y1="3" x2="90" y2="18" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFD36A"/><stop offset="1" stop-color="#FF7043"/>
+    </linearGradient>
+  </defs>
 </svg>

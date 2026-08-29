@@ -42,7 +42,11 @@ export default defineConfig({
       message:
         'Released under the <a href="https://github.com/envoy1084/ensforge/blob/main/LICENSE">Apache-2.0 License</a>.',
     },
-    logo: "/logo.svg",
+    logo: {
+      alt: "Ensforge",
+      dark: "/brand/wordmark-dark.svg",
+      light: "/brand/wordmark-light.svg",
+    },
     nav: [
       { link: "/guide/getting-started", text: "Learn" },
       { link: "/core/", text: "Core" },
@@ -73,6 +77,7 @@ export default defineConfig({
       },
     },
     sidebar,
+    siteTitle: false,
     socialLinks: [{ icon: "github", link: "https://github.com/envoy1084/ensforge" }],
   },
   title: "Ensforge",

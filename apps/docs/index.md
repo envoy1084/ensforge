@@ -19,7 +19,7 @@ hero:
       text: View on GitHub
       link: https://github.com/envoy1084/ensforge
   image:
-    src: /logo.svg
+    src: /brand/mark.svg
     alt: Ensforge logo
 
 features:
