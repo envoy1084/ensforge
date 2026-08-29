@@ -13,11 +13,12 @@ catalog:
   cborg: "6.1.1"
   effect: "4.0.0-rc.112"
   fflate: "0.8.3"
-  happy-dom: "18.0.1"
+  happy-dom: "20.12.0"
   react: "19.2.8"
   react-dom: "19.2.8"
   scheduler: "0.27.0"
   viem: "2.56.0"
+  vite: "8.2.2"
   vitest: "4.1.11"
   wagmi: "3.7.7"
 
@@ -28,3 +29,4 @@ allowBuilds:
 
 minimumReleaseAgeExclude:
   - viem@2.56.0
+  - happy-dom@20.12.0
