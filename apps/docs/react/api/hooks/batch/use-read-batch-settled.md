@@ -1,0 +1,59 @@
+---
+title: useReadBatchSettled
+description: Hook for running read batch settled.
+---
+
+# useReadBatchSettled
+
+Hook for running read batch settled.
+
+## Import
+
+```tsx
+import { useReadBatchSettled } from "@ensforge/react";
+```
+
+## Usage
+
+```tsx
+function Component() {
+  const result = useReadBatchSettled({});
+
+  return <pre>{JSON.stringify(result.data, null, 2)}</pre>;
+}
+```
+
+## Parameters
+
+```ts
+type Parameters = Parameters<typeof useReadBatchSettled>[0];
+```
+
+### query
+
+`EnsQueryOptions | undefined`
+
+Controls execution, freshness, retries, polling, garbage collection, and selection. See [Query Options](/react/api/query-options).
+
+## Return Type
+
+Returns [`EnsQueryResult`](/react/api/query-result) with typed data, failure, status flags, `AsyncResult`, and Promise or Effect refetch controls.
+
+```ts
+type Result = ReturnType<typeof useReadBatchSettled>;
+```
+
+## Effect Atom
+
+```ts
+import { readBatchSettledAtom } from "@ensforge/react/atoms";
+
+const atom = readBatchSettledAtom(sdk, parameters, options);
+```
+
+The hook uses this atom with the SDK and registry from `EnsforgeProvider`.
+
+## Action
+
+- [`readBatchSettled`](/core/api/actions/batch/read-batch-settled)
+- [`sdk.batch.readBatchSettled`](/sdk/api/batch/read-batch-settled)
