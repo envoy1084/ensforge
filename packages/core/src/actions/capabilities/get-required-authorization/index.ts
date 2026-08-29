@@ -15,7 +15,7 @@ import { getWrapperPermissions } from "../get-wrapper-permissions/index.js";
 import { getWriteTarget } from "../get-write-target/index.js";
 import { hasRegistryRoles } from "../has-registry-roles/index.js";
 import type {
-  AuthorizationRequirement,
+  AuthorizationDecision,
   CapabilityError,
   NameCapabilityParameters,
   RequiredAuthorizationResult,
@@ -40,27 +40,6 @@ const registryRoleFor = (operation: WriteOperation): bigint | null => {
   }
 };
 
-const requirementFromRecordSource = (
-  source: "owner" | "operator-approval" | "resolver-delegate" | "resolver-role" | "none",
-  roles: bigint,
-  resource: bigint | null,
-): AuthorizationRequirement => {
-  switch (source) {
-    case "owner":
-      return { kind: "owner" };
-    case "operator-approval":
-      return { kind: "operator-approval" };
-    case "resolver-delegate":
-      return { kind: "resolver-delegate" };
-    case "resolver-role":
-      return { kind: "resolver-role", roles, resource: resource ?? 0n };
-    case "none":
-      return resource === null
-        ? { kind: "resolver-delegate" }
-        : { kind: "resolver-role", roles, resource };
-  }
-};
-
 const getRequiredAuthorizationEffect = Effect.fn("ensforge.getRequiredAuthorization")(function* (
   config: EnsforgeConfig,
   parameters: GetRequiredAuthorizationParameters,
@@ -75,8 +54,7 @@ const getRequiredAuthorizationEffect = Effect.fn("ensforge.getRequiredAuthorizat
           account: parameters.account,
           operation: parameters.operation,
           target,
-          authorized: false,
-          requirement: { kind: "unsupported" },
+          authorization: { status: "unauthorized", requirement: { kind: "unsupported" } },
           blockers: [target.reason],
         } as const satisfies RequiredAuthorizationResult;
       }
@@ -87,8 +65,7 @@ const getRequiredAuthorizationEffect = Effect.fn("ensforge.getRequiredAuthorizat
             account: parameters.account,
             operation: parameters.operation,
             target,
-            authorized: false,
-            requirement: { kind: "unsupported" },
+            authorization: { status: "unauthorized", requirement: { kind: "unsupported" } },
             blockers: ["OPERATION_UNSUPPORTED"],
           } as const satisfies RequiredAuthorizationResult;
         }
@@ -102,8 +79,7 @@ const getRequiredAuthorizationEffect = Effect.fn("ensforge.getRequiredAuthorizat
             account: parameters.account,
             operation: parameters.operation,
             target,
-            authorized: false,
-            requirement: { kind: "unsupported" },
+            authorization: { status: "unauthorized", requirement: { kind: "unsupported" } },
             blockers: ["OPERATION_UNSUPPORTED"],
           } as const satisfies RequiredAuthorizationResult;
         }
@@ -111,14 +87,7 @@ const getRequiredAuthorizationEffect = Effect.fn("ensforge.getRequiredAuthorizat
           account: parameters.account,
           operation: parameters.operation,
           target,
-          authorized: permission.authorized,
-          requirement: permission.supported
-            ? requirementFromRecordSource(
-                permission.source,
-                permission.requiredRole,
-                permission.resource,
-              )
-            : { kind: "unsupported" },
+          authorization: permission.authorization,
           blockers: permission.supported ? [] : ["OPERATION_UNSUPPORTED"],
         } as const satisfies RequiredAuthorizationResult;
       }
@@ -130,8 +99,10 @@ const getRequiredAuthorizationEffect = Effect.fn("ensforge.getRequiredAuthorizat
             account: parameters.account,
             operation: parameters.operation,
             target,
-            authorized: false,
-            requirement: { kind: "wrapper-permission" },
+            authorization: {
+              status: "unauthorized",
+              requirement: { kind: "wrapper-permission" },
+            },
             blockers: ["OPERATION_UNSUPPORTED"],
           } as const satisfies RequiredAuthorizationResult;
         }
@@ -147,8 +118,10 @@ const getRequiredAuthorizationEffect = Effect.fn("ensforge.getRequiredAuthorizat
           account: parameters.account,
           operation: parameters.operation,
           target,
-          authorized: wrapper.canModify && fuseAllows,
-          requirement: { kind: "wrapper-permission" },
+          authorization:
+            wrapper.canModify && fuseAllows
+              ? { status: "authorized", source: "wrapper-permission" }
+              : { status: "unauthorized", requirement: { kind: "wrapper-permission" } },
           blockers: fuseAllows ? [] : ["WRAPPER_FUSE"],
         } as const satisfies RequiredAuthorizationResult;
       }
@@ -178,26 +151,30 @@ const getRequiredAuthorizationEffect = Effect.fn("ensforge.getRequiredAuthorizat
           ? null
           : yield* hasRegistryRoles.effect(config, { ...parameters, roles: role });
       const roleAuthorized = roleResult?.supported === true && roleResult.authorized;
-      const authorized = ownerAuthorized || operatorAuthorized || tokenAuthorized || roleAuthorized;
-      const requirement: AuthorizationRequirement = ownerAuthorized
-        ? { kind: "owner" }
+      const authorization: AuthorizationDecision = ownerAuthorized
+        ? ({ status: "authorized", source: "owner" } as const)
         : operatorAuthorized
-          ? { kind: "operator-approval" }
+          ? ({ status: "authorized", source: "operator-approval" } as const)
           : tokenAuthorized
-            ? { kind: "token-approval" }
-            : roleResult?.supported === true
-              ? {
-                  kind: "registry-role",
-                  roles: roleResult.roles,
-                  resource: roleResult.resource,
-                }
-              : { kind: "owner" };
+            ? ({ status: "authorized", source: "token-approval" } as const)
+            : roleAuthorized
+              ? ({ status: "authorized", source: "registry-role" } as const)
+              : ({
+                  status: "unauthorized",
+                  requirement:
+                    roleResult?.supported === true
+                      ? {
+                          kind: "registry-role",
+                          roles: roleResult.roles,
+                          resource: roleResult.resource,
+                        }
+                      : { kind: "owner" },
+                } as const);
       return {
         account: parameters.account,
         operation: parameters.operation,
         target,
-        authorized,
-        requirement,
+        authorization,
         blockers: [],
       } satisfies RequiredAuthorizationResult;
     }),

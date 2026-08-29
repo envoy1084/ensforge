@@ -71,11 +71,11 @@ const getNameCapabilitiesEffect = Effect.fn("ensforge.getNameCapabilities")(func
         resolver,
         records: recordPermissions.records,
         ownership: {
-          setOwner: authorizations.setOwner.authorized,
-          setResolver: authorizations.setResolver.authorized,
-          createSubname: authorizations.createSubname.authorized,
-          transfer: authorizations.transfer.authorized,
-          setExpiry: authorizations.setExpiry.authorized,
+          setOwner: authorizations.setOwner.authorization.status === "authorized",
+          setResolver: authorizations.setResolver.authorization.status === "authorized",
+          createSubname: authorizations.createSubname.authorization.status === "authorized",
+          transfer: authorizations.transfer.authorization.status === "authorized",
+          setExpiry: authorizations.setExpiry.authorization.status === "authorized",
         },
       } satisfies NameCapabilities;
     }),

@@ -10,8 +10,11 @@ import type {
 } from "viem";
 
 import type { EnsWriteIntent } from "../action/write-intent.js";
+import type { AuthorizationError } from "../errors/authorization-error.js";
+import type { CodecError } from "../errors/codec-error.js";
 import type { ConfigError } from "../errors/config-error.js";
 import type { ContractError } from "../errors/contract-error.js";
+import type { NameError } from "../errors/name-error.js";
 import type { RpcError } from "../errors/rpc-error.js";
 import type { TransactionError } from "../errors/transaction-error.js";
 import type { WalletError } from "../errors/wallet-error.js";
@@ -37,8 +40,11 @@ export const ConfirmationPolicy = Schema.Union([
 export type ConfirmationPolicy = typeof ConfirmationPolicy.Type;
 
 export type WriteError =
+  | AuthorizationError
+  | CodecError
   | ConfigError
   | ContractError
+  | NameError
   | RpcError
   | TransactionError
   | WalletError

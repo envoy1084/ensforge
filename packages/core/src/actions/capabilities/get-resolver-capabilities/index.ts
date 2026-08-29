@@ -18,7 +18,9 @@ import { resolverInterfaceIds } from "@ensforge/contracts/v2";
 import { defineReadAction } from "../../../action/read-request.js";
 import type { EnsforgeConfig } from "../../../config/config.js";
 import { supportsInterfaces } from "../../../internal/capabilities/interface-support.js";
+import { getResolverAuthorizationModel } from "../../../internal/capabilities/resolver-authorization.js";
 import { executeRead } from "../../../internal/read/execute-read.js";
+import { DeploymentService } from "../../../internal/services/deployment.js";
 import { namehash } from "../../../names/hashes.js";
 import { normalizeName } from "../../../names/normalize.js";
 import { findResolver } from "../../resolution/get-resolver/find.js";
@@ -69,10 +71,12 @@ const getResolverCapabilitiesEffect = Effect.fn("ensforge.getResolverCapabilitie
           inherited: false,
           extended: false,
           permissioned: false,
+          authorization: "none",
           profiles: emptyProfiles,
         } as const satisfies ResolverCapabilities;
       }
       const support = yield* supportsInterfaces(discovery.address, resolverInterfaces);
+      const deployment = yield* DeploymentService;
       const { extended, permissioned, ...profiles } = support;
       return {
         address: discovery.address,
@@ -80,6 +84,11 @@ const getResolverCapabilitiesEffect = Effect.fn("ensforge.getResolverCapabilitie
         inherited: discovery.offset > 0n,
         extended,
         permissioned,
+        authorization: getResolverAuthorizationModel(
+          discovery.address,
+          permissioned,
+          deployment.profile,
+        ),
         profiles,
       } as const satisfies ResolverCapabilities;
     }),

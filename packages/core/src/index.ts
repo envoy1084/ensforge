@@ -25,6 +25,8 @@ export {
   type EnsNetwork,
 } from "./config/index.js";
 export {
+  AuthorizationError,
+  AuthorizationErrorCode,
   CodecError,
   CodecErrorCode,
   ConfigError,

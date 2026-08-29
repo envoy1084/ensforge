@@ -260,11 +260,15 @@ describe("capability integration", () => {
         { concurrency: "unbounded" },
       );
 
-      assert.strictEqual(v1.records[0]?.source, "resolver-delegate");
-      assert.isTrue(v1.records[0]?.authorized);
-      assert.strictEqual(v2.records[0]?.source, "resolver-role");
-      assert.isTrue(v2.records[0]?.authorized);
-      assert.isFalse(denied.records[0]?.authorized);
+      assert.deepStrictEqual(v1.records[0]?.authorization, {
+        status: "authorized",
+        source: "resolver-delegate",
+      });
+      assert.deepStrictEqual(v2.records[0]?.authorization, {
+        status: "authorized",
+        source: "resolver-role",
+      });
+      assert.strictEqual(denied.records[0]?.authorization.status, "unauthorized");
     }),
   );
 
@@ -301,8 +305,8 @@ describe("capability integration", () => {
       if (recordTarget.available) assert.strictEqual(recordTarget.kind, "resolver");
       assert.isTrue(transferTarget.available);
       if (transferTarget.available) assert.strictEqual(transferTarget.kind, "registrar");
-      assert.isTrue(recordAuthorization.authorized);
-      assert.isTrue(registryAuthorization.authorized);
+      assert.strictEqual(recordAuthorization.authorization.status, "authorized");
+      assert.strictEqual(registryAuthorization.authorization.status, "authorized");
     }),
   );
 
@@ -318,7 +322,7 @@ describe("capability integration", () => {
       assert.strictEqual(result.name, devnet.fixtures.permissions.v2.permissionedResolver.name);
       assert.isTrue(result.registry.permissioned);
       assert.isTrue(result.resolver.permissioned);
-      assert.isTrue(result.records[0]?.authorized);
+      assert.strictEqual(result.records[0]?.authorization.status, "authorized");
     }),
   );
 });

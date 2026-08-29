@@ -61,3 +61,9 @@ export {
   type GetTextsError,
   type GetTextsParameters,
 } from "./get-text/index.js";
+export {
+  setText,
+  type SetTextError,
+  type SetTextParameters,
+  type SetTextResult,
+} from "./set-text/index.js";

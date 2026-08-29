@@ -48,7 +48,7 @@ export interface EnsWriteAction<Parameters, Success, Failure> extends EnsAction<
   readonly call: (parameters: Parameters) => EnsWriteIntent<Success, Failure>;
 }
 
-const makeWriteIntent = <Parameters, Success, Failure>(
+export const makeWriteIntent = <Parameters, Success, Failure>(
   operation: string,
   parameters: Parameters,
   preparer?: EnsWriteIntentPreparer<Parameters, Failure>,

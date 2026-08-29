@@ -51,6 +51,7 @@ export const ResolverCapabilities = Schema.Struct({
   inherited: Schema.Boolean,
   extended: Schema.Boolean,
   permissioned: Schema.Boolean,
+  authorization: Schema.Literals(["none", "owner-delegate", "role", "unknown"]),
   profiles: ResolverProfiles,
 });
 export type ResolverCapabilities = typeof ResolverCapabilities.Type;
@@ -226,20 +227,58 @@ export const WrapperPermissionsResult = Schema.Union([
 ]);
 export type WrapperPermissionsResult = typeof WrapperPermissionsResult.Type;
 
-export const PermissionSource = Schema.Literals([
+export const AuthorizationRequirement = Schema.Union([
+  Schema.Struct({ kind: Schema.Literal("none") }),
+  Schema.Struct({ kind: Schema.Literal("owner") }),
+  Schema.Struct({ kind: Schema.Literal("operator-approval") }),
+  Schema.Struct({ kind: Schema.Literal("token-approval") }),
+  Schema.Struct({ kind: Schema.Literal("resolver-delegate") }),
+  Schema.Struct({
+    kind: Schema.Literal("registry-role"),
+    roles: Schema.BigInt,
+    resource: Schema.BigInt,
+  }),
+  Schema.Struct({
+    kind: Schema.Literal("resolver-role"),
+    roles: Schema.BigInt,
+    resource: Schema.BigInt,
+  }),
+  Schema.Struct({ kind: Schema.Literal("wrapper-permission") }),
+  Schema.Struct({ kind: Schema.Literal("unsupported") }),
+]);
+export type AuthorizationRequirement = typeof AuthorizationRequirement.Type;
+
+export const AuthorizationSource = Schema.Literals([
   "owner",
   "operator-approval",
+  "token-approval",
   "resolver-delegate",
+  "registry-role",
   "resolver-role",
-  "none",
+  "wrapper-permission",
 ]);
-export type PermissionSource = typeof PermissionSource.Type;
+export type AuthorizationSource = typeof AuthorizationSource.Type;
+
+export const AuthorizationDecision = Schema.Union([
+  Schema.Struct({
+    status: Schema.Literal("authorized"),
+    source: AuthorizationSource,
+  }),
+  Schema.Struct({
+    status: Schema.Literal("unauthorized"),
+    requirement: AuthorizationRequirement,
+  }),
+  Schema.Struct({
+    status: Schema.Literal("unknown"),
+    reason: Schema.Literal("CUSTOM_RESOLVER"),
+  }),
+]);
+export type AuthorizationDecision = typeof AuthorizationDecision.Type;
 
 export const RecordPermission = Schema.Struct({
   record: RecordOperation,
   supported: Schema.Boolean,
-  authorized: Schema.Boolean,
-  source: PermissionSource,
+  authorization: AuthorizationDecision,
   requiredRole: Schema.BigInt,
   resource: Schema.NullOr(Schema.BigInt),
 });
@@ -274,27 +313,6 @@ const AvailableWriteTarget = Schema.Struct({
 export const WriteTarget = Schema.Union([UnavailableWriteTarget, AvailableWriteTarget]);
 export type WriteTarget = typeof WriteTarget.Type;
 
-export const AuthorizationRequirement = Schema.Union([
-  Schema.Struct({ kind: Schema.Literal("none") }),
-  Schema.Struct({ kind: Schema.Literal("owner") }),
-  Schema.Struct({ kind: Schema.Literal("operator-approval") }),
-  Schema.Struct({ kind: Schema.Literal("token-approval") }),
-  Schema.Struct({ kind: Schema.Literal("resolver-delegate") }),
-  Schema.Struct({
-    kind: Schema.Literal("registry-role"),
-    roles: Schema.BigInt,
-    resource: Schema.BigInt,
-  }),
-  Schema.Struct({
-    kind: Schema.Literal("resolver-role"),
-    roles: Schema.BigInt,
-    resource: Schema.BigInt,
-  }),
-  Schema.Struct({ kind: Schema.Literal("wrapper-permission") }),
-  Schema.Struct({ kind: Schema.Literal("unsupported") }),
-]);
-export type AuthorizationRequirement = typeof AuthorizationRequirement.Type;
-
 const AuthorizationBlocker = Schema.Literals([
   "NAME_NOT_REGISTERED",
   "RESOLVER_NOT_FOUND",
@@ -306,8 +324,7 @@ export const RequiredAuthorizationResult = Schema.Struct({
   account: EthereumAddress,
   operation: WriteOperation,
   target: WriteTarget,
-  authorized: Schema.Boolean,
-  requirement: AuthorizationRequirement,
+  authorization: AuthorizationDecision,
   blockers: Schema.Array(AuthorizationBlocker),
 });
 export type RequiredAuthorizationResult = typeof RequiredAuthorizationResult.Type;

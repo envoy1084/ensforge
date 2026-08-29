@@ -26,6 +26,7 @@ import {
   resolve,
   resolveBatch,
   resolveWithResolver,
+  setText,
   type EnsReadRequest,
   type EnsWriteIntent,
   type EnsforgeConfig,
@@ -59,6 +60,8 @@ import {
   type ResolveResult,
   type ResolveWithResolverError,
   type ResolveWithResolverResult,
+  type SetTextError,
+  type SetTextResult,
   type InterfaceResult,
   type NameResult,
   type PrimaryNameResult,
@@ -83,6 +86,15 @@ expectTypeOf(action.effect(config, { value: 1 })).toEqualTypeOf<
 >();
 expectTypeOf(readAction.request({ value: 1 })).toEqualTypeOf<EnsReadRequest<number, TestFailure>>();
 expectTypeOf(writeAction.call({ value: 1 })).toEqualTypeOf<EnsWriteIntent<number, TestFailure>>();
+expectTypeOf(
+  setText(config, { name: "example.eth", key: "url", value: "https://example.com" }),
+).toEqualTypeOf<Promise<SetTextResult>>();
+expectTypeOf(
+  setText.effect(config, { name: "example.eth", key: "url", value: "https://example.com" }),
+).toEqualTypeOf<Effect.Effect<SetTextResult, SetTextError>>();
+expectTypeOf(
+  setText.call({ name: "example.eth", key: "url", value: "https://example.com" }),
+).toEqualTypeOf<EnsWriteIntent<SetTextResult, SetTextError>>();
 expectTypeOf(getExpiry(config, { name: "example.eth" })).toEqualTypeOf<
   Promise<ExpiryResult | null>
 >();

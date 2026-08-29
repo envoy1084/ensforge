@@ -1,11 +1,10 @@
 import { Effect } from "effect";
 
 import { publicResolverV1Abi } from "@ensforge/contracts/v1";
-import { permissionedResolverV2InterfaceAbi, resolverInterfaceIds } from "@ensforge/contracts/v2";
+import { permissionedResolverV2InterfaceAbi } from "@ensforge/contracts/v2";
 
 import { defineReadAction } from "../../../action/read-request.js";
 import type { EnsforgeConfig } from "../../../config/config.js";
-import { supportsInterface } from "../../../internal/capabilities/interface-support.js";
 import {
   resolverRecordPart,
   resolverRecordRole,
@@ -64,13 +63,7 @@ const getRecordPermissionsEffect = Effect.fn("ensforge.getRecordPermissions")(fu
     config,
     parameters,
     Effect.gen(function* () {
-      const [resolver, manager] = yield* Effect.all(
-        [
-          getResolverCapabilities.effect(config, parameters),
-          getManager.effect(config, parameters),
-        ] as const,
-        { concurrency: "unbounded" },
-      );
+      const resolver = yield* getResolverCapabilities.effect(config, parameters);
       if (resolver.address === null) {
         return {
           resolver: null,
@@ -79,8 +72,10 @@ const getRecordPermissionsEffect = Effect.fn("ensforge.getRecordPermissions")(fu
           records: parameters.records.map((record): RecordPermission => ({
             record,
             supported: false,
-            authorized: false,
-            source: "none",
+            authorization: {
+              status: "unauthorized",
+              requirement: { kind: "unsupported" },
+            },
             requiredRole: resolverRecordRole(record),
             resource: null,
           })),
@@ -89,14 +84,15 @@ const getRecordPermissionsEffect = Effect.fn("ensforge.getRecordPermissions")(fu
 
       const ethereum = yield* EthereumClient;
       const resolverAddress = resolver.address;
-      const permissioned = yield* supportsInterface(
-        resolverAddress,
-        resolverInterfaceIds.permissionedResolver,
-      );
+      const permissioned = resolver.authorization === "role";
+      const manager =
+        resolver.authorization === "owner-delegate"
+          ? yield* getManager.effect(config, parameters)
+          : null;
       let ownerAuthorized = false;
       let operatorAuthorized = false;
       let delegateAuthorized = false;
-      if (!permissioned && manager !== null) {
+      if (resolver.authorization === "owner-delegate" && manager !== null) {
         ownerAuthorized = manager.toLowerCase() === parameters.account.toLowerCase();
         [operatorAuthorized, delegateAuthorized] = yield* Effect.all(
           [
@@ -130,11 +126,22 @@ const getRecordPermissionsEffect = Effect.fn("ensforge.getRecordPermissions")(fu
             return {
               record,
               supported,
-              authorized: false,
-              source: "none",
+              authorization: {
+                status: "unauthorized",
+                requirement: { kind: "unsupported" },
+              },
               requiredRole,
               resource: null,
-            } as const;
+            } as const satisfies RecordPermission;
+          }
+          if (resolver.authorization === "unknown") {
+            return {
+              record,
+              supported,
+              authorization: { status: "unknown", reason: "CUSTOM_RESOLVER" },
+              requiredRole,
+              resource: null,
+            } as const satisfies RecordPermission;
           }
           if (!permissioned) {
             const source = ownerAuthorized
@@ -147,11 +154,16 @@ const getRecordPermissionsEffect = Effect.fn("ensforge.getRecordPermissions")(fu
             return {
               record,
               supported,
-              authorized: source !== "none",
-              source,
+              authorization:
+                source === "none"
+                  ? {
+                      status: "unauthorized",
+                      requirement: { kind: "resolver-delegate" },
+                    }
+                  : { status: "authorized", source },
               requiredRole,
               resource: null,
-            } as const;
+            } as const satisfies RecordPermission;
           }
 
           const part = resolverRecordPart(record);
@@ -180,11 +192,15 @@ const getRecordPermissionsEffect = Effect.fn("ensforge.getRecordPermissions")(fu
           return {
             record,
             supported,
-            authorized,
-            source: authorized ? "resolver-role" : "none",
+            authorization: authorized
+              ? { status: "authorized", source: "resolver-role" }
+              : {
+                  status: "unauthorized",
+                  requirement: { kind: "resolver-role", roles: requiredRole, resource: exact },
+                },
             requiredRole,
             resource: exact,
-          } as const;
+          } as const satisfies RecordPermission;
         }),
         { concurrency: "unbounded" },
       );
