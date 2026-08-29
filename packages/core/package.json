@@ -68,7 +68,8 @@
     "@ensforge/contracts": "workspace:*",
     "cborg": "catalog:",
     "fflate": "catalog:",
-    "viem": "catalog:"
+    "viem": "catalog:",
+    "wagmi": "^3.7.7"
   },
   "peerDependencies": {
     "@wagmi/core": "catalog:",

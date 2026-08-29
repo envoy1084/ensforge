@@ -1,8 +1,10 @@
 import { Effect } from "effect";
 
-import type { Config as WagmiConfig } from "@wagmi/core";
-import { getPublicClient, getWalletClient } from "@wagmi/core/actions";
 import type { PublicClient } from "viem";
+// import type { Config as WagmiConfig } from "@wagmi/core";
+import type { Config as WagmiConfig } from "wagmi";
+// import { getPublicClient, getWalletClient } from "@wagmi/core/actions";
+import { getPublicClient, getWalletClient } from "wagmi/actions";
 
 import type { EnsChainId, EnsNetwork } from "../../config/network.js";
 import { ConfigError } from "../../errors/config-error.js";

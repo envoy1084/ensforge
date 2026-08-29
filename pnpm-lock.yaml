@@ -64,7 +64,7 @@ importers:
         version: 4.1.11(vitest@4.1.11)
       '@wagmi/core':
         specifier: 'catalog:'
-        version: 3.6.5(typescript@6.0.3)(viem@2.56.0(typescript@6.0.3))
+        version: 3.6.5(@tanstack/query-core@5.102.8)(react@19.2.8)(typescript@6.0.3)(use-sync-external-store@1.4.0(react@19.2.8))(viem@2.56.0(typescript@6.0.3))
       effect:
         specifier: 'catalog:'
         version: 4.0.0-rc.112
@@ -115,7 +115,7 @@ importers:
         version: link:../contracts
       '@wagmi/core':
         specifier: 'catalog:'
-        version: 3.6.5(typescript@6.0.3)(viem@2.56.0(typescript@6.0.3))
+        version: 3.6.5(@tanstack/query-core@5.102.8)(react@19.2.8)(typescript@6.0.3)(use-sync-external-store@1.4.0(react@19.2.8))(viem@2.56.0(typescript@6.0.3))
       cborg:
         specifier: 'catalog:'
         version: 6.1.1
@@ -128,6 +128,9 @@ importers:
       viem:
         specifier: 'catalog:'
         version: 2.56.0(typescript@6.0.3)
+      wagmi:
+        specifier: ^3.7.7
+        version: 3.7.7(@tanstack/query-core@5.102.8)(@tanstack/react-query@5.102.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)(viem@2.56.0(typescript@6.0.3))
 
   packages/template:
     dependencies:
@@ -817,6 +820,14 @@ packages:
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
 
+  '@tanstack/query-core@5.102.8':
+    resolution: {integrity: sha512-ZNjkJ33CqvPNec/6lZBnHqLc3EVGPZ9ySLhYahU9TcuRFdmwXewuj0c4hwSWcGHqEUwcSrKeZ+oGcvPBqXcQcg==}
+
+  '@tanstack/react-query@5.102.8':
+    resolution: {integrity: sha512-TYBea4OuXWD7MhaSHq069TWbFe7rcwWN6kzT7JF0OKi1K6c1gTv2IzD6A6ExJsCMozdkqBWeuIUZmu4KQg0O5A==}
+    peerDependencies:
+      react: ^18 || ^19
+
   '@turbo/darwin-64@2.10.12':
     resolution: {integrity: sha512-9nKgKoF6ZOUsM+or0OtNf+TTJSfGvDNP7ZFv/ZGWVwOSCkumyctQiTeHwB4UNljHTnC41AqylgbunLDHoccNrA==}
     cpu: [x64]
@@ -896,6 +907,37 @@ packages:
 
   '@vitest/utils@4.1.11':
     resolution: {integrity: sha512-zTCVGpyFsGWBhllOyKlTw/vnr6D9qxsfSDyfbyZmTyjHw5N/VuvzHpHoQjm2ZJzn4RJgx5w4r7V0er69CmLgPQ==}
+
+  '@wagmi/connectors@8.2.0':
+    resolution: {integrity: sha512-hPwdmePYjQqSWlw9JmzrzVgmw2PJ+NJsUQ/BuPBYbzBS8+cW5vWdqiaKLB4qTF9m+yr+zSp7u91KBgvOWz50og==}
+    peerDependencies:
+      '@base-org/account': ^2.5.1
+      '@coinbase/wallet-sdk': ^4.3.6
+      '@metamask/connect-evm': ^2.1.0
+      '@safe-global/safe-apps-provider': ~0.18.6
+      '@safe-global/safe-apps-sdk': ^9.1.0
+      '@wagmi/core': 3.6.5
+      '@walletconnect/ethereum-provider': ^2.21.1
+      accounts: ~0.18
+      typescript: '>=5.9.3'
+      viem: 2.x
+    peerDependenciesMeta:
+      '@base-org/account':
+        optional: true
+      '@coinbase/wallet-sdk':
+        optional: true
+      '@metamask/connect-evm':
+        optional: true
+      '@safe-global/safe-apps-provider':
+        optional: true
+      '@safe-global/safe-apps-sdk':
+        optional: true
+      '@walletconnect/ethereum-provider':
+        optional: true
+      accounts:
+        optional: true
+      typescript:
+        optional: true
 
   '@wagmi/core@3.6.5':
     resolution: {integrity: sha512-zfKvLNT1V1+/RgrrUcRvteKx+V+Iv9ZHPWseIVKFA9mX5WE0H8J6zWZGWXSQCKbz5xGSUoatNFCkNFSzqQp+AA==}
@@ -1723,6 +1765,10 @@ packages:
   quansync@1.0.0:
     resolution: {integrity: sha512-5xZacEEufv3HSTPQuchrvV6soaiACMFnq1H8wkVioctoH3TRha9Sz66lOxRwPK/qZj7HPiSveih9yAyh98gvqA==}
 
+  react@19.2.8:
+    resolution: {integrity: sha512-PWaYA1L/q9u2u7xYQi+Y3L3Yfnie7XyLeaJICV1MGD6LprsBxcAqGjYyr0eY3p+QdsA+x/Irkt4Qif8D63+Sbw==}
+    engines: {node: '>=0.10.0'}
+
   require-directory@2.1.1:
     resolution: {integrity: sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q==}
     engines: {node: '>=0.10.0'}
@@ -1915,6 +1961,11 @@ packages:
     resolution: {integrity: sha512-yLSH4py7oFH3oG/9K+XWrz1pSi3dfUrWEnInbxMfArOfc1+33BlGPQtLsOYwvdMy11AwUBetYuaRxSPqgkq+8g==}
     engines: {node: '>=4'}
 
+  use-sync-external-store@1.4.0:
+    resolution: {integrity: sha512-9WXSPC5fMv61vaupRkCKCxsPxBocVnwakBEkMIHHpkTTg6icbJtg6jzgtLDm4bl3cSHAca52rYWih0k4K3PfHw==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+
   validate-npm-package-name@5.0.1:
     resolution: {integrity: sha512-OljLrQ9SQdOUqTaQxqL5dEfZWrXExyyWsozYlAWFawPVNuD83igl7uJD2RTkNMbniIYgt8l81eCJGIdQF7avLQ==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
@@ -2013,6 +2064,17 @@ packages:
       happy-dom:
         optional: true
       jsdom:
+        optional: true
+
+  wagmi@3.7.7:
+    resolution: {integrity: sha512-J9YTRKwOVt+L135nMiitwGALrJqpXFhLX8AZzbECWeAQ1aI9Uz8Pz0GGMqtbKe7xJtmOx838OChT7YkMs9k8OA==}
+    peerDependencies:
+      '@tanstack/react-query': '>=5.0.0'
+      react: '>=18'
+      typescript: '>=5.9.3'
+      viem: 2.x
+    peerDependenciesMeta:
+      typescript:
         optional: true
 
   why-is-node-running@2.3.0:
@@ -2651,6 +2713,13 @@ snapshots:
 
   '@standard-schema/spec@1.1.0': {}
 
+  '@tanstack/query-core@5.102.8': {}
+
+  '@tanstack/react-query@5.102.8(react@19.2.8)':
+    dependencies:
+      '@tanstack/query-core': 5.102.8
+      react: 19.2.8
+
   '@turbo/darwin-64@2.10.12':
     optional: true
 
@@ -2737,13 +2806,21 @@ snapshots:
       convert-source-map: 2.0.0
       tinyrainbow: 3.1.1
 
-  '@wagmi/core@3.6.5(typescript@6.0.3)(viem@2.56.0(typescript@6.0.3))':
+  '@wagmi/connectors@8.2.0(@wagmi/core@3.6.5(@tanstack/query-core@5.102.8)(react@19.2.8)(typescript@6.0.3)(use-sync-external-store@1.4.0(react@19.2.8))(viem@2.56.0(typescript@6.0.3)))(typescript@6.0.3)(viem@2.56.0(typescript@6.0.3))':
+    dependencies:
+      '@wagmi/core': 3.6.5(@tanstack/query-core@5.102.8)(react@19.2.8)(typescript@6.0.3)(use-sync-external-store@1.4.0(react@19.2.8))(viem@2.56.0(typescript@6.0.3))
+      viem: 2.56.0(typescript@6.0.3)
+    optionalDependencies:
+      typescript: 6.0.3
+
+  '@wagmi/core@3.6.5(@tanstack/query-core@5.102.8)(react@19.2.8)(typescript@6.0.3)(use-sync-external-store@1.4.0(react@19.2.8))(viem@2.56.0(typescript@6.0.3))':
     dependencies:
       eventemitter3: 5.0.1
       mipd: 0.0.7(typescript@6.0.3)
       viem: 2.56.0(typescript@6.0.3)
-      zustand: 5.0.0
+      zustand: 5.0.0(react@19.2.8)(use-sync-external-store@1.4.0(react@19.2.8))
     optionalDependencies:
+      '@tanstack/query-core': 5.102.8
       typescript: 6.0.3
     transitivePeerDependencies:
       - '@types/react'
@@ -3392,6 +3469,8 @@ snapshots:
 
   quansync@1.0.0: {}
 
+  react@19.2.8: {}
+
   require-directory@2.1.1: {}
 
   require-from-string@2.0.2: {}
@@ -3565,6 +3644,10 @@ snapshots:
 
   unicode-emoji-modifier-base@1.0.0: {}
 
+  use-sync-external-store@1.4.0(react@19.2.8):
+    dependencies:
+      react: 19.2.8
+
   validate-npm-package-name@5.0.1: {}
 
   verkit@0.3.2: {}
@@ -3626,6 +3709,28 @@ snapshots:
       '@vitest/coverage-v8': 4.1.11(vitest@4.1.11)
     transitivePeerDependencies:
       - msw
+
+  wagmi@3.7.7(@tanstack/query-core@5.102.8)(@tanstack/react-query@5.102.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)(viem@2.56.0(typescript@6.0.3)):
+    dependencies:
+      '@tanstack/react-query': 5.102.8(react@19.2.8)
+      '@wagmi/connectors': 8.2.0(@wagmi/core@3.6.5(@tanstack/query-core@5.102.8)(react@19.2.8)(typescript@6.0.3)(use-sync-external-store@1.4.0(react@19.2.8))(viem@2.56.0(typescript@6.0.3)))(typescript@6.0.3)(viem@2.56.0(typescript@6.0.3))
+      '@wagmi/core': 3.6.5(@tanstack/query-core@5.102.8)(react@19.2.8)(typescript@6.0.3)(use-sync-external-store@1.4.0(react@19.2.8))(viem@2.56.0(typescript@6.0.3))
+      react: 19.2.8
+      use-sync-external-store: 1.4.0(react@19.2.8)
+      viem: 2.56.0(typescript@6.0.3)
+    optionalDependencies:
+      typescript: 6.0.3
+    transitivePeerDependencies:
+      - '@base-org/account'
+      - '@coinbase/wallet-sdk'
+      - '@metamask/connect-evm'
+      - '@safe-global/safe-apps-provider'
+      - '@safe-global/safe-apps-sdk'
+      - '@tanstack/query-core'
+      - '@types/react'
+      - '@walletconnect/ethereum-provider'
+      - accounts
+      - immer
 
   why-is-node-running@2.3.0:
     dependencies:
@@ -3712,4 +3817,7 @@ snapshots:
       '@yuku-parser/binding-win32-arm64': 0.8.7
       '@yuku-parser/binding-win32-x64': 0.8.7
 
-  zustand@5.0.0: {}
+  zustand@5.0.0(react@19.2.8)(use-sync-external-store@1.4.0(react@19.2.8)):
+    optionalDependencies:
+      react: 19.2.8
+      use-sync-external-store: 1.4.0(react@19.2.8)
