@@ -14,6 +14,7 @@ describe("avatar resolution integration", () => {
       const result = yield* getAvatar.effect(devnet.configs.v1, { name: fixture.name });
 
       expect(result).toEqual({
+        status: "resolved",
         record: fixture.texts.avatar,
         uri: fixture.texts.avatar,
       });
@@ -33,10 +34,12 @@ describe("avatar resolution integration", () => {
       ]);
 
       expect(migrated).toEqual({
+        status: "resolved",
         record: devnet.fixtures.records.v2.texts.avatar,
         uri: devnet.fixtures.records.v2.texts.avatar,
       });
       expect(reserved).toEqual({
+        status: "resolved",
         record: devnet.fixtures.records.reserved.texts.avatar,
         uri: devnet.fixtures.records.reserved.texts.avatar,
       });
@@ -64,6 +67,7 @@ describe("avatar resolution integration", () => {
       });
 
       expect(result.avatar).toEqual({
+        status: "resolved",
         record: fixture.texts.avatar,
         uri: fixture.texts.avatar,
       });

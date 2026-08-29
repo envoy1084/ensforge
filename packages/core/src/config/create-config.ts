@@ -11,6 +11,7 @@ import {
   type CreateConfigParameters,
   type EnsforgeConfig,
 } from "./config.js";
+import { resolveGatewayOptions } from "./gateway-options.js";
 import { ensChainIds, EnsNetworkSchema } from "./network.js";
 import { resolveReadOptions } from "./read-options.js";
 import { resolveWriteOptions } from "./write-options.js";
@@ -28,6 +29,7 @@ export const createConfig = (parameters: CreateConfigParameters): EnsforgeConfig
   const deployments = getNetworkProfile(network);
   const reads = resolveReadOptions(parameters.reads);
   const writes = resolveWriteOptions(parameters.writes);
+  const gateways = resolveGatewayOptions(parameters.gateways);
 
   validateClientChain(parameters.publicClient, "public", network, chainId);
 
@@ -53,6 +55,7 @@ export const createConfig = (parameters: CreateConfigParameters): EnsforgeConfig
       publicClient: parameters.publicClient,
       reads,
       writes,
+      gateways,
       deployments,
       ...(parameters.walletClient === undefined ? {} : { walletClient: parameters.walletClient }),
     },

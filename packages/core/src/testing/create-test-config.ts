@@ -2,6 +2,8 @@ import type { PublicClient, WalletClient } from "viem";
 
 import type { EnsDeploymentProfile, EnsforgeConfig } from "../config/config.js";
 import { EnsforgeConfigTypeId } from "../config/config.js";
+import type { GatewayOptions } from "../config/gateway-options.js";
+import { resolveGatewayOptions } from "../config/gateway-options.js";
 import type { ReadOptions } from "../config/read-options.js";
 import { resolveReadOptions } from "../config/read-options.js";
 import type { WriteOptions } from "../config/write-options.js";
@@ -18,6 +20,7 @@ export interface CreateTestConfigParameters {
   readonly walletClient?: WalletClient;
   readonly reads?: ReadOptions;
   readonly writes?: WriteOptions;
+  readonly gateways?: GatewayOptions;
 }
 
 export const createTestConfig = (parameters: CreateTestConfigParameters): EnsforgeConfig => {
@@ -30,6 +33,7 @@ export const createTestConfig = (parameters: CreateTestConfigParameters): Ensfor
   validateDeployments(parameters.deployments, ensTestChainId);
   const reads = resolveReadOptions(parameters.reads);
   const writes = resolveWriteOptions(parameters.writes);
+  const gateways = resolveGatewayOptions(parameters.gateways);
 
   const serviceValues = {
     network: "devnet",
@@ -48,6 +52,7 @@ export const createTestConfig = (parameters: CreateTestConfigParameters): Ensfor
         [EnsforgeConfigTypeId]: EnsforgeConfigTypeId,
         ...serviceValues,
         writes,
+        gateways,
       } as unknown as EnsforgeConfig,
       makeServicesContext(serviceValues),
     ),

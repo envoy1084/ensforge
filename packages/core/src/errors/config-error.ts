@@ -10,6 +10,7 @@ export const ConfigErrorCode = Schema.Literals([
   "WALLET_ACCOUNT_UNAVAILABLE",
   "INVALID_READ_OPTIONS",
   "INVALID_WRITE_OPTIONS",
+  "INVALID_GATEWAY_OPTIONS",
 ]);
 
 export type ConfigErrorCode = typeof ConfigErrorCode.Type;

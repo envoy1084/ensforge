@@ -10,10 +10,18 @@ import type { NameError } from "../../../errors/name-error.js";
 import type { RpcError } from "../../../errors/rpc-error.js";
 
 export const AvatarResult = Schema.NullOr(
-  Schema.Struct({
-    record: Schema.String,
-    uri: Schema.String,
-  }),
+  Schema.Union([
+    Schema.Struct({
+      status: Schema.Literal("resolved"),
+      record: Schema.String,
+      uri: Schema.String,
+    }),
+    Schema.Struct({
+      status: Schema.Literal("unsupported-chain"),
+      record: Schema.String,
+      chainId: Schema.Int,
+    }),
+  ]),
 );
 
 export type AvatarResult = typeof AvatarResult.Type;

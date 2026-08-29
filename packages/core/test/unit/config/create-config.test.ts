@@ -41,6 +41,7 @@ describe("createConfig", () => {
       confirmation: { type: "confirmed" },
       statusRetries: 0,
     });
+    expect(config.gateways).toEqual({ allowedHosts: null, deniedHosts: [], timeout: 10_000 });
     expect(config.deployments.protocol).toBe("v1");
     expect(config.deployments.v1).toBe(mainnetV1Deployment);
     expect(config.deployments.v2).toBeUndefined();
@@ -80,6 +81,37 @@ describe("createConfig", () => {
     expect(Object.isFrozen(config.reads)).toBe(true);
     expect(Object.isFrozen(config.writes)).toBe(true);
     expect(Object.isFrozen(config.writes.confirmation)).toBe(true);
+    expect(Object.isFrozen(config.gateways)).toBe(true);
+  });
+
+  it("accepts custom gateway policies", () => {
+    const config = createConfig({
+      network: "mainnet",
+      publicClient: makeMainnetPublicClient(),
+      gateways: {
+        allowedHosts: ["gateway.example"],
+        deniedHosts: ["blocked.example"],
+        timeout: 5_000,
+      },
+    });
+
+    expect(config.gateways).toEqual({
+      allowedHosts: ["gateway.example"],
+      deniedHosts: ["blocked.example"],
+      timeout: 5_000,
+    });
+  });
+
+  it("rejects invalid gateway policies", () => {
+    expectConfigError(
+      () =>
+        createConfig({
+          network: "mainnet",
+          publicClient: makeMainnetPublicClient(),
+          gateways: { timeout: 0 },
+        }),
+      "INVALID_GATEWAY_OPTIONS",
+    );
   });
 
   it("accepts custom write policies", () => {

@@ -2,6 +2,7 @@ import type { EnsV1Deployment, EnsV2Deployment } from "@ensforge/contracts/deplo
 import type { PublicClient, WalletClient } from "viem";
 
 import type { EnsProtocol } from "../schemas/protocol.js";
+import type { GatewayOptions, ResolvedGatewayOptions } from "./gateway-options.js";
 import type { EnsChainId, EnsNetwork } from "./network.js";
 import type { ReadOptions, ResolvedReadOptions } from "./read-options.js";
 import type { ResolvedWriteOptions, WriteOptions } from "./write-options.js";
@@ -28,6 +29,7 @@ export interface CreateConfigParameters {
   readonly walletClient?: WalletClient;
   readonly reads?: ReadOptions;
   readonly writes?: WriteOptions;
+  readonly gateways?: GatewayOptions;
 }
 
 export type EnsRuntimeNetwork = EnsNetwork | "devnet";
@@ -42,5 +44,6 @@ export interface EnsforgeConfig {
   readonly walletClient?: WalletClient;
   readonly reads: ResolvedReadOptions;
   readonly writes: ResolvedWriteOptions;
+  readonly gateways: ResolvedGatewayOptions;
   readonly deployments: EnsDeploymentProfile;
 }

@@ -54,7 +54,7 @@ describe("resolver profile integration", () => {
           { key: "missing", value: null },
           { key: "email", value: fixture.texts.email },
         ],
-        avatar: { record: fixture.texts.avatar, uri: fixture.texts.avatar },
+        avatar: { status: "resolved", record: fixture.texts.avatar, uri: fixture.texts.avatar },
         contentHash: { ...decodedContentHash, raw: fixture.contenthash },
         abi: { contentType: "json", value: fixture.abi.value, raw: fixture.abi.json.raw },
         pubkey: fixture.pubkey,
@@ -171,6 +171,7 @@ describe("resolver profile integration", () => {
       expect(result.profile.addresses[0]?.address).toBe(fixture.addresses.eth);
       expect(result.profile.texts[0]?.value).toBe(fixture.texts.email);
       expect(result.profile.avatar).toEqual({
+        status: "resolved",
         record: fixture.texts.avatar,
         uri: fixture.texts.avatar,
       });

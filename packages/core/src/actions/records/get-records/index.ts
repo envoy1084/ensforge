@@ -20,7 +20,14 @@ const getRecordsEffect = Effect.fn("ensforge.getRecords")(function* (
   return yield* executeRead(
     config,
     parameters,
-    resolveSelectedRecords(config.publicClient, name, parameters.records, parameters.gatewayUrls),
+    resolveSelectedRecords(
+      config.publicClient,
+      name,
+      parameters.records,
+      config.chainId,
+      config.gateways,
+      parameters.gatewayUrls,
+    ),
   );
 });
 

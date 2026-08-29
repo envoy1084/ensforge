@@ -25,6 +25,7 @@ import {
   type PublicClient,
 } from "viem";
 
+import type { ResolvedGatewayOptions } from "../../../config/gateway-options.js";
 import { CodecError } from "../../../errors/codec-error.js";
 import { ContractError } from "../../../errors/contract-error.js";
 import type { ReadContext } from "../../../internal/read/execution-context.js";
@@ -490,10 +491,12 @@ export const resolveSelectedRecords: (
   client: PublicClient,
   name: NormalizedName,
   selection: GetRecordsSelection,
+  chainId: number,
+  gatewayPolicy: ResolvedGatewayOptions,
   gatewayUrls?: AssetGatewayUrls,
 ) => Effect.Effect<GetRecordsResult, GetRecordsError, EnsforgeServices | ReadContext> = Effect.fn(
   "resolveSelectedRecords",
-)(function* (client, name, selection, gatewayUrls) {
+)(function* (client, name, selection, chainId, gatewayPolicy, gatewayUrls) {
   const descriptors = yield* prepareDescriptors(name, selection);
   const encodedResults = yield* resolveRecords(
     name,
@@ -528,7 +531,14 @@ export const resolveSelectedRecords: (
         result.avatar =
           record.value === null
             ? null
-            : yield* resolveAvatarRecord(client, name, record.value, gatewayUrls);
+            : yield* resolveAvatarRecord(
+                client,
+                name,
+                record.value,
+                chainId,
+                gatewayPolicy,
+                gatewayUrls,
+              );
         break;
       case "contentHash":
         result.contentHash = record.value;

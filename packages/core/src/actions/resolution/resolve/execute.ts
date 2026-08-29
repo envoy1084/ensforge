@@ -2,8 +2,10 @@ import { Effect, Schema } from "effect";
 
 import { zeroAddress } from "viem";
 
+import type { ResolvedGatewayOptions } from "../../../config/gateway-options.js";
 import { CodecError } from "../../../errors/codec-error.js";
 import { isContractRevert } from "../../../internal/errors/viem-error.js";
+import { validateGatewayUrl } from "../../../internal/gateway/validate-url.js";
 import { resolveName, resolveNameWithResolver } from "../../../internal/resolver/resolve-name.js";
 import { DeploymentService } from "../../../internal/services/deployment.js";
 import { dnsEncodeName } from "../../../names/dns.js";
@@ -15,6 +17,7 @@ import type { ResolveResult } from "./types.js";
 
 export const executeResolveCall = Effect.fn("executeResolveCall")(function* (
   call: ResolveBatchCall,
+  gatewayPolicy?: ResolvedGatewayOptions,
 ) {
   const name = yield* normalizeName.effect(call.name);
   const data = yield* Effect.try({
@@ -68,6 +71,12 @@ export const executeResolveCall = Effect.fn("executeResolveCall")(function* (
       code: "INVALID_ADDRESS",
       message: "Resolver address cannot be the zero address",
     });
+  }
+
+  if (gatewayPolicy !== undefined) {
+    yield* Effect.forEach(call.gateways ?? [], (gateway) =>
+      validateGatewayUrl(gateway, gatewayPolicy),
+    );
   }
 
   const result = yield* resolveNameWithResolver({

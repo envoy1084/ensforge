@@ -20,6 +20,8 @@ const getAvatarEffect = Effect.fn("ensforge.getAvatar")(function* (
     config.publicClient,
     parameters.name,
     avatar.value,
+    config.chainId,
+    config.gateways,
     parameters.gatewayUrls,
   );
 });

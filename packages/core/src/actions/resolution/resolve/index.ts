@@ -18,14 +18,18 @@ const resolveEffect = Effect.fn("ensforge.resolve")(function* (
   config: EnsforgeConfig,
   parameters: ResolveParameters,
 ) {
-  return yield* executeRead(config, parameters, executeResolveCall(parameters));
+  return yield* executeRead(config, parameters, executeResolveCall(parameters, config.gateways));
 });
 
 const resolveWithResolverEffect = Effect.fn("ensforge.resolveWithResolver")(function* (
   config: EnsforgeConfig,
   parameters: ResolveWithResolverParameters,
 ) {
-  const result = yield* executeRead(config, parameters, executeResolveCall(parameters));
+  const result = yield* executeRead(
+    config,
+    parameters,
+    executeResolveCall(parameters, config.gateways),
+  );
   return result === null
     ? yield* new ContractError({
         code: "DECODE_FAILED",

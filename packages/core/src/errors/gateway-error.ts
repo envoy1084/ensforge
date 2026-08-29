@@ -1,6 +1,10 @@
 import { Schema } from "effect";
 
-export const GatewayErrorCode = Schema.Literals(["AVATAR_RESOLUTION_FAILED"]);
+export const GatewayErrorCode = Schema.Literals([
+  "AVATAR_RESOLUTION_FAILED",
+  "GATEWAY_NOT_ALLOWED",
+  "GATEWAY_TIMEOUT",
+]);
 
 export type GatewayErrorCode = typeof GatewayErrorCode.Type;
 

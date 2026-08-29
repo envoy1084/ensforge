@@ -3,6 +3,7 @@ import { Schema } from "effect";
 import type { BlockParameters } from "../../../action/block.js";
 import type { CodecError } from "../../../errors/codec-error.js";
 import type { ContractError } from "../../../errors/contract-error.js";
+import type { GatewayError } from "../../../errors/gateway-error.js";
 import type { NameError } from "../../../errors/name-error.js";
 import type { RpcError } from "../../../errors/rpc-error.js";
 import { Hex } from "../../../schemas/hex.js";
@@ -36,6 +37,6 @@ export type ResolveWithResolverParameters = {
   readonly gateways?: ReadonlyArray<string>;
 } & BlockParameters;
 
-export type ResolveError = CodecError | ContractError | NameError | RpcError;
+export type ResolveError = CodecError | ContractError | GatewayError | NameError | RpcError;
 
 export type ResolveWithResolverError = ResolveError;
