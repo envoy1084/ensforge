@@ -1,0 +1,7 @@
+{
+  "extends": "klarity/tsconfig/app/vite",
+  "compilerOptions": {
+    "types": ["node", "vitepress/client"]
+  },
+  "include": [".vitepress/**/*.ts", ".vitepress/**/*.vue"]
+}
