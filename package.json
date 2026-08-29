@@ -14,7 +14,7 @@
     "lint:fix": "oxlint --fix .",
     "pack:check": "turbo run pack:check",
     "prepare": "lefthook install",
-    "release": "pnpm check && changeset publish",
+    "release": "changeset publish",
     "test": "turbo run test",
     "test:integration": "pnpm --filter @ensforge/core test:integration",
     "test:packages": "node scripts/test-packages.mjs",
