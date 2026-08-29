@@ -124,7 +124,6 @@ export default withTwoslashInlineCache(
     ignoreDeadLinks: false,
     lang: "en-US",
     lastUpdated: true,
-    outDir: "./dist",
     markdown: {
       config(markdown) {
         markdown.use(copyOrDownloadAsMarkdownButtons).use(groupIconMdPlugin);

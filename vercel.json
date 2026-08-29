@@ -1,5 +1,4 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "pnpm --filter @ensforge/docs build",
-  "outputDirectory": "apps/docs/dist"
+  "outputDirectory": "apps/docs/.vitepress/dist"
 }
