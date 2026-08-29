@@ -30,7 +30,7 @@ const isAvailableEffect = Effect.fn("ensforge.isAvailable")(function* (
       const ethereum = yield* EthereumClient;
       if (route.kind === "v2" || route.kind === "available") {
         return analysis.ethSecondLevelLabel === undefined
-          ? route.kind === "available"
+          ? route.kind === "available" || route.state.status === 0
           : yield* ethereum.readContract({
               address: route.deployment.contracts.ethRegistrar,
               abi: ethRegistrarV2Abi,

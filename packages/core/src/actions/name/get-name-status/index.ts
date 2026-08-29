@@ -16,6 +16,7 @@ import type {
   GetNameStateParameters,
   NameStatus,
 } from "../get-name-state/types.js";
+import { getOwner } from "../get-owner/index.js";
 
 const getNameStatusEffect = Effect.fn("ensforge.getNameStatus")(function* (
   config: EnsforgeConfig,
@@ -32,7 +33,9 @@ const getNameStatusEffect = Effect.fn("ensforge.getNameStatus")(function* (
 
       if (route.kind === "v2") {
         if (route.state.status === 2) return "active";
-        if (analyzeName(name).ethSecondLevelLabel === undefined) return "expired";
+        if (analyzeName(name).ethSecondLevelLabel === undefined) {
+          return route.state.status === 0 ? "available" : "expired";
+        }
         const renewable = yield* (yield* EthereumClient).readContract({
           address: route.deployment.contracts.ethRegistrar,
           abi: ethRegistrarV2Abi,
@@ -43,7 +46,10 @@ const getNameStatusEffect = Effect.fn("ensforge.getNameStatus")(function* (
       }
 
       const expiry = yield* getExpiry.effect(config, parameters);
-      if (expiry === null) return "available";
+      if (expiry === null) {
+        const owner = yield* getOwner.effect(config, parameters);
+        return owner === null ? "available" : "active";
+      }
       const timestamp = yield* readBlockTimestamp();
       if (timestamp <= expiry.expiry) return "active";
       return timestamp <= expiry.gracePeriodEnd ? "grace" : "expired";
