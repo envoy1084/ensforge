@@ -9,6 +9,8 @@ directly. Ensforge targets ENSv2 while preserving the ENSv1 and migration behavi
 packages/
   contracts/   ENSv1/ENSv2 ABIs, interfaces, constants, and deployments
   core/        Semantic ENS actions with Promise and Effect APIs
+  react/       Effect Atom-powered React hooks and providers
+  sdk/         Config-bound grouped SDK client
   test-env/    Private deterministic ENS integration environment
   template/    Starter for future packages
 ```
