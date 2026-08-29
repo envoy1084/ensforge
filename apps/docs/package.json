@@ -10,7 +10,9 @@
     "preview": "vitepress preview --port 3000"
   },
   "devDependencies": {
+    "@shikijs/vitepress-twoslash": "3.20.0",
     "@types/node": "24.13.3",
+    "unocss": "^66.8.1",
     "vite": "5.4.21",
     "vitepress": "1.6.4",
     "vitepress-plugin-group-icons": "1.7.6",

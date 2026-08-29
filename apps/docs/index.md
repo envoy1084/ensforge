@@ -2,7 +2,7 @@
 layout: home
 title: ensforge
 titleTemplate: false
-description: Type-safe tools for reading, writing, and building applications on ENS.
+description: Type-safe TypeScript SDK for ENS names, records, registration, renewals, migration, React hooks, batching, and ENSv1 and ENSv2 contracts.
 
 hero:
   name: ensforge

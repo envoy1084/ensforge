@@ -1,0 +1,15 @@
+{
+  "name": "ensforge",
+  "short_name": "ensforge",
+  "description": "Type-safe TypeScript SDK for the Ethereum Name Service.",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ],
+  "theme_color": "#315cf5",
+  "background_color": "#111216",
+  "display": "standalone"
+}
