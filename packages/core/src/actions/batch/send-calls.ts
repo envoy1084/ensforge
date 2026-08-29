@@ -4,6 +4,7 @@ import { defineAction } from "../../action/action.js";
 import type { EnsforgeConfig } from "../../config/config.js";
 import { executeNativeBatch } from "../../internal/write/execute-native-batch.js";
 import { executeSequential } from "../../internal/write/execute-sequential.js";
+import { redactSensitiveWriteError } from "../../internal/write/redact-sensitive-error.js";
 import type { SendCallsParameters, SendCallsResult, WriteError } from "../../write/types.js";
 import { getWalletCapabilities } from "./get-wallet-capabilities.js";
 
@@ -18,7 +19,9 @@ const sendCallsEffect = Effect.fn("ensforge.sendCalls")(function* (
   if (mode === "auto" && !capabilities.nativeCalls) {
     return yield* executeSequential(config, parameters);
   }
-  return yield* executeNativeBatch(config, parameters, capabilities);
+  return yield* executeNativeBatch(config, parameters, capabilities).pipe(
+    Effect.mapError((error) => redactSensitiveWriteError(parameters.calls, error)),
+  );
 });
 
 export const sendCalls = defineAction<SendCallsParameters, SendCallsResult, WriteError>(

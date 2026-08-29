@@ -6,6 +6,7 @@ import { WritePlanError } from "../../errors/write-plan-error.js";
 import type { PreparedWriteCall, PrepareCallsParameters, WriteError } from "../../write/types.js";
 import { executeRead } from "../read/execute-read.js";
 import { resolveWalletContext } from "../services/wallet-client.js";
+import { redactSensitiveWriteError } from "./redact-sensitive-error.js";
 
 export const prepareWriteIntents = Effect.fn("prepareWriteIntents")(function* (
   config: EnsforgeConfig,
@@ -44,6 +45,7 @@ export const prepareWriteIntents = Effect.fn("prepareWriteIntents")(function* (
           chainId: config.chainId,
           walletClient,
         }).pipe(
+          Effect.mapError((error) => redactSensitiveWriteError([intent], error)),
           Effect.map((details): PreparedWriteCall => {
             const call = {
               id,

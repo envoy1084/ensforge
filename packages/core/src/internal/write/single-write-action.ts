@@ -14,6 +14,7 @@ import { executeSequential } from "./execute-sequential.js";
 export const makeSingleWriteAction = <Parameters>(
   operation: string,
   preparer: EnsWriteIntentPreparer<Parameters, WriteError>,
+  options?: { readonly sensitive?: boolean },
 ): EnsWriteAction<Parameters, CallExecutionResult, WriteError> => {
   const implementation = Effect.fn(`ensforge.${operation}`)(function* (
     config: EnsforgeConfig,
@@ -23,6 +24,7 @@ export const makeSingleWriteAction = <Parameters>(
       operation,
       parameters,
       preparer,
+      options?.sensitive ?? false,
     );
     const result = yield* executeSequential(config, { calls: [intent] });
     const call = result.calls[0];
@@ -36,5 +38,5 @@ export const makeSingleWriteAction = <Parameters>(
     return call;
   });
 
-  return defineWriteAction(operation, implementation, preparer);
+  return defineWriteAction(operation, implementation, preparer, options);
 };

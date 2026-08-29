@@ -39,6 +39,8 @@ export {
   NameErrorCode,
   RpcError,
   RpcErrorCode,
+  RegistrationError,
+  RegistrationErrorCode,
   TransactionError,
   TransactionErrorCode,
   WalletError,

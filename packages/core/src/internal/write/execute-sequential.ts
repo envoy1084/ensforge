@@ -12,6 +12,7 @@ import type {
 import { provideConfig } from "../config/context.js";
 import { resolveWalletContext } from "../services/wallet-client.js";
 import { prepareWriteIntents } from "./prepare-write-intents.js";
+import { redactSensitiveWriteError } from "./redact-sensitive-error.js";
 import { simulatePreparedCalls } from "./simulate-prepared-calls.js";
 import { WriteClient } from "./write-client.js";
 
@@ -77,7 +78,7 @@ export const executeSequential = Effect.fn("executeSequential")(function* (
           hash,
           receipt,
         } satisfies CallExecutionResult;
-      }),
+      }).pipe(Effect.mapError((error) => redactSensitiveWriteError([intent], error))),
     );
 
     if (Result.isFailure(execution)) {

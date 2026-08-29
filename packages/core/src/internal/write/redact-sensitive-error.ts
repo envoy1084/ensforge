@@ -1,0 +1,14 @@
+import { isSensitiveWriteIntent, type EnsWriteIntent } from "../../action/write-intent.js";
+import { RegistrationError } from "../../errors/registration-error.js";
+import type { WriteError } from "../../write/types.js";
+
+export const redactSensitiveWriteError = (
+  calls: ReadonlyArray<EnsWriteIntent<unknown, WriteError>>,
+  error: WriteError,
+): WriteError =>
+  calls.some(isSensitiveWriteIntent) && !(error instanceof RegistrationError)
+    ? new RegistrationError({
+        code: "REGISTRATION_FAILED",
+        message: "A sensitive registration call failed",
+      })
+    : error;

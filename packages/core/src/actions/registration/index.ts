@@ -33,6 +33,17 @@ export {
   type MakeRegistrationCommitmentError,
   type MakeRegistrationCommitmentParameters,
 } from "./make-registration-commitment/index.js";
+export { approvePaymentToken, commitName, completeRegistration } from "./mutation.js";
+export {
+  registerName,
+  type RegisterNameParameters,
+  type RegisterNameResult,
+} from "./register-name/index.js";
+export {
+  registerNames,
+  type RegisterNamesParameters,
+  type RegisterNamesResult,
+} from "./register-names/index.js";
 export {
   CommitmentStatus,
   Erc20PaymentCurrency,
@@ -45,5 +56,13 @@ export {
   RegistrationPriceResult,
   RenewalPriceResult,
   RenewalRoute,
+  type AvailableRegistrationPrice,
+  type ApprovePaymentTokenParameters,
+  type CommitNameParameters,
+  type CompleteRegistrationParameters,
+  type RegisterNamesEntryParameters,
+  type RegistrationWriteError,
+  type RegistrationWriteIntent,
+  type RegistrationWriteResult,
   type RegistrationReadError,
 } from "./types.js";

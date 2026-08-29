@@ -1,6 +1,9 @@
 import { Schema } from "effect";
 
+import type { Account, Address, WalletClient } from "viem";
+
 import type { BlockParameters } from "../../action/block.js";
+import type { EnsWriteIntent } from "../../action/write-intent.js";
 import type { CodecError } from "../../errors/codec-error.js";
 import type { ContractError } from "../../errors/contract-error.js";
 import type { NameError } from "../../errors/name-error.js";
@@ -10,6 +13,15 @@ import type { Hex } from "../../schemas/hex.js";
 import { EthereumAddress } from "../../schemas/identity.js";
 import { NormalizedName } from "../../schemas/name.js";
 import { EnsProtocol } from "../../schemas/protocol.js";
+import type {
+  CallExecutionResult,
+  ConfirmationPolicy,
+  WriteError,
+  WriteMode,
+  WritePlanProgress,
+} from "../../write/types.js";
+import type { NameState } from "../name/get-name-state/types.js";
+import type { SetRecordInput } from "../records/set-records/types.js";
 
 export type RegistrationReadError = CodecError | ContractError | NameError | RpcError;
 
@@ -214,3 +226,77 @@ export const RegistrationPlan = Schema.Union([
   }),
 ]);
 export type RegistrationPlan = typeof RegistrationPlan.Type;
+
+export interface CommitNameParameters {
+  readonly commitment: Bytes32;
+}
+
+export interface ApprovePaymentTokenParameters {
+  readonly paymentToken: string;
+  readonly amount: bigint;
+}
+
+type RegistrationCommitmentWriteParameters = Omit<
+  RegistrationCommitmentParameters,
+  "blockNumber" | "blockTag"
+>;
+
+export type CompleteRegistrationParameters = RegistrationCommitmentWriteParameters & {
+  readonly paymentToken?: EthereumAddress;
+  readonly maxPrice?: bigint;
+};
+
+interface RegistrationWalletParameters {
+  readonly walletClient?: WalletClient;
+  readonly account?: Account | Address;
+  readonly mode?: WriteMode;
+  readonly confirmation?: ConfirmationPolicy;
+}
+
+export type RegisterNameParameters = Omit<RegistrationCommitmentWriteParameters, "records"> &
+  RegistrationWalletParameters & {
+    readonly paymentToken?: EthereumAddress;
+    readonly maxPrice?: bigint;
+    readonly records?: ReadonlyArray<SetRecordInput>;
+    readonly resume?: RegisterNameResult;
+  };
+
+export type AvailableRegistrationPrice = Extract<RegistrationPriceResult, { status: "available" }>;
+
+export interface RegisterNameResult {
+  readonly status: "waiting" | "partial" | "completed";
+  readonly name: NormalizedName;
+  readonly protocol: typeof EnsProtocol.Type;
+  readonly commitment: Bytes32;
+  readonly committedByWorkflow: boolean;
+  readonly paymentApprovalIncluded: boolean;
+  readonly readyAt: bigint | null;
+  readonly expiresAt: bigint | null;
+  readonly nextActionAt: bigint | null;
+  readonly price: AvailableRegistrationPrice;
+  readonly write: WritePlanProgress;
+  readonly finalState: NameState | null;
+}
+
+export type RegisterNamesEntryParameters = Omit<
+  RegisterNameParameters,
+  "resume" | "walletClient" | "account" | "mode" | "confirmation"
+>;
+
+export interface RegisterNamesParameters extends RegistrationWalletParameters {
+  readonly registrations: ReadonlyArray<RegisterNamesEntryParameters>;
+  readonly resume?: RegisterNamesResult;
+}
+
+export interface RegisterNamesResult {
+  readonly status: "waiting" | "partial" | "completed";
+  readonly registrations: ReadonlyArray<RegisterNameResult>;
+  readonly nextActionAt: bigint | null;
+}
+
+export type RegistrationWriteError = WriteError;
+export type RegistrationWriteResult = CallExecutionResult;
+export type RegistrationWriteIntent = EnsWriteIntent<
+  RegistrationWriteResult,
+  RegistrationWriteError
+>;
