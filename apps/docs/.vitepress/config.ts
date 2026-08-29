@@ -143,9 +143,9 @@ export default withTwoslashInlineCache(
         light: "/brand/wordmark-light.svg",
       },
       nav: [
-        { link: "/core/getting-started", text: "Core" },
-        { link: "/sdk/getting-started", text: "SDK" },
         { link: "/react/getting-started", text: "React" },
+        { link: "/sdk/getting-started", text: "SDK" },
+        { link: "/core/getting-started", text: "Core" },
         { link: "/contracts/getting-started", text: "Contracts" },
         {
           items: [
