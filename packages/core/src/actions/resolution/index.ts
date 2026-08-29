@@ -13,6 +13,12 @@ export {
   type GetAliasParameters,
 } from "./get-alias/index.js";
 export {
+  getOrCreateResolver,
+  type GetOrCreateResolverError,
+  type GetOrCreateResolverParameters,
+  type GetOrCreateResolverResult,
+} from "./get-or-create-resolver/index.js";
+export {
   getResolver,
   type GetResolverError,
   type GetResolverParameters,
@@ -24,6 +30,13 @@ export {
   type GetResolverVersionError,
   type GetResolverVersionParameters,
 } from "./get-resolver-version/index.js";
+export {
+  upgradeResolver,
+  type UpgradeResolverError,
+  type UpgradeResolverIntent,
+  type UpgradeResolverParameters,
+  type UpgradeResolverResult,
+} from "./upgrade-resolver/index.js";
 export {
   setResolver,
   type SetResolverError,
