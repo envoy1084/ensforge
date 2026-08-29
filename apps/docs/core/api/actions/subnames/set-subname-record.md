@@ -7,8 +7,6 @@ description: Sets subname record for subname management.
 
 Sets subname record for subname management.
 
-This action belongs to subname management. It selects the supported contract and protocol route from the current configuration and name state.
-
 ## Import
 
 ```ts
@@ -17,7 +15,9 @@ import { setSubnameRecord } from "@ensforge/core";
 
 ## Usage
 
-```ts
+::: code-group
+
+```ts [index.ts]
 import { setSubnameRecord } from "@ensforge/core";
 import { config } from "./config";
 
@@ -27,10 +27,14 @@ const result = await setSubnameRecord(config, {
 });
 ```
 
+<<< @/snippets/core/config.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type SetSubnameRecordParameters = Parameters<typeof setSubnameRecord>[1];
+import type { SetSubnameRecordParameters } from "@ensforge/core";
 ```
 
 ### records
@@ -85,25 +89,25 @@ Deterministic deployment salt.
 
 `WalletClient | undefined`
 
-Wallet client override for this operation.
+Viem wallet client override for this operation. Defaults to the wallet resolved from the config.
 
 ### account
 
 `Account | Address | undefined`
 
-Account used for authorization and wallet execution.
+Account used to authorize this operation. Defaults to the account exposed by the resolved wallet client.
 
 ### mode
 
 `WriteMode | undefined`
 
-Execution mode. `auto` uses wallet capabilities and falls back safely.
+Write execution strategy. `auto` uses wallet capabilities and falls back to sequential transactions.
 
 ### confirmation
 
 `ConfirmationPolicy | undefined`
 
-Transaction confirmation policy for this operation.
+Controls whether the action returns after submission or waits for one or more confirmations.
 
 ### resume
 
@@ -115,31 +119,51 @@ Previously returned progress used to continue an incomplete workflow.
 
 `string`
 
-ENS name used by the operation. It is normalized before contract interaction.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ## Return Type
 
 ```ts
-type SetSubnameRecordResult = Awaited<ReturnType<typeof setSubnameRecord>>;
+import type { SetSubnameRecordResult } from "@ensforge/core";
 ```
 
-`SetSubnameRecordResult`
+| Property        | Type                                                                                                                                                                                                                                                                                                            | Description                                                      |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| `name`          | `string`                                                                                                                                                                                                                                                                                                        | Normalized ENS name.                                             |
+| `protocol`      | `"v1" \| "v2"`                                                                                                                                                                                                                                                                                                  | ENS protocol route used for the result.                          |
+| `created`       | `boolean`                                                                                                                                                                                                                                                                                                       | The created value returned by the operation.                     |
+| `registry`      | `&#96;0x${string}&#96;`                                                                                                                                                                                                                                                                                         | The registry value returned by the operation.                    |
+| `resolver`      | `&#96;0x${string}&#96; \| null`                                                                                                                                                                                                                                                                                 | The resolver value returned by the operation.                    |
+| `resolverWrite` | `SetResolverAndRecordsProgress \| null`                                                                                                                                                                                                                                                                         | The resolverWrite value returned by the operation.               |
+| `create`        | `CreateSubnameResult \| null`                                                                                                                                                                                                                                                                                   | The create value returned by the operation.                      |
+| `mutations`     | `readonly CallExecutionResult[]`                                                                                                                                                                                                                                                                                | The mutations value returned by the operation.                   |
+| `finalState`    | `{ readonly kind: "available"; readonly protocol: "v1" \| "v2"; readonly wrapped: false; readonly migrated: false; readonly name: string & Brand<"NormalizedName">; readonly status: "available" \| ... 3 more ... \| "expired"; ... 10 more ...; readonly renewable: boolean; } \| ... 4 more ... \| { ...; }` | Name state observed after the workflow finishes, when available. |
 
 ## Effect
 
-```ts
-const effect = setSubnameRecord.effect(config, parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+
+const program = setSubnameRecord.effect(config, parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Error
 
 ```ts
-import type { Effect } from "effect";
-
-type SetSubnameRecordError = Effect.Effect.Error<ReturnType<typeof setSubnameRecord.effect>>;
+import type { SetSubnameRecordError } from "@ensforge/core";
 ```
 
-See [Error Handling](/core/guides/error-handling) for tagged errors and stable error codes.
+The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
+
+See [Error Handling](/core/guides/error-handling).
+
+## Related
+
+- [`ens.subnames.setSubnameRecord`](/sdk/api/subnames/set-subname-record)

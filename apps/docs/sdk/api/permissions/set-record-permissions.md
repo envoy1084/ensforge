@@ -15,10 +15,12 @@ import { Ensforge } from "@ensforge/sdk";
 
 ## Usage
 
-```ts
-import { sdk } from "./sdk";
+::: code-group
 
-const result = await sdk.permissions.setRecordPermissions({
+```ts [index.ts]
+import { ens } from "./client";
+
+const result = await ens.permissions.setRecordPermissions({
   name: "example.eth",
   account: "value",
   records: [],
@@ -26,23 +28,27 @@ const result = await sdk.permissions.setRecordPermissions({
 });
 ```
 
+<<< @/snippets/sdk/client.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type SetRecordPermissionsParameters = Parameters<typeof sdk.permissions.setRecordPermissions>[0];
+import type { SetRecordPermissionsParameters } from "@ensforge/sdk";
 ```
 
 ### name
 
 `string`
 
-ENS name used by the method. It is normalized before contract interaction.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### account
 
 `string`
 
-Account used for authorization and execution.
+Account used to authorize this operation. Defaults to the account exposed by the resolved wallet client.
 
 ### records
 
@@ -66,7 +72,7 @@ Value used for `allowScopeWidening` by this method.
 
 `WalletClient | undefined`
 
-Wallet client override.
+Viem wallet client override for this operation. Defaults to the wallet resolved from the config.
 
 ### walletAccount
 
@@ -78,7 +84,7 @@ Value used for `walletAccount` by this method.
 
 `WriteMode | undefined`
 
-Execution mode. `auto` selects wallet batching when available.
+Write execution strategy. `auto` uses wallet capabilities and falls back to sequential transactions.
 
 ### atomicity
 
@@ -90,7 +96,7 @@ Value used for `atomicity` by this method.
 
 `ConfirmationPolicy | undefined`
 
-Confirmation policy for the write.
+Controls whether the action returns after submission or waits for one or more confirmations.
 
 ### capabilities
 
@@ -101,19 +107,46 @@ Value used for `capabilities` by this method.
 ## Return Type
 
 ```ts
-type SetRecordPermissionsResult = Awaited<ReturnType<typeof sdk.permissions.setRecordPermissions>>;
+import type { SetRecordPermissionsResult } from "@ensforge/sdk";
 ```
 
-The result is identical to the corresponding Core action with configuration already bound.
+| Property      | Type                                                          | Description                                      |
+| ------------- | ------------------------------------------------------------- | ------------------------------------------------ |
+| `model`       | `"public-resolver-delegate" \| "permissioned-resolver-roles"` | The model value returned by the operation.       |
+| `protocol`    | `"v1" \| "v2" \| "v2"`                                        | ENS protocol route used for the result.          |
+| `resolver`    | `&#96;0x${string}&#96;`                                       | The resolver value returned by the operation.    |
+| `account`     | `&#96;0x${string}&#96;`                                       | The account value returned by the operation.     |
+| `approved`    | `boolean`                                                     | The approved value returned by the operation.    |
+| `scope`       | `"node" \| "exact"`                                           | The scope value returned by the operation.       |
+| `widened`     | `true \| false`                                               | The widened value returned by the operation.     |
+| `execution`   | `SendCallsResult`                                             | The execution value returned by the operation.   |
+| `permissions` | `readonly AppliedRecordPermission[] \| undefined`             | The permissions value returned by the operation. |
 
 ## Effect
 
-```ts
-const effect = sdk.permissions.setRecordPermissions.effect(parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+import { ens } from "./client";
+
+const program = ens.permissions.setRecordPermissions.effect(parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
+
+## Error
+
+```ts
+import type { SetRecordPermissionsError } from "@ensforge/sdk";
+```
+
+The method rejects with the corresponding Core action errors. Use `.effect` to keep those failures in the typed Effect error channel.
+
+See [Error Handling](/sdk/guides/error-handling).
 
 ## Action
 

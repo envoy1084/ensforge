@@ -5,7 +5,7 @@ description: Get the canonical ENSv2 resource identifier for a name.
 
 # getCanonicalResource
 
-Gets the canonical ENSv2 resource identifier assigned to a name.
+Get the canonical ENSv2 resource identifier for a name.
 
 ## Import
 
@@ -15,7 +15,9 @@ import { getCanonicalResource } from "@ensforge/core";
 
 ## Usage
 
-```ts
+::: code-group
+
+```ts [index.ts]
 import { getCanonicalResource } from "@ensforge/core";
 import { config } from "./config";
 
@@ -24,20 +26,21 @@ const resource = await getCanonicalResource(config, {
 });
 ```
 
-Canonical resources identify records inside ENSv2 registries. ENSv1 names and available names
-without an assigned V2 resource return `null`.
+<<< @/snippets/core/config.ts
+
+:::
 
 ## Parameters
 
 ```ts
-import type { GetCanonicalResourceParameters } from "@ensforge/core";
+import type { GetNameStateParameters } from "@ensforge/core";
 ```
 
 ### name
 
 `string`
 
-ENS name whose canonical resource should be returned.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### blockNumber
 
@@ -49,28 +52,39 @@ Block number to read from. Cannot be combined with `blockTag`.
 
 `"latest" | "earliest" | "pending" | "safe" | "finalized" | undefined`
 
-Block tag to read from. Cannot be combined with `blockNumber`.
+Named block state to read from. Cannot be combined with `blockNumber`.
 
 ## Return Type
 
 ```ts
-import type { GetCanonicalResourceResult } from "@ensforge/core";
+type GetCanonicalResourceResult = Awaited<ReturnType<typeof getCanonicalResource>>;
 ```
 
-`bigint | null`
-
-Returns `null` when the active route does not expose a canonical ENSv2 resource.
+| Property  | Type                        | Description                          |
+| --------- | --------------------------- | ------------------------------------ |
+| `valueOf` | `() => bigint \| undefined` | function valueOf() { [native code] } |
 
 ## Effect
 
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
+
 ```ts
-const effect = getCanonicalResource.effect(config, { name: "example.eth" });
+import { Effect } from "effect";
+
+const program = getCanonicalResource.effect(config, parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Request
 
+Use `.request` to describe the read without executing it, then include it in a typed [read batch](/core/guides/batching).
+
 ```ts
-const request = getCanonicalResource.request({ name: "example.eth" });
+const request = getCanonicalResource.request(parameters);
 ```
 
 ## Error
@@ -79,4 +93,10 @@ const request = getCanonicalResource.request({ name: "example.eth" });
 import type { GetCanonicalResourceError } from "@ensforge/core";
 ```
 
-Can fail with `NameError`, `RpcError`, `ContractError`, or `CodecError`.
+The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
+
+See [Error Handling](/core/guides/error-handling).
+
+## Related
+
+- [`ens.name.getCanonicalResource`](/sdk/api/name/get-canonical-resource)

@@ -7,8 +7,6 @@ description: Creates resolver for resolver discovery and Universal Resolver call
 
 Creates resolver for resolver discovery and Universal Resolver calls.
 
-This action belongs to resolver discovery and Universal Resolver calls. It selects the supported contract and protocol route from the current configuration and name state.
-
 ## Import
 
 ```ts
@@ -17,7 +15,9 @@ import { createResolver } from "@ensforge/core";
 
 ## Usage
 
-```ts
+::: code-group
+
+```ts [index.ts]
 import { createResolver } from "@ensforge/core";
 import { config } from "./config";
 
@@ -26,10 +26,14 @@ const result = await createResolver(config, {
 });
 ```
 
+<<< @/snippets/core/config.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type CreateResolverParameters = Parameters<typeof createResolver>[1];
+import type { CreateResolverParameters } from "@ensforge/core";
 ```
 
 ### salt
@@ -60,51 +64,67 @@ Encoded initial resolver setter calls.
 
 `WalletClient | undefined`
 
-Wallet client override for this operation.
+Viem wallet client override for this operation. Defaults to the wallet resolved from the config.
 
 ### account
 
 `Account | Address | undefined`
 
-Account used for authorization and wallet execution.
+Account used to authorize this operation. Defaults to the account exposed by the resolved wallet client.
 
 ### confirmation
 
 `ConfirmationPolicy | undefined`
 
-Transaction confirmation policy for this operation.
+Controls whether the action returns after submission or waits for one or more confirmations.
 
 ## Return Type
 
 ```ts
-type CreateResolverResult = Awaited<ReturnType<typeof createResolver>>;
+import type { CreateResolverResult } from "@ensforge/core";
 ```
 
-`CreateResolverResult`
+| Property         | Type                    | Description                                            |
+| ---------------- | ----------------------- | ------------------------------------------------------ |
+| `status`         | `"deployed"`            | Current query, transaction, batch, or workflow status. |
+| `resolver`       | `&#96;0x${string}&#96;` | The resolver value returned by the operation.          |
+| `implementation` | `&#96;0x${string}&#96;` | The implementation value returned by the operation.    |
+| `factory`        | `&#96;0x${string}&#96;` | The factory value returned by the operation.           |
+| `call`           | `CallExecutionResult`   | The call value returned by the operation.              |
 
 ## Effect
 
-```ts
-const effect = createResolver.effect(config, parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+
+const program = createResolver.effect(config, parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Call
 
-Use `.call` to prepare a write intent without submitting it.
+Use `.call` to prepare this write for simulation, wallet batching, or a custom execution policy.
 
 ```ts
-const intent = createResolver.call(parameters);
+const call = createResolver.call(parameters);
 ```
 
 ## Error
 
 ```ts
-import type { Effect } from "effect";
-
-type CreateResolverError = Effect.Effect.Error<ReturnType<typeof createResolver.effect>>;
+import type { CreateResolverError } from "@ensforge/core";
 ```
 
-See [Error Handling](/core/guides/error-handling) for tagged errors and stable error codes.
+The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
+
+See [Error Handling](/core/guides/error-handling).
+
+## Related
+
+- [`ens.resolution.createResolver`](/sdk/api/resolution/create-resolver)

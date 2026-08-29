@@ -7,8 +7,6 @@ description: Gets registry capabilities for ENS permissions and contract capabil
 
 Gets registry capabilities for ENS permissions and contract capabilities.
 
-This action belongs to ENS permissions and contract capabilities. It selects the supported contract and protocol route from the current configuration and name state.
-
 ## Import
 
 ```ts
@@ -17,7 +15,9 @@ import { getRegistryCapabilities } from "@ensforge/core";
 
 ## Usage
 
-```ts
+::: code-group
+
+```ts [index.ts]
 import { getRegistryCapabilities } from "@ensforge/core";
 import { config } from "./config";
 
@@ -26,17 +26,21 @@ const result = await getRegistryCapabilities(config, {
 });
 ```
 
+<<< @/snippets/core/config.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type GetRegistryCapabilitiesParameters = Parameters<typeof getRegistryCapabilities>[1];
+import type { NameCapabilityParameters } from "@ensforge/core";
 ```
 
 ### name
 
 `string`
 
-ENS name used by the operation. It is normalized before contract interaction.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### blockNumber
 
@@ -48,7 +52,7 @@ Block number to read from. Cannot be combined with `blockTag`.
 
 `"latest" | "earliest" | "pending" | "safe" | "finalized" | undefined`
 
-Block tag to read from. Cannot be combined with `blockNumber`.
+Named block state to read from. Cannot be combined with `blockNumber`.
 
 ## Return Type
 
@@ -56,20 +60,40 @@ Block tag to read from. Cannot be combined with `blockNumber`.
 type GetRegistryCapabilitiesResult = Awaited<ReturnType<typeof getRegistryCapabilities>>;
 ```
 
-The return type is inferred from the action and preserves its discriminated protocol and workflow states.
+| Property        | Type                                                                            | Description                                            |
+| --------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| `address`       | `&#96;0x${string}&#96;`                                                         | Decoded address, or `null` when the record is not set. |
+| `protocol`      | `"v1" \| "v2"`                                                                  | ENS protocol route used for the result.                |
+| `kind`          | `"registry" \| "name-wrapper" \| "permissioned-registry" \| "wrapper-registry"` | The kind value returned by the operation.              |
+| `owned`         | `boolean`                                                                       | The owned value returned by the operation.             |
+| `permissioned`  | `boolean`                                                                       | The permissioned value returned by the operation.      |
+| `temporal`      | `boolean`                                                                       | The temporal value returned by the operation.          |
+| `tokenized`     | `boolean`                                                                       | The tokenized value returned by the operation.         |
+| `wrapped`       | `boolean`                                                                       | Whether the name is held by the ENS Name Wrapper.      |
+| `setOwner`      | `boolean`                                                                       | The setOwner value returned by the operation.          |
+| `setResolver`   | `boolean`                                                                       | The setResolver value returned by the operation.       |
+| `createSubname` | `boolean`                                                                       | The createSubname value returned by the operation.     |
+| `transfer`      | `boolean`                                                                       | The transfer value returned by the operation.          |
+| `setExpiry`     | `boolean`                                                                       | The setExpiry value returned by the operation.         |
 
 ## Effect
 
-```ts
-const effect = getRegistryCapabilities.effect(config, parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+
+const program = getRegistryCapabilities.effect(config, parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Request
 
-Use `.request` to include the read in [`readBatch`](/core/guides/batching).
+Use `.request` to describe the read without executing it, then include it in a typed [read batch](/core/guides/batching).
 
 ```ts
 const request = getRegistryCapabilities.request(parameters);
@@ -78,11 +102,13 @@ const request = getRegistryCapabilities.request(parameters);
 ## Error
 
 ```ts
-import type { Effect } from "effect";
-
-type GetRegistryCapabilitiesError = Effect.Effect.Error<
-  ReturnType<typeof getRegistryCapabilities.effect>
->;
+import type { GetRegistryCapabilitiesError } from "@ensforge/core";
 ```
 
-See [Error Handling](/core/guides/error-handling) for tagged errors and stable error codes.
+The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
+
+See [Error Handling](/core/guides/error-handling).
+
+## Related
+
+- [`ens.capabilities.getRegistryCapabilities`](/sdk/api/capabilities/get-registry-capabilities)

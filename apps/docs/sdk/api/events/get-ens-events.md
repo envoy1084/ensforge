@@ -15,18 +15,24 @@ import { Ensforge } from "@ensforge/sdk";
 
 ## Usage
 
-```ts
-import { sdk } from "./sdk";
+::: code-group
 
-const result = await sdk.events.getEnsEvents({
+```ts [index.ts]
+import { ens } from "./client";
+
+const result = await ens.events.getEnsEvents({
   fromBlock: 22_000_000n,
 });
 ```
 
+<<< @/snippets/sdk/client.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type GetEnsEventsParameters = Parameters<typeof sdk.events.getEnsEvents>[0];
+import type { GetEnsEventsParameters } from "@ensforge/sdk";
 ```
 
 ### fromBlock
@@ -51,13 +57,13 @@ Value used for `kinds` by this method.
 
 `string | undefined`
 
-ENS name used by the method. It is normalized before contract interaction.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### account
 
 `EthereumAddress | undefined`
 
-Account used for authorization and execution.
+Account used to authorize this operation. Defaults to the account exposed by the resolved wallet client.
 
 ### commitment
 
@@ -68,19 +74,36 @@ Registration commitment.
 ## Return Type
 
 ```ts
-type GetEnsEventsResult = Awaited<ReturnType<typeof sdk.events.getEnsEvents>>;
+type GetEnsEventsResult = Awaited<ReturnType<typeof getEnsEvents>>;
 ```
 
-The result is identical to the corresponding Core action with configuration already bound.
+Returns `readonly { readonly blockNumber: bigint | null; readonly transactionHash: &#96;0x${string}&#96; | null; readonly protocol: "v1" | "v2"; readonly kind: "records" | "ownership" | "resolver" | "commitment" | ... 5 more ... | "other"; ... 15 more ...; readonly commitment?: &#96;0x${string}&#96; | undefined; }[]`.
 
 ## Effect
 
-```ts
-const effect = sdk.events.getEnsEvents.effect(parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+import { ens } from "./client";
+
+const program = ens.events.getEnsEvents.effect(parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
+
+## Error
+
+```ts
+import type { GetEnsEventsError } from "@ensforge/sdk";
+```
+
+The method rejects with the corresponding Core action errors. Use `.effect` to keep those failures in the typed Effect error channel.
+
+See [Error Handling](/sdk/guides/error-handling).
 
 ## Action
 

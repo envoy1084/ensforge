@@ -15,26 +15,32 @@ import { Ensforge } from "@ensforge/sdk";
 
 ## Usage
 
-```ts
-import { sdk } from "./sdk";
+::: code-group
 
-const result = await sdk.registration.renewName({
+```ts [index.ts]
+import { ens } from "./client";
+
+const result = await ens.registration.renewName({
   name: "example.eth",
   duration: 365n * 24n * 60n * 60n,
 });
 ```
 
+<<< @/snippets/sdk/client.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type RenewNameParameters = Parameters<typeof sdk.registration.renewName>[0];
+import type { RenewNameParameters } from "@ensforge/sdk";
 ```
 
 ### name
 
 `string`
 
-ENS name used by the method. It is normalized before contract interaction.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### duration
 
@@ -64,25 +70,25 @@ Value used for `referrer` by this method.
 
 `WalletClient | undefined`
 
-Wallet client override.
+Viem wallet client override for this operation. Defaults to the wallet resolved from the config.
 
 ### account
 
 `Account | Address | undefined`
 
-Account used for authorization and execution.
+Account used to authorize this operation. Defaults to the account exposed by the resolved wallet client.
 
 ### mode
 
 `WriteMode | undefined`
 
-Execution mode. `auto` selects wallet batching when available.
+Write execution strategy. `auto` uses wallet capabilities and falls back to sequential transactions.
 
 ### confirmation
 
 `ConfirmationPolicy | undefined`
 
-Confirmation policy for the write.
+Controls whether the action returns after submission or waits for one or more confirmations.
 
 ### resume
 
@@ -93,27 +99,53 @@ Previously returned progress used to continue the workflow.
 ## Return Type
 
 ```ts
-type RenewNameResult = Awaited<ReturnType<typeof sdk.registration.renewName>>;
+import type { RenewNameResult } from "@ensforge/sdk";
 ```
 
-The result is identical to the corresponding Core action with configuration already bound.
+| Property         | Type                                                                                                                                                                                                                                                                                                        | Description                                                      |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| `status`         | `"completed" \| "partial"`                                                                                                                                                                                                                                                                                  | Current query, transaction, batch, or workflow status.           |
+| `name`           | `string & Brand<"NormalizedName">`                                                                                                                                                                                                                                                                          | Normalized ENS name.                                             |
+| `protocol`       | `"v1" \| "v2"`                                                                                                                                                                                                                                                                                              | ENS protocol route used for the result.                          |
+| `route`          | `"v1-controller" \| "v2-registrar" \| "v1-renewer"`                                                                                                                                                                                                                                                         | The route value returned by the operation.                       |
+| `duration`       | `bigint`                                                                                                                                                                                                                                                                                                    | The duration value returned by the operation.                    |
+| `previousExpiry` | `bigint \| null`                                                                                                                                                                                                                                                                                            | The previousExpiry value returned by the operation.              |
+| `newExpiry`      | `bigint \| null`                                                                                                                                                                                                                                                                                            | The newExpiry value returned by the operation.                   |
+| `price`          | `bigint`                                                                                                                                                                                                                                                                                                    | The price value returned by the operation.                       |
+| `currency`       | `{ readonly kind: "native"; readonly symbol: "ETH"; readonly decimals: 18; } \| { readonly kind: "erc20"; readonly address: &#96;0x${string}&#96;; readonly symbol: string; readonly decimals: number; }`                                                                                                   | The currency value returned by the operation.                    |
+| `approval`       | `RenewalApproval`                                                                                                                                                                                                                                                                                           | The approval value returned by the operation.                    |
+| `write`          | `WritePlanProgress`                                                                                                                                                                                                                                                                                         | Progress for the write plan used by the workflow.                |
+| `finalState`     | `{ readonly kind: "available"; readonly protocol: "v1" \| "v2"; readonly wrapped: false; readonly migrated: false; readonly name: string & Brand<"NormalizedName">; readonly status: "available" \| ... 3 more ... \| "expired"; ... 10 more ...; readonly renewable: boolean; } \| ... 5 more ... \| null` | Name state observed after the workflow finishes, when available. |
 
 ## Effect
 
-```ts
-const effect = sdk.registration.renewName.effect(parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+import { ens } from "./client";
+
+const program = ens.registration.renewName.effect(parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Call
 
-The bound method retains `.call` for deferred write composition.
+Use `.call` to prepare this write for simulation, wallet batching, or a custom execution policy.
 
 ```ts
-const intent = sdk.registration.renewName.call(parameters);
+const call = ens.registration.renewName.call(parameters);
 ```
+
+## Error
+
+The method rejects with the corresponding Core action errors. Use `.effect` to keep those failures in the typed Effect error channel.
+
+See [Error Handling](/sdk/guides/error-handling).
 
 ## Action
 

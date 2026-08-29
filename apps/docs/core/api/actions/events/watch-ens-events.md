@@ -7,8 +7,6 @@ description: Watches supported contracts and emits normalized ENS events.
 
 Watches supported contracts and emits normalized ENS events.
 
-This action belongs to normalized ENS contract events. It selects the supported contract and protocol route from the current configuration and name state.
-
 ## Import
 
 ```ts
@@ -17,7 +15,9 @@ import { watchEnsEvents } from "@ensforge/core";
 
 ## Usage
 
-```ts
+::: code-group
+
+```ts [index.ts]
 import { watchEnsEvents } from "@ensforge/core";
 import { config } from "./config";
 
@@ -29,23 +29,27 @@ const unwatch = await watchEnsEvents(
 );
 ```
 
+<<< @/snippets/core/config.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type WatchEnsEventsParameters = Parameters<typeof watchEnsEvents>[1];
+import type { WatchEnsEventsParameters } from "@ensforge/core";
 ```
 
 ### account
 
 `EthereumAddress | undefined`
 
-Account used for authorization and wallet execution.
+Account used to authorize this operation. Defaults to the account exposed by the resolved wallet client.
 
 ### name
 
 `string | undefined`
 
-ENS name used by the operation. It is normalized before contract interaction.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### commitment
 
@@ -77,22 +81,26 @@ Polling interval in milliseconds.
 type WatchEnsEventsResult = Awaited<ReturnType<typeof watchEnsEvents>>;
 ```
 
-`() => void`
+Returns `() => void`.
 
 ## Stream
 
-Use `.stream` to consume the watcher as an Effect stream.
+Use `.stream` to consume events as an Effect stream with typed failures and interruption.
 
 ```ts
-const stream = watchEnsEvents.stream(config, parameters);
+const stream = watchEnsEvents.stream(parameters);
 ```
 
 ## Error
 
 ```ts
-import type { Stream } from "effect";
-
-type WatchEnsEventsError = Stream.Stream.Error<ReturnType<typeof watchEnsEvents.stream>>;
+import type { WatchEnsEventsError } from "@ensforge/core";
 ```
 
-See [Error Handling](/core/guides/error-handling) for tagged errors and stable error codes.
+The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
+
+See [Error Handling](/core/guides/error-handling).
+
+## Related
+
+- [`ens.events.watchEnsEvents`](/sdk/api/events/watch-ens-events)

@@ -15,25 +15,31 @@ import { Ensforge } from "@ensforge/sdk";
 
 ## Usage
 
-```ts
-import { sdk } from "./sdk";
+::: code-group
 
-const result = await sdk.dns.getDnsClaimStatus({
+```ts [index.ts]
+import { ens } from "./client";
+
+const result = await ens.dns.getDnsClaimStatus({
   name: "example.eth",
 });
 ```
 
+<<< @/snippets/sdk/client.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type GetDnsClaimStatusParameters = Parameters<typeof sdk.dns.getDnsClaimStatus>[0];
+import type { GetDnsClaimStatusParameters } from "@ensforge/sdk";
 ```
 
 ### name
 
 `string`
 
-ENS name used by the method. It is normalized before contract interaction.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### blockNumber
 
@@ -45,32 +51,56 @@ Block number to read from. Cannot be combined with `blockTag`.
 
 `"latest" | "earliest" | "pending" | "safe" | "finalized" | undefined`
 
-Block tag to read from. Cannot be combined with `blockNumber`.
+Named block state to read from. Cannot be combined with `blockNumber`.
 
 ## Return Type
 
 ```ts
-type GetDnsClaimStatusResult = Awaited<ReturnType<typeof sdk.dns.getDnsClaimStatus>>;
+type GetDnsClaimStatusResult = Awaited<ReturnType<typeof getDnsClaimStatus>>;
 ```
 
-The result is identical to the corresponding Core action with configuration already bound.
+| Property            | Type                                             | Description                                                  |
+| ------------------- | ------------------------------------------------ | ------------------------------------------------------------ |
+| `status`            | `"unsupported" \| "claimed" \| "proof-required"` | Current query, transaction, batch, or workflow status.       |
+| `name`              | `string & Brand<"NormalizedName">`               | Normalized ENS name.                                         |
+| `reason`            | `"DNS_REGISTRAR_UNAVAILABLE" \| undefined`       | The reason value returned by the operation.                  |
+| `owner`             | `&#96;0x${string}&#96; \| undefined`             | Current owner address, or `null` when the name has no owner. |
+| `resolver`          | `&#96;0x${string}&#96; \| null \| undefined`     | The resolver value returned by the operation.                |
+| `previousInception` | `bigint \| undefined`                            | The previousInception value returned by the operation.       |
 
 ## Effect
 
-```ts
-const effect = sdk.dns.getDnsClaimStatus.effect(parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+import { ens } from "./client";
+
+const program = ens.dns.getDnsClaimStatus.effect(parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Request
 
-The bound method retains `.request` for typed read batching.
+Use `.request` to describe the read without executing it, then include it in a typed [read batch](/core/guides/batching).
 
 ```ts
-const request = sdk.dns.getDnsClaimStatus.request(parameters);
+const request = ens.dns.getDnsClaimStatus.request(parameters);
 ```
+
+## Error
+
+```ts
+import type { GetDnsClaimStatusError } from "@ensforge/sdk";
+```
+
+The method rejects with the corresponding Core action errors. Use `.effect` to keep those failures in the typed Effect error channel.
+
+See [Error Handling](/sdk/guides/error-handling).
 
 ## Action
 

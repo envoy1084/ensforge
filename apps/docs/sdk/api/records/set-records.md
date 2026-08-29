@@ -15,26 +15,32 @@ import { Ensforge } from "@ensforge/sdk";
 
 ## Usage
 
-```ts
-import { sdk } from "./sdk";
+::: code-group
 
-const result = await sdk.records.setRecords({
+```ts [index.ts]
+import { ens } from "./client";
+
+const result = await ens.records.setRecords({
   name: "example.eth",
   records: [],
 });
 ```
 
+<<< @/snippets/sdk/client.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type SetRecordsParameters = Parameters<typeof sdk.records.setRecords>[0];
+import type { SetRecordsParameters } from "@ensforge/sdk";
 ```
 
 ### name
 
 `string`
 
-ENS name used by the method. It is normalized before contract interaction.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### records
 
@@ -52,7 +58,7 @@ Value used for `aggregation` by this method.
 
 `WriteMode | undefined`
 
-Execution mode. `auto` selects wallet batching when available.
+Write execution strategy. `auto` uses wallet capabilities and falls back to sequential transactions.
 
 ### atomicity
 
@@ -64,7 +70,7 @@ Value used for `atomicity` by this method.
 
 `ConfirmationPolicy | undefined`
 
-Confirmation policy for the write.
+Controls whether the action returns after submission or waits for one or more confirmations.
 
 ### capabilities
 
@@ -76,38 +82,65 @@ Value used for `capabilities` by this method.
 
 `WalletClient | undefined`
 
-Wallet client override.
+Viem wallet client override for this operation. Defaults to the wallet resolved from the config.
 
 ### account
 
 `Account | Address | undefined`
 
-Account used for authorization and execution.
+Account used to authorize this operation. Defaults to the account exposed by the resolved wallet client.
 
 ## Return Type
 
 ```ts
-type SetRecordsResult = Awaited<ReturnType<typeof sdk.records.setRecords>>;
+import type { SetRecordsResult } from "@ensforge/sdk";
 ```
 
-The result is identical to the corresponding Core action with configuration already bound.
+| Property       | Type                                                     | Description                                                 |
+| -------------- | -------------------------------------------------------- | ----------------------------------------------------------- |
+| `mode`         | `"batch" \| "sequential" \| "resolver"`                  | The mode value returned by the operation.                   |
+| `atomic`       | `boolean \| false \| true`                               | Whether the wallet guarantees the calls execute atomically. |
+| `status`       | `"submitted" \| "confirmed" \| "completed" \| "partial"` | Current query, transaction, batch, or workflow status.      |
+| `id`           | `string \| undefined`                                    | Stable operation or wallet batch identifier.                |
+| `calls`        | `readonly CallExecutionResult[] \| undefined`            | Per-call preparation, simulation, or execution results.     |
+| `receipts`     | `readonly WriteReceipt[] \| undefined`                   | Confirmed transaction receipts.                             |
+| `capabilities` | `WalletCapabilitiesResult \| undefined`                  | The capabilities value returned by the operation.           |
+| `failure`      | `WriteError \| null \| undefined`                        | The failure value returned by the operation.                |
+| `call`         | `CallExecutionResult \| undefined`                       | The call value returned by the operation.                   |
 
 ## Effect
 
-```ts
-const effect = sdk.records.setRecords.effect(parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+import { ens } from "./client";
+
+const program = ens.records.setRecords.effect(parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Call
 
-The bound method retains `.call` for deferred write composition.
+Use `.call` to prepare this write for simulation, wallet batching, or a custom execution policy.
 
 ```ts
-const intent = sdk.records.setRecords.call(parameters);
+const call = ens.records.setRecords.call(parameters);
 ```
+
+## Error
+
+```ts
+import type { SetRecordsError } from "@ensforge/sdk";
+```
+
+The method rejects with the corresponding Core action errors. Use `.effect` to keep those failures in the typed Effect error channel.
+
+See [Error Handling](/sdk/guides/error-handling).
 
 ## Action
 

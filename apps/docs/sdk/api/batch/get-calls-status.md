@@ -15,18 +15,24 @@ import { Ensforge } from "@ensforge/sdk";
 
 ## Usage
 
-```ts
-import { sdk } from "./sdk";
+::: code-group
 
-const result = await sdk.batch.getCallsStatus({
+```ts [index.ts]
+import { ens } from "./client";
+
+const result = await ens.batch.getCallsStatus({
   id: "0x1234",
 });
 ```
 
+<<< @/snippets/sdk/client.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type GetCallsStatusParameters = Parameters<typeof sdk.batch.getCallsStatus>[0];
+import type { GetCallsStatusParameters } from "@ensforge/sdk";
 ```
 
 ### id
@@ -39,30 +45,50 @@ Submitted wallet batch identifier.
 
 `WalletClient | undefined`
 
-Wallet client override.
+Viem wallet client override for this operation. Defaults to the wallet resolved from the config.
 
 ### account
 
 `Account | Address | undefined`
 
-Account used for authorization and execution.
+Account used to authorize this operation. Defaults to the account exposed by the resolved wallet client.
 
 ## Return Type
 
 ```ts
-type GetCallsStatusResult = Awaited<ReturnType<typeof sdk.batch.getCallsStatus>>;
+import type { CallsStatusResult } from "@ensforge/sdk";
 ```
 
-The result is identical to the corresponding Core action with configuration already bound.
+| Property     | Type                                               | Description                                                 |
+| ------------ | -------------------------------------------------- | ----------------------------------------------------------- |
+| `id`         | `string`                                           | Stable operation or wallet batch identifier.                |
+| `chainId`    | `number`                                           | The chainId value returned by the operation.                |
+| `status`     | `"pending" \| "success" \| "failure" \| "unknown"` | Current query, transaction, batch, or workflow status.      |
+| `statusCode` | `number`                                           | The statusCode value returned by the operation.             |
+| `atomic`     | `boolean`                                          | Whether the wallet guarantees the calls execute atomically. |
+| `receipts`   | `readonly WriteReceipt[]`                          | Confirmed transaction receipts.                             |
 
 ## Effect
 
-```ts
-const effect = sdk.batch.getCallsStatus.effect(parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+import { ens } from "./client";
+
+const program = ens.batch.getCallsStatus.effect(parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
+
+## Error
+
+The method rejects with the corresponding Core action errors. Use `.effect` to keep those failures in the typed Effect error channel.
+
+See [Error Handling](/sdk/guides/error-handling).
 
 ## Action
 

@@ -15,27 +15,33 @@ import { Ensforge } from "@ensforge/sdk";
 
 ## Usage
 
-```ts
-import { sdk } from "./sdk";
+::: code-group
 
-const result = await sdk.capabilities.getRecordPermissions({
+```ts [index.ts]
+import { ens } from "./client";
+
+const result = await ens.capabilities.getRecordPermissions({
   name: "example.eth",
   account: {},
   records: [],
 });
 ```
 
+<<< @/snippets/sdk/client.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type GetRecordPermissionsParameters = Parameters<typeof sdk.capabilities.getRecordPermissions>[0];
+import type { GetRecordPermissionsParameters } from "@ensforge/sdk";
 ```
 
 ### name
 
 `string`
 
-ENS name used by the method. It is normalized before contract interaction.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### blockNumber
 
@@ -47,13 +53,13 @@ Block number to read from. Cannot be combined with `blockTag`.
 
 `"latest" | "earliest" | "pending" | "safe" | "finalized" | undefined`
 
-Block tag to read from. Cannot be combined with `blockNumber`.
+Named block state to read from. Cannot be combined with `blockNumber`.
 
 ### account
 
 `EthereumAddress`
 
-Account used for authorization and execution.
+Account used to authorize this operation. Defaults to the account exposed by the resolved wallet client.
 
 ### records
 
@@ -64,27 +70,49 @@ Records selected, read, or written.
 ## Return Type
 
 ```ts
-type GetRecordPermissionsResult = Awaited<ReturnType<typeof sdk.capabilities.getRecordPermissions>>;
+type GetRecordPermissionsResult = Awaited<ReturnType<typeof getRecordPermissions>>;
 ```
 
-The result is identical to the corresponding Core action with configuration already bound.
+| Property    | Type                                                                                                                                                                                                                                                                                                                                      | Description                                    |
+| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| `resolver`  | `&#96;0x${string}&#96; \| null`                                                                                                                                                                                                                                                                                                           | The resolver value returned by the operation.  |
+| `inherited` | `boolean`                                                                                                                                                                                                                                                                                                                                 | The inherited value returned by the operation. |
+| `account`   | `&#96;0x${string}&#96;`                                                                                                                                                                                                                                                                                                                   | The account value returned by the operation.   |
+| `records`   | `readonly { readonly record: { readonly type: "address"; readonly coinType: bigint; } \| { readonly type: "text"; readonly key: string; } \| { readonly type: "contentHash"; } \| { readonly type: "pubkey"; } \| { readonly type: "abi"; readonly contentType?: bigint \| undefined; } \| ... 6 more ... \| { ...; }; readonly suppo...` | The records value returned by the operation.   |
 
 ## Effect
 
-```ts
-const effect = sdk.capabilities.getRecordPermissions.effect(parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+import { ens } from "./client";
+
+const program = ens.capabilities.getRecordPermissions.effect(parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Request
 
-The bound method retains `.request` for typed read batching.
+Use `.request` to describe the read without executing it, then include it in a typed [read batch](/core/guides/batching).
 
 ```ts
-const request = sdk.capabilities.getRecordPermissions.request(parameters);
+const request = ens.capabilities.getRecordPermissions.request(parameters);
 ```
+
+## Error
+
+```ts
+import type { GetRecordPermissionsError } from "@ensforge/sdk";
+```
+
+The method rejects with the corresponding Core action errors. Use `.effect` to keep those failures in the typed Effect error channel.
+
+See [Error Handling](/sdk/guides/error-handling).
 
 ## Action
 

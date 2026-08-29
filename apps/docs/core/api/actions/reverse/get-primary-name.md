@@ -7,8 +7,6 @@ description: Gets and optionally forward-verifies the primary name for an addres
 
 Gets and optionally forward-verifies the primary name for an address.
 
-This action belongs to primary-name and reverse resolution. It selects the supported contract and protocol route from the current configuration and name state.
-
 ## Import
 
 ```ts
@@ -17,7 +15,9 @@ import { getPrimaryName } from "@ensforge/core";
 
 ## Usage
 
-```ts
+::: code-group
+
+```ts [index.ts]
 import { getPrimaryName } from "@ensforge/core";
 import { config } from "./config";
 
@@ -26,10 +26,14 @@ const result = await getPrimaryName(config, {
 });
 ```
 
+<<< @/snippets/core/config.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type GetPrimaryNameParameters = Parameters<typeof getPrimaryName>[1];
+import type { GetPrimaryNameParameters } from "@ensforge/core";
 ```
 
 ### address
@@ -54,7 +58,7 @@ Block number to read from. Cannot be combined with `blockTag`.
 
 `"latest" | "earliest" | "pending" | "safe" | "finalized" | undefined`
 
-Block tag to read from. Cannot be combined with `blockNumber`.
+Named block state to read from. Cannot be combined with `blockNumber`.
 
 ## Return Type
 
@@ -62,20 +66,29 @@ Block tag to read from. Cannot be combined with `blockNumber`.
 type GetPrimaryNameResult = Awaited<ReturnType<typeof getPrimaryName>>;
 ```
 
-`{ readonly name: string & Brand<"NormalizedName">; readonly match: true; } | null`
+| Property | Type                                            | Description                                |
+| -------- | ----------------------------------------------- | ------------------------------------------ |
+| `name`   | `string & Brand<"NormalizedName"> \| undefined` | Normalized ENS name.                       |
+| `match`  | `true \| undefined`                             | The match value returned by the operation. |
 
 ## Effect
 
-```ts
-const effect = getPrimaryName.effect(config, parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+
+const program = getPrimaryName.effect(config, parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Request
 
-Use `.request` to include the read in [`readBatch`](/core/guides/batching).
+Use `.request` to describe the read without executing it, then include it in a typed [read batch](/core/guides/batching).
 
 ```ts
 const request = getPrimaryName.request(parameters);
@@ -84,9 +97,13 @@ const request = getPrimaryName.request(parameters);
 ## Error
 
 ```ts
-import type { Effect } from "effect";
-
-type GetPrimaryNameError = Effect.Effect.Error<ReturnType<typeof getPrimaryName.effect>>;
+import type { GetPrimaryNameError } from "@ensforge/core";
 ```
 
-See [Error Handling](/core/guides/error-handling) for tagged errors and stable error codes.
+The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
+
+See [Error Handling](/core/guides/error-handling).
+
+## Related
+
+- [`ens.reverse.getPrimaryName`](/sdk/api/reverse/get-primary-name)

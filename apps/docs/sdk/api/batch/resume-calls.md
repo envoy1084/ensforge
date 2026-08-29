@@ -15,18 +15,24 @@ import { Ensforge } from "@ensforge/sdk";
 
 ## Usage
 
-```ts
-import { sdk } from "./sdk";
+::: code-group
 
-const result = await sdk.batch.resumeCalls({
+```ts [index.ts]
+import { ens } from "./client";
+
+const result = await ens.batch.resumeCalls({
   batch: {},
 });
 ```
 
+<<< @/snippets/sdk/client.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type ResumeCallsParameters = Parameters<typeof sdk.batch.resumeCalls>[0];
+import type { ResumeCallsParameters } from "@ensforge/sdk";
 ```
 
 ### batch
@@ -39,36 +45,57 @@ Value used for `batch` by this method.
 
 `ConfirmationPolicy | undefined`
 
-Confirmation policy for the write.
+Controls whether the action returns after submission or waits for one or more confirmations.
 
 ### walletClient
 
 `WalletClient | undefined`
 
-Wallet client override.
+Viem wallet client override for this operation. Defaults to the wallet resolved from the config.
 
 ### account
 
 `Account | Address | undefined`
 
-Account used for authorization and execution.
+Account used to authorize this operation. Defaults to the account exposed by the resolved wallet client.
 
 ## Return Type
 
 ```ts
-type ResumeCallsResult = Awaited<ReturnType<typeof sdk.batch.resumeCalls>>;
+import type { NativeBatchResult } from "@ensforge/sdk";
 ```
 
-The result is identical to the corresponding Core action with configuration already bound.
+| Property       | Type                             | Description                                                 |
+| -------------- | -------------------------------- | ----------------------------------------------------------- |
+| `mode`         | `"batch"`                        | The mode value returned by the operation.                   |
+| `atomic`       | `boolean`                        | Whether the wallet guarantees the calls execute atomically. |
+| `status`       | `"submitted" \| "confirmed"`     | Current query, transaction, batch, or workflow status.      |
+| `id`           | `string`                         | Stable operation or wallet batch identifier.                |
+| `calls`        | `readonly CallExecutionResult[]` | Per-call preparation, simulation, or execution results.     |
+| `receipts`     | `readonly WriteReceipt[]`        | Confirmed transaction receipts.                             |
+| `capabilities` | `WalletCapabilitiesResult`       | The capabilities value returned by the operation.           |
 
 ## Effect
 
-```ts
-const effect = sdk.batch.resumeCalls.effect(parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+import { ens } from "./client";
+
+const program = ens.batch.resumeCalls.effect(parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
+
+## Error
+
+The method rejects with the corresponding Core action errors. Use `.effect` to keep those failures in the typed Effect error channel.
+
+See [Error Handling](/sdk/guides/error-handling).
 
 ## Action
 

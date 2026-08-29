@@ -7,8 +7,6 @@ description: Claims dns name through DNSSEC names and DNS resolver records.
 
 Claims dns name through DNSSEC names and DNS resolver records.
 
-This action belongs to DNSSEC names and DNS resolver records. It selects the supported contract and protocol route from the current configuration and name state.
-
 ## Import
 
 ```ts
@@ -17,7 +15,9 @@ import { claimDnsName } from "@ensforge/core";
 
 ## Usage
 
-```ts
+::: code-group
+
+```ts [index.ts]
 import { claimDnsName } from "@ensforge/core";
 import { config } from "./config";
 
@@ -27,17 +27,21 @@ const result = await claimDnsName(config, {
 });
 ```
 
+<<< @/snippets/core/config.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type ClaimDnsNameParameters = Parameters<typeof claimDnsName>[1];
+import type { ClaimDnsNameParameters } from "@ensforge/core";
 ```
 
 ### name
 
 `string`
 
-ENS name used by the operation. It is normalized before contract interaction.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### proof
 
@@ -60,34 +64,50 @@ Address used by this operation.
 ## Return Type
 
 ```ts
-type ClaimDnsNameResult = Awaited<ReturnType<typeof claimDnsName>>;
+import type { CallExecutionResult } from "@ensforge/core";
 ```
 
-`CallExecutionResult`
+| Property    | Type                                          | Description                                                                    |
+| ----------- | --------------------------------------------- | ------------------------------------------------------------------------------ |
+| `id`        | `string`                                      | Stable operation or wallet batch identifier.                                   |
+| `operation` | `string`                                      | The operation value returned by the operation.                                 |
+| `status`    | `"not-started" \| "submitted" \| "confirmed"` | Current query, transaction, batch, or workflow status.                         |
+| `hash`      | `null \| &#96;0x${string}&#96; \| null`       | Transaction hash, or `null` before submission.                                 |
+| `receipt`   | `null \| WriteReceipt \| null`                | Normalized transaction receipt, or `null` when confirmation was not requested. |
 
 ## Effect
 
-```ts
-const effect = claimDnsName.effect(config, parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+
+const program = claimDnsName.effect(config, parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Call
 
-Use `.call` to prepare a write intent without submitting it.
+Use `.call` to prepare this write for simulation, wallet batching, or a custom execution policy.
 
 ```ts
-const intent = claimDnsName.call(parameters);
+const call = claimDnsName.call(parameters);
 ```
 
 ## Error
 
 ```ts
-import type { Effect } from "effect";
-
-type ClaimDnsNameError = Effect.Effect.Error<ReturnType<typeof claimDnsName.effect>>;
+import type { ClaimDnsNameError } from "@ensforge/core";
 ```
 
-See [Error Handling](/core/guides/error-handling) for tagged errors and stable error codes.
+The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
+
+See [Error Handling](/core/guides/error-handling).
+
+## Related
+
+- [`ens.dns.claimDnsName`](/sdk/api/dns/claim-dns-name)

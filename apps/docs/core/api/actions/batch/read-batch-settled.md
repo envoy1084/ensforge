@@ -7,8 +7,6 @@ description: Executes a typed read batch and preserves each success or failure i
 
 Executes a typed read batch and preserves each success or failure independently.
 
-This action belongs to typed read and wallet-aware write batching. It selects the supported contract and protocol route from the current configuration and name state.
-
 ## Import
 
 ```ts
@@ -17,7 +15,9 @@ import { readBatchSettled } from "@ensforge/core";
 
 ## Usage
 
-```ts
+::: code-group
+
+```ts [index.ts]
 import { readBatchSettled } from "@ensforge/core";
 import { config } from "./config";
 
@@ -26,10 +26,14 @@ const result = await readBatchSettled(config, {
 });
 ```
 
+<<< @/snippets/core/config.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type ReadBatchSettledParameters = Parameters<typeof readBatchSettled>[1];
+type Parameters = Parameters<typeof readBatchSettled>[1];
 ```
 
 ### requests
@@ -56,23 +60,29 @@ Argument passed to `readBatchSettled`.
 type ReadBatchSettledResult = Awaited<ReturnType<typeof readBatchSettled>>;
 ```
 
-`ReadBatchSettledResult<Requests>`
+Returns `ReadBatchSettledResult<Requests>`.
 
 ## Effect
 
-```ts
-const effect = readBatchSettled.effect(config, parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+
+const program = readBatchSettled.effect(config, parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Error
 
-```ts
-import type { Effect } from "effect";
+The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
 
-type ReadBatchSettledError = Effect.Effect.Error<ReturnType<typeof readBatchSettled.effect>>;
-```
+See [Error Handling](/core/guides/error-handling).
 
-See [Error Handling](/core/guides/error-handling) for tagged errors and stable error codes.
+## Related
+
+- [`ens.batch.readBatchSettled`](/sdk/api/batch/read-batch-settled)

@@ -7,8 +7,6 @@ description: Executes a staged ENS write plan and returns resumable progress.
 
 Executes a staged ENS write plan and returns resumable progress.
 
-This action belongs to typed read and wallet-aware write batching. It selects the supported contract and protocol route from the current configuration and name state.
-
 ## Import
 
 ```ts
@@ -17,7 +15,9 @@ import { executeWritePlan } from "@ensforge/core";
 
 ## Usage
 
-```ts
+::: code-group
+
+```ts [index.ts]
 import { executeWritePlan } from "@ensforge/core";
 import { config } from "./config";
 
@@ -26,10 +26,14 @@ const result = await executeWritePlan(config, {
 });
 ```
 
+<<< @/snippets/core/config.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type ExecuteWritePlanParameters = Parameters<typeof executeWritePlan>[1];
+import type { ExecuteWritePlanParameters } from "@ensforge/core";
 ```
 
 ### plan
@@ -48,37 +52,50 @@ Previously returned progress used to continue an incomplete workflow.
 
 `WalletClient | undefined`
 
-Wallet client override for this operation.
+Viem wallet client override for this operation. Defaults to the wallet resolved from the config.
 
 ### account
 
 `Account | Address | undefined`
 
-Account used for authorization and wallet execution.
+Account used to authorize this operation. Defaults to the account exposed by the resolved wallet client.
 
 ## Return Type
 
 ```ts
-type ExecuteWritePlanResult = Awaited<ReturnType<typeof executeWritePlan>>;
+import type { WritePlanProgress } from "@ensforge/core";
 ```
 
-`WritePlanProgress`
+| Property          | Type                                                   | Description                                            |
+| ----------------- | ------------------------------------------------------ | ------------------------------------------------------ |
+| `planId`          | `string`                                               | The planId value returned by the operation.            |
+| `status`          | `"completed" \| "waiting" \| "partial" \| "submitted"` | Current query, transaction, batch, or workflow status. |
+| `completedStages` | `readonly WriteStageResult[]`                          | The completedStages value returned by the operation.   |
+| `currentStage`    | `string \| null`                                       | The currentStage value returned by the operation.      |
+| `nextActionAt`    | `bigint \| null`                                       | The nextActionAt value returned by the operation.      |
+| `failure`         | `WriteError \| null`                                   | The failure value returned by the operation.           |
 
 ## Effect
 
-```ts
-const effect = executeWritePlan.effect(config, parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+
+const program = executeWritePlan.effect(config, parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Error
 
-```ts
-import type { Effect } from "effect";
+The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
 
-type ExecuteWritePlanError = Effect.Effect.Error<ReturnType<typeof executeWritePlan.effect>>;
-```
+See [Error Handling](/core/guides/error-handling).
 
-See [Error Handling](/core/guides/error-handling) for tagged errors and stable error codes.
+## Related
+
+- [`ens.batch.executeWritePlan`](/sdk/api/batch/execute-write-plan)

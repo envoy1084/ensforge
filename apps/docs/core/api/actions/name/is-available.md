@@ -5,7 +5,7 @@ description: Check whether an ENS name is available through its active registrat
 
 # isAvailable
 
-Checks whether an ENS name is currently available.
+Check whether an ENS name is available through its active registration route.
 
 ## Import
 
@@ -15,27 +15,30 @@ import { isAvailable } from "@ensforge/core";
 
 ## Usage
 
-```ts
+::: code-group
+
+```ts [index.ts]
 import { isAvailable } from "@ensforge/core";
 import { config } from "./config";
 
 const available = await isAvailable(config, { name: "example.eth" });
 ```
 
-Second-level `.eth` names are checked through the active ETH registrar. Other names use their
-registry ownership state. Names reserved for ENSv1 owners on ENSv2 are not available.
+<<< @/snippets/core/config.ts
+
+:::
 
 ## Parameters
 
 ```ts
-import type { IsAvailableParameters } from "@ensforge/core";
+import type { GetNameStateParameters } from "@ensforge/core";
 ```
 
 ### name
 
 `string`
 
-ENS name to check.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### blockNumber
 
@@ -47,24 +50,39 @@ Block number to read from. Cannot be combined with `blockTag`.
 
 `"latest" | "earliest" | "pending" | "safe" | "finalized" | undefined`
 
-Block tag to read from. Cannot be combined with `blockNumber`.
+Named block state to read from. Cannot be combined with `blockNumber`.
 
 ## Return Type
 
-`boolean`
+```ts
+type IsAvailableResult = Awaited<ReturnType<typeof isAvailable>>;
+```
 
-Returns `true` when the active route reports the name as available.
+| Property  | Type            | Description                          |
+| --------- | --------------- | ------------------------------------ |
+| `valueOf` | `() => boolean` | function valueOf() { [native code] } |
 
 ## Effect
 
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
+
 ```ts
-const effect = isAvailable.effect(config, { name: "example.eth" });
+import { Effect } from "effect";
+
+const program = isAvailable.effect(config, parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Request
 
+Use `.request` to describe the read without executing it, then include it in a typed [read batch](/core/guides/batching).
+
 ```ts
-const request = isAvailable.request({ name: "example.eth" });
+const request = isAvailable.request(parameters);
 ```
 
 ## Error
@@ -73,4 +91,10 @@ const request = isAvailable.request({ name: "example.eth" });
 import type { IsAvailableError } from "@ensforge/core";
 ```
 
-Can fail with `NameError`, `RpcError`, `ContractError`, or `CodecError`.
+The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
+
+See [Error Handling](/core/guides/error-handling).
+
+## Related
+
+- [`ens.name.isAvailable`](/sdk/api/name/is-available)

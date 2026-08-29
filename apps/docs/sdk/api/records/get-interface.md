@@ -15,26 +15,32 @@ import { Ensforge } from "@ensforge/sdk";
 
 ## Usage
 
-```ts
-import { sdk } from "./sdk";
+::: code-group
 
-const result = await sdk.records.getInterface({
+```ts [index.ts]
+import { ens } from "./client";
+
+const result = await ens.records.getInterface({
   name: "example.eth",
   interfaceId: "0x01ffc9a7",
 });
 ```
 
+<<< @/snippets/sdk/client.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type GetInterfaceParameters = Parameters<typeof sdk.records.getInterface>[0];
+import type { GetInterfaceParameters } from "@ensforge/sdk";
 ```
 
 ### name
 
 `string`
 
-ENS name used by the method. It is normalized before contract interaction.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### interfaceId
 
@@ -52,32 +58,52 @@ Block number to read from. Cannot be combined with `blockTag`.
 
 `"latest" | "earliest" | "pending" | "safe" | "finalized" | undefined`
 
-Block tag to read from. Cannot be combined with `blockNumber`.
+Named block state to read from. Cannot be combined with `blockNumber`.
 
 ## Return Type
 
 ```ts
-type GetInterfaceResult = Awaited<ReturnType<typeof sdk.records.getInterface>>;
+type GetInterfaceResult = Awaited<ReturnType<typeof getInterface>>;
 ```
 
-The result is identical to the corresponding Core action with configuration already bound.
+| Property      | Type                                           | Description                                      |
+| ------------- | ---------------------------------------------- | ------------------------------------------------ |
+| `interfaceId` | `&#96;0x${string}&#96; & Brand<"InterfaceId">` | The interfaceId value returned by the operation. |
+| `implementer` | `&#96;0x${string}&#96; \| null`                | The implementer value returned by the operation. |
 
 ## Effect
 
-```ts
-const effect = sdk.records.getInterface.effect(parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+import { ens } from "./client";
+
+const program = ens.records.getInterface.effect(parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Request
 
-The bound method retains `.request` for typed read batching.
+Use `.request` to describe the read without executing it, then include it in a typed [read batch](/core/guides/batching).
 
 ```ts
-const request = sdk.records.getInterface.request(parameters);
+const request = ens.records.getInterface.request(parameters);
 ```
+
+## Error
+
+```ts
+import type { GetInterfaceError } from "@ensforge/sdk";
+```
+
+The method rejects with the corresponding Core action errors. Use `.effect` to keep those failures in the typed Effect error channel.
+
+See [Error Handling](/sdk/guides/error-handling).
 
 ## Action
 

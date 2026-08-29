@@ -15,25 +15,31 @@ import { Ensforge } from "@ensforge/sdk";
 
 ## Usage
 
-```ts
-import { sdk } from "./sdk";
+::: code-group
 
-const result = await sdk.resolution.getOrCreateResolver({
+```ts [index.ts]
+import { ens } from "./client";
+
+const result = await ens.resolution.getOrCreateResolver({
   name: "example.eth",
 });
 ```
 
+<<< @/snippets/sdk/client.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type GetOrCreateResolverParameters = Parameters<typeof sdk.resolution.getOrCreateResolver>[0];
+import type { GetOrCreateResolverParameters } from "@ensforge/sdk";
 ```
 
 ### name
 
 `string`
 
-ENS name used by the method. It is normalized before contract interaction.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### salt
 
@@ -57,36 +63,61 @@ Role bitmask to inspect, grant, or revoke.
 
 `WalletClient | undefined`
 
-Wallet client override.
+Viem wallet client override for this operation. Defaults to the wallet resolved from the config.
 
 ### account
 
 `Account | Address | undefined`
 
-Account used for authorization and execution.
+Account used to authorize this operation. Defaults to the account exposed by the resolved wallet client.
 
 ### confirmation
 
 `ConfirmationPolicy | undefined`
 
-Confirmation policy for the write.
+Controls whether the action returns after submission or waits for one or more confirmations.
 
 ## Return Type
 
 ```ts
-type GetOrCreateResolverResult = Awaited<ReturnType<typeof sdk.resolution.getOrCreateResolver>>;
+import type { GetOrCreateResolverResult } from "@ensforge/sdk";
 ```
 
-The result is identical to the corresponding Core action with configuration already bound.
+| Property         | Type                                     | Description                                            |
+| ---------------- | ---------------------------------------- | ------------------------------------------------------ |
+| `status`         | `"existing" \| "selected" \| "deployed"` | Current query, transaction, batch, or workflow status. |
+| `protocol`       | `"v1" \| "v2" \| "v1" \| "v2"`           | ENS protocol route used for the result.                |
+| `resolver`       | `&#96;0x${string}&#96;`                  | The resolver value returned by the operation.          |
+| `inherited`      | `false`                                  | The inherited value returned by the operation.         |
+| `implementation` | `&#96;0x${string}&#96; \| undefined`     | The implementation value returned by the operation.    |
+| `factory`        | `&#96;0x${string}&#96; \| undefined`     | The factory value returned by the operation.           |
+| `call`           | `CallExecutionResult \| undefined`       | The call value returned by the operation.              |
 
 ## Effect
 
-```ts
-const effect = sdk.resolution.getOrCreateResolver.effect(parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+import { ens } from "./client";
+
+const program = ens.resolution.getOrCreateResolver.effect(parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
+
+## Error
+
+```ts
+import type { GetOrCreateResolverError } from "@ensforge/sdk";
+```
+
+The method rejects with the corresponding Core action errors. Use `.effect` to keep those failures in the typed Effect error channel.
+
+See [Error Handling](/sdk/guides/error-handling).
 
 ## Action
 

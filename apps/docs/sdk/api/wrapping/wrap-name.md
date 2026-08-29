@@ -15,26 +15,32 @@ import { Ensforge } from "@ensforge/sdk";
 
 ## Usage
 
-```ts
-import { sdk } from "./sdk";
+::: code-group
 
-const result = await sdk.wrapping.wrapName({
+```ts [index.ts]
+import { ens } from "./client";
+
+const result = await ens.wrapping.wrapName({
   name: "example.eth",
   owner: "0x0000000000000000000000000000000000000001",
 });
 ```
 
+<<< @/snippets/sdk/client.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type WrapNameParameters = Parameters<typeof sdk.wrapping.wrapName>[0];
+import type { WrapNameParameters } from "@ensforge/sdk";
 ```
 
 ### name
 
 `string`
 
-ENS name used by the method. It is normalized before contract interaction.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### owner
 
@@ -58,13 +64,13 @@ Value used for `fuses` by this method.
 
 `WriteMode | undefined`
 
-Execution mode. `auto` selects wallet batching when available.
+Write execution strategy. `auto` uses wallet capabilities and falls back to sequential transactions.
 
 ### confirmation
 
 `ConfirmationPolicy | undefined`
 
-Confirmation policy for the write.
+Controls whether the action returns after submission or waits for one or more confirmations.
 
 ### resume
 
@@ -76,30 +82,55 @@ Previously returned progress used to continue the workflow.
 
 `WalletClient | undefined`
 
-Wallet client override.
+Viem wallet client override for this operation. Defaults to the wallet resolved from the config.
 
 ### account
 
 `Account | Address | undefined`
 
-Account used for authorization and execution.
+Account used to authorize this operation. Defaults to the account exposed by the resolved wallet client.
 
 ## Return Type
 
 ```ts
-type WrapNameResult = Awaited<ReturnType<typeof sdk.wrapping.wrapName>>;
+import type { WrapNameResult } from "@ensforge/sdk";
 ```
 
-The result is identical to the corresponding Core action with configuration already bound.
+| Property     | Type                                                                                                                                                                                                                                                                                                        | Description                                                      |
+| ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| `name`       | `string`                                                                                                                                                                                                                                                                                                    | Normalized ENS name.                                             |
+| `protocol`   | `"v1"`                                                                                                                                                                                                                                                                                                      | ENS protocol route used for the result.                          |
+| `strategy`   | `"registry" \| "eth-2ld"`                                                                                                                                                                                                                                                                                   | The strategy value returned by the operation.                    |
+| `owner`      | `&#96;0x${string}&#96;`                                                                                                                                                                                                                                                                                     | Current owner address, or `null` when the name has no owner.     |
+| `approvals`  | `{ readonly registrar: boolean; readonly registry: boolean; }`                                                                                                                                                                                                                                              | The approvals value returned by the operation.                   |
+| `write`      | `WritePlanProgress`                                                                                                                                                                                                                                                                                         | Progress for the write plan used by the workflow.                |
+| `finalState` | `{ readonly kind: "available"; readonly protocol: "v1" \| "v2"; readonly wrapped: false; readonly migrated: false; readonly name: string & Brand<"NormalizedName">; readonly status: "available" \| ... 3 more ... \| "expired"; ... 10 more ...; readonly renewable: boolean; } \| ... 5 more ... \| null` | Name state observed after the workflow finishes, when available. |
 
 ## Effect
 
-```ts
-const effect = sdk.wrapping.wrapName.effect(parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+import { ens } from "./client";
+
+const program = ens.wrapping.wrapName.effect(parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
+
+## Error
+
+```ts
+import type { WrapNameError } from "@ensforge/sdk";
+```
+
+The method rejects with the corresponding Core action errors. Use `.effect` to keep those failures in the typed Effect error channel.
+
+See [Error Handling](/sdk/guides/error-handling).
 
 ## Action
 

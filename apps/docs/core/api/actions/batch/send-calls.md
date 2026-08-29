@@ -7,8 +7,6 @@ description: Submits ENS write intents through wallet batching or sequential fal
 
 Submits ENS write intents through wallet batching or sequential fallback.
 
-This action belongs to typed read and wallet-aware write batching. It selects the supported contract and protocol route from the current configuration and name state.
-
 ## Import
 
 ```ts
@@ -17,7 +15,9 @@ import { sendCalls } from "@ensforge/core";
 
 ## Usage
 
-```ts
+::: code-group
+
+```ts [index.ts]
 import { sendCalls } from "@ensforge/core";
 import { config } from "./config";
 
@@ -26,17 +26,21 @@ const result = await sendCalls(config, {
 });
 ```
 
+<<< @/snippets/core/config.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type SendCallsParameters = Parameters<typeof sendCalls>[1];
+import type { SendCallsParameters } from "@ensforge/core";
 ```
 
 ### mode
 
 `WriteMode | undefined`
 
-Execution mode. `auto` uses wallet capabilities and falls back safely.
+Write execution strategy. `auto` uses wallet capabilities and falls back to sequential transactions.
 
 ### atomicity
 
@@ -48,7 +52,7 @@ Atomicity required from the selected execution path.
 
 `ConfirmationPolicy | undefined`
 
-Transaction confirmation policy for this operation.
+Controls whether the action returns after submission or waits for one or more confirmations.
 
 ### simulation
 
@@ -72,37 +76,52 @@ Read calls or write intents included in the operation.
 
 `WalletClient | undefined`
 
-Wallet client override for this operation.
+Viem wallet client override for this operation. Defaults to the wallet resolved from the config.
 
 ### account
 
 `Account | Address | undefined`
 
-Account used for authorization and wallet execution.
+Account used to authorize this operation. Defaults to the account exposed by the resolved wallet client.
 
 ## Return Type
 
 ```ts
-type SendCallsResult = Awaited<ReturnType<typeof sendCalls>>;
+import type { SendCallsResult } from "@ensforge/core";
 ```
 
-`SendCallsResult`
+| Property       | Type                                                     | Description                                                 |
+| -------------- | -------------------------------------------------------- | ----------------------------------------------------------- |
+| `mode`         | `"batch" \| "sequential"`                                | The mode value returned by the operation.                   |
+| `atomic`       | `boolean \| false`                                       | Whether the wallet guarantees the calls execute atomically. |
+| `status`       | `"submitted" \| "confirmed" \| "completed" \| "partial"` | Current query, transaction, batch, or workflow status.      |
+| `id`           | `string \| undefined`                                    | Stable operation or wallet batch identifier.                |
+| `calls`        | `readonly CallExecutionResult[]`                         | Per-call preparation, simulation, or execution results.     |
+| `receipts`     | `readonly WriteReceipt[] \| undefined`                   | Confirmed transaction receipts.                             |
+| `capabilities` | `WalletCapabilitiesResult \| undefined`                  | The capabilities value returned by the operation.           |
+| `failure`      | `WriteError \| null \| undefined`                        | The failure value returned by the operation.                |
 
 ## Effect
 
-```ts
-const effect = sendCalls.effect(config, parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+
+const program = sendCalls.effect(config, parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Error
 
-```ts
-import type { Effect } from "effect";
+The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
 
-type SendCallsError = Effect.Effect.Error<ReturnType<typeof sendCalls.effect>>;
-```
+See [Error Handling](/core/guides/error-handling).
 
-See [Error Handling](/core/guides/error-handling) for tagged errors and stable error codes.
+## Related
+
+- [`ens.batch.sendCalls`](/sdk/api/batch/send-calls)

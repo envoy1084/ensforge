@@ -15,26 +15,32 @@ import { Ensforge } from "@ensforge/sdk";
 
 ## Usage
 
-```ts
-import { sdk } from "./sdk";
+::: code-group
 
-const result = await sdk.dns.importDnsName({
+```ts [index.ts]
+import { ens } from "./client";
+
+const result = await ens.dns.importDnsName({
   name: "example.eth",
   proof: [],
 });
 ```
 
+<<< @/snippets/sdk/client.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type ImportDnsNameParameters = Parameters<typeof sdk.dns.importDnsName>[0];
+import type { ImportDnsNameParameters } from "@ensforge/sdk";
 ```
 
 ### name
 
 `string`
 
-ENS name used by the method. It is normalized before contract interaction.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### proof
 
@@ -58,25 +64,25 @@ Address used by the method.
 
 `WalletClient | undefined`
 
-Wallet client override.
+Viem wallet client override for this operation. Defaults to the wallet resolved from the config.
 
 ### account
 
 `Account | Address | undefined`
 
-Account used for authorization and execution.
+Account used to authorize this operation. Defaults to the account exposed by the resolved wallet client.
 
 ### mode
 
 `WriteMode | undefined`
 
-Execution mode. `auto` selects wallet batching when available.
+Write execution strategy. `auto` uses wallet capabilities and falls back to sequential transactions.
 
 ### confirmation
 
 `ConfirmationPolicy | undefined`
 
-Confirmation policy for the write.
+Controls whether the action returns after submission or waits for one or more confirmations.
 
 ### resume
 
@@ -87,19 +93,42 @@ Previously returned progress used to continue the workflow.
 ## Return Type
 
 ```ts
-type ImportDnsNameResult = Awaited<ReturnType<typeof sdk.dns.importDnsName>>;
+import type { ImportDnsNameResult } from "@ensforge/sdk";
 ```
 
-The result is identical to the corresponding Core action with configuration already bound.
+| Property   | Type                                             | Description                                                  |
+| ---------- | ------------------------------------------------ | ------------------------------------------------------------ |
+| `status`   | `"completed" \| "not-required" \| "partial"`     | Current query, transaction, batch, or workflow status.       |
+| `name`     | `string & Brand<"NormalizedName">`               | Normalized ENS name.                                         |
+| `owner`    | `&#96;0x${string}&#96; \| null`                  | Current owner address, or `null` when the name has no owner. |
+| `resolver` | `&#96;0x${string}&#96; \| null \| null`          | The resolver value returned by the operation.                |
+| `write`    | `WritePlanProgress \| null \| WritePlanProgress` | Progress for the write plan used by the workflow.            |
 
 ## Effect
 
-```ts
-const effect = sdk.dns.importDnsName.effect(parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+import { ens } from "./client";
+
+const program = ens.dns.importDnsName.effect(parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
+
+## Error
+
+```ts
+import type { ImportDnsNameError } from "@ensforge/sdk";
+```
+
+The method rejects with the corresponding Core action errors. Use `.effect` to keep those failures in the typed Effect error channel.
+
+See [Error Handling](/sdk/guides/error-handling).
 
 ## Action
 

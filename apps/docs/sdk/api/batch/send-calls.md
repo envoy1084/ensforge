@@ -15,25 +15,31 @@ import { Ensforge } from "@ensforge/sdk";
 
 ## Usage
 
-```ts
-import { sdk } from "./sdk";
+::: code-group
 
-const result = await sdk.batch.sendCalls({
+```ts [index.ts]
+import { ens } from "./client";
+
+const result = await ens.batch.sendCalls({
   calls: [],
 });
 ```
 
+<<< @/snippets/sdk/client.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type SendCallsParameters = Parameters<typeof sdk.batch.sendCalls>[0];
+import type { SendCallsParameters } from "@ensforge/sdk";
 ```
 
 ### mode
 
 `WriteMode | undefined`
 
-Execution mode. `auto` selects wallet batching when available.
+Write execution strategy. `auto` uses wallet capabilities and falls back to sequential transactions.
 
 ### atomicity
 
@@ -45,7 +51,7 @@ Value used for `atomicity` by this method.
 
 `ConfirmationPolicy | undefined`
 
-Confirmation policy for the write.
+Controls whether the action returns after submission or waits for one or more confirmations.
 
 ### simulation
 
@@ -69,30 +75,52 @@ Read requests or write intents included in the operation.
 
 `WalletClient | undefined`
 
-Wallet client override.
+Viem wallet client override for this operation. Defaults to the wallet resolved from the config.
 
 ### account
 
 `Account | Address | undefined`
 
-Account used for authorization and execution.
+Account used to authorize this operation. Defaults to the account exposed by the resolved wallet client.
 
 ## Return Type
 
 ```ts
-type SendCallsResult = Awaited<ReturnType<typeof sdk.batch.sendCalls>>;
+import type { SendCallsResult } from "@ensforge/sdk";
 ```
 
-The result is identical to the corresponding Core action with configuration already bound.
+| Property       | Type                                                     | Description                                                 |
+| -------------- | -------------------------------------------------------- | ----------------------------------------------------------- |
+| `mode`         | `"batch" \| "sequential"`                                | The mode value returned by the operation.                   |
+| `atomic`       | `boolean \| false`                                       | Whether the wallet guarantees the calls execute atomically. |
+| `status`       | `"submitted" \| "confirmed" \| "completed" \| "partial"` | Current query, transaction, batch, or workflow status.      |
+| `id`           | `string \| undefined`                                    | Stable operation or wallet batch identifier.                |
+| `calls`        | `readonly CallExecutionResult[]`                         | Per-call preparation, simulation, or execution results.     |
+| `receipts`     | `readonly WriteReceipt[] \| undefined`                   | Confirmed transaction receipts.                             |
+| `capabilities` | `WalletCapabilitiesResult \| undefined`                  | The capabilities value returned by the operation.           |
+| `failure`      | `WriteError \| null \| undefined`                        | The failure value returned by the operation.                |
 
 ## Effect
 
-```ts
-const effect = sdk.batch.sendCalls.effect(parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+import { ens } from "./client";
+
+const program = ens.batch.sendCalls.effect(parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
+
+## Error
+
+The method rejects with the corresponding Core action errors. Use `.effect` to keep those failures in the typed Effect error channel.
+
+See [Error Handling](/sdk/guides/error-handling).
 
 ## Action
 

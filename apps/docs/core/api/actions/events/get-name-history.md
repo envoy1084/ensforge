@@ -7,8 +7,6 @@ description: Gets the normalized event history for one ENS name.
 
 Gets the normalized event history for one ENS name.
 
-This action belongs to normalized ENS contract events. It selects the supported contract and protocol route from the current configuration and name state.
-
 ## Import
 
 ```ts
@@ -17,7 +15,9 @@ import { getNameHistory } from "@ensforge/core";
 
 ## Usage
 
-```ts
+::: code-group
+
+```ts [index.ts]
 import { getNameHistory } from "@ensforge/core";
 import { config } from "./config";
 
@@ -27,17 +27,21 @@ const result = await getNameHistory(config, {
 });
 ```
 
+<<< @/snippets/core/config.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type GetNameHistoryParameters = Parameters<typeof getNameHistory>[1];
+import type { GetNameHistoryParameters } from "@ensforge/core";
 ```
 
 ### name
 
 `string`
 
-ENS name used by the operation. It is normalized before contract interaction.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### fromBlock
 
@@ -57,23 +61,36 @@ Last block included in the event query.
 type GetNameHistoryResult = Awaited<ReturnType<typeof getNameHistory>>;
 ```
 
-The return type is inferred from the action and preserves its discriminated protocol and workflow states.
+| Property | Type                                                                                                                                                                                                                                                                                                                            | Description                                 |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| `name`   | `string & Brand<"NormalizedName">`                                                                                                                                                                                                                                                                                              | Normalized ENS name.                        |
+| `events` | `readonly { readonly blockNumber: bigint \| null; readonly transactionHash: &#96;0x${string}&#96; \| null; readonly protocol: "v1" \| "v2"; readonly kind: "records" \| "ownership" \| "resolver" \| "commitment" \| ... 5 more ... \| "other"; ... 15 more ...; readonly commitment?: &#96;0x${string}&#96; \| undefined; }[]` | The events value returned by the operation. |
 
 ## Effect
 
-```ts
-const effect = getNameHistory.effect(config, parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+
+const program = getNameHistory.effect(config, parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Error
 
 ```ts
-import type { Effect } from "effect";
-
-type GetNameHistoryError = Effect.Effect.Error<ReturnType<typeof getNameHistory.effect>>;
+import type { GetNameHistoryError } from "@ensforge/core";
 ```
 
-See [Error Handling](/core/guides/error-handling) for tagged errors and stable error codes.
+The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
+
+See [Error Handling](/core/guides/error-handling).
+
+## Related
+
+- [`ens.events.getNameHistory`](/sdk/api/events/get-name-history)

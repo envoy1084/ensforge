@@ -7,8 +7,6 @@ description: Gets abi for ENS resolver records.
 
 Gets abi for ENS resolver records.
 
-This action belongs to ENS resolver records. It selects the supported contract and protocol route from the current configuration and name state.
-
 ## Import
 
 ```ts
@@ -17,7 +15,9 @@ import { getAbi } from "@ensforge/core";
 
 ## Usage
 
-```ts
+::: code-group
+
+```ts [index.ts]
 import { getAbi } from "@ensforge/core";
 import { config } from "./config";
 
@@ -26,17 +26,21 @@ const result = await getAbi(config, {
 });
 ```
 
+<<< @/snippets/core/config.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type GetAbiParameters = Parameters<typeof getAbi>[1];
+import type { GetAbiParameters } from "@ensforge/core";
 ```
 
 ### name
 
 `string`
 
-ENS name used by the operation. It is normalized before contract interaction.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### contentTypes
 
@@ -54,7 +58,7 @@ Block number to read from. Cannot be combined with `blockTag`.
 
 `"latest" | "earliest" | "pending" | "safe" | "finalized" | undefined`
 
-Block tag to read from. Cannot be combined with `blockNumber`.
+Named block state to read from. Cannot be combined with `blockNumber`.
 
 ## Return Type
 
@@ -62,20 +66,30 @@ Block tag to read from. Cannot be combined with `blockNumber`.
 type GetAbiResult = Awaited<ReturnType<typeof getAbi>>;
 ```
 
-The return type is inferred from the action and preserves its discriminated protocol and workflow states.
+| Property      | Type                                                     | Description                                               |
+| ------------- | -------------------------------------------------------- | --------------------------------------------------------- |
+| `contentType` | `"json" \| "zlib-json" \| "cbor" \| "uri" \| null`       | The contentType value returned by the operation.          |
+| `value`       | `Abi \| string \| null`                                  | Decoded value returned by the contract or resolver.       |
+| `raw`         | `&#96;0x${string}&#96; & Brand<"AbiRecordData"> \| null` | Raw resolver bytes, or `null` when the record is not set. |
 
 ## Effect
 
-```ts
-const effect = getAbi.effect(config, parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+
+const program = getAbi.effect(config, parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Request
 
-Use `.request` to include the read in [`readBatch`](/core/guides/batching).
+Use `.request` to describe the read without executing it, then include it in a typed [read batch](/core/guides/batching).
 
 ```ts
 const request = getAbi.request(parameters);
@@ -84,9 +98,13 @@ const request = getAbi.request(parameters);
 ## Error
 
 ```ts
-import type { Effect } from "effect";
-
-type GetAbiError = Effect.Effect.Error<ReturnType<typeof getAbi.effect>>;
+import type { GetAbiError } from "@ensforge/core";
 ```
 
-See [Error Handling](/core/guides/error-handling) for tagged errors and stable error codes.
+The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
+
+See [Error Handling](/core/guides/error-handling).
+
+## Related
+
+- [`ens.records.getAbi`](/sdk/api/records/get-abi)

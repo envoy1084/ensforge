@@ -7,8 +7,6 @@ description: Sets a resolver and initial records through a resumable workflow.
 
 Sets a resolver and initial records through a resumable workflow.
 
-This action belongs to resolver discovery and Universal Resolver calls. It selects the supported contract and protocol route from the current configuration and name state.
-
 ## Import
 
 ```ts
@@ -17,7 +15,9 @@ import { setResolverAndRecords } from "@ensforge/core";
 
 ## Usage
 
-```ts
+::: code-group
+
+```ts [index.ts]
 import { setResolverAndRecords } from "@ensforge/core";
 import { config } from "./config";
 
@@ -27,17 +27,21 @@ const result = await setResolverAndRecords(config, {
 });
 ```
 
+<<< @/snippets/core/config.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type SetResolverAndRecordsParameters = Parameters<typeof setResolverAndRecords>[1];
+import type { SetResolverAndRecordsParameters } from "@ensforge/core";
 ```
 
 ### name
 
 `string`
 
-ENS name used by the operation. It is normalized before contract interaction.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### records
 
@@ -79,19 +83,19 @@ Encoded initial resolver setter calls.
 
 `WalletClient | undefined`
 
-Wallet client override for this operation.
+Viem wallet client override for this operation. Defaults to the wallet resolved from the config.
 
 ### account
 
 `Account | Address | undefined`
 
-Account used for authorization and wallet execution.
+Account used to authorize this operation. Defaults to the account exposed by the resolved wallet client.
 
 ### confirmation
 
 `ConfirmationPolicy | undefined`
 
-Transaction confirmation policy for this operation.
+Controls whether the action returns after submission or waits for one or more confirmations.
 
 ### resume
 
@@ -102,28 +106,41 @@ Previously returned progress used to continue an incomplete workflow.
 ## Return Type
 
 ```ts
-type SetResolverAndRecordsResult = Awaited<ReturnType<typeof setResolverAndRecords>>;
+import type { SetResolverAndRecordsProgress } from "@ensforge/core";
 ```
 
-`SetResolverAndRecordsProgress`
+| Property         | Type                    | Description                                         |
+| ---------------- | ----------------------- | --------------------------------------------------- |
+| `protocol`       | `"v1" \| "v2"`          | ENS protocol route used for the result.             |
+| `resolver`       | `&#96;0x${string}&#96;` | The resolver value returned by the operation.       |
+| `resolverSource` | `ResolverSource`        | The resolverSource value returned by the operation. |
+| `write`          | `WritePlanProgress`     | Progress for the write plan used by the workflow.   |
 
 ## Effect
 
-```ts
-const effect = setResolverAndRecords.effect(config, parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+
+const program = setResolverAndRecords.effect(config, parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Error
 
 ```ts
-import type { Effect } from "effect";
-
-type SetResolverAndRecordsError = Effect.Effect.Error<
-  ReturnType<typeof setResolverAndRecords.effect>
->;
+import type { SetResolverAndRecordsError } from "@ensforge/core";
 ```
 
-See [Error Handling](/core/guides/error-handling) for tagged errors and stable error codes.
+The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
+
+See [Error Handling](/core/guides/error-handling).
+
+## Related
+
+- [`ens.resolution.setResolverAndRecords`](/sdk/api/resolution/set-resolver-and-records)

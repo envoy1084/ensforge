@@ -15,25 +15,31 @@ import { Ensforge } from "@ensforge/sdk";
 
 ## Usage
 
-```ts
-import { sdk } from "./sdk";
+::: code-group
 
-const result = await sdk.records.getName({
+```ts [index.ts]
+import { ens } from "./client";
+
+const result = await ens.records.getName({
   name: "example.eth",
 });
 ```
 
+<<< @/snippets/sdk/client.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type GetNameParameters = Parameters<typeof sdk.records.getName>[0];
+import type { GetNameParameters } from "@ensforge/sdk";
 ```
 
 ### name
 
 `string`
 
-ENS name used by the method. It is normalized before contract interaction.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### blockNumber
 
@@ -45,32 +51,51 @@ Block number to read from. Cannot be combined with `blockTag`.
 
 `"latest" | "earliest" | "pending" | "safe" | "finalized" | undefined`
 
-Block tag to read from. Cannot be combined with `blockNumber`.
+Named block state to read from. Cannot be combined with `blockNumber`.
 
 ## Return Type
 
 ```ts
-type GetNameResult = Awaited<ReturnType<typeof sdk.records.getName>>;
+type GetNameResult = Awaited<ReturnType<typeof getName>>;
 ```
 
-The result is identical to the corresponding Core action with configuration already bound.
+| Property | Type             | Description          |
+| -------- | ---------------- | -------------------- |
+| `name`   | `string \| null` | Normalized ENS name. |
 
 ## Effect
 
-```ts
-const effect = sdk.records.getName.effect(parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+import { ens } from "./client";
+
+const program = ens.records.getName.effect(parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Request
 
-The bound method retains `.request` for typed read batching.
+Use `.request` to describe the read without executing it, then include it in a typed [read batch](/core/guides/batching).
 
 ```ts
-const request = sdk.records.getName.request(parameters);
+const request = ens.records.getName.request(parameters);
 ```
+
+## Error
+
+```ts
+import type { GetNameError } from "@ensforge/sdk";
+```
+
+The method rejects with the corresponding Core action errors. Use `.effect` to keep those failures in the typed Effect error channel.
+
+See [Error Handling](/sdk/guides/error-handling).
 
 ## Action
 

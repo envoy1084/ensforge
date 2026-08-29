@@ -15,18 +15,24 @@ import { Ensforge } from "@ensforge/sdk";
 
 ## Usage
 
-```ts
-import { sdk } from "./sdk";
+::: code-group
 
-const result = await sdk.batch.readBatch({
-  owner: sdk.name.getOwner.request({ name: "ens.eth" }),
+```ts [index.ts]
+import { ens } from "./client";
+
+const result = await ens.batch.readBatch({
+  owner: ens.name.getOwner.request({ name: "ens.eth" }),
 });
 ```
+
+<<< @/snippets/sdk/client.ts
+
+:::
 
 ## Parameters
 
 ```ts
-type ReadBatchParameters = Parameters<typeof sdk.batch.readBatch>[0];
+type Parameters = Parameters<typeof ens.batch.readBatch>[0];
 ```
 
 ### requests
@@ -50,19 +56,36 @@ Argument passed to `readBatch`.
 ## Return Type
 
 ```ts
-type ReadBatchResult = Awaited<ReturnType<typeof sdk.batch.readBatch>>;
+type ReadBatchResult = Awaited<ReturnType<typeof readBatch>>;
 ```
 
-The result is identical to the corresponding Core action with configuration already bound.
+Returns `ReadBatchResult<Requests>`.
 
 ## Effect
 
-```ts
-const effect = sdk.batch.readBatch.effect(parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+import { ens } from "./client";
+
+const program = ens.batch.readBatch.effect(parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
+
+## Error
+
+```ts
+import type { ReadBatchError } from "@ensforge/sdk";
+```
+
+The method rejects with the corresponding Core action errors. Use `.effect` to keep those failures in the typed Effect error channel.
+
+See [Error Handling](/sdk/guides/error-handling).
 
 ## Action
 

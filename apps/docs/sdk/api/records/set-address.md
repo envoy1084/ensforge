@@ -15,26 +15,32 @@ import { Ensforge } from "@ensforge/sdk";
 
 ## Usage
 
-```ts
-import { sdk } from "./sdk";
+::: code-group
 
-const result = await sdk.records.setAddress({
+```ts [index.ts]
+import { ens } from "./client";
+
+const result = await ens.records.setAddress({
   name: "example.eth",
   address: "0x0000000000000000000000000000000000000001",
 });
 ```
 
+<<< @/snippets/sdk/client.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type SetAddressParameters = Parameters<typeof sdk.records.setAddress>[0];
+import type { SetAddressParameters } from "@ensforge/sdk";
 ```
 
 ### name
 
 `string`
 
-ENS name used by the method. It is normalized before contract interaction.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### coinType
 
@@ -51,27 +57,50 @@ Address used by the method.
 ## Return Type
 
 ```ts
-type SetAddressResult = Awaited<ReturnType<typeof sdk.records.setAddress>>;
+import type { CallExecutionResult } from "@ensforge/sdk";
 ```
 
-The result is identical to the corresponding Core action with configuration already bound.
+| Property    | Type                                          | Description                                                                    |
+| ----------- | --------------------------------------------- | ------------------------------------------------------------------------------ |
+| `id`        | `string`                                      | Stable operation or wallet batch identifier.                                   |
+| `operation` | `string`                                      | The operation value returned by the operation.                                 |
+| `status`    | `"not-started" \| "submitted" \| "confirmed"` | Current query, transaction, batch, or workflow status.                         |
+| `hash`      | `null \| &#96;0x${string}&#96; \| null`       | Transaction hash, or `null` before submission.                                 |
+| `receipt`   | `null \| WriteReceipt \| null`                | Normalized transaction receipt, or `null` when confirmation was not requested. |
 
 ## Effect
 
-```ts
-const effect = sdk.records.setAddress.effect(parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+import { ens } from "./client";
+
+const program = ens.records.setAddress.effect(parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Call
 
-The bound method retains `.call` for deferred write composition.
+Use `.call` to prepare this write for simulation, wallet batching, or a custom execution policy.
 
 ```ts
-const intent = sdk.records.setAddress.call(parameters);
+const call = ens.records.setAddress.call(parameters);
 ```
+
+## Error
+
+```ts
+import type { SetAddressError } from "@ensforge/sdk";
+```
+
+The method rejects with the corresponding Core action errors. Use `.effect` to keep those failures in the typed Effect error channel.
+
+See [Error Handling](/sdk/guides/error-handling).
 
 ## Action
 

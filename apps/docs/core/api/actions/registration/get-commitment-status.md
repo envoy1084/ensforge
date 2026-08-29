@@ -7,8 +7,6 @@ description: Gets commitment status for registration and renewal.
 
 Gets commitment status for registration and renewal.
 
-This action belongs to registration and renewal. It selects the supported contract and protocol route from the current configuration and name state.
-
 ## Import
 
 ```ts
@@ -17,7 +15,9 @@ import { getCommitmentStatus } from "@ensforge/core";
 
 ## Usage
 
-```ts
+::: code-group
+
+```ts [index.ts]
 import { getCommitmentStatus } from "@ensforge/core";
 import { config } from "./config";
 
@@ -26,10 +26,14 @@ const result = await getCommitmentStatus(config, {
 });
 ```
 
+<<< @/snippets/core/config.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type GetCommitmentStatusParameters = Parameters<typeof getCommitmentStatus>[1];
+import type { GetCommitmentStatusParameters } from "@ensforge/core";
 ```
 
 ### commitment
@@ -48,7 +52,7 @@ Block number to read from. Cannot be combined with `blockTag`.
 
 `"latest" | "earliest" | "pending" | "safe" | "finalized" | undefined`
 
-Block tag to read from. Cannot be combined with `blockNumber`.
+Named block state to read from. Cannot be combined with `blockNumber`.
 
 ## Return Type
 
@@ -56,20 +60,33 @@ Block tag to read from. Cannot be combined with `blockNumber`.
 type GetCommitmentStatusResult = Awaited<ReturnType<typeof getCommitmentStatus>>;
 ```
 
-The return type is inferred from the action and preserves its discriminated protocol and workflow states.
+| Property           | Type                                               | Description                                            |
+| ------------------ | -------------------------------------------------- | ------------------------------------------------------ |
+| `status`           | `"not-found" \| "pending" \| "ready" \| "expired"` | Current query, transaction, batch, or workflow status. |
+| `protocol`         | `"v1" \| "v2"`                                     | ENS protocol route used for the result.                |
+| `submittedAt`      | `bigint \| undefined`                              | The submittedAt value returned by the operation.       |
+| `readyAt`          | `bigint \| undefined`                              | The readyAt value returned by the operation.           |
+| `expiresAt`        | `bigint \| undefined`                              | The expiresAt value returned by the operation.         |
+| `remainingSeconds` | `bigint \| undefined`                              | The remainingSeconds value returned by the operation.  |
 
 ## Effect
 
-```ts
-const effect = getCommitmentStatus.effect(config, parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+
+const program = getCommitmentStatus.effect(config, parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Request
 
-Use `.request` to include the read in [`readBatch`](/core/guides/batching).
+Use `.request` to describe the read without executing it, then include it in a typed [read batch](/core/guides/batching).
 
 ```ts
 const request = getCommitmentStatus.request(parameters);
@@ -78,9 +95,13 @@ const request = getCommitmentStatus.request(parameters);
 ## Error
 
 ```ts
-import type { Effect } from "effect";
-
-type GetCommitmentStatusError = Effect.Effect.Error<ReturnType<typeof getCommitmentStatus.effect>>;
+import type { GetCommitmentStatusError } from "@ensforge/core";
 ```
 
-See [Error Handling](/core/guides/error-handling) for tagged errors and stable error codes.
+The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
+
+See [Error Handling](/core/guides/error-handling).
+
+## Related
+
+- [`ens.registration.getCommitmentStatus`](/sdk/api/registration/get-commitment-status)

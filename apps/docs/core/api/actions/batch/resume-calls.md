@@ -7,8 +7,6 @@ description: Continues a partially completed wallet or sequential call execution
 
 Continues a partially completed wallet or sequential call execution.
 
-This action belongs to typed read and wallet-aware write batching. It selects the supported contract and protocol route from the current configuration and name state.
-
 ## Import
 
 ```ts
@@ -17,7 +15,9 @@ import { resumeCalls } from "@ensforge/core";
 
 ## Usage
 
-```ts
+::: code-group
+
+```ts [index.ts]
 import { resumeCalls } from "@ensforge/core";
 import { config } from "./config";
 
@@ -26,10 +26,14 @@ const result = await resumeCalls(config, {
 });
 ```
 
+<<< @/snippets/core/config.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type ResumeCallsParameters = Parameters<typeof resumeCalls>[1];
+import type { ResumeCallsParameters } from "@ensforge/core";
 ```
 
 ### batch
@@ -42,43 +46,57 @@ Previously submitted native wallet batch.
 
 `ConfirmationPolicy | undefined`
 
-Transaction confirmation policy for this operation.
+Controls whether the action returns after submission or waits for one or more confirmations.
 
 ### walletClient
 
 `WalletClient | undefined`
 
-Wallet client override for this operation.
+Viem wallet client override for this operation. Defaults to the wallet resolved from the config.
 
 ### account
 
 `Account | Address | undefined`
 
-Account used for authorization and wallet execution.
+Account used to authorize this operation. Defaults to the account exposed by the resolved wallet client.
 
 ## Return Type
 
 ```ts
-type ResumeCallsResult = Awaited<ReturnType<typeof resumeCalls>>;
+import type { NativeBatchResult } from "@ensforge/core";
 ```
 
-`NativeBatchResult`
+| Property       | Type                             | Description                                                 |
+| -------------- | -------------------------------- | ----------------------------------------------------------- |
+| `mode`         | `"batch"`                        | The mode value returned by the operation.                   |
+| `atomic`       | `boolean`                        | Whether the wallet guarantees the calls execute atomically. |
+| `status`       | `"submitted" \| "confirmed"`     | Current query, transaction, batch, or workflow status.      |
+| `id`           | `string`                         | Stable operation or wallet batch identifier.                |
+| `calls`        | `readonly CallExecutionResult[]` | Per-call preparation, simulation, or execution results.     |
+| `receipts`     | `readonly WriteReceipt[]`        | Confirmed transaction receipts.                             |
+| `capabilities` | `WalletCapabilitiesResult`       | The capabilities value returned by the operation.           |
 
 ## Effect
 
-```ts
-const effect = resumeCalls.effect(config, parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+
+const program = resumeCalls.effect(config, parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Error
 
-```ts
-import type { Effect } from "effect";
+The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
 
-type ResumeCallsError = Effect.Effect.Error<ReturnType<typeof resumeCalls.effect>>;
-```
+See [Error Handling](/core/guides/error-handling).
 
-See [Error Handling](/core/guides/error-handling) for tagged errors and stable error codes.
+## Related
+
+- [`ens.batch.resumeCalls`](/sdk/api/batch/resume-calls)

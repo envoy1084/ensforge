@@ -5,7 +5,7 @@ description: Get the complete protocol-aware state of an ENS name.
 
 # getNameState
 
-Gets the complete application-facing state of an ENS name as a discriminated union.
+Get the complete protocol-aware state of an ENS name.
 
 ## Import
 
@@ -15,7 +15,9 @@ import { getNameState } from "@ensforge/core";
 
 ## Usage
 
-```ts
+::: code-group
+
+```ts [index.ts]
 import { getNameState } from "@ensforge/core";
 import { config } from "./config";
 
@@ -26,8 +28,9 @@ if (state.kind === "v2-reserved") {
 }
 ```
 
-Use this action when the interface needs several ownership, lifecycle, and migration fields together.
-Use focused actions such as `getManager` or `isMigrated` when you only need one value.
+<<< @/snippets/core/config.ts
+
+:::
 
 ## Parameters
 
@@ -39,7 +42,7 @@ import type { GetNameStateParameters } from "@ensforge/core";
 
 `string`
 
-ENS name to inspect.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### blockNumber
 
@@ -51,62 +54,55 @@ Block number to read from. Cannot be combined with `blockTag`.
 
 `"latest" | "earliest" | "pending" | "safe" | "finalized" | undefined`
 
-Block tag to read from. Cannot be combined with `blockNumber`.
+Named block state to read from. Cannot be combined with `blockNumber`.
 
 ## Return Type
 
 ```ts
-import type { NameState } from "@ensforge/core";
+type GetNameStateResult = Awaited<ReturnType<typeof getNameState>>;
 ```
 
-`NameState`
-
-The `kind` field identifies the route:
-
-| `kind`         | Meaning                                               |
-| -------------- | ----------------------------------------------------- |
-| `available`    | No active registration owns the name.                 |
-| `v1-unwrapped` | The name is managed directly through ENSv1.           |
-| `v1-wrapped`   | The name is held by the ENSv1 Name Wrapper.           |
-| `v2-native`    | The name was created directly in ENSv2.               |
-| `v2-migrated`  | The name migrated from ENSv1 to ENSv2.                |
-| `v2-reserved`  | ENSv2 reserves the name for its existing ENSv1 owner. |
-
-Every variant contains:
-
-```ts
-{
-  name: NormalizedName;
-  kind: NameState["kind"];
-  protocol: "v1" | "v2";
-  status: "available" | "active" | "grace" | "expired" | "reserved";
-  wrapped: boolean;
-  migrated: boolean;
-  owner: EthereumAddress | null;
-  manager: EthereumAddress | null;
-  registrant: EthereumAddress | null;
-  registry: EthereumAddress;
-  resolver: EthereumAddress | null;
-  expiry: bigint | null;
-  gracePeriodEnd: bigint | null;
-  tokenId: bigint | null;
-  resource: bigint | null;
-  available: boolean;
-  renewable: boolean;
-}
-```
+| Property         | Type                                                                                             | Description                                                  |
+| ---------------- | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------ |
+| `kind`           | `"available" \| "v1-unwrapped" \| "v1-wrapped" \| "v2-native" \| "v2-migrated" \| "v2-reserved"` | The kind value returned by the operation.                    |
+| `protocol`       | `"v1" \| "v2" \| "v1" \| "v2"`                                                                   | ENS protocol route used for the result.                      |
+| `wrapped`        | `false \| true \| boolean`                                                                       | Whether the name is held by the ENS Name Wrapper.            |
+| `migrated`       | `false \| true`                                                                                  | The migrated value returned by the operation.                |
+| `name`           | `string & Brand<"NormalizedName">`                                                               | Normalized ENS name.                                         |
+| `status`         | `"available" \| "reserved" \| "active" \| "grace" \| "expired"`                                  | Current query, transaction, batch, or workflow status.       |
+| `owner`          | `&#96;0x${string}&#96; \| null`                                                                  | Current owner address, or `null` when the name has no owner. |
+| `manager`        | `&#96;0x${string}&#96; \| null`                                                                  | The manager value returned by the operation.                 |
+| `registrant`     | `&#96;0x${string}&#96; \| null`                                                                  | The registrant value returned by the operation.              |
+| `registry`       | `&#96;0x${string}&#96;`                                                                          | The registry value returned by the operation.                |
+| `resolver`       | `&#96;0x${string}&#96; \| null`                                                                  | The resolver value returned by the operation.                |
+| `expiry`         | `bigint \| null`                                                                                 | The expiry value returned by the operation.                  |
+| `gracePeriodEnd` | `bigint \| null`                                                                                 | The gracePeriodEnd value returned by the operation.          |
+| `tokenId`        | `bigint \| null`                                                                                 | The tokenId value returned by the operation.                 |
+| `resource`       | `bigint \| null`                                                                                 | The resource value returned by the operation.                |
+| `available`      | `boolean`                                                                                        | The available value returned by the operation.               |
+| `renewable`      | `boolean`                                                                                        | The renewable value returned by the operation.               |
 
 ## Effect
 
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
+
 ```ts
-const effect = getNameState.effect(config, { name: "example.eth" });
-// Effect.Effect<NameState, GetNameStateError>
+import { Effect } from "effect";
+
+const program = getNameState.effect(config, parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Request
 
+Use `.request` to describe the read without executing it, then include it in a typed [read batch](/core/guides/batching).
+
 ```ts
-const request = getNameState.request({ name: "example.eth" });
+const request = getNameState.request(parameters);
 ```
 
 ## Error
@@ -115,4 +111,10 @@ const request = getNameState.request({ name: "example.eth" });
 import type { GetNameStateError } from "@ensforge/core";
 ```
 
-Can fail with `NameError`, `RpcError`, `ContractError`, or `CodecError`.
+The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
+
+See [Error Handling](/core/guides/error-handling).
+
+## Related
+
+- [`ens.name.getNameState`](/sdk/api/name/get-name-state)

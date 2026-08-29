@@ -7,8 +7,6 @@ description: Sets name for ENS resolver records.
 
 Sets name for ENS resolver records.
 
-This action belongs to ENS resolver records. It selects the supported contract and protocol route from the current configuration and name state.
-
 ## Import
 
 ```ts
@@ -17,7 +15,9 @@ import { setName } from "@ensforge/core";
 
 ## Usage
 
-```ts
+::: code-group
+
+```ts [index.ts]
 import { setName } from "@ensforge/core";
 import { config } from "./config";
 
@@ -27,17 +27,21 @@ const result = await setName(config, {
 });
 ```
 
+<<< @/snippets/core/config.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type SetNameParameters = Parameters<typeof setName>[1];
+import type { SetNameParameters } from "@ensforge/core";
 ```
 
 ### name
 
 `string`
 
-ENS name used by the operation. It is normalized before contract interaction.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### value
 
@@ -48,34 +52,50 @@ Value written by the operation.
 ## Return Type
 
 ```ts
-type SetNameResult = Awaited<ReturnType<typeof setName>>;
+import type { CallExecutionResult } from "@ensforge/core";
 ```
 
-`CallExecutionResult`
+| Property    | Type                                          | Description                                                                    |
+| ----------- | --------------------------------------------- | ------------------------------------------------------------------------------ |
+| `id`        | `string`                                      | Stable operation or wallet batch identifier.                                   |
+| `operation` | `string`                                      | The operation value returned by the operation.                                 |
+| `status`    | `"not-started" \| "submitted" \| "confirmed"` | Current query, transaction, batch, or workflow status.                         |
+| `hash`      | `null \| &#96;0x${string}&#96; \| null`       | Transaction hash, or `null` before submission.                                 |
+| `receipt`   | `null \| WriteReceipt \| null`                | Normalized transaction receipt, or `null` when confirmation was not requested. |
 
 ## Effect
 
-```ts
-const effect = setName.effect(config, parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+
+const program = setName.effect(config, parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Call
 
-Use `.call` to prepare a write intent without submitting it.
+Use `.call` to prepare this write for simulation, wallet batching, or a custom execution policy.
 
 ```ts
-const intent = setName.call(parameters);
+const call = setName.call(parameters);
 ```
 
 ## Error
 
 ```ts
-import type { Effect } from "effect";
-
-type SetNameError = Effect.Effect.Error<ReturnType<typeof setName.effect>>;
+import type { SetNameError } from "@ensforge/core";
 ```
 
-See [Error Handling](/core/guides/error-handling) for tagged errors and stable error codes.
+The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
+
+See [Error Handling](/core/guides/error-handling).
+
+## Related
+
+- [`ens.records.setName`](/sdk/api/records/set-name)

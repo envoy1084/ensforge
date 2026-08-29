@@ -15,27 +15,33 @@ import { Ensforge } from "@ensforge/sdk";
 
 ## Usage
 
-```ts
-import { sdk } from "./sdk";
+::: code-group
 
-const result = await sdk.resolution.resolveWithResolver({
+```ts [index.ts]
+import { ens } from "./client";
+
+const result = await ens.resolution.resolveWithResolver({
   name: "example.eth",
   data: "0x",
   resolverAddress: "0x0000000000000000000000000000000000000001",
 });
 ```
 
+<<< @/snippets/sdk/client.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type ResolveWithResolverParameters = Parameters<typeof sdk.resolution.resolveWithResolver>[0];
+import type { ResolveWithResolverParameters } from "@ensforge/sdk";
 ```
 
 ### name
 
 `string`
 
-ENS name used by the method. It is normalized before contract interaction.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### data
 
@@ -65,32 +71,52 @@ Block number to read from. Cannot be combined with `blockTag`.
 
 `"latest" | "earliest" | "pending" | "safe" | "finalized" | undefined`
 
-Block tag to read from. Cannot be combined with `blockNumber`.
+Named block state to read from. Cannot be combined with `blockNumber`.
 
 ## Return Type
 
 ```ts
-type ResolveWithResolverResult = Awaited<ReturnType<typeof sdk.resolution.resolveWithResolver>>;
+type ResolveWithResolverResult = Awaited<ReturnType<typeof resolveWithResolver>>;
 ```
 
-The result is identical to the corresponding Core action with configuration already bound.
+| Property          | Type                    | Description                                          |
+| ----------------- | ----------------------- | ---------------------------------------------------- |
+| `data`            | `&#96;0x${string}&#96;` | The data value returned by the operation.            |
+| `resolverAddress` | `&#96;0x${string}&#96;` | The resolverAddress value returned by the operation. |
 
 ## Effect
 
-```ts
-const effect = sdk.resolution.resolveWithResolver.effect(parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+import { ens } from "./client";
+
+const program = ens.resolution.resolveWithResolver.effect(parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Request
 
-The bound method retains `.request` for typed read batching.
+Use `.request` to describe the read without executing it, then include it in a typed [read batch](/core/guides/batching).
 
 ```ts
-const request = sdk.resolution.resolveWithResolver.request(parameters);
+const request = ens.resolution.resolveWithResolver.request(parameters);
 ```
+
+## Error
+
+```ts
+import type { ResolveWithResolverError } from "@ensforge/sdk";
+```
+
+The method rejects with the corresponding Core action errors. Use `.effect` to keep those failures in the typed Effect error channel.
+
+See [Error Handling](/sdk/guides/error-handling).
 
 ## Action
 

@@ -15,18 +15,24 @@ import { Ensforge } from "@ensforge/sdk";
 
 ## Usage
 
-```ts
-import { sdk } from "./sdk";
+::: code-group
 
-const result = await sdk.batch.executeWritePlan({
+```ts [index.ts]
+import { ens } from "./client";
+
+const result = await ens.batch.executeWritePlan({
   plan: { id: "profile", stages: [] },
 });
 ```
 
+<<< @/snippets/sdk/client.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type ExecuteWritePlanParameters = Parameters<typeof sdk.batch.executeWritePlan>[0];
+import type { ExecuteWritePlanParameters } from "@ensforge/sdk";
 ```
 
 ### plan
@@ -45,30 +51,50 @@ Previously returned progress used to continue the workflow.
 
 `WalletClient | undefined`
 
-Wallet client override.
+Viem wallet client override for this operation. Defaults to the wallet resolved from the config.
 
 ### account
 
 `Account | Address | undefined`
 
-Account used for authorization and execution.
+Account used to authorize this operation. Defaults to the account exposed by the resolved wallet client.
 
 ## Return Type
 
 ```ts
-type ExecuteWritePlanResult = Awaited<ReturnType<typeof sdk.batch.executeWritePlan>>;
+import type { WritePlanProgress } from "@ensforge/sdk";
 ```
 
-The result is identical to the corresponding Core action with configuration already bound.
+| Property          | Type                                                   | Description                                            |
+| ----------------- | ------------------------------------------------------ | ------------------------------------------------------ |
+| `planId`          | `string`                                               | The planId value returned by the operation.            |
+| `status`          | `"completed" \| "waiting" \| "partial" \| "submitted"` | Current query, transaction, batch, or workflow status. |
+| `completedStages` | `readonly WriteStageResult[]`                          | The completedStages value returned by the operation.   |
+| `currentStage`    | `string \| null`                                       | The currentStage value returned by the operation.      |
+| `nextActionAt`    | `bigint \| null`                                       | The nextActionAt value returned by the operation.      |
+| `failure`         | `WriteError \| null`                                   | The failure value returned by the operation.           |
 
 ## Effect
 
-```ts
-const effect = sdk.batch.executeWritePlan.effect(parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+import { ens } from "./client";
+
+const program = ens.batch.executeWritePlan.effect(parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
+
+## Error
+
+The method rejects with the corresponding Core action errors. Use `.effect` to keep those failures in the typed Effect error channel.
+
+See [Error Handling](/sdk/guides/error-handling).
 
 ## Action
 

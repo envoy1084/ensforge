@@ -7,8 +7,6 @@ description: Builds the DNSSEC proof and write plan required to import a DNS nam
 
 Builds the DNSSEC proof and write plan required to import a DNS name.
 
-This action belongs to DNSSEC names and DNS resolver records. It selects the supported contract and protocol route from the current configuration and name state.
-
 ## Import
 
 ```ts
@@ -17,7 +15,9 @@ import { getDnsImportPlan } from "@ensforge/core";
 
 ## Usage
 
-```ts
+::: code-group
+
+```ts [index.ts]
 import { getDnsImportPlan } from "@ensforge/core";
 import { config } from "./config";
 
@@ -26,17 +26,21 @@ const result = await getDnsImportPlan(config, {
 });
 ```
 
+<<< @/snippets/core/config.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type GetDnsImportPlanParameters = Parameters<typeof getDnsImportPlan>[1];
+import type { GetDnsImportPlanParameters } from "@ensforge/core";
 ```
 
 ### name
 
 `string`
 
-ENS name used by the operation. It is normalized before contract interaction.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### blockNumber
 
@@ -48,7 +52,7 @@ Block number to read from. Cannot be combined with `blockTag`.
 
 `"latest" | "earliest" | "pending" | "safe" | "finalized" | undefined`
 
-Block tag to read from. Cannot be combined with `blockNumber`.
+Named block state to read from. Cannot be combined with `blockNumber`.
 
 ## Return Type
 
@@ -56,20 +60,35 @@ Block tag to read from. Cannot be combined with `blockNumber`.
 type GetDnsImportPlanResult = Awaited<ReturnType<typeof getDnsImportPlan>>;
 ```
 
-The return type is inferred from the action and preserves its discriminated protocol and workflow states.
+| Property       | Type                                                                                                                   | Description                                                  |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| `status`       | `"unsupported" \| "already-claimed" \| "proof-required"`                                                               | Current query, transaction, batch, or workflow status.       |
+| `name`         | `string & Brand<"NormalizedName">`                                                                                     | Normalized ENS name.                                         |
+| `reason`       | `"DNS_REGISTRAR_UNAVAILABLE" \| undefined`                                                                             | The reason value returned by the operation.                  |
+| `registrar`    | `&#96;0x${string}&#96; \| undefined`                                                                                   | The registrar value returned by the operation.               |
+| `oracle`       | `&#96;0x${string}&#96; \| undefined`                                                                                   | The oracle value returned by the operation.                  |
+| `owner`        | `&#96;0x${string}&#96; \| undefined`                                                                                   | Current owner address, or `null` when the name has no owner. |
+| `resolver`     | `&#96;0x${string}&#96; \| null \| undefined`                                                                           | The resolver value returned by the operation.                |
+| `proofRequest` | `{ readonly name: &#96;0x${string}&#96; & Brand<"DnsEncodedName">; readonly previousInception: bigint; } \| undefined` | The proofRequest value returned by the operation.            |
 
 ## Effect
 
-```ts
-const effect = getDnsImportPlan.effect(config, parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+
+const program = getDnsImportPlan.effect(config, parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Request
 
-Use `.request` to include the read in [`readBatch`](/core/guides/batching).
+Use `.request` to describe the read without executing it, then include it in a typed [read batch](/core/guides/batching).
 
 ```ts
 const request = getDnsImportPlan.request(parameters);
@@ -78,9 +97,13 @@ const request = getDnsImportPlan.request(parameters);
 ## Error
 
 ```ts
-import type { Effect } from "effect";
-
-type GetDnsImportPlanError = Effect.Effect.Error<ReturnType<typeof getDnsImportPlan.effect>>;
+import type { GetDnsImportPlanError } from "@ensforge/core";
 ```
 
-See [Error Handling](/core/guides/error-handling) for tagged errors and stable error codes.
+The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
+
+See [Error Handling](/core/guides/error-handling).
+
+## Related
+
+- [`ens.dns.getDnsImportPlan`](/sdk/api/dns/get-dns-import-plan)

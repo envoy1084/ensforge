@@ -7,8 +7,6 @@ description: Gets registration parameters for registration and renewal.
 
 Gets registration parameters for registration and renewal.
 
-This action belongs to registration and renewal. It selects the supported contract and protocol route from the current configuration and name state.
-
 ## Import
 
 ```ts
@@ -17,17 +15,23 @@ import { getRegistrationParameters } from "@ensforge/core";
 
 ## Usage
 
-```ts
+::: code-group
+
+```ts [index.ts]
 import { getRegistrationParameters } from "@ensforge/core";
 import { config } from "./config";
 
 const result = await getRegistrationParameters(config, {});
 ```
 
+<<< @/snippets/core/config.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type GetRegistrationParametersParameters = Parameters<typeof getRegistrationParameters>[1];
+import type { BlockParameters } from "@ensforge/core";
 ```
 
 ### blockNumber
@@ -40,7 +44,7 @@ Block number to read from. Cannot be combined with `blockTag`.
 
 `"latest" | "earliest" | "pending" | "safe" | "finalized" | undefined`
 
-Block tag to read from. Cannot be combined with `blockNumber`.
+Named block state to read from. Cannot be combined with `blockNumber`.
 
 ## Return Type
 
@@ -48,20 +52,35 @@ Block tag to read from. Cannot be combined with `blockNumber`.
 type GetRegistrationParametersResult = Awaited<ReturnType<typeof getRegistrationParameters>>;
 ```
 
-The return type is inferred from the action and preserves its discriminated protocol and workflow states.
+| Property                      | Type                                                                                      | Description                                                      |
+| ----------------------------- | ----------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| `protocol`                    | `"v1" \| "v2"`                                                                            | ENS protocol route used for the result.                          |
+| `registrar`                   | `&#96;0x${string}&#96;`                                                                   | The registrar value returned by the operation.                   |
+| `priceOracle`                 | `&#96;0x${string}&#96;`                                                                   | The priceOracle value returned by the operation.                 |
+| `minimumRegistrationDuration` | `bigint`                                                                                  | The minimumRegistrationDuration value returned by the operation. |
+| `minimumRenewalDuration`      | `bigint`                                                                                  | The minimumRenewalDuration value returned by the operation.      |
+| `minimumCommitmentAge`        | `bigint`                                                                                  | The minimumCommitmentAge value returned by the operation.        |
+| `maximumCommitmentAge`        | `bigint`                                                                                  | The maximumCommitmentAge value returned by the operation.        |
+| `payment`                     | `{ readonly kind: "native"; } \| { readonly kind: "erc20"; readonly enumerable: false; }` | The payment value returned by the operation.                     |
 
 ## Effect
 
-```ts
-const effect = getRegistrationParameters.effect(config, parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+
+const program = getRegistrationParameters.effect(config, parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Request
 
-Use `.request` to include the read in [`readBatch`](/core/guides/batching).
+Use `.request` to describe the read without executing it, then include it in a typed [read batch](/core/guides/batching).
 
 ```ts
 const request = getRegistrationParameters.request(parameters);
@@ -70,11 +89,13 @@ const request = getRegistrationParameters.request(parameters);
 ## Error
 
 ```ts
-import type { Effect } from "effect";
-
-type GetRegistrationParametersError = Effect.Effect.Error<
-  ReturnType<typeof getRegistrationParameters.effect>
->;
+import type { GetRegistrationParametersError } from "@ensforge/core";
 ```
 
-See [Error Handling](/core/guides/error-handling) for tagged errors and stable error codes.
+The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
+
+See [Error Handling](/core/guides/error-handling).
+
+## Related
+
+- [`ens.registration.getRegistrationParameters`](/sdk/api/registration/get-registration-parameters)

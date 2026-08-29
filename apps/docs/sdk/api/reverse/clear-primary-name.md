@@ -15,16 +15,22 @@ import { Ensforge } from "@ensforge/sdk";
 
 ## Usage
 
-```ts
-import { sdk } from "./sdk";
+::: code-group
 
-const result = await sdk.reverse.clearPrimaryName({});
+```ts [index.ts]
+import { ens } from "./client";
+
+const result = await ens.reverse.clearPrimaryName({});
 ```
+
+<<< @/snippets/sdk/client.ts
+
+:::
 
 ## Parameters
 
 ```ts
-type ClearPrimaryNameParameters = Parameters<typeof sdk.reverse.clearPrimaryName>[0];
+import type { ClearPrimaryNameParameters } from "@ensforge/sdk";
 ```
 
 ### parameters
@@ -42,27 +48,50 @@ Argument passed to `clearPrimaryName`.
 ## Return Type
 
 ```ts
-type ClearPrimaryNameResult = Awaited<ReturnType<typeof sdk.reverse.clearPrimaryName>>;
+import type { CallExecutionResult } from "@ensforge/sdk";
 ```
 
-The result is identical to the corresponding Core action with configuration already bound.
+| Property    | Type                                          | Description                                                                    |
+| ----------- | --------------------------------------------- | ------------------------------------------------------------------------------ |
+| `id`        | `string`                                      | Stable operation or wallet batch identifier.                                   |
+| `operation` | `string`                                      | The operation value returned by the operation.                                 |
+| `status`    | `"not-started" \| "submitted" \| "confirmed"` | Current query, transaction, batch, or workflow status.                         |
+| `hash`      | `null \| &#96;0x${string}&#96; \| null`       | Transaction hash, or `null` before submission.                                 |
+| `receipt`   | `null \| WriteReceipt \| null`                | Normalized transaction receipt, or `null` when confirmation was not requested. |
 
 ## Effect
 
-```ts
-const effect = sdk.reverse.clearPrimaryName.effect(parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+import { ens } from "./client";
+
+const program = ens.reverse.clearPrimaryName.effect(parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Call
 
-The bound method retains `.call` for deferred write composition.
+Use `.call` to prepare this write for simulation, wallet batching, or a custom execution policy.
 
 ```ts
-const intent = sdk.reverse.clearPrimaryName.call(parameters);
+const call = ens.reverse.clearPrimaryName.call(parameters);
 ```
+
+## Error
+
+```ts
+import type { ClearPrimaryNameError } from "@ensforge/sdk";
+```
+
+The method rejects with the corresponding Core action errors. Use `.effect` to keep those failures in the typed Effect error channel.
+
+See [Error Handling](/sdk/guides/error-handling).
 
 ## Action
 

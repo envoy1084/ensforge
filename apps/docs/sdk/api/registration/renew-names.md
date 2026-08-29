@@ -15,18 +15,24 @@ import { Ensforge } from "@ensforge/sdk";
 
 ## Usage
 
-```ts
-import { sdk } from "./sdk";
+::: code-group
 
-const result = await sdk.registration.renewNames({
+```ts [index.ts]
+import { ens } from "./client";
+
+const result = await ens.registration.renewNames({
   renewals: [],
 });
 ```
 
+<<< @/snippets/sdk/client.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type RenewNamesParameters = Parameters<typeof sdk.registration.renewNames>[0];
+import type { RenewNamesParameters } from "@ensforge/sdk";
 ```
 
 ### renewals
@@ -51,42 +57,61 @@ Previously returned progress used to continue the workflow.
 
 `WalletClient | undefined`
 
-Wallet client override.
+Viem wallet client override for this operation. Defaults to the wallet resolved from the config.
 
 ### account
 
 `Account | Address | undefined`
 
-Account used for authorization and execution.
+Account used to authorize this operation. Defaults to the account exposed by the resolved wallet client.
 
 ### mode
 
 `WriteMode | undefined`
 
-Execution mode. `auto` selects wallet batching when available.
+Write execution strategy. `auto` uses wallet capabilities and falls back to sequential transactions.
 
 ### confirmation
 
 `ConfirmationPolicy | undefined`
 
-Confirmation policy for the write.
+Controls whether the action returns after submission or waits for one or more confirmations.
 
 ## Return Type
 
 ```ts
-type RenewNamesResult = Awaited<ReturnType<typeof sdk.registration.renewNames>>;
+import type { RenewNamesResult } from "@ensforge/sdk";
 ```
 
-The result is identical to the corresponding Core action with configuration already bound.
+| Property     | Type                                                                                                                                                                      | Description                                            |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| `status`     | `"completed" \| "partial"`                                                                                                                                                | Current query, transaction, batch, or workflow status. |
+| `renewals`   | `readonly (Omit<RenewNameResult, "status" \| "write" \| "approval" \| "finalState"> & { readonly newExpiry: bigint \| null; readonly finalState: NameState \| null; })[]` | The renewals value returned by the operation.          |
+| `approvals`  | `readonly RenewalApproval[]`                                                                                                                                              | The approvals value returned by the operation.         |
+| `totalPrice` | `bigint`                                                                                                                                                                  | The totalPrice value returned by the operation.        |
+| `write`      | `WritePlanProgress`                                                                                                                                                       | Progress for the write plan used by the workflow.      |
 
 ## Effect
 
-```ts
-const effect = sdk.registration.renewNames.effect(parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+import { ens } from "./client";
+
+const program = ens.registration.renewNames.effect(parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
+
+## Error
+
+The method rejects with the corresponding Core action errors. Use `.effect` to keep those failures in the typed Effect error channel.
+
+See [Error Handling](/sdk/guides/error-handling).
 
 ## Action
 

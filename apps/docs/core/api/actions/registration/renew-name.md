@@ -7,8 +7,6 @@ description: Renews one name through its active ENSv1 or ENSv2 route.
 
 Renews one name through its active ENSv1 or ENSv2 route.
 
-This action belongs to registration and renewal. It selects the supported contract and protocol route from the current configuration and name state.
-
 ## Import
 
 ```ts
@@ -17,7 +15,9 @@ import { renewName } from "@ensforge/core";
 
 ## Usage
 
-```ts
+::: code-group
+
+```ts [index.ts]
 import { renewName } from "@ensforge/core";
 import { config } from "./config";
 
@@ -27,17 +27,21 @@ const result = await renewName(config, {
 });
 ```
 
+<<< @/snippets/core/config.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type RenewNameParameters = Parameters<typeof renewName>[1];
+import type { RenewNameParameters } from "@ensforge/core";
 ```
 
 ### name
 
 `string`
 
-ENS name used by the operation. It is normalized before contract interaction.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### duration
 
@@ -67,25 +71,25 @@ Optional protocol-specific referral identifier.
 
 `WalletClient | undefined`
 
-Wallet client override for this operation.
+Viem wallet client override for this operation. Defaults to the wallet resolved from the config.
 
 ### account
 
 `Account | Address | undefined`
 
-Account used for authorization and wallet execution.
+Account used to authorize this operation. Defaults to the account exposed by the resolved wallet client.
 
 ### mode
 
 `WriteMode | undefined`
 
-Execution mode. `auto` uses wallet capabilities and falls back safely.
+Write execution strategy. `auto` uses wallet capabilities and falls back to sequential transactions.
 
 ### confirmation
 
 `ConfirmationPolicy | undefined`
 
-Transaction confirmation policy for this operation.
+Controls whether the action returns after submission or waits for one or more confirmations.
 
 ### resume
 
@@ -96,34 +100,53 @@ Previously returned progress used to continue an incomplete workflow.
 ## Return Type
 
 ```ts
-type RenewNameResult = Awaited<ReturnType<typeof renewName>>;
+import type { RenewNameResult } from "@ensforge/core";
 ```
 
-`RenewNameResult`
+| Property         | Type                                                                                                                                                                                                                                                                                                        | Description                                                      |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| `status`         | `"completed" \| "partial"`                                                                                                                                                                                                                                                                                  | Current query, transaction, batch, or workflow status.           |
+| `name`           | `string & Brand<"NormalizedName">`                                                                                                                                                                                                                                                                          | Normalized ENS name.                                             |
+| `protocol`       | `"v1" \| "v2"`                                                                                                                                                                                                                                                                                              | ENS protocol route used for the result.                          |
+| `route`          | `"v1-controller" \| "v2-registrar" \| "v1-renewer"`                                                                                                                                                                                                                                                         | The route value returned by the operation.                       |
+| `duration`       | `bigint`                                                                                                                                                                                                                                                                                                    | The duration value returned by the operation.                    |
+| `previousExpiry` | `bigint \| null`                                                                                                                                                                                                                                                                                            | The previousExpiry value returned by the operation.              |
+| `newExpiry`      | `bigint \| null`                                                                                                                                                                                                                                                                                            | The newExpiry value returned by the operation.                   |
+| `price`          | `bigint`                                                                                                                                                                                                                                                                                                    | The price value returned by the operation.                       |
+| `currency`       | `{ readonly kind: "native"; readonly symbol: "ETH"; readonly decimals: 18; } \| { readonly kind: "erc20"; readonly address: &#96;0x${string}&#96;; readonly symbol: string; readonly decimals: number; }`                                                                                                   | The currency value returned by the operation.                    |
+| `approval`       | `RenewalApproval`                                                                                                                                                                                                                                                                                           | The approval value returned by the operation.                    |
+| `write`          | `WritePlanProgress`                                                                                                                                                                                                                                                                                         | Progress for the write plan used by the workflow.                |
+| `finalState`     | `{ readonly kind: "available"; readonly protocol: "v1" \| "v2"; readonly wrapped: false; readonly migrated: false; readonly name: string & Brand<"NormalizedName">; readonly status: "available" \| ... 3 more ... \| "expired"; ... 10 more ...; readonly renewable: boolean; } \| ... 5 more ... \| null` | Name state observed after the workflow finishes, when available. |
 
 ## Effect
 
-```ts
-const effect = renewName.effect(config, parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+
+const program = renewName.effect(config, parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Call
 
-Use `.call` to prepare a write intent without submitting it.
+Use `.call` to prepare this write for simulation, wallet batching, or a custom execution policy.
 
 ```ts
-const intent = renewName.call(parameters);
+const call = renewName.call(parameters);
 ```
 
 ## Error
 
-```ts
-import type { Effect } from "effect";
+The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
 
-type RenewNameError = Effect.Effect.Error<ReturnType<typeof renewName.effect>>;
-```
+See [Error Handling](/core/guides/error-handling).
 
-See [Error Handling](/core/guides/error-handling) for tagged errors and stable error codes.
+## Related
+
+- [`ens.registration.renewName`](/sdk/api/registration/renew-name)

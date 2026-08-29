@@ -7,8 +7,6 @@ description: Determines the authorization required by a proposed ENS write.
 
 Determines the authorization required by a proposed ENS write.
 
-This action belongs to ENS permissions and contract capabilities. It selects the supported contract and protocol route from the current configuration and name state.
-
 ## Import
 
 ```ts
@@ -17,7 +15,9 @@ import { getRequiredAuthorization } from "@ensforge/core";
 
 ## Usage
 
-```ts
+::: code-group
+
+```ts [index.ts]
 import { getRequiredAuthorization } from "@ensforge/core";
 import { config } from "./config";
 
@@ -28,17 +28,21 @@ const result = await getRequiredAuthorization(config, {
 });
 ```
 
+<<< @/snippets/core/config.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type GetRequiredAuthorizationParameters = Parameters<typeof getRequiredAuthorization>[1];
+import type { GetRequiredAuthorizationParameters } from "@ensforge/core";
 ```
 
 ### name
 
 `string`
 
-ENS name used by the operation. It is normalized before contract interaction.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### blockNumber
 
@@ -50,13 +54,13 @@ Block number to read from. Cannot be combined with `blockTag`.
 
 `"latest" | "earliest" | "pending" | "safe" | "finalized" | undefined`
 
-Block tag to read from. Cannot be combined with `blockNumber`.
+Named block state to read from. Cannot be combined with `blockNumber`.
 
 ### account
 
 `EthereumAddress`
 
-Account used for authorization and wallet execution.
+Account used to authorize this operation. Defaults to the account exposed by the resolved wallet client.
 
 ### operation
 
@@ -70,20 +74,32 @@ Write operation whose authorization should be resolved.
 type GetRequiredAuthorizationResult = Awaited<ReturnType<typeof getRequiredAuthorization>>;
 ```
 
-The return type is inferred from the action and preserves its discriminated protocol and workflow states.
+| Property        | Type                                                                                                                                                                                                                                                                                        | Description                                        |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- |
+| `account`       | `&#96;0x${string}&#96;`                                                                                                                                                                                                                                                                     | The account value returned by the operation.       |
+| `operation`     | `{ readonly type: "address"; readonly coinType: bigint; } \| { readonly type: "text"; readonly key: string; } \| { readonly type: "contentHash"; } \| { readonly type: "pubkey"; } \| { readonly type: "abi"; readonly contentType?: bigint \| undefined; } \| ... 12 more ... \| { ...; }` | The operation value returned by the operation.     |
+| `target`        | `{ readonly available: false; readonly protocol: "v1" \| "v2"; readonly reason: "NAME_NOT_REGISTERED" \| "RESOLVER_NOT_FOUND" \| "OPERATION_UNSUPPORTED"; } \| { readonly available: true; ... 7 more ...; readonly inheritedResolver: boolean; }`                                          | The target value returned by the operation.        |
+| `authorization` | `{ readonly status: "authorized"; readonly source: "owner" \| "operator-approval" \| "token-approval" \| "resolver-delegate" \| "registry-role" \| "resolver-role" \| "wrapper-permission"; } \| { ...; } \| { ...; }`                                                                      | The authorization value returned by the operation. |
+| `blockers`      | `readonly ("NAME_NOT_REGISTERED" \| "RESOLVER_NOT_FOUND" \| "OPERATION_UNSUPPORTED" \| "WRAPPER_FUSE" \| "TRANSFER_ROLE")[]`                                                                                                                                                                | The blockers value returned by the operation.      |
 
 ## Effect
 
-```ts
-const effect = getRequiredAuthorization.effect(config, parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+
+const program = getRequiredAuthorization.effect(config, parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Request
 
-Use `.request` to include the read in [`readBatch`](/core/guides/batching).
+Use `.request` to describe the read without executing it, then include it in a typed [read batch](/core/guides/batching).
 
 ```ts
 const request = getRequiredAuthorization.request(parameters);
@@ -92,11 +108,13 @@ const request = getRequiredAuthorization.request(parameters);
 ## Error
 
 ```ts
-import type { Effect } from "effect";
-
-type GetRequiredAuthorizationError = Effect.Effect.Error<
-  ReturnType<typeof getRequiredAuthorization.effect>
->;
+import type { GetRequiredAuthorizationError } from "@ensforge/core";
 ```
 
-See [Error Handling](/core/guides/error-handling) for tagged errors and stable error codes.
+The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
+
+See [Error Handling](/core/guides/error-handling).
+
+## Related
+
+- [`ens.capabilities.getRequiredAuthorization`](/sdk/api/capabilities/get-required-authorization)

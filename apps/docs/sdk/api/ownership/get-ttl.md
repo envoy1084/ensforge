@@ -15,25 +15,31 @@ import { Ensforge } from "@ensforge/sdk";
 
 ## Usage
 
-```ts
-import { sdk } from "./sdk";
+::: code-group
 
-const result = await sdk.ownership.getTtl({
+```ts [index.ts]
+import { ens } from "./client";
+
+const result = await ens.ownership.getTtl({
   name: "example.eth",
 });
 ```
 
+<<< @/snippets/sdk/client.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type GetTtlParameters = Parameters<typeof sdk.ownership.getTtl>[0];
+import type { GetNameStateParameters } from "@ensforge/sdk";
 ```
 
 ### name
 
 `string`
 
-ENS name used by the method. It is normalized before contract interaction.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### blockNumber
 
@@ -45,32 +51,54 @@ Block number to read from. Cannot be combined with `blockTag`.
 
 `"latest" | "earliest" | "pending" | "safe" | "finalized" | undefined`
 
-Block tag to read from. Cannot be combined with `blockNumber`.
+Named block state to read from. Cannot be combined with `blockNumber`.
 
 ## Return Type
 
 ```ts
-type GetTtlResult = Awaited<ReturnType<typeof sdk.ownership.getTtl>>;
+type GetTtlResult = Awaited<ReturnType<typeof getTtl>>;
 ```
 
-The result is identical to the corresponding Core action with configuration already bound.
+| Property    | Type                             | Description                                            |
+| ----------- | -------------------------------- | ------------------------------------------------------ |
+| `supported` | `true \| false`                  | Whether the selected protocol supports this operation. |
+| `protocol`  | `"v1" \| "v2"`                   | ENS protocol route used for the result.                |
+| `ttl`       | `bigint \| undefined`            | The ttl value returned by the operation.               |
+| `reason`    | `"TTL_UNSUPPORTED" \| undefined` | The reason value returned by the operation.            |
 
 ## Effect
 
-```ts
-const effect = sdk.ownership.getTtl.effect(parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+import { ens } from "./client";
+
+const program = ens.ownership.getTtl.effect(parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Request
 
-The bound method retains `.request` for typed read batching.
+Use `.request` to describe the read without executing it, then include it in a typed [read batch](/core/guides/batching).
 
 ```ts
-const request = sdk.ownership.getTtl.request(parameters);
+const request = ens.ownership.getTtl.request(parameters);
 ```
+
+## Error
+
+```ts
+import type { GetTtlError } from "@ensforge/sdk";
+```
+
+The method rejects with the corresponding Core action errors. Use `.effect` to keep those failures in the typed Effect error channel.
+
+See [Error Handling](/sdk/guides/error-handling).
 
 ## Action
 

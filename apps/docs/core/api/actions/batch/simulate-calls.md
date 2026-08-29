@@ -7,8 +7,6 @@ description: simulate calls for typed read and wallet-aware write batching.
 
 simulate calls for typed read and wallet-aware write batching.
 
-This action belongs to typed read and wallet-aware write batching. It selects the supported contract and protocol route from the current configuration and name state.
-
 ## Import
 
 ```ts
@@ -17,7 +15,9 @@ import { simulateCalls } from "@ensforge/core";
 
 ## Usage
 
-```ts
+::: code-group
+
+```ts [index.ts]
 import { simulateCalls } from "@ensforge/core";
 import { config } from "./config";
 
@@ -26,10 +26,14 @@ const result = await simulateCalls(config, {
 });
 ```
 
+<<< @/snippets/core/config.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type SimulateCallsParameters = Parameters<typeof simulateCalls>[1];
+import type { SimulateCallsParameters } from "@ensforge/core";
 ```
 
 ### calls
@@ -42,13 +46,13 @@ Read calls or write intents included in the operation.
 
 `WalletClient | undefined`
 
-Wallet client override for this operation.
+Viem wallet client override for this operation. Defaults to the wallet resolved from the config.
 
 ### account
 
 `Account | Address | undefined`
 
-Account used for authorization and wallet execution.
+Account used to authorize this operation. Defaults to the account exposed by the resolved wallet client.
 
 ## Return Type
 
@@ -56,23 +60,29 @@ Account used for authorization and wallet execution.
 type SimulateCallsResult = Awaited<ReturnType<typeof simulateCalls>>;
 ```
 
-`readonly SimulatedWriteCall[]`
+Returns `readonly SimulatedWriteCall[]`.
 
 ## Effect
 
-```ts
-const effect = simulateCalls.effect(config, parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+
+const program = simulateCalls.effect(config, parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Error
 
-```ts
-import type { Effect } from "effect";
+The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
 
-type SimulateCallsError = Effect.Effect.Error<ReturnType<typeof simulateCalls.effect>>;
-```
+See [Error Handling](/core/guides/error-handling).
 
-See [Error Handling](/core/guides/error-handling) for tagged errors and stable error codes.
+## Related
+
+- [`ens.batch.simulateCalls`](/sdk/api/batch/simulate-calls)

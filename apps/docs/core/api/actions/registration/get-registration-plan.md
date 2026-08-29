@@ -7,8 +7,6 @@ description: Builds the current registration plan for a name.
 
 Builds the current registration plan for a name.
 
-This action belongs to registration and renewal. It selects the supported contract and protocol route from the current configuration and name state.
-
 ## Import
 
 ```ts
@@ -17,7 +15,9 @@ import { getRegistrationPlan } from "@ensforge/core";
 
 ## Usage
 
-```ts
+::: code-group
+
+```ts [index.ts]
 import { getRegistrationPlan } from "@ensforge/core";
 import { config } from "./config";
 
@@ -29,17 +29,21 @@ const result = await getRegistrationPlan(config, {
 });
 ```
 
+<<< @/snippets/core/config.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type GetRegistrationPlanParameters = Parameters<typeof getRegistrationPlan>[1];
+import type { GetRegistrationPlanParameters } from "@ensforge/core";
 ```
 
 ### name
 
 `string`
 
-ENS name used by the operation. It is normalized before contract interaction.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### duration
 
@@ -57,7 +61,7 @@ Block number to read from. Cannot be combined with `blockTag`.
 
 `"latest" | "earliest" | "pending" | "safe" | "finalized" | undefined`
 
-Block tag to read from. Cannot be combined with `blockNumber`.
+Named block state to read from. Cannot be combined with `blockNumber`.
 
 ### owner
 
@@ -113,20 +117,34 @@ ERC-20 token used when the registrar supports token payments.
 type GetRegistrationPlanResult = Awaited<ReturnType<typeof getRegistrationPlan>>;
 ```
 
-The return type is inferred from the action and preserves its discriminated protocol and workflow states.
+| Property           | Type                                                                                                                                                                                                                                                                                                                                                         | Description                                            |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------ |
+| `status`           | `"unavailable" \| "payment-token-required" \| "unsupported-payment-token" \| "ready" \| "commitment-required" \| "commitment-pending" \| "commitment-expired"`                                                                                                                                                                                               | Current query, transaction, batch, or workflow status. |
+| `name`             | `string & Brand<"NormalizedName">`                                                                                                                                                                                                                                                                                                                           | Normalized ENS name.                                   |
+| `paymentToken`     | `&#96;0x${string}&#96; \| undefined`                                                                                                                                                                                                                                                                                                                         | The paymentToken value returned by the operation.      |
+| `parameters`       | `{ readonly protocol: "v1"; readonly registrar: &#96;0x${string}&#96;; readonly priceOracle: &#96;0x${string}&#96;; readonly minimumRegistrationDuration: bigint; readonly minimumRenewalDuration: bigint; readonly minimumCommitmentAge: bigint; readonly maximumCommitmentAge: bigint; readonly payment: { ...; }; } \| { ...; } \| undefined`             | The parameters value returned by the operation.        |
+| `price`            | `{ readonly status: "available"; readonly name: string & Brand<"NormalizedName">; readonly protocol: "v1" \| "v2"; readonly registrar: &#96;0x${string}&#96;; readonly duration: bigint; readonly base: bigint; readonly premium: bigint; readonly total: bigint; readonly currency: { ...; } \| { ...; }; } \| { ...; } \| { ...; } \| { .... \| undefined` | The price value returned by the operation.             |
+| `commitment`       | `{ readonly name: string & Brand<"NormalizedName">; readonly protocol: "v1" \| "v2"; readonly registrar: &#96;0x${string}&#96;; readonly commitment: &#96;0x${string}&#96;; } \| undefined`                                                                                                                                                                  | The commitment value returned by the operation.        |
+| `commitmentStatus` | `{ readonly status: "not-found"; readonly protocol: "v1" \| "v2"; } \| { readonly status: "pending"; readonly protocol: "v1" \| "v2"; readonly submittedAt: bigint; readonly readyAt: bigint; readonly expiresAt: bigint; readonly remainingSeconds: bigint; } \| { ...; } \| { ...; } \| undefined`                                                         | The commitmentStatus value returned by the operation.  |
 
 ## Effect
 
-```ts
-const effect = getRegistrationPlan.effect(config, parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+
+const program = getRegistrationPlan.effect(config, parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Request
 
-Use `.request` to include the read in [`readBatch`](/core/guides/batching).
+Use `.request` to describe the read without executing it, then include it in a typed [read batch](/core/guides/batching).
 
 ```ts
 const request = getRegistrationPlan.request(parameters);
@@ -135,9 +153,13 @@ const request = getRegistrationPlan.request(parameters);
 ## Error
 
 ```ts
-import type { Effect } from "effect";
-
-type GetRegistrationPlanError = Effect.Effect.Error<ReturnType<typeof getRegistrationPlan.effect>>;
+import type { GetRegistrationPlanError } from "@ensforge/core";
 ```
 
-See [Error Handling](/core/guides/error-handling) for tagged errors and stable error codes.
+The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
+
+See [Error Handling](/core/guides/error-handling).
+
+## Related
+
+- [`ens.registration.getRegistrationPlan`](/sdk/api/registration/get-registration-plan)

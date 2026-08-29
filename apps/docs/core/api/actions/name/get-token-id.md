@@ -5,7 +5,7 @@ description: Get the registrar, wrapper, or registry token ID for an ENS name.
 
 # getTokenId
 
-Gets the token identifier representing an ENS name on its active ownership route.
+Get the registrar, wrapper, or registry token ID for an ENS name.
 
 ## Import
 
@@ -15,27 +15,30 @@ import { getTokenId } from "@ensforge/core";
 
 ## Usage
 
-```ts
+::: code-group
+
+```ts [index.ts]
 import { getTokenId } from "@ensforge/core";
 import { config } from "./config";
 
 const tokenId = await getTokenId(config, { name: "ens.eth" });
 ```
 
-For a wrapped ENSv1 name, the token ID is its namehash. For an unwrapped second-level `.eth` name,
-it is the labelhash interpreted as a bigint. ENSv2 returns the token ID stored by the registry route.
+<<< @/snippets/core/config.ts
+
+:::
 
 ## Parameters
 
 ```ts
-import type { GetTokenIdParameters } from "@ensforge/core";
+import type { GetNameStateParameters } from "@ensforge/core";
 ```
 
 ### name
 
 `string`
 
-ENS name whose token identifier should be returned.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### blockNumber
 
@@ -47,29 +50,39 @@ Block number to read from. Cannot be combined with `blockTag`.
 
 `"latest" | "earliest" | "pending" | "safe" | "finalized" | undefined`
 
-Block tag to read from. Cannot be combined with `blockNumber`.
+Named block state to read from. Cannot be combined with `blockNumber`.
 
 ## Return Type
 
 ```ts
-import type { GetTokenIdResult } from "@ensforge/core";
+type GetTokenIdResult = Awaited<ReturnType<typeof getTokenId>>;
 ```
 
-`bigint | null`
-
-Returns `null` when the name is not represented by a supported registrar, wrapper, or tokenized V2
-registry.
+| Property  | Type                        | Description                          |
+| --------- | --------------------------- | ------------------------------------ |
+| `valueOf` | `() => bigint \| undefined` | function valueOf() { [native code] } |
 
 ## Effect
 
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
+
 ```ts
-const effect = getTokenId.effect(config, { name: "ens.eth" });
+import { Effect } from "effect";
+
+const program = getTokenId.effect(config, parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Request
 
+Use `.request` to describe the read without executing it, then include it in a typed [read batch](/core/guides/batching).
+
 ```ts
-const request = getTokenId.request({ name: "ens.eth" });
+const request = getTokenId.request(parameters);
 ```
 
 ## Error
@@ -78,4 +91,10 @@ const request = getTokenId.request({ name: "ens.eth" });
 import type { GetTokenIdError } from "@ensforge/core";
 ```
 
-Can fail with `NameError`, `RpcError`, `ContractError`, or `CodecError`.
+The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
+
+See [Error Handling](/core/guides/error-handling).
+
+## Related
+
+- [`ens.name.getTokenId`](/sdk/api/name/get-token-id)

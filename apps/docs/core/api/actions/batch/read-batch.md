@@ -7,8 +7,6 @@ description: Executes a typed collection of ENS read requests, using Multicall w
 
 Executes a typed collection of ENS read requests, using Multicall where compatible.
 
-This action belongs to typed read and wallet-aware write batching. It selects the supported contract and protocol route from the current configuration and name state.
-
 ## Import
 
 ```ts
@@ -17,7 +15,9 @@ import { readBatch } from "@ensforge/core";
 
 ## Usage
 
-```ts
+::: code-group
+
+```ts [index.ts]
 import { readBatch } from "@ensforge/core";
 import { config } from "./config";
 
@@ -26,10 +26,14 @@ const result = await readBatch(config, {
 });
 ```
 
+<<< @/snippets/core/config.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type ReadBatchParameters = Parameters<typeof readBatch>[1];
+type Parameters = Parameters<typeof readBatch>[1];
 ```
 
 ### requests
@@ -56,23 +60,33 @@ Argument passed to `readBatch`.
 type ReadBatchResult = Awaited<ReturnType<typeof readBatch>>;
 ```
 
-`ReadBatchResult<Requests>`
+Returns `ReadBatchResult<Requests>`.
 
 ## Effect
 
-```ts
-const effect = readBatch.effect(config, parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+
+const program = readBatch.effect(config, parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Error
 
 ```ts
-import type { Effect } from "effect";
-
-type ReadBatchError = Effect.Effect.Error<ReturnType<typeof readBatch.effect>>;
+import type { ReadBatchError } from "@ensforge/core";
 ```
 
-See [Error Handling](/core/guides/error-handling) for tagged errors and stable error codes.
+The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
+
+See [Error Handling](/core/guides/error-handling).
+
+## Related
+
+- [`ens.batch.readBatch`](/sdk/api/batch/read-batch)

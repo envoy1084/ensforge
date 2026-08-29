@@ -15,26 +15,32 @@ import { Ensforge } from "@ensforge/sdk";
 
 ## Usage
 
-```ts
-import { sdk } from "./sdk";
+::: code-group
 
-const result = await sdk.dns.hasDnsRecords({
+```ts [index.ts]
+import { ens } from "./client";
+
+const result = await ens.dns.hasDnsRecords({
   name: "example.eth",
   recordName: "_ens.example.com",
 });
 ```
 
+<<< @/snippets/sdk/client.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type HasDnsRecordsParameters = Parameters<typeof sdk.dns.hasDnsRecords>[0];
+import type { HasDnsRecordsParameters } from "@ensforge/sdk";
 ```
 
 ### name
 
 `string`
 
-ENS name used by the method. It is normalized before contract interaction.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### recordName
 
@@ -52,32 +58,54 @@ Block number to read from. Cannot be combined with `blockTag`.
 
 `"latest" | "earliest" | "pending" | "safe" | "finalized" | undefined`
 
-Block tag to read from. Cannot be combined with `blockNumber`.
+Named block state to read from. Cannot be combined with `blockNumber`.
 
 ## Return Type
 
 ```ts
-type HasDnsRecordsResult = Awaited<ReturnType<typeof sdk.dns.hasDnsRecords>>;
+type HasDnsRecordsResult = Awaited<ReturnType<typeof hasDnsRecords>>;
 ```
 
-The result is identical to the corresponding Core action with configuration already bound.
+| Property     | Type                               | Description                                     |
+| ------------ | ---------------------------------- | ----------------------------------------------- |
+| `name`       | `string & Brand<"NormalizedName">` | Normalized ENS name.                            |
+| `recordName` | `string & Brand<"NormalizedName">` | The recordName value returned by the operation. |
+| `resolver`   | `&#96;0x${string}&#96; \| null`    | The resolver value returned by the operation.   |
+| `exists`     | `boolean`                          | The exists value returned by the operation.     |
 
 ## Effect
 
-```ts
-const effect = sdk.dns.hasDnsRecords.effect(parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+import { ens } from "./client";
+
+const program = ens.dns.hasDnsRecords.effect(parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Request
 
-The bound method retains `.request` for typed read batching.
+Use `.request` to describe the read without executing it, then include it in a typed [read batch](/core/guides/batching).
 
 ```ts
-const request = sdk.dns.hasDnsRecords.request(parameters);
+const request = ens.dns.hasDnsRecords.request(parameters);
 ```
+
+## Error
+
+```ts
+import type { HasDnsRecordsError } from "@ensforge/sdk";
+```
+
+The method rejects with the corresponding Core action errors. Use `.effect` to keep those failures in the typed Effect error channel.
+
+See [Error Handling](/sdk/guides/error-handling).
 
 ## Action
 

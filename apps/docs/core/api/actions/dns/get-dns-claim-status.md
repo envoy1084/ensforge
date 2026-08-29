@@ -7,8 +7,6 @@ description: Gets dns claim status for DNSSEC names and DNS resolver records.
 
 Gets dns claim status for DNSSEC names and DNS resolver records.
 
-This action belongs to DNSSEC names and DNS resolver records. It selects the supported contract and protocol route from the current configuration and name state.
-
 ## Import
 
 ```ts
@@ -17,7 +15,9 @@ import { getDnsClaimStatus } from "@ensforge/core";
 
 ## Usage
 
-```ts
+::: code-group
+
+```ts [index.ts]
 import { getDnsClaimStatus } from "@ensforge/core";
 import { config } from "./config";
 
@@ -26,17 +26,21 @@ const result = await getDnsClaimStatus(config, {
 });
 ```
 
+<<< @/snippets/core/config.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type GetDnsClaimStatusParameters = Parameters<typeof getDnsClaimStatus>[1];
+import type { GetDnsClaimStatusParameters } from "@ensforge/core";
 ```
 
 ### name
 
 `string`
 
-ENS name used by the operation. It is normalized before contract interaction.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### blockNumber
 
@@ -48,7 +52,7 @@ Block number to read from. Cannot be combined with `blockTag`.
 
 `"latest" | "earliest" | "pending" | "safe" | "finalized" | undefined`
 
-Block tag to read from. Cannot be combined with `blockNumber`.
+Named block state to read from. Cannot be combined with `blockNumber`.
 
 ## Return Type
 
@@ -56,20 +60,33 @@ Block tag to read from. Cannot be combined with `blockNumber`.
 type GetDnsClaimStatusResult = Awaited<ReturnType<typeof getDnsClaimStatus>>;
 ```
 
-The return type is inferred from the action and preserves its discriminated protocol and workflow states.
+| Property            | Type                                             | Description                                                  |
+| ------------------- | ------------------------------------------------ | ------------------------------------------------------------ |
+| `status`            | `"unsupported" \| "claimed" \| "proof-required"` | Current query, transaction, batch, or workflow status.       |
+| `name`              | `string & Brand<"NormalizedName">`               | Normalized ENS name.                                         |
+| `reason`            | `"DNS_REGISTRAR_UNAVAILABLE" \| undefined`       | The reason value returned by the operation.                  |
+| `owner`             | `&#96;0x${string}&#96; \| undefined`             | Current owner address, or `null` when the name has no owner. |
+| `resolver`          | `&#96;0x${string}&#96; \| null \| undefined`     | The resolver value returned by the operation.                |
+| `previousInception` | `bigint \| undefined`                            | The previousInception value returned by the operation.       |
 
 ## Effect
 
-```ts
-const effect = getDnsClaimStatus.effect(config, parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+
+const program = getDnsClaimStatus.effect(config, parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Request
 
-Use `.request` to include the read in [`readBatch`](/core/guides/batching).
+Use `.request` to describe the read without executing it, then include it in a typed [read batch](/core/guides/batching).
 
 ```ts
 const request = getDnsClaimStatus.request(parameters);
@@ -78,9 +95,13 @@ const request = getDnsClaimStatus.request(parameters);
 ## Error
 
 ```ts
-import type { Effect } from "effect";
-
-type GetDnsClaimStatusError = Effect.Effect.Error<ReturnType<typeof getDnsClaimStatus.effect>>;
+import type { GetDnsClaimStatusError } from "@ensforge/core";
 ```
 
-See [Error Handling](/core/guides/error-handling) for tagged errors and stable error codes.
+The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
+
+See [Error Handling](/core/guides/error-handling).
+
+## Related
+
+- [`ens.dns.getDnsClaimStatus`](/sdk/api/dns/get-dns-claim-status)

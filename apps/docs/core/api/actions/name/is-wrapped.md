@@ -5,7 +5,7 @@ description: Check whether an ENS name is represented by a wrapper registry.
 
 # isWrapped
 
-Checks whether an ENS name uses a supported wrapper ownership model.
+Check whether an ENS name is represented by a wrapper registry.
 
 ## Import
 
@@ -15,27 +15,30 @@ import { isWrapped } from "@ensforge/core";
 
 ## Usage
 
-```ts
+::: code-group
+
+```ts [index.ts]
 import { isWrapped } from "@ensforge/core";
 import { config } from "./config";
 
 const wrapped = await isWrapped(config, { name: "example.eth" });
 ```
 
-ENSv1 checks the Name Wrapper. ENSv2 checks whether the active registry route exposes the Wrapper
-Registry interface. Available names return `false`.
+<<< @/snippets/core/config.ts
+
+:::
 
 ## Parameters
 
 ```ts
-import type { IsWrappedParameters } from "@ensforge/core";
+import type { GetNameStateParameters } from "@ensforge/core";
 ```
 
 ### name
 
 `string`
 
-ENS name to check.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### blockNumber
 
@@ -47,22 +50,39 @@ Block number to read from. Cannot be combined with `blockTag`.
 
 `"latest" | "earliest" | "pending" | "safe" | "finalized" | undefined`
 
-Block tag to read from. Cannot be combined with `blockNumber`.
+Named block state to read from. Cannot be combined with `blockNumber`.
 
 ## Return Type
 
-`boolean`
+```ts
+type IsWrappedResult = Awaited<ReturnType<typeof isWrapped>>;
+```
+
+| Property  | Type            | Description                          |
+| --------- | --------------- | ------------------------------------ |
+| `valueOf` | `() => boolean` | function valueOf() { [native code] } |
 
 ## Effect
 
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
+
 ```ts
-const effect = isWrapped.effect(config, { name: "example.eth" });
+import { Effect } from "effect";
+
+const program = isWrapped.effect(config, parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Request
 
+Use `.request` to describe the read without executing it, then include it in a typed [read batch](/core/guides/batching).
+
 ```ts
-const request = isWrapped.request({ name: "example.eth" });
+const request = isWrapped.request(parameters);
 ```
 
 ## Error
@@ -71,4 +91,10 @@ const request = isWrapped.request({ name: "example.eth" });
 import type { IsWrappedError } from "@ensforge/core";
 ```
 
-Can fail with `NameError`, `RpcError`, `ContractError`, or `CodecError`.
+The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
+
+See [Error Handling](/core/guides/error-handling).
+
+## Related
+
+- [`ens.name.isWrapped`](/sdk/api/name/is-wrapped)

@@ -7,8 +7,6 @@ description: Gets registration price for registration and renewal.
 
 Gets registration price for registration and renewal.
 
-This action belongs to registration and renewal. It selects the supported contract and protocol route from the current configuration and name state.
-
 ## Import
 
 ```ts
@@ -17,7 +15,9 @@ import { getRegistrationPrice } from "@ensforge/core";
 
 ## Usage
 
-```ts
+::: code-group
+
+```ts [index.ts]
 import { getRegistrationPrice } from "@ensforge/core";
 import { config } from "./config";
 
@@ -27,17 +27,21 @@ const result = await getRegistrationPrice(config, {
 });
 ```
 
+<<< @/snippets/core/config.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type GetRegistrationPriceParameters = Parameters<typeof getRegistrationPrice>[1];
+type Parameters = Parameters<typeof getRegistrationPrice>[1];
 ```
 
 ### name
 
 `string`
 
-ENS name used by the operation. It is normalized before contract interaction.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### duration
 
@@ -55,7 +59,7 @@ Block number to read from. Cannot be combined with `blockTag`.
 
 `"latest" | "earliest" | "pending" | "safe" | "finalized" | undefined`
 
-Block tag to read from. Cannot be combined with `blockNumber`.
+Named block state to read from. Cannot be combined with `blockNumber`.
 
 ### paymentToken
 
@@ -69,20 +73,38 @@ ERC-20 token used when the registrar supports token payments.
 type GetRegistrationPriceResult = Awaited<ReturnType<typeof getRegistrationPrice>>;
 ```
 
-The return type is inferred from the action and preserves its discriminated protocol and workflow states.
+| Property       | Type                                                                                                                                                                                                                   | Description                                            |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| `status`       | `"available" \| "unavailable" \| "payment-token-required" \| "unsupported-payment-token"`                                                                                                                              | Current query, transaction, batch, or workflow status. |
+| `name`         | `string & Brand<"NormalizedName">`                                                                                                                                                                                     | Normalized ENS name.                                   |
+| `protocol`     | `"v1" \| "v2"`                                                                                                                                                                                                         | ENS protocol route used for the result.                |
+| `registrar`    | `&#96;0x${string}&#96; \| undefined`                                                                                                                                                                                   | The registrar value returned by the operation.         |
+| `duration`     | `bigint \| undefined`                                                                                                                                                                                                  | The duration value returned by the operation.          |
+| `base`         | `bigint \| undefined`                                                                                                                                                                                                  | The base value returned by the operation.              |
+| `premium`      | `bigint \| undefined`                                                                                                                                                                                                  | The premium value returned by the operation.           |
+| `total`        | `bigint \| undefined`                                                                                                                                                                                                  | The total value returned by the operation.             |
+| `currency`     | `{ readonly kind: "native"; readonly symbol: "ETH"; readonly decimals: 18; } \| { readonly kind: "erc20"; readonly address: &#96;0x${string}&#96;; readonly symbol: string; readonly decimals: number; } \| undefined` | The currency value returned by the operation.          |
+| `reason`       | `"NAME_UNAVAILABLE" \| undefined`                                                                                                                                                                                      | The reason value returned by the operation.            |
+| `paymentToken` | `&#96;0x${string}&#96; \| undefined`                                                                                                                                                                                   | The paymentToken value returned by the operation.      |
 
 ## Effect
 
-```ts
-const effect = getRegistrationPrice.effect(config, parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+
+const program = getRegistrationPrice.effect(config, parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Request
 
-Use `.request` to include the read in [`readBatch`](/core/guides/batching).
+Use `.request` to describe the read without executing it, then include it in a typed [read batch](/core/guides/batching).
 
 ```ts
 const request = getRegistrationPrice.request(parameters);
@@ -91,11 +113,13 @@ const request = getRegistrationPrice.request(parameters);
 ## Error
 
 ```ts
-import type { Effect } from "effect";
-
-type GetRegistrationPriceError = Effect.Effect.Error<
-  ReturnType<typeof getRegistrationPrice.effect>
->;
+import type { GetRegistrationPriceError } from "@ensforge/core";
 ```
 
-See [Error Handling](/core/guides/error-handling) for tagged errors and stable error codes.
+The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
+
+See [Error Handling](/core/guides/error-handling).
+
+## Related
+
+- [`ens.registration.getRegistrationPrice`](/sdk/api/registration/get-registration-price)

@@ -7,8 +7,6 @@ description: Builds the authorization and transaction plan for migrating a name.
 
 Builds the authorization and transaction plan for migrating a name.
 
-This action belongs to ENSv1 to ENSv2 migration. It selects the supported contract and protocol route from the current configuration and name state.
-
 ## Import
 
 ```ts
@@ -17,7 +15,9 @@ import { getMigrationPlan } from "@ensforge/core";
 
 ## Usage
 
-```ts
+::: code-group
+
+```ts [index.ts]
 import { getMigrationPlan } from "@ensforge/core";
 import { config } from "./config";
 
@@ -27,17 +27,21 @@ const result = await getMigrationPlan(config, {
 });
 ```
 
+<<< @/snippets/core/config.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type GetMigrationPlanParameters = Parameters<typeof getMigrationPlan>[1];
+import type { GetMigrationPlanParameters } from "@ensforge/core";
 ```
 
 ### name
 
 `string`
 
-ENS name used by the operation. It is normalized before contract interaction.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### blockNumber
 
@@ -49,13 +53,13 @@ Block number to read from. Cannot be combined with `blockTag`.
 
 `"latest" | "earliest" | "pending" | "safe" | "finalized" | undefined`
 
-Block tag to read from. Cannot be combined with `blockNumber`.
+Named block state to read from. Cannot be combined with `blockNumber`.
 
 ### account
 
 `EthereumAddress`
 
-Account used for authorization and wallet execution.
+Account used to authorize this operation. Defaults to the account exposed by the resolved wallet client.
 
 ### owner
 
@@ -81,20 +85,36 @@ ENSv2 subregistry assigned during registration.
 type GetMigrationPlanResult = Awaited<ReturnType<typeof getMigrationPlan>>;
 ```
 
-The return type is inferred from the action and preserves its discriminated protocol and workflow states.
+| Property    | Type                                                                                                                                                                                                                                                                            | Description                                                  |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| `status`    | `"unsupported" \| "not-required" \| "blocked" \| "authorization-required" \| "ready"`                                                                                                                                                                                           | Current query, transaction, batch, or workflow status.       |
+| `name`      | `string & Brand<"NormalizedName">`                                                                                                                                                                                                                                              | Normalized ENS name.                                         |
+| `blockers`  | `readonly ("ENSV2_NOT_ACTIVE" \| "NOT_ETH_NAME" \| "NAME_NOT_RESERVED" \| "PARENT_NOT_MIGRATED" \| "NAME_ALREADY_MIGRATED" \| "NAME_AVAILABLE" \| "ACCOUNT_NOT_OWNER_OR_OPERATOR" \| "INVALID_WRAPPER_STATE" \| "FROZEN_TOKEN_APPROVAL" \| "TRANSFER_DISABLED")[] \| undefined` | The blockers value returned by the operation.                |
+| `reason`    | `"V2_NATIVE" \| "AVAILABLE" \| "ALREADY_MIGRATED" \| undefined`                                                                                                                                                                                                                 | The reason value returned by the operation.                  |
+| `account`   | `&#96;0x${string}&#96; \| undefined`                                                                                                                                                                                                                                            | The account value returned by the operation.                 |
+| `owner`     | `&#96;0x${string}&#96; \| undefined`                                                                                                                                                                                                                                            | Current owner address, or `null` when the name has no owner. |
+| `target`    | `{ readonly supported: false; readonly name: string & Brand<"NormalizedName">; readonly reason: "MIGRATION_UNSUPPORTED" \| "MIGRATION_NOT_REQUIRED" \| "PARENT_NOT_MIGRATED"; } \| { ...; } \| undefined`                                                                       | The target value returned by the operation.                  |
+| `migration` | `{ readonly label: string; readonly owner: &#96;0x${string}&#96;; readonly resolver: &#96;0x${string}&#96;; readonly subregistry: &#96;0x${string}&#96;; } \| undefined`                                                                                                        | The migration value returned by the operation.               |
+| `warnings`  | `readonly ("SUBREGISTRY_IGNORED_FOR_LOCKED_NAME" \| "RESOLVER_MAY_BE_PRESERVED")[] \| undefined`                                                                                                                                                                                | The warnings value returned by the operation.                |
 
 ## Effect
 
-```ts
-const effect = getMigrationPlan.effect(config, parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+
+const program = getMigrationPlan.effect(config, parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Request
 
-Use `.request` to include the read in [`readBatch`](/core/guides/batching).
+Use `.request` to describe the read without executing it, then include it in a typed [read batch](/core/guides/batching).
 
 ```ts
 const request = getMigrationPlan.request(parameters);
@@ -103,9 +123,13 @@ const request = getMigrationPlan.request(parameters);
 ## Error
 
 ```ts
-import type { Effect } from "effect";
-
-type GetMigrationPlanError = Effect.Effect.Error<ReturnType<typeof getMigrationPlan.effect>>;
+import type { GetMigrationPlanError } from "@ensforge/core";
 ```
 
-See [Error Handling](/core/guides/error-handling) for tagged errors and stable error codes.
+The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
+
+See [Error Handling](/core/guides/error-handling).
+
+## Related
+
+- [`ens.migration.getMigrationPlan`](/sdk/api/migration/get-migration-plan)

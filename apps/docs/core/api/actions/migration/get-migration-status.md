@@ -7,8 +7,6 @@ description: Gets migration status for ENSv1 to ENSv2 migration.
 
 Gets migration status for ENSv1 to ENSv2 migration.
 
-This action belongs to ENSv1 to ENSv2 migration. It selects the supported contract and protocol route from the current configuration and name state.
-
 ## Import
 
 ```ts
@@ -17,7 +15,9 @@ import { getMigrationStatus } from "@ensforge/core";
 
 ## Usage
 
-```ts
+::: code-group
+
+```ts [index.ts]
 import { getMigrationStatus } from "@ensforge/core";
 import { config } from "./config";
 
@@ -26,17 +26,21 @@ const result = await getMigrationStatus(config, {
 });
 ```
 
+<<< @/snippets/core/config.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type GetMigrationStatusParameters = Parameters<typeof getMigrationStatus>[1];
+import type { MigrationNameParameters } from "@ensforge/core";
 ```
 
 ### name
 
 `string`
 
-ENS name used by the operation. It is normalized before contract interaction.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### blockNumber
 
@@ -48,7 +52,7 @@ Block number to read from. Cannot be combined with `blockTag`.
 
 `"latest" | "earliest" | "pending" | "safe" | "finalized" | undefined`
 
-Block tag to read from. Cannot be combined with `blockNumber`.
+Named block state to read from. Cannot be combined with `blockNumber`.
 
 ## Return Type
 
@@ -56,20 +60,34 @@ Block tag to read from. Cannot be combined with `blockNumber`.
 type GetMigrationStatusResult = Awaited<ReturnType<typeof getMigrationStatus>>;
 ```
 
-The return type is inferred from the action and preserves its discriminated protocol and workflow states.
+| Property         | Type                                                                                                                                                                                                                   | Description                                            |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| `status`         | `"unsupported" \| "not-required" \| "reserved-unwrapped" \| "locked-child-pending-parent" \| "reserved-wrapped-unlocked" \| "reserved-wrapped-locked" \| "mirrored-child" \| "migrated-unlocked" \| "migrated-locked"` | Current query, transaction, batch, or workflow status. |
+| `name`           | `string & Brand<"NormalizedName">`                                                                                                                                                                                     | Normalized ENS name.                                   |
+| `reason`         | `"ENSV2_NOT_ACTIVE" \| "NOT_ETH_NAME" \| "NAME_NOT_RESERVED" \| "V2_NATIVE" \| "AVAILABLE" \| undefined`                                                                                                               | The reason value returned by the operation.            |
+| `parent`         | `string & Brand<"NormalizedName"> \| undefined`                                                                                                                                                                        | The parent value returned by the operation.            |
+| `fuses`          | `number \| undefined`                                                                                                                                                                                                  | The fuses value returned by the operation.             |
+| `parentRegistry` | `&#96;0x${string}&#96; \| undefined`                                                                                                                                                                                   | The parentRegistry value returned by the operation.    |
+| `registry`       | `&#96;0x${string}&#96; \| undefined`                                                                                                                                                                                   | The registry value returned by the operation.          |
 
 ## Effect
 
-```ts
-const effect = getMigrationStatus.effect(config, parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+
+const program = getMigrationStatus.effect(config, parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Request
 
-Use `.request` to include the read in [`readBatch`](/core/guides/batching).
+Use `.request` to describe the read without executing it, then include it in a typed [read batch](/core/guides/batching).
 
 ```ts
 const request = getMigrationStatus.request(parameters);
@@ -78,9 +96,13 @@ const request = getMigrationStatus.request(parameters);
 ## Error
 
 ```ts
-import type { Effect } from "effect";
-
-type GetMigrationStatusError = Effect.Effect.Error<ReturnType<typeof getMigrationStatus.effect>>;
+import type { GetMigrationStatusError } from "@ensforge/core";
 ```
 
-See [Error Handling](/core/guides/error-handling) for tagged errors and stable error codes.
+The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
+
+See [Error Handling](/core/guides/error-handling).
+
+## Related
+
+- [`ens.migration.getMigrationStatus`](/sdk/api/migration/get-migration-status)

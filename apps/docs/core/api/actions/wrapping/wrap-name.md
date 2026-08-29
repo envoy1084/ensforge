@@ -7,8 +7,6 @@ description: Wraps an ENS name and returns resumable write progress.
 
 Wraps an ENS name and returns resumable write progress.
 
-This action belongs to wrapped names, expiries, and fuses. It selects the supported contract and protocol route from the current configuration and name state.
-
 ## Import
 
 ```ts
@@ -17,7 +15,9 @@ import { wrapName } from "@ensforge/core";
 
 ## Usage
 
-```ts
+::: code-group
+
+```ts [index.ts]
 import { wrapName } from "@ensforge/core";
 import { config } from "./config";
 
@@ -27,17 +27,21 @@ const result = await wrapName(config, {
 });
 ```
 
+<<< @/snippets/core/config.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type WrapNameParameters = Parameters<typeof wrapName>[1];
+import type { WrapNameParameters } from "@ensforge/core";
 ```
 
 ### name
 
 `string`
 
-ENS name used by the operation. It is normalized before contract interaction.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### owner
 
@@ -61,13 +65,13 @@ Value used for `fuses` by this action.
 
 `WriteMode | undefined`
 
-Execution mode. `auto` uses wallet capabilities and falls back safely.
+Write execution strategy. `auto` uses wallet capabilities and falls back to sequential transactions.
 
 ### confirmation
 
 `ConfirmationPolicy | undefined`
 
-Transaction confirmation policy for this operation.
+Controls whether the action returns after submission or waits for one or more confirmations.
 
 ### resume
 
@@ -79,37 +83,55 @@ Previously returned progress used to continue an incomplete workflow.
 
 `WalletClient | undefined`
 
-Wallet client override for this operation.
+Viem wallet client override for this operation. Defaults to the wallet resolved from the config.
 
 ### account
 
 `Account | Address | undefined`
 
-Account used for authorization and wallet execution.
+Account used to authorize this operation. Defaults to the account exposed by the resolved wallet client.
 
 ## Return Type
 
 ```ts
-type WrapNameResult = Awaited<ReturnType<typeof wrapName>>;
+import type { WrapNameResult } from "@ensforge/core";
 ```
 
-`WrapNameResult`
+| Property     | Type                                                                                                                                                                                                                                                                                                        | Description                                                      |
+| ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| `name`       | `string`                                                                                                                                                                                                                                                                                                    | Normalized ENS name.                                             |
+| `protocol`   | `"v1"`                                                                                                                                                                                                                                                                                                      | ENS protocol route used for the result.                          |
+| `strategy`   | `"registry" \| "eth-2ld"`                                                                                                                                                                                                                                                                                   | The strategy value returned by the operation.                    |
+| `owner`      | `&#96;0x${string}&#96;`                                                                                                                                                                                                                                                                                     | Current owner address, or `null` when the name has no owner.     |
+| `approvals`  | `{ readonly registrar: boolean; readonly registry: boolean; }`                                                                                                                                                                                                                                              | The approvals value returned by the operation.                   |
+| `write`      | `WritePlanProgress`                                                                                                                                                                                                                                                                                         | Progress for the write plan used by the workflow.                |
+| `finalState` | `{ readonly kind: "available"; readonly protocol: "v1" \| "v2"; readonly wrapped: false; readonly migrated: false; readonly name: string & Brand<"NormalizedName">; readonly status: "available" \| ... 3 more ... \| "expired"; ... 10 more ...; readonly renewable: boolean; } \| ... 5 more ... \| null` | Name state observed after the workflow finishes, when available. |
 
 ## Effect
 
-```ts
-const effect = wrapName.effect(config, parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+
+const program = wrapName.effect(config, parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Error
 
 ```ts
-import type { Effect } from "effect";
-
-type WrapNameError = Effect.Effect.Error<ReturnType<typeof wrapName.effect>>;
+import type { WrapNameError } from "@ensforge/core";
 ```
 
-See [Error Handling](/core/guides/error-handling) for tagged errors and stable error codes.
+The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
+
+See [Error Handling](/core/guides/error-handling).
+
+## Related
+
+- [`ens.wrapping.wrapName`](/sdk/api/wrapping/wrap-name)

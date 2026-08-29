@@ -7,8 +7,6 @@ description: Runs the resumable DNSSEC proof and ENS import workflow.
 
 Runs the resumable DNSSEC proof and ENS import workflow.
 
-This action belongs to DNSSEC names and DNS resolver records. It selects the supported contract and protocol route from the current configuration and name state.
-
 ## Import
 
 ```ts
@@ -17,7 +15,9 @@ import { importDnsName } from "@ensforge/core";
 
 ## Usage
 
-```ts
+::: code-group
+
+```ts [index.ts]
 import { importDnsName } from "@ensforge/core";
 import { config } from "./config";
 
@@ -27,17 +27,21 @@ const result = await importDnsName(config, {
 });
 ```
 
+<<< @/snippets/core/config.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type ImportDnsNameParameters = Parameters<typeof importDnsName>[1];
+import type { ImportDnsNameParameters } from "@ensforge/core";
 ```
 
 ### name
 
 `string`
 
-ENS name used by the operation. It is normalized before contract interaction.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### proof
 
@@ -61,25 +65,25 @@ Address used by this operation.
 
 `WalletClient | undefined`
 
-Wallet client override for this operation.
+Viem wallet client override for this operation. Defaults to the wallet resolved from the config.
 
 ### account
 
 `Account | Address | undefined`
 
-Account used for authorization and wallet execution.
+Account used to authorize this operation. Defaults to the account exposed by the resolved wallet client.
 
 ### mode
 
 `WriteMode | undefined`
 
-Execution mode. `auto` uses wallet capabilities and falls back safely.
+Write execution strategy. `auto` uses wallet capabilities and falls back to sequential transactions.
 
 ### confirmation
 
 `ConfirmationPolicy | undefined`
 
-Transaction confirmation policy for this operation.
+Controls whether the action returns after submission or waits for one or more confirmations.
 
 ### resume
 
@@ -90,26 +94,42 @@ Previously returned progress used to continue an incomplete workflow.
 ## Return Type
 
 ```ts
-type ImportDnsNameResult = Awaited<ReturnType<typeof importDnsName>>;
+import type { ImportDnsNameResult } from "@ensforge/core";
 ```
 
-`ImportDnsNameResult`
+| Property   | Type                                             | Description                                                  |
+| ---------- | ------------------------------------------------ | ------------------------------------------------------------ |
+| `status`   | `"completed" \| "not-required" \| "partial"`     | Current query, transaction, batch, or workflow status.       |
+| `name`     | `string & Brand<"NormalizedName">`               | Normalized ENS name.                                         |
+| `owner`    | `&#96;0x${string}&#96; \| null`                  | Current owner address, or `null` when the name has no owner. |
+| `resolver` | `&#96;0x${string}&#96; \| null \| null`          | The resolver value returned by the operation.                |
+| `write`    | `WritePlanProgress \| null \| WritePlanProgress` | Progress for the write plan used by the workflow.            |
 
 ## Effect
 
-```ts
-const effect = importDnsName.effect(config, parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+
+const program = importDnsName.effect(config, parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Error
 
 ```ts
-import type { Effect } from "effect";
-
-type ImportDnsNameError = Effect.Effect.Error<ReturnType<typeof importDnsName.effect>>;
+import type { ImportDnsNameError } from "@ensforge/core";
 ```
 
-See [Error Handling](/core/guides/error-handling) for tagged errors and stable error codes.
+The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
+
+See [Error Handling](/core/guides/error-handling).
+
+## Related
+
+- [`ens.dns.importDnsName`](/sdk/api/dns/import-dns-name)

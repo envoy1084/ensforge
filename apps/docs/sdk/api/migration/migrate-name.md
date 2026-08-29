@@ -15,18 +15,24 @@ import { Ensforge } from "@ensforge/sdk";
 
 ## Usage
 
-```ts
-import { sdk } from "./sdk";
+::: code-group
 
-const result = await sdk.migration.migrateName({
+```ts [index.ts]
+import { ens } from "./client";
+
+const result = await ens.migration.migrateName({
   name: "example.eth",
 });
 ```
 
+<<< @/snippets/sdk/client.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type MigrateNameParameters = Parameters<typeof sdk.migration.migrateName>[0];
+import type { MigrateNameParameters } from "@ensforge/sdk";
 ```
 
 ### migrateParent
@@ -45,7 +51,7 @@ Previously returned progress used to continue the workflow.
 
 `string`
 
-ENS name used by the method. It is normalized before contract interaction.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### owner
 
@@ -69,50 +75,71 @@ Value used for `subregistry` by this method.
 
 `WalletClient | undefined`
 
-Wallet client override.
+Viem wallet client override for this operation. Defaults to the wallet resolved from the config.
 
 ### account
 
 `Account | Address | undefined`
 
-Account used for authorization and execution.
+Account used to authorize this operation. Defaults to the account exposed by the resolved wallet client.
 
 ### mode
 
 `WriteMode | undefined`
 
-Execution mode. `auto` selects wallet batching when available.
+Write execution strategy. `auto` uses wallet capabilities and falls back to sequential transactions.
 
 ### confirmation
 
 `ConfirmationPolicy | undefined`
 
-Confirmation policy for the write.
+Controls whether the action returns after submission or waits for one or more confirmations.
 
 ## Return Type
 
 ```ts
-type MigrateNameResult = Awaited<ReturnType<typeof sdk.migration.migrateName>>;
+import type { MigrateNameResult } from "@ensforge/sdk";
 ```
 
-The result is identical to the corresponding Core action with configuration already bound.
+| Property     | Type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | Description                                                      |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| `status`     | `"completed" \| "partial" \| "not-required"`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | Current query, transaction, batch, or workflow status.           |
+| `name`       | `string`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | Normalized ENS name.                                             |
+| `route`      | `"unwrapped" \| "wrapped-unlocked" \| "wrapped-locked" \| "locked-child" \| undefined`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | The route value returned by the operation.                       |
+| `steps`      | `readonly { readonly name: string; readonly route: Extract<MigrationTarget, { readonly supported: true; }>["route"]; }[] \| undefined`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | The steps value returned by the operation.                       |
+| `write`      | `WritePlanProgress \| null`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | Progress for the write plan used by the workflow.                |
+| `finalState` | `{ readonly kind: "available"; readonly protocol: "v1" \| "v2"; readonly wrapped: false; readonly migrated: false; readonly name: string & Brand<"NormalizedName">; readonly status: "available" \| ... 3 more ... \| "expired"; ... 10 more ...; readonly renewable: boolean; } \| ... 5 more ... \| null \| { readonly kind: "available"; readonly protocol: "v1" \| "v2"; readonly wrapped: false; readonly migrated: false; readonly name: string & Brand<"NormalizedName">; readonly status: "available" \| ... 3 more ... \| "expired"; ... 10 more ...; readonly renewable: boolean; } \| ... 4 more ... \| { ...; }` | Name state observed after the workflow finishes, when available. |
+| `reason`     | `"V2_NATIVE" \| "AVAILABLE" \| "ALREADY_MIGRATED" \| undefined`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | The reason value returned by the operation.                      |
 
 ## Effect
 
-```ts
-const effect = sdk.migration.migrateName.effect(parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+import { ens } from "./client";
+
+const program = ens.migration.migrateName.effect(parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Call
 
-The bound method retains `.call` for deferred write composition.
+Use `.call` to prepare this write for simulation, wallet batching, or a custom execution policy.
 
 ```ts
-const intent = sdk.migration.migrateName.call(parameters);
+const call = ens.migration.migrateName.call(parameters);
 ```
+
+## Error
+
+The method rejects with the corresponding Core action errors. Use `.effect` to keep those failures in the typed Effect error channel.
+
+See [Error Handling](/sdk/guides/error-handling).
 
 ## Action
 

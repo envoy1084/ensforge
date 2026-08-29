@@ -7,8 +7,6 @@ description: Gets migration target for ENSv1 to ENSv2 migration.
 
 Gets migration target for ENSv1 to ENSv2 migration.
 
-This action belongs to ENSv1 to ENSv2 migration. It selects the supported contract and protocol route from the current configuration and name state.
-
 ## Import
 
 ```ts
@@ -17,7 +15,9 @@ import { getMigrationTarget } from "@ensforge/core";
 
 ## Usage
 
-```ts
+::: code-group
+
+```ts [index.ts]
 import { getMigrationTarget } from "@ensforge/core";
 import { config } from "./config";
 
@@ -26,17 +26,21 @@ const result = await getMigrationTarget(config, {
 });
 ```
 
+<<< @/snippets/core/config.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type GetMigrationTargetParameters = Parameters<typeof getMigrationTarget>[1];
+import type { MigrationNameParameters } from "@ensforge/core";
 ```
 
 ### name
 
 `string`
 
-ENS name used by the operation. It is normalized before contract interaction.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### blockNumber
 
@@ -48,7 +52,7 @@ Block number to read from. Cannot be combined with `blockTag`.
 
 `"latest" | "earliest" | "pending" | "safe" | "finalized" | undefined`
 
-Block tag to read from. Cannot be combined with `blockNumber`.
+Named block state to read from. Cannot be combined with `blockNumber`.
 
 ## Return Type
 
@@ -56,20 +60,35 @@ Block tag to read from. Cannot be combined with `blockNumber`.
 type GetMigrationTargetResult = Awaited<ReturnType<typeof getMigrationTarget>>;
 ```
 
-The return type is inferred from the action and preserves its discriminated protocol and workflow states.
+| Property        | Type                                                                                        | Description                                            |
+| --------------- | ------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| `supported`     | `false \| true`                                                                             | Whether the selected protocol supports this operation. |
+| `name`          | `string & Brand<"NormalizedName">`                                                          | Normalized ENS name.                                   |
+| `reason`        | `"MIGRATION_UNSUPPORTED" \| "MIGRATION_NOT_REQUIRED" \| "PARENT_NOT_MIGRATED" \| undefined` | The reason value returned by the operation.            |
+| `route`         | `"unwrapped" \| "wrapped-unlocked" \| "wrapped-locked" \| "locked-child" \| undefined`      | The route value returned by the operation.             |
+| `tokenContract` | `&#96;0x${string}&#96; \| undefined`                                                        | The tokenContract value returned by the operation.     |
+| `tokenId`       | `bigint \| undefined`                                                                       | The tokenId value returned by the operation.           |
+| `tokenStandard` | `"erc721" \| "erc1155" \| undefined`                                                        | The tokenStandard value returned by the operation.     |
+| `receiver`      | `&#96;0x${string}&#96; \| undefined`                                                        | The receiver value returned by the operation.          |
 
 ## Effect
 
-```ts
-const effect = getMigrationTarget.effect(config, parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+
+const program = getMigrationTarget.effect(config, parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Request
 
-Use `.request` to include the read in [`readBatch`](/core/guides/batching).
+Use `.request` to describe the read without executing it, then include it in a typed [read batch](/core/guides/batching).
 
 ```ts
 const request = getMigrationTarget.request(parameters);
@@ -78,9 +97,13 @@ const request = getMigrationTarget.request(parameters);
 ## Error
 
 ```ts
-import type { Effect } from "effect";
-
-type GetMigrationTargetError = Effect.Effect.Error<ReturnType<typeof getMigrationTarget.effect>>;
+import type { GetMigrationTargetError } from "@ensforge/core";
 ```
 
-See [Error Handling](/core/guides/error-handling) for tagged errors and stable error codes.
+The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
+
+See [Error Handling](/core/guides/error-handling).
+
+## Related
+
+- [`ens.migration.getMigrationTarget`](/sdk/api/migration/get-migration-target)

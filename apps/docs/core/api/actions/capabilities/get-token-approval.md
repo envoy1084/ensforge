@@ -7,8 +7,6 @@ description: Gets token approval for ENS permissions and contract capabilities.
 
 Gets token approval for ENS permissions and contract capabilities.
 
-This action belongs to ENS permissions and contract capabilities. It selects the supported contract and protocol route from the current configuration and name state.
-
 ## Import
 
 ```ts
@@ -17,7 +15,9 @@ import { getTokenApproval } from "@ensforge/core";
 
 ## Usage
 
-```ts
+::: code-group
+
+```ts [index.ts]
 import { getTokenApproval } from "@ensforge/core";
 import { config } from "./config";
 
@@ -26,17 +26,21 @@ const result = await getTokenApproval(config, {
 });
 ```
 
+<<< @/snippets/core/config.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type GetTokenApprovalParameters = Parameters<typeof getTokenApproval>[1];
+import type { NameCapabilityParameters } from "@ensforge/core";
 ```
 
 ### name
 
 `string`
 
-ENS name used by the operation. It is normalized before contract interaction.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### blockNumber
 
@@ -48,7 +52,7 @@ Block number to read from. Cannot be combined with `blockTag`.
 
 `"latest" | "earliest" | "pending" | "safe" | "finalized" | undefined`
 
-Block tag to read from. Cannot be combined with `blockNumber`.
+Named block state to read from. Cannot be combined with `blockNumber`.
 
 ## Return Type
 
@@ -56,20 +60,34 @@ Block tag to read from. Cannot be combined with `blockNumber`.
 type GetTokenApprovalResult = Awaited<ReturnType<typeof getTokenApproval>>;
 ```
 
-The return type is inferred from the action and preserves its discriminated protocol and workflow states.
+| Property    | Type                                                                    | Description                                            |
+| ----------- | ----------------------------------------------------------------------- | ------------------------------------------------------ |
+| `supported` | `false \| true`                                                         | Whether the selected protocol supports this operation. |
+| `protocol`  | `"v1" \| "v2" \| "v1"`                                                  | ENS protocol route used for the result.                |
+| `reason`    | `"PER_TOKEN_APPROVAL_UNSUPPORTED" \| "NAME_NOT_TOKENIZED" \| undefined` | The reason value returned by the operation.            |
+| `kind`      | `"name-wrapper" \| "registrar" \| undefined`                            | The kind value returned by the operation.              |
+| `contract`  | `&#96;0x${string}&#96; \| undefined`                                    | The contract value returned by the operation.          |
+| `tokenId`   | `bigint \| undefined`                                                   | The tokenId value returned by the operation.           |
+| `approved`  | `&#96;0x${string}&#96; \| null \| undefined`                            | The approved value returned by the operation.          |
 
 ## Effect
 
-```ts
-const effect = getTokenApproval.effect(config, parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+
+const program = getTokenApproval.effect(config, parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Request
 
-Use `.request` to include the read in [`readBatch`](/core/guides/batching).
+Use `.request` to describe the read without executing it, then include it in a typed [read batch](/core/guides/batching).
 
 ```ts
 const request = getTokenApproval.request(parameters);
@@ -78,9 +96,13 @@ const request = getTokenApproval.request(parameters);
 ## Error
 
 ```ts
-import type { Effect } from "effect";
-
-type GetTokenApprovalError = Effect.Effect.Error<ReturnType<typeof getTokenApproval.effect>>;
+import type { GetTokenApprovalError } from "@ensforge/core";
 ```
 
-See [Error Handling](/core/guides/error-handling) for tagged errors and stable error codes.
+The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
+
+See [Error Handling](/core/guides/error-handling).
+
+## Related
+
+- [`ens.capabilities.getTokenApproval`](/sdk/api/capabilities/get-token-approval)

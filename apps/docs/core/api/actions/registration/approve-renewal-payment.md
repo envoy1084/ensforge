@@ -7,8 +7,6 @@ description: Approves renewal payment for registration and renewal.
 
 Approves renewal payment for registration and renewal.
 
-This action belongs to registration and renewal. It selects the supported contract and protocol route from the current configuration and name state.
-
 ## Import
 
 ```ts
@@ -17,7 +15,9 @@ import { approveRenewalPayment } from "@ensforge/core";
 
 ## Usage
 
-```ts
+::: code-group
+
+```ts [index.ts]
 import { approveRenewalPayment } from "@ensforge/core";
 import { config } from "./config";
 
@@ -29,17 +29,21 @@ const result = await approveRenewalPayment(config, {
 });
 ```
 
+<<< @/snippets/core/config.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type ApproveRenewalPaymentParameters = Parameters<typeof approveRenewalPayment>[1];
+import type { ApproveRenewalPaymentParameters } from "@ensforge/core";
 ```
 
 ### name
 
 `string`
 
-ENS name used by the operation. It is normalized before contract interaction.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### duration
 
@@ -62,36 +66,46 @@ Token amount approved by the operation.
 ## Return Type
 
 ```ts
-type ApproveRenewalPaymentResult = Awaited<ReturnType<typeof approveRenewalPayment>>;
+import type { CallExecutionResult } from "@ensforge/core";
 ```
 
-`CallExecutionResult`
+| Property    | Type                                          | Description                                                                    |
+| ----------- | --------------------------------------------- | ------------------------------------------------------------------------------ |
+| `id`        | `string`                                      | Stable operation or wallet batch identifier.                                   |
+| `operation` | `string`                                      | The operation value returned by the operation.                                 |
+| `status`    | `"not-started" \| "submitted" \| "confirmed"` | Current query, transaction, batch, or workflow status.                         |
+| `hash`      | `null \| &#96;0x${string}&#96; \| null`       | Transaction hash, or `null` before submission.                                 |
+| `receipt`   | `null \| WriteReceipt \| null`                | Normalized transaction receipt, or `null` when confirmation was not requested. |
 
 ## Effect
 
-```ts
-const effect = approveRenewalPayment.effect(config, parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+
+const program = approveRenewalPayment.effect(config, parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Call
 
-Use `.call` to prepare a write intent without submitting it.
+Use `.call` to prepare this write for simulation, wallet batching, or a custom execution policy.
 
 ```ts
-const intent = approveRenewalPayment.call(parameters);
+const call = approveRenewalPayment.call(parameters);
 ```
 
 ## Error
 
-```ts
-import type { Effect } from "effect";
+The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
 
-type ApproveRenewalPaymentError = Effect.Effect.Error<
-  ReturnType<typeof approveRenewalPayment.effect>
->;
-```
+See [Error Handling](/core/guides/error-handling).
 
-See [Error Handling](/core/guides/error-handling) for tagged errors and stable error codes.
+## Related
+
+- [`ens.registration.approveRenewalPayment`](/sdk/api/registration/approve-renewal-payment)

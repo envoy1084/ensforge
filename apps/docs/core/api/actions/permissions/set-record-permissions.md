@@ -7,8 +7,6 @@ description: Sets record permissions for approvals and scoped roles.
 
 Sets record permissions for approvals and scoped roles.
 
-This action belongs to approvals and scoped roles. It selects the supported contract and protocol route from the current configuration and name state.
-
 ## Import
 
 ```ts
@@ -17,7 +15,9 @@ import { setRecordPermissions } from "@ensforge/core";
 
 ## Usage
 
-```ts
+::: code-group
+
+```ts [index.ts]
 import { setRecordPermissions } from "@ensforge/core";
 import { config } from "./config";
 
@@ -29,23 +29,27 @@ const result = await setRecordPermissions(config, {
 });
 ```
 
+<<< @/snippets/core/config.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type SetRecordPermissionsParameters = Parameters<typeof setRecordPermissions>[1];
+import type { SetRecordPermissionsParameters } from "@ensforge/core";
 ```
 
 ### name
 
 `string`
 
-ENS name used by the operation. It is normalized before contract interaction.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### account
 
 `string`
 
-Account used for authorization and wallet execution.
+Account used to authorize this operation. Defaults to the account exposed by the resolved wallet client.
 
 ### records
 
@@ -69,7 +73,7 @@ Allows the operation to use a broader supported permission scope.
 
 `WalletClient | undefined`
 
-Wallet client override for this operation.
+Viem wallet client override for this operation. Defaults to the wallet resolved from the config.
 
 ### walletAccount
 
@@ -81,7 +85,7 @@ Wallet account used to execute this operation.
 
 `WriteMode | undefined`
 
-Execution mode. `auto` uses wallet capabilities and falls back safely.
+Write execution strategy. `auto` uses wallet capabilities and falls back to sequential transactions.
 
 ### atomicity
 
@@ -93,7 +97,7 @@ Atomicity required from the selected execution path.
 
 `ConfirmationPolicy | undefined`
 
-Transaction confirmation policy for this operation.
+Controls whether the action returns after submission or waits for one or more confirmations.
 
 ### capabilities
 
@@ -104,28 +108,46 @@ Wallet capability overrides included with the call request.
 ## Return Type
 
 ```ts
-type SetRecordPermissionsResult = Awaited<ReturnType<typeof setRecordPermissions>>;
+import type { SetRecordPermissionsResult } from "@ensforge/core";
 ```
 
-`SetRecordPermissionsResult`
+| Property      | Type                                                          | Description                                      |
+| ------------- | ------------------------------------------------------------- | ------------------------------------------------ |
+| `model`       | `"public-resolver-delegate" \| "permissioned-resolver-roles"` | The model value returned by the operation.       |
+| `protocol`    | `"v1" \| "v2" \| "v2"`                                        | ENS protocol route used for the result.          |
+| `resolver`    | `&#96;0x${string}&#96;`                                       | The resolver value returned by the operation.    |
+| `account`     | `&#96;0x${string}&#96;`                                       | The account value returned by the operation.     |
+| `approved`    | `boolean`                                                     | The approved value returned by the operation.    |
+| `scope`       | `"node" \| "exact"`                                           | The scope value returned by the operation.       |
+| `widened`     | `true \| false`                                               | The widened value returned by the operation.     |
+| `execution`   | `SendCallsResult`                                             | The execution value returned by the operation.   |
+| `permissions` | `readonly AppliedRecordPermission[] \| undefined`             | The permissions value returned by the operation. |
 
 ## Effect
 
-```ts
-const effect = setRecordPermissions.effect(config, parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+
+const program = setRecordPermissions.effect(config, parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Error
 
 ```ts
-import type { Effect } from "effect";
-
-type SetRecordPermissionsError = Effect.Effect.Error<
-  ReturnType<typeof setRecordPermissions.effect>
->;
+import type { SetRecordPermissionsError } from "@ensforge/core";
 ```
 
-See [Error Handling](/core/guides/error-handling) for tagged errors and stable error codes.
+The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
+
+See [Error Handling](/core/guides/error-handling).
+
+## Related
+
+- [`ens.permissions.setRecordPermissions`](/sdk/api/permissions/set-record-permissions)

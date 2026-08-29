@@ -15,27 +15,31 @@ import { Ensforge } from "@ensforge/sdk";
 
 ## Usage
 
-```ts
-import { sdk } from "./sdk";
+::: code-group
 
-const result = await sdk.capabilities.getResolverCapabilities({
+```ts [index.ts]
+import { ens } from "./client";
+
+const result = await ens.capabilities.getResolverCapabilities({
   name: "example.eth",
 });
 ```
 
+<<< @/snippets/sdk/client.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type GetResolverCapabilitiesParameters = Parameters<
-  typeof sdk.capabilities.getResolverCapabilities
->[0];
+import type { NameCapabilityParameters } from "@ensforge/sdk";
 ```
 
 ### name
 
 `string`
 
-ENS name used by the method. It is normalized before contract interaction.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### blockNumber
 
@@ -47,34 +51,57 @@ Block number to read from. Cannot be combined with `blockTag`.
 
 `"latest" | "earliest" | "pending" | "safe" | "finalized" | undefined`
 
-Block tag to read from. Cannot be combined with `blockNumber`.
+Named block state to read from. Cannot be combined with `blockNumber`.
 
 ## Return Type
 
 ```ts
-type GetResolverCapabilitiesResult = Awaited<
-  ReturnType<typeof sdk.capabilities.getResolverCapabilities>
->;
+type GetResolverCapabilitiesResult = Awaited<ReturnType<typeof getResolverCapabilities>>;
 ```
 
-The result is identical to the corresponding Core action with configuration already bound.
+| Property        | Type                                                                                                                                                                                                                                                                          | Description                                            |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| `address`       | `&#96;0x${string}&#96; \| null`                                                                                                                                                                                                                                               | Decoded address, or `null` when the record is not set. |
+| `node`          | `&#96;0x${string}&#96; & Brand<"Namehash">`                                                                                                                                                                                                                                   | The node value returned by the operation.              |
+| `inherited`     | `boolean`                                                                                                                                                                                                                                                                     | The inherited value returned by the operation.         |
+| `extended`      | `boolean`                                                                                                                                                                                                                                                                     | The extended value returned by the operation.          |
+| `permissioned`  | `boolean`                                                                                                                                                                                                                                                                     | The permissioned value returned by the operation.      |
+| `authorization` | `"unknown" \| "none" \| "owner-delegate" \| "role"`                                                                                                                                                                                                                           | The authorization value returned by the operation.     |
+| `profiles`      | `{ readonly address: boolean; readonly text: boolean; readonly contentHash: boolean; readonly abi: boolean; readonly pubkey: boolean; readonly interface: boolean; readonly name: boolean; readonly data: boolean; readonly dnsRecord: boolean; readonly dnsZone: boolean; }` | The profiles value returned by the operation.          |
 
 ## Effect
 
-```ts
-const effect = sdk.capabilities.getResolverCapabilities.effect(parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+import { ens } from "./client";
+
+const program = ens.capabilities.getResolverCapabilities.effect(parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Request
 
-The bound method retains `.request` for typed read batching.
+Use `.request` to describe the read without executing it, then include it in a typed [read batch](/core/guides/batching).
 
 ```ts
-const request = sdk.capabilities.getResolverCapabilities.request(parameters);
+const request = ens.capabilities.getResolverCapabilities.request(parameters);
 ```
+
+## Error
+
+```ts
+import type { GetResolverCapabilitiesError } from "@ensforge/sdk";
+```
+
+The method rejects with the corresponding Core action errors. Use `.effect` to keep those failures in the typed Effect error channel.
+
+See [Error Handling](/sdk/guides/error-handling).
 
 ## Action
 

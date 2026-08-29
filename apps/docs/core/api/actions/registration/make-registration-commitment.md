@@ -7,8 +7,6 @@ description: make registration commitment for registration and renewal.
 
 make registration commitment for registration and renewal.
 
-This action belongs to registration and renewal. It selects the supported contract and protocol route from the current configuration and name state.
-
 ## Import
 
 ```ts
@@ -17,7 +15,9 @@ import { makeRegistrationCommitment } from "@ensforge/core";
 
 ## Usage
 
-```ts
+::: code-group
+
+```ts [index.ts]
 import { makeRegistrationCommitment } from "@ensforge/core";
 import { config } from "./config";
 
@@ -29,17 +29,21 @@ const result = await makeRegistrationCommitment(config, {
 });
 ```
 
+<<< @/snippets/core/config.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type MakeRegistrationCommitmentParameters = Parameters<typeof makeRegistrationCommitment>[1];
+type Parameters = Parameters<typeof makeRegistrationCommitment>[1];
 ```
 
 ### name
 
 `string`
 
-ENS name used by the operation. It is normalized before contract interaction.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### duration
 
@@ -57,7 +61,7 @@ Block number to read from. Cannot be combined with `blockTag`.
 
 `"latest" | "earliest" | "pending" | "safe" | "finalized" | undefined`
 
-Block tag to read from. Cannot be combined with `blockNumber`.
+Named block state to read from. Cannot be combined with `blockNumber`.
 
 ### owner
 
@@ -107,20 +111,31 @@ Optional protocol-specific referral identifier.
 type MakeRegistrationCommitmentResult = Awaited<ReturnType<typeof makeRegistrationCommitment>>;
 ```
 
-`{ readonly name: string & Brand<"NormalizedName">; readonly protocol: "v1" | "v2"; readonly registrar: `0x${string}`; readonly commitment: `0x${string}`; }`
+| Property     | Type                               | Description                                     |
+| ------------ | ---------------------------------- | ----------------------------------------------- |
+| `name`       | `string & Brand<"NormalizedName">` | Normalized ENS name.                            |
+| `protocol`   | `"v1" \| "v2"`                     | ENS protocol route used for the result.         |
+| `registrar`  | `&#96;0x${string}&#96;`            | The registrar value returned by the operation.  |
+| `commitment` | `&#96;0x${string}&#96;`            | The commitment value returned by the operation. |
 
 ## Effect
 
-```ts
-const effect = makeRegistrationCommitment.effect(config, parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+
+const program = makeRegistrationCommitment.effect(config, parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Request
 
-Use `.request` to include the read in [`readBatch`](/core/guides/batching).
+Use `.request` to describe the read without executing it, then include it in a typed [read batch](/core/guides/batching).
 
 ```ts
 const request = makeRegistrationCommitment.request(parameters);
@@ -129,11 +144,13 @@ const request = makeRegistrationCommitment.request(parameters);
 ## Error
 
 ```ts
-import type { Effect } from "effect";
-
-type MakeRegistrationCommitmentError = Effect.Effect.Error<
-  ReturnType<typeof makeRegistrationCommitment.effect>
->;
+import type { MakeRegistrationCommitmentError } from "@ensforge/core";
 ```
 
-See [Error Handling](/core/guides/error-handling) for tagged errors and stable error codes.
+The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
+
+See [Error Handling](/core/guides/error-handling).
+
+## Related
+
+- [`ens.registration.makeRegistrationCommitment`](/sdk/api/registration/make-registration-commitment)

@@ -15,18 +15,24 @@ import { Ensforge } from "@ensforge/sdk";
 
 ## Usage
 
-```ts
-import { sdk } from "./sdk";
+::: code-group
 
-const result = await sdk.registration.getCommitmentStatus({
+```ts [index.ts]
+import { ens } from "./client";
+
+const result = await ens.registration.getCommitmentStatus({
   commitment: "0x0000000000000000000000000000000000000000000000000000000000000001",
 });
 ```
 
+<<< @/snippets/sdk/client.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type GetCommitmentStatusParameters = Parameters<typeof sdk.registration.getCommitmentStatus>[0];
+import type { GetCommitmentStatusParameters } from "@ensforge/sdk";
 ```
 
 ### commitment
@@ -45,32 +51,56 @@ Block number to read from. Cannot be combined with `blockTag`.
 
 `"latest" | "earliest" | "pending" | "safe" | "finalized" | undefined`
 
-Block tag to read from. Cannot be combined with `blockNumber`.
+Named block state to read from. Cannot be combined with `blockNumber`.
 
 ## Return Type
 
 ```ts
-type GetCommitmentStatusResult = Awaited<ReturnType<typeof sdk.registration.getCommitmentStatus>>;
+type GetCommitmentStatusResult = Awaited<ReturnType<typeof getCommitmentStatus>>;
 ```
 
-The result is identical to the corresponding Core action with configuration already bound.
+| Property           | Type                                               | Description                                            |
+| ------------------ | -------------------------------------------------- | ------------------------------------------------------ |
+| `status`           | `"not-found" \| "pending" \| "ready" \| "expired"` | Current query, transaction, batch, or workflow status. |
+| `protocol`         | `"v1" \| "v2"`                                     | ENS protocol route used for the result.                |
+| `submittedAt`      | `bigint \| undefined`                              | The submittedAt value returned by the operation.       |
+| `readyAt`          | `bigint \| undefined`                              | The readyAt value returned by the operation.           |
+| `expiresAt`        | `bigint \| undefined`                              | The expiresAt value returned by the operation.         |
+| `remainingSeconds` | `bigint \| undefined`                              | The remainingSeconds value returned by the operation.  |
 
 ## Effect
 
-```ts
-const effect = sdk.registration.getCommitmentStatus.effect(parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+import { ens } from "./client";
+
+const program = ens.registration.getCommitmentStatus.effect(parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Request
 
-The bound method retains `.request` for typed read batching.
+Use `.request` to describe the read without executing it, then include it in a typed [read batch](/core/guides/batching).
 
 ```ts
-const request = sdk.registration.getCommitmentStatus.request(parameters);
+const request = ens.registration.getCommitmentStatus.request(parameters);
 ```
+
+## Error
+
+```ts
+import type { GetCommitmentStatusError } from "@ensforge/sdk";
+```
+
+The method rejects with the corresponding Core action errors. Use `.effect` to keep those failures in the typed Effect error channel.
+
+See [Error Handling](/sdk/guides/error-handling).
 
 ## Action
 

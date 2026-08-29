@@ -15,26 +15,32 @@ import { Ensforge } from "@ensforge/sdk";
 
 ## Usage
 
-```ts
-import { sdk } from "./sdk";
+::: code-group
 
-const result = await sdk.records.getAddresses({
+```ts [index.ts]
+import { ens } from "./client";
+
+const result = await ens.records.getAddresses({
   name: "example.eth",
   coinTypes: [60n],
 });
 ```
 
+<<< @/snippets/sdk/client.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type GetAddressesParameters = Parameters<typeof sdk.records.getAddresses>[0];
+import type { GetAddressesParameters } from "@ensforge/sdk";
 ```
 
 ### name
 
 `string`
 
-ENS name used by the method. It is normalized before contract interaction.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### coinTypes
 
@@ -52,32 +58,49 @@ Block number to read from. Cannot be combined with `blockTag`.
 
 `"latest" | "earliest" | "pending" | "safe" | "finalized" | undefined`
 
-Block tag to read from. Cannot be combined with `blockNumber`.
+Named block state to read from. Cannot be combined with `blockNumber`.
 
 ## Return Type
 
 ```ts
-type GetAddressesResult = Awaited<ReturnType<typeof sdk.records.getAddresses>>;
+type GetAddressesResult = Awaited<ReturnType<typeof getAddresses>>;
 ```
 
-The result is identical to the corresponding Core action with configuration already bound.
+Returns `readonly ({ readonly coinType: bigint & Brand<"CoinType">; readonly address: string; readonly raw: &#96;0x${string}&#96; & Brand<"AddressRecordData">; } | { readonly coinType: bigint & Brand<"CoinType">; readonly address: null; readonly raw: null; })[]`.
 
 ## Effect
 
-```ts
-const effect = sdk.records.getAddresses.effect(parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+import { ens } from "./client";
+
+const program = ens.records.getAddresses.effect(parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Request
 
-The bound method retains `.request` for typed read batching.
+Use `.request` to describe the read without executing it, then include it in a typed [read batch](/core/guides/batching).
 
 ```ts
-const request = sdk.records.getAddresses.request(parameters);
+const request = ens.records.getAddresses.request(parameters);
 ```
+
+## Error
+
+```ts
+import type { GetAddressesError } from "@ensforge/sdk";
+```
+
+The method rejects with the corresponding Core action errors. Use `.effect` to keep those failures in the typed Effect error channel.
+
+See [Error Handling](/sdk/guides/error-handling).
 
 ## Action
 

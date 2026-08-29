@@ -5,7 +5,7 @@ description: Check whether an ENS .eth registration can be renewed.
 
 # isRenewable
 
-Checks whether a second-level `.eth` registration can be renewed through its active route.
+Check whether an ENS .eth registration can be renewed.
 
 ## Import
 
@@ -15,28 +15,30 @@ import { isRenewable } from "@ensforge/core";
 
 ## Usage
 
-```ts
+::: code-group
+
+```ts [index.ts]
 import { isRenewable } from "@ensforge/core";
 import { config } from "./config";
 
 const renewable = await isRenewable(config, { name: "example.eth" });
 ```
 
-ENSv1 registrations use the V1 registrar state. ENSv2 names use the ETH Registrar. Reserved,
-unmigrated names use the V1 renewal compatibility contract. Names outside second-level `.eth` return
-`false`.
+<<< @/snippets/core/config.ts
+
+:::
 
 ## Parameters
 
 ```ts
-import type { IsRenewableParameters } from "@ensforge/core";
+import type { GetNameStateParameters } from "@ensforge/core";
 ```
 
 ### name
 
 `string`
 
-Second-level `.eth` name to check.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### blockNumber
 
@@ -48,22 +50,39 @@ Block number to read from. Cannot be combined with `blockTag`.
 
 `"latest" | "earliest" | "pending" | "safe" | "finalized" | undefined`
 
-Block tag to read from. Cannot be combined with `blockNumber`.
+Named block state to read from. Cannot be combined with `blockNumber`.
 
 ## Return Type
 
-`boolean`
+```ts
+type IsRenewableResult = Awaited<ReturnType<typeof isRenewable>>;
+```
+
+| Property  | Type            | Description                          |
+| --------- | --------------- | ------------------------------------ |
+| `valueOf` | `() => boolean` | function valueOf() { [native code] } |
 
 ## Effect
 
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
+
 ```ts
-const effect = isRenewable.effect(config, { name: "example.eth" });
+import { Effect } from "effect";
+
+const program = isRenewable.effect(config, parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Request
 
+Use `.request` to describe the read without executing it, then include it in a typed [read batch](/core/guides/batching).
+
 ```ts
-const request = isRenewable.request({ name: "example.eth" });
+const request = isRenewable.request(parameters);
 ```
 
 ## Error
@@ -72,4 +91,10 @@ const request = isRenewable.request({ name: "example.eth" });
 import type { IsRenewableError } from "@ensforge/core";
 ```
 
-Can fail with `NameError`, `RpcError`, `ContractError`, or `CodecError`.
+The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
+
+See [Error Handling](/core/guides/error-handling).
+
+## Related
+
+- [`ens.name.isRenewable`](/sdk/api/name/is-renewable)

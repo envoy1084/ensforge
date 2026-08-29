@@ -5,7 +5,7 @@ description: Get the effective owner of an ENS name.
 
 # getOwner
 
-Gets the effective owner and ownership source for an ENS name.
+Get the effective owner of an ENS name.
 
 ## Import
 
@@ -15,15 +15,18 @@ import { getOwner } from "@ensforge/core";
 
 ## Usage
 
-```ts
+::: code-group
+
+```ts [index.ts]
 import { getOwner } from "@ensforge/core";
 import { config } from "./config";
 
 const result = await getOwner(config, { name: "ens.eth" });
 ```
 
-The action routes across the ENS registry, ETH registrar, and Name Wrapper as required. It also
-handles migrated and reserved names on an ENSv2 deployment.
+<<< @/snippets/core/config.ts
+
+:::
 
 ## Parameters
 
@@ -35,67 +38,55 @@ import type { GetOwnerParameters } from "@ensforge/core";
 
 `string`
 
-ENS name to inspect. The name is normalized before it is read.
-
-```ts
-await getOwner(config, {
-  name: "ens.eth", // [!code focus]
-});
-```
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### blockNumber
 
 `bigint | undefined`
 
-Block number to read from. Cannot be used with `blockTag`.
-
-```ts
-await getOwner(config, {
-  name: "ens.eth",
-  blockNumber: 22_000_000n, // [!code focus]
-});
-```
+Block number to read from. Cannot be combined with `blockTag`.
 
 ### blockTag
 
 `"latest" | "earliest" | "pending" | "safe" | "finalized" | undefined`
 
-Block tag to read from. Cannot be used with `blockNumber`.
+Named block state to read from. Cannot be combined with `blockNumber`.
 
 ## Return Type
 
 ```ts
-import type { OwnerResult } from "@ensforge/core";
+type GetOwnerResult = Awaited<ReturnType<typeof getOwner>>;
 ```
 
-`OwnerResult | null`
-
-```ts
-type OwnerResult = {
-  name: NormalizedName;
-  owner: EthereumAddress | null;
-  registrant: EthereumAddress | null;
-  protocol: "v1" | "v2";
-  ownershipLevel: "registry" | "registrar" | "nameWrapper";
-};
-```
-
-Returns `null` when the name has no owner. `owner` is the account that currently controls the name.
-`registrant` is present when a separate registrar-level owner exists.
+| Property         | Type                                                      | Description                                                  |
+| ---------------- | --------------------------------------------------------- | ------------------------------------------------------------ |
+| `name`           | `string & Brand<"NormalizedName"> \| undefined`           | Normalized ENS name.                                         |
+| `owner`          | `&#96;0x${string}&#96; \| null \| undefined`              | Current owner address, or `null` when the name has no owner. |
+| `registrant`     | `&#96;0x${string}&#96; \| null \| undefined`              | The registrant value returned by the operation.              |
+| `protocol`       | `"v1" \| "v2" \| undefined`                               | ENS protocol route used for the result.                      |
+| `ownershipLevel` | `"registry" \| "registrar" \| "nameWrapper" \| undefined` | The ownershipLevel value returned by the operation.          |
 
 ## Effect
 
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
+
 ```ts
-const effect = getOwner.effect(config, { name: "ens.eth" });
-// Effect.Effect<OwnerResult | null, GetOwnerError>
+import { Effect } from "effect";
+
+const program = getOwner.effect(config, parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Request
 
-Use `.request` to include the read in [`readBatch`](/core/guides/batching).
+Use `.request` to describe the read without executing it, then include it in a typed [read batch](/core/guides/batching).
 
 ```ts
-const request = getOwner.request({ name: "ens.eth" });
+const request = getOwner.request(parameters);
 ```
 
 ## Error
@@ -104,4 +95,10 @@ const request = getOwner.request({ name: "ens.eth" });
 import type { GetOwnerError } from "@ensforge/core";
 ```
 
-Can fail with `NameError`, `RpcError`, `ContractError`, or `CodecError`.
+The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
+
+See [Error Handling](/core/guides/error-handling).
+
+## Related
+
+- [`ens.name.getOwner`](/sdk/api/name/get-owner)

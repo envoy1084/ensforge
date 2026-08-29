@@ -15,18 +15,24 @@ import { Ensforge } from "@ensforge/sdk";
 
 ## Usage
 
-```ts
-import { sdk } from "./sdk";
+::: code-group
 
-const result = await sdk.batch.simulateCalls({
+```ts [index.ts]
+import { ens } from "./client";
+
+const result = await ens.batch.simulateCalls({
   calls: [],
 });
 ```
 
+<<< @/snippets/sdk/client.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type SimulateCallsParameters = Parameters<typeof sdk.batch.simulateCalls>[0];
+import type { SimulateCallsParameters } from "@ensforge/sdk";
 ```
 
 ### calls
@@ -39,30 +45,43 @@ Read requests or write intents included in the operation.
 
 `WalletClient | undefined`
 
-Wallet client override.
+Viem wallet client override for this operation. Defaults to the wallet resolved from the config.
 
 ### account
 
 `Account | Address | undefined`
 
-Account used for authorization and execution.
+Account used to authorize this operation. Defaults to the account exposed by the resolved wallet client.
 
 ## Return Type
 
 ```ts
-type SimulateCallsResult = Awaited<ReturnType<typeof sdk.batch.simulateCalls>>;
+type SimulateCallsResult = Awaited<ReturnType<typeof simulateCalls>>;
 ```
 
-The result is identical to the corresponding Core action with configuration already bound.
+Returns `readonly SimulatedWriteCall[]`.
 
 ## Effect
 
-```ts
-const effect = sdk.batch.simulateCalls.effect(parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+import { ens } from "./client";
+
+const program = ens.batch.simulateCalls.effect(parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
+
+## Error
+
+The method rejects with the corresponding Core action errors. Use `.effect` to keep those failures in the typed Effect error channel.
+
+See [Error Handling](/sdk/guides/error-handling).
 
 ## Action
 

@@ -7,8 +7,6 @@ description: Sets contract primary name for primary-name and reverse resolution.
 
 Sets contract primary name for primary-name and reverse resolution.
 
-This action belongs to primary-name and reverse resolution. It selects the supported contract and protocol route from the current configuration and name state.
-
 ## Import
 
 ```ts
@@ -17,7 +15,9 @@ import { setContractPrimaryName } from "@ensforge/core";
 
 ## Usage
 
-```ts
+::: code-group
+
+```ts [index.ts]
 import { setContractPrimaryName } from "@ensforge/core";
 import { config } from "./config";
 
@@ -27,10 +27,14 @@ const result = await setContractPrimaryName(config, {
 });
 ```
 
+<<< @/snippets/core/config.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type SetContractPrimaryNameParameters = Parameters<typeof setContractPrimaryName>[1];
+import type { SetContractPrimaryNameParameters } from "@ensforge/core";
 ```
 
 ### contract
@@ -43,7 +47,7 @@ Contract whose reverse name is managed.
 
 `string`
 
-ENS name used by the operation. It is normalized before contract interaction.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### verifyForward
 
@@ -54,36 +58,50 @@ Whether a reverse result must resolve forward to the supplied address.
 ## Return Type
 
 ```ts
-type SetContractPrimaryNameResult = Awaited<ReturnType<typeof setContractPrimaryName>>;
+import type { CallExecutionResult } from "@ensforge/core";
 ```
 
-`CallExecutionResult`
+| Property    | Type                                          | Description                                                                    |
+| ----------- | --------------------------------------------- | ------------------------------------------------------------------------------ |
+| `id`        | `string`                                      | Stable operation or wallet batch identifier.                                   |
+| `operation` | `string`                                      | The operation value returned by the operation.                                 |
+| `status`    | `"not-started" \| "submitted" \| "confirmed"` | Current query, transaction, batch, or workflow status.                         |
+| `hash`      | `null \| &#96;0x${string}&#96; \| null`       | Transaction hash, or `null` before submission.                                 |
+| `receipt`   | `null \| WriteReceipt \| null`                | Normalized transaction receipt, or `null` when confirmation was not requested. |
 
 ## Effect
 
-```ts
-const effect = setContractPrimaryName.effect(config, parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+
+const program = setContractPrimaryName.effect(config, parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Call
 
-Use `.call` to prepare a write intent without submitting it.
+Use `.call` to prepare this write for simulation, wallet batching, or a custom execution policy.
 
 ```ts
-const intent = setContractPrimaryName.call(parameters);
+const call = setContractPrimaryName.call(parameters);
 ```
 
 ## Error
 
 ```ts
-import type { Effect } from "effect";
-
-type SetContractPrimaryNameError = Effect.Effect.Error<
-  ReturnType<typeof setContractPrimaryName.effect>
->;
+import type { SetContractPrimaryNameError } from "@ensforge/core";
 ```
 
-See [Error Handling](/core/guides/error-handling) for tagged errors and stable error codes.
+The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
+
+See [Error Handling](/core/guides/error-handling).
+
+## Related
+
+- [`ens.reverse.setContractPrimaryName`](/sdk/api/reverse/set-contract-primary-name)

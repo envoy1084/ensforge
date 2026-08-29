@@ -15,18 +15,24 @@ import { Ensforge } from "@ensforge/sdk";
 
 ## Usage
 
-```ts
-import { sdk } from "./sdk";
+::: code-group
 
-const result = await sdk.batch.estimateCalls({
+```ts [index.ts]
+import { ens } from "./client";
+
+const result = await ens.batch.estimateCalls({
   calls: [],
 });
 ```
 
+<<< @/snippets/sdk/client.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type EstimateCallsParameters = Parameters<typeof sdk.batch.estimateCalls>[0];
+import type { EstimateCallsParameters } from "@ensforge/sdk";
 ```
 
 ### calls
@@ -39,30 +45,48 @@ Read requests or write intents included in the operation.
 
 `WalletClient | undefined`
 
-Wallet client override.
+Viem wallet client override for this operation. Defaults to the wallet resolved from the config.
 
 ### account
 
 `Account | Address | undefined`
 
-Account used for authorization and execution.
+Account used to authorize this operation. Defaults to the account exposed by the resolved wallet client.
 
 ## Return Type
 
 ```ts
-type EstimateCallsResult = Awaited<ReturnType<typeof sdk.batch.estimateCalls>>;
+import type { EstimateCallsResult } from "@ensforge/sdk";
 ```
 
-The result is identical to the corresponding Core action with configuration already bound.
+| Property      | Type                                                                                                    | Description                                             |
+| ------------- | ------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| `blockNumber` | `bigint`                                                                                                | The blockNumber value returned by the operation.        |
+| `fee`         | `FeeEstimate`                                                                                           | The fee value returned by the operation.                |
+| `calls`       | `readonly CallEstimate[]`                                                                               | Per-call preparation, simulation, or execution results. |
+| `totals`      | `{ readonly gas: bigint; readonly fee: bigint; readonly value: bigint; readonly maximumCost: bigint; }` | The totals value returned by the operation.             |
 
 ## Effect
 
-```ts
-const effect = sdk.batch.estimateCalls.effect(parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+import { ens } from "./client";
+
+const program = ens.batch.estimateCalls.effect(parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
+
+## Error
+
+The method rejects with the corresponding Core action errors. Use `.effect` to keep those failures in the typed Effect error channel.
+
+See [Error Handling](/sdk/guides/error-handling).
 
 ## Action
 

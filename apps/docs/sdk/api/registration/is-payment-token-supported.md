@@ -15,20 +15,24 @@ import { Ensforge } from "@ensforge/sdk";
 
 ## Usage
 
-```ts
-import { sdk } from "./sdk";
+::: code-group
 
-const result = await sdk.registration.isPaymentTokenSupported({
+```ts [index.ts]
+import { ens } from "./client";
+
+const result = await ens.registration.isPaymentTokenSupported({
   paymentToken: "0x0000000000000000000000000000000000000001",
 });
 ```
 
+<<< @/snippets/sdk/client.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type IsPaymentTokenSupportedParameters = Parameters<
-  typeof sdk.registration.isPaymentTokenSupported
->[0];
+import type { IsPaymentTokenSupportedParameters } from "@ensforge/sdk";
 ```
 
 ### paymentToken
@@ -47,34 +51,56 @@ Block number to read from. Cannot be combined with `blockTag`.
 
 `"latest" | "earliest" | "pending" | "safe" | "finalized" | undefined`
 
-Block tag to read from. Cannot be combined with `blockNumber`.
+Named block state to read from. Cannot be combined with `blockNumber`.
 
 ## Return Type
 
 ```ts
-type IsPaymentTokenSupportedResult = Awaited<
-  ReturnType<typeof sdk.registration.isPaymentTokenSupported>
->;
+type IsPaymentTokenSupportedResult = Awaited<ReturnType<typeof isPaymentTokenSupported>>;
 ```
 
-The result is identical to the corresponding Core action with configuration already bound.
+| Property    | Type                                                                  | Description                                            |
+| ----------- | --------------------------------------------------------------------- | ------------------------------------------------------ |
+| `protocol`  | `"v1" \| "v2"`                                                        | ENS protocol route used for the result.                |
+| `supported` | `false \| true`                                                       | Whether the selected protocol supports this operation. |
+| `reason`    | `"NATIVE_PAYMENT_ONLY" \| "PAYMENT_TOKEN_NOT_SUPPORTED" \| undefined` | The reason value returned by the operation.            |
+| `token`     | `&#96;0x${string}&#96; \| undefined`                                  | The token value returned by the operation.             |
+| `symbol`    | `string \| undefined`                                                 | The symbol value returned by the operation.            |
+| `decimals`  | `number \| undefined`                                                 | The decimals value returned by the operation.          |
 
 ## Effect
 
-```ts
-const effect = sdk.registration.isPaymentTokenSupported.effect(parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+import { ens } from "./client";
+
+const program = ens.registration.isPaymentTokenSupported.effect(parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Request
 
-The bound method retains `.request` for typed read batching.
+Use `.request` to describe the read without executing it, then include it in a typed [read batch](/core/guides/batching).
 
 ```ts
-const request = sdk.registration.isPaymentTokenSupported.request(parameters);
+const request = ens.registration.isPaymentTokenSupported.request(parameters);
 ```
+
+## Error
+
+```ts
+import type { IsPaymentTokenSupportedError } from "@ensforge/sdk";
+```
+
+The method rejects with the corresponding Core action errors. Use `.effect` to keep those failures in the typed Effect error channel.
+
+See [Error Handling](/sdk/guides/error-handling).
 
 ## Action
 

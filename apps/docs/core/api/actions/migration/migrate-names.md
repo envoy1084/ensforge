@@ -7,8 +7,6 @@ description: Runs a resumable migration workflow for multiple names.
 
 Runs a resumable migration workflow for multiple names.
 
-This action belongs to ENSv1 to ENSv2 migration. It selects the supported contract and protocol route from the current configuration and name state.
-
 ## Import
 
 ```ts
@@ -17,7 +15,9 @@ import { migrateNames } from "@ensforge/core";
 
 ## Usage
 
-```ts
+::: code-group
+
+```ts [index.ts]
 import { migrateNames } from "@ensforge/core";
 import { config } from "./config";
 
@@ -26,10 +26,14 @@ const result = await migrateNames(config, {
 });
 ```
 
+<<< @/snippets/core/config.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type MigrateNamesParameters = Parameters<typeof migrateNames>[1];
+import type { MigrateNamesParameters } from "@ensforge/core";
 ```
 
 ### migrations
@@ -48,49 +52,62 @@ Previously returned progress used to continue an incomplete workflow.
 
 `WalletClient | undefined`
 
-Wallet client override for this operation.
+Viem wallet client override for this operation. Defaults to the wallet resolved from the config.
 
 ### account
 
 `Account | Address | undefined`
 
-Account used for authorization and wallet execution.
+Account used to authorize this operation. Defaults to the account exposed by the resolved wallet client.
 
 ### mode
 
 `WriteMode | undefined`
 
-Execution mode. `auto` uses wallet capabilities and falls back safely.
+Write execution strategy. `auto` uses wallet capabilities and falls back to sequential transactions.
 
 ### confirmation
 
 `ConfirmationPolicy | undefined`
 
-Transaction confirmation policy for this operation.
+Controls whether the action returns after submission or waits for one or more confirmations.
 
 ## Return Type
 
 ```ts
-type MigrateNamesResult = Awaited<ReturnType<typeof migrateNames>>;
+import type { MigrationBatchProgress } from "@ensforge/core";
 ```
 
-`MigrationBatchProgress`
+| Property     | Type                                                                                                                      | Description                                            |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| `status`     | `"completed" \| "partial"`                                                                                                | Current query, transaction, batch, or workflow status. |
+| `strategy`   | `"sequential" \| "helper"`                                                                                                | The strategy value returned by the operation.          |
+| `migrations` | `readonly MigrationBatchEntry[]`                                                                                          | The migrations value returned by the operation.        |
+| `approvals`  | `readonly MigrationBatchApproval[]`                                                                                       | The approvals value returned by the operation.         |
+| `steps`      | `readonly { readonly name: string; readonly route: Extract<MigrationTarget, { readonly supported: true; }>["route"]; }[]` | The steps value returned by the operation.             |
+| `write`      | `WritePlanProgress`                                                                                                       | Progress for the write plan used by the workflow.      |
 
 ## Effect
 
-```ts
-const effect = migrateNames.effect(config, parameters);
+Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
 
-type Success = Effect.Effect.Success<typeof effect>;
-type Failure = Effect.Effect.Error<typeof effect>;
+```ts
+import { Effect } from "effect";
+
+const program = migrateNames.effect(config, parameters);
+
+type Success = Effect.Effect.Success<typeof program>;
+type Failure = Effect.Effect.Error<typeof program>;
+
+const result = await Effect.runPromise(program);
 ```
 
 ## Error
 
-```ts
-import type { Effect } from "effect";
+The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
 
-type MigrateNamesError = Effect.Effect.Error<ReturnType<typeof migrateNames.effect>>;
-```
+See [Error Handling](/core/guides/error-handling).
 
-See [Error Handling](/core/guides/error-handling) for tagged errors and stable error codes.
+## Related
+
+- [`ens.migration.migrateNames`](/sdk/api/migration/migrate-names)

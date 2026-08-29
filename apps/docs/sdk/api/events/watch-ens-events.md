@@ -15,33 +15,39 @@ import { Ensforge } from "@ensforge/sdk";
 
 ## Usage
 
-```ts
-import { sdk } from "./sdk";
+::: code-group
 
-const unwatch = await sdk.events.watchEnsEvents(
+```ts [index.ts]
+import { ens } from "./client";
+
+const unwatch = await ens.events.watchEnsEvents(
   { fromBlock: 22_000_000n },
   console.log,
   console.error,
 );
 ```
 
+<<< @/snippets/sdk/client.ts
+
+:::
+
 ## Parameters
 
 ```ts
-type WatchEnsEventsParameters = Parameters<typeof sdk.events.watchEnsEvents>[0];
+import type { WatchEnsEventsParameters } from "@ensforge/sdk";
 ```
 
 ### account
 
 `EthereumAddress | undefined`
 
-Account used for authorization and execution.
+Account used to authorize this operation. Defaults to the account exposed by the resolved wallet client.
 
 ### name
 
 `string | undefined`
 
-ENS name used by the method. It is normalized before contract interaction.
+ENS name to operate on. ensforge normalizes it before hashing or contract interaction.
 
 ### commitment
 
@@ -70,18 +76,28 @@ Polling interval in milliseconds.
 ## Return Type
 
 ```ts
-type WatchEnsEventsResult = Awaited<ReturnType<typeof sdk.events.watchEnsEvents>>;
+type WatchEnsEventsResult = Awaited<ReturnType<typeof watchEnsEvents>>;
 ```
 
-The result is identical to the corresponding Core action with configuration already bound.
+Returns `() => void`.
 
 ## Stream
 
-The bound method retains the Effect stream interface.
+Use `.stream` to consume events as an Effect stream with typed failures and interruption.
 
 ```ts
-const stream = sdk.events.watchEnsEvents.stream(parameters);
+const stream = ens.events.watchEnsEvents.stream(parameters);
 ```
+
+## Error
+
+```ts
+import type { WatchEnsEventsError } from "@ensforge/sdk";
+```
+
+The method rejects with the corresponding Core action errors. Use `.effect` to keep those failures in the typed Effect error channel.
+
+See [Error Handling](/sdk/guides/error-handling).
 
 ## Action
 
