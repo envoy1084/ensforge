@@ -134,6 +134,7 @@ export type RecordOperation = typeof RecordOperation.Type;
 
 export const RegistryOperation = Schema.Union([
   Schema.Struct({ type: Schema.Literal("setOwner") }),
+  Schema.Struct({ type: Schema.Literal("setTtl") }),
   Schema.Struct({ type: Schema.Literal("setResolver") }),
   Schema.Struct({ type: Schema.Literal("createSubname") }),
   Schema.Struct({ type: Schema.Literal("transfer") }),
@@ -215,6 +216,7 @@ export const WrapperPermissionsResult = Schema.Union([
     canUnwrap: Schema.Boolean,
     canTransfer: Schema.Boolean,
     canSetResolver: Schema.Boolean,
+    canSetTtl: Schema.Boolean,
     canCreateSubname: Schema.Boolean,
     canApprove: Schema.Boolean,
   }),
@@ -321,6 +323,7 @@ const AuthorizationBlocker = Schema.Literals([
   "RESOLVER_NOT_FOUND",
   "OPERATION_UNSUPPORTED",
   "WRAPPER_FUSE",
+  "TRANSFER_ROLE",
 ]);
 
 export const RequiredAuthorizationResult = Schema.Struct({

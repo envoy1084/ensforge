@@ -8,6 +8,7 @@ import { isResolverRecord } from "../../../internal/capabilities/resolver-resour
 import { executeRead } from "../../../internal/read/execute-read.js";
 import type { EthereumAddress } from "../../../schemas/identity.js";
 import { getManager } from "../../name/get-manager/index.js";
+import { getRegistrant } from "../../name/get-registrant/index.js";
 import { getOperatorApproval } from "../get-operator-approval/index.js";
 import { getRecordPermissions } from "../get-record-permissions/index.js";
 import { getTokenApproval } from "../get-token-approval/index.js";
@@ -109,11 +110,13 @@ const getRequiredAuthorizationEffect = Effect.fn("ensforge.getRequiredAuthorizat
         const fuseAllows =
           parameters.operation.type === "setResolver"
             ? wrapper.canSetResolver
-            : parameters.operation.type === "createSubname"
-              ? wrapper.canCreateSubname
-              : parameters.operation.type === "transfer"
-                ? wrapper.canTransfer
-                : true;
+            : parameters.operation.type === "setTtl"
+              ? wrapper.canSetTtl
+              : parameters.operation.type === "createSubname"
+                ? wrapper.canCreateSubname
+                : parameters.operation.type === "transfer"
+                  ? wrapper.canTransfer
+                  : true;
         return {
           account: parameters.account,
           operation: parameters.operation,
@@ -126,14 +129,45 @@ const getRequiredAuthorizationEffect = Effect.fn("ensforge.getRequiredAuthorizat
         } as const satisfies RequiredAuthorizationResult;
       }
 
+      if (target.kind === "wrapper-registry" && parameters.operation.type === "transfer") {
+        const manager = yield* getManager.effect(config, parameters);
+        const wrapper = yield* getWrapperPermissions.effect(config, parameters);
+        const transferRole =
+          manager === null
+            ? null
+            : yield* hasRegistryRoles.effect(config, {
+                ...parameters,
+                account: manager,
+                roles: registryRoles.canTransferAdmin,
+              });
+        const transferAllowed = transferRole?.supported === true && transferRole.authorized;
+        const ownerAuthorized = manager?.toLowerCase() === parameters.account.toLowerCase();
+        const operatorAuthorized =
+          wrapper.supported && wrapper.protocol === "v2" && wrapper.operatorApproved;
+        return {
+          account: parameters.account,
+          operation: parameters.operation,
+          target,
+          authorization: ownerAuthorized
+            ? { status: "authorized", source: "owner" }
+            : operatorAuthorized
+              ? { status: "authorized", source: "operator-approval" }
+              : { status: "unauthorized", requirement: { kind: "owner" } },
+          blockers: transferAllowed ? [] : ["TRANSFER_ROLE"],
+        } as const satisfies RequiredAuthorizationResult;
+      }
+
       const manager = yield* getManager.effect(config, parameters);
-      const ownerAuthorized = manager?.toLowerCase() === parameters.account.toLowerCase();
+      const registrant =
+        target.kind === "registrar" ? yield* getRegistrant.effect(config, parameters) : null;
+      const controllingOwner = target.kind === "registrar" ? registrant : manager;
+      const ownerAuthorized = controllingOwner?.toLowerCase() === parameters.account.toLowerCase();
       const approvals =
-        manager === null
+        controllingOwner === null
           ? null
           : yield* getOperatorApproval.effect(config, {
               ...parameters,
-              owner: manager,
+              owner: controllingOwner,
               operator: parameters.account,
             });
       const targetKind = target.kind === "registrar" ? "registrar" : "registry";
@@ -151,6 +185,16 @@ const getRequiredAuthorizationEffect = Effect.fn("ensforge.getRequiredAuthorizat
           ? null
           : yield* hasRegistryRoles.effect(config, { ...parameters, roles: role });
       const roleAuthorized = roleResult?.supported === true && roleResult.authorized;
+      const transferRole =
+        target.protocol === "v2" && parameters.operation.type === "transfer" && manager !== null
+          ? yield* hasRegistryRoles.effect(config, {
+              ...parameters,
+              account: manager,
+              roles: registryRoles.canTransferAdmin,
+            })
+          : null;
+      const transferAllowed =
+        transferRole === null || (transferRole.supported === true && transferRole.authorized);
       const authorization: AuthorizationDecision = ownerAuthorized
         ? ({ status: "authorized", source: "owner" } as const)
         : operatorAuthorized
@@ -175,7 +219,7 @@ const getRequiredAuthorizationEffect = Effect.fn("ensforge.getRequiredAuthorizat
         operation: parameters.operation,
         target,
         authorization,
-        blockers: [],
+        blockers: transferAllowed ? [] : ["TRANSFER_ROLE"],
       } satisfies RequiredAuthorizationResult;
     }),
   );

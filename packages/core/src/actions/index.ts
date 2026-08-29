@@ -4,6 +4,7 @@ export * from "./dns/index.js";
 export * from "./events/index.js";
 export * from "./migration/index.js";
 export * from "./name/index.js";
+export * from "./ownership/index.js";
 export * from "./permissions/index.js";
 export * from "./records/index.js";
 export * from "./registration/index.js";

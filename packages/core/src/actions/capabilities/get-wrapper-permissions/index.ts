@@ -98,6 +98,7 @@ const getWrapperPermissionsEffect = Effect.fn("ensforge.getWrapperPermissions")(
           canUnwrap: !hasFuse(fuses, nameWrapperFuses.cannotUnwrap),
           canTransfer: !hasFuse(fuses, nameWrapperFuses.cannotTransfer),
           canSetResolver: !hasFuse(fuses, nameWrapperFuses.cannotSetResolver),
+          canSetTtl: !hasFuse(fuses, nameWrapperFuses.cannotSetTtl),
           canCreateSubname: !hasFuse(fuses, nameWrapperFuses.cannotCreateSubdomain),
           canApprove: !hasFuse(fuses, nameWrapperFuses.cannotApprove),
         } as const;
