@@ -1,0 +1,24 @@
+---
+title: encodeContentHash
+description: Encode a content-addressed URI into an ENS content hash.
+---
+
+# encodeContentHash
+
+Encodes a supported content protocol and value into resolver content-hash bytes.
+
+## Import
+
+```ts
+import { encodeContentHash } from "@ensforge/core";
+```
+
+## Usage
+
+```ts
+const contentHash = encodeContentHash({ protocol: "ipfs", value: cid });
+```
+
+## Return Type
+
+`ContentHash`

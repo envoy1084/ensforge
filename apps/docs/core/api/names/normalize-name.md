@@ -1,0 +1,40 @@
+---
+title: normalizeName
+description: Normalize a complete ENS name with ENSIP-15.
+---
+
+# normalizeName
+
+Normalizes and validates a complete ENS name.
+
+## Import
+
+```ts
+import { normalizeName } from "@ensforge/core";
+```
+
+## Usage
+
+```ts
+const name = normalizeName("ENS.eth");
+```
+
+## Parameters
+
+### name
+
+`string`
+
+Name to normalize. Empty root-name input is supported where ENS permits it.
+
+## Return Type
+
+`NormalizedName`
+
+Throws `NameError` when the input is not a valid ENSIP-15 name.
+
+## Effect
+
+```ts
+const effect = normalizeName.effect("ENS.eth");
+```
