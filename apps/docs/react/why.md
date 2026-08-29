@@ -10,8 +10,8 @@ It provides caching, deduplication, retries, selection, refetching, Suspense, mu
 invalidation without introducing a second ENS execution model.
 
 ```tsx
-const owner = useOwner({ name: "ens.eth" });
-const ownerSuspense = useOwnerSuspense({ name: "ens.eth" });
+const owner = useOwner({ name: "sdk.eth" });
+const ownerSuspense = useOwnerSuspense({ name: "sdk.eth" });
 ```
 
 Read hooks expose both familiar state fields and the underlying `AsyncResult`. Mutation hooks expose

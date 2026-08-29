@@ -1,30 +1,50 @@
 ---
 title: Mutation Hooks
-description: Execute ENS writes and workflows from React.
+description: Execute ENS writes and workflows with callbacks, Promises, or Effect.
 ---
 
 # Mutation Hooks
 
-Mutation hooks do not execute until you call a mutation function.
+Mutation hooks stay idle until execution and preserve the Core action's success and error types.
 
 ```tsx
 const setText = useSetText({
-  onSuccess: () => console.log("Updated"),
+  onSuccess: (_result, parameters) => console.log(parameters.key),
 });
-
-setText.mutate({ name, key: "url", value });
 ```
 
-`mutate` starts work without returning the result. `mutateAsync` returns a Promise. `mutateEffect`
-returns the typed Effect.
+## Callback execution
+
+Use `mutate` when state and callbacks drive the UI.
 
 ```tsx
-const result = await setText.mutateAsync(parameters);
-const effect = setText.mutateEffect(parameters);
+setText.mutate({ name, key: "url", value }, { onError: (error) => console.error(error.code) });
 ```
 
-Use `isIdle`, `isPending`, `isSuccess`, and `isError` to render state. `interrupt` cancels the active
-Effect, and `reset` restores the atom to its initial state.
+## Promise execution
 
-After a write, invalidate the affected cache entries with `useInvalidateEnsforge` when the hook does
-not already model the complete workflow result.
+Use `mutateAsync` when the caller owns asynchronous control flow.
+
+```tsx
+try {
+  const result = await setText.mutateAsync({ name, key: "url", value });
+  console.log(result.hash);
+} catch (error) {
+  // Handle the same typed error as the Core action.
+}
+```
+
+## Effect execution
+
+Use `mutateEffect` for typed recovery, tracing, timeouts, or larger workflows.
+
+```tsx
+import { Effect } from "effect";
+
+const update = setText
+  .mutateEffect({ name, key: "url", value })
+  .pipe(Effect.tap(() => Effect.log("record updated")));
+```
+
+After a write, invalidate affected read keys with `useInvalidateEnsforge` when the workflow result
+does not already contain the final state.

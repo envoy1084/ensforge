@@ -1,41 +1,56 @@
 ---
 title: Config
-description: Configure the SDK and query defaults used by ensforge React.
+description: Configure clients, Wagmi, and query defaults for ensforge React.
 ---
 
 # Config
 
-`EnsforgeProvider` accepts the same viem-or-Wagmi configuration as the SDK.
+`EnsforgeProvider` accepts the same mutually exclusive client configurations as the SDK.
 
-## viem
+## viem clients
 
-```tsx
-<EnsforgeProvider
-  config={{
-    network: "mainnet",
-    publicClient,
-    walletClient,
-  }}
->
-  <App />
-</EnsforgeProvider>
+::: code-group
+
+```tsx [providers.tsx]
+import { EnsforgeProvider } from "@ensforge/react";
+import { publicClient, walletClient } from "./clients";
+
+export function Providers({ children }: React.PropsWithChildren) {
+  return (
+    <EnsforgeProvider config={{ network: "mainnet", publicClient, walletClient }}>
+      {children}
+    </EnsforgeProvider>
+  );
+}
 ```
+
+```ts [clients.ts]
+import { createPublicClient, createWalletClient, custom, http } from "viem";
+import { mainnet } from "viem/chains";
+
+export const publicClient = createPublicClient({ chain: mainnet, transport: http() });
+export const walletClient = createWalletClient({
+  chain: mainnet,
+  transport: custom(window.ethereum),
+});
+```
+
+:::
+
+Omit `walletClient` for a read-only application.
 
 ## Wagmi
 
-```tsx
-<EnsforgeProvider config={{ network: "mainnet", wagmiConfig }}>
-  <App />
-</EnsforgeProvider>
-```
+::: code-group
 
-## Existing SDK
+<<< @/snippets/react/provider.tsx
 
-```tsx
-<EnsforgeProvider sdk={sdk}>
-  <App />
-</EnsforgeProvider>
-```
+<<< @/snippets/wagmi/config.ts
+
+:::
+
+The active wallet is resolved when a mutation executes, so account and connector changes do not
+require recreating the provider.
 
 ## Query defaults
 
@@ -55,4 +70,4 @@ description: Configure the SDK and query defaults used by ensforge React.
 </EnsforgeProvider>
 ```
 
-Per-hook `query` options override provider defaults.
+See [Query Options](/react/api/query-options) for defaults and per-hook overrides.

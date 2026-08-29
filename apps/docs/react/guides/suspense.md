@@ -1,29 +1,44 @@
 ---
 title: Suspense
-description: Read ENS data through Suspense query hooks.
+description: Read ENS data through React Suspense and error boundaries.
 ---
 
 # Suspense
 
-Every standard read hook has a `Suspense` counterpart.
+Each standard read hook has a `Suspense` counterpart. Suspense hooks return successful data directly
+and move pending and failure UI to React boundaries.
 
 ```tsx
+import { Suspense } from "react";
+import { useOwnerSuspense } from "@ensforge/react";
+
 function Profile({ name }: { name: string }) {
-  const owner = useOwnerSuspense({ name });
-  return <span>{owner.data?.owner}</span>;
+  const { data, isFetching } = useOwnerSuspense({ name });
+  return <span aria-busy={isFetching}>{data?.owner ?? "Unowned"}</span>;
 }
 
-function Page() {
+export function Page() {
   return (
-    <Suspense fallback={<span>Loading…</span>}>
-      <Profile name="ens.eth" />
-    </Suspense>
+    <ErrorBoundary fallback={<p>Unable to load name</p>}>
+      <Suspense fallback={<p>Loading…</p>}>
+        <Profile name="example.eth" />
+      </Suspense>
+    </ErrorBoundary>
   );
 }
 ```
 
-Suspense hooks throw the pending Effect promise to the nearest boundary and throw failures to the
-nearest error boundary. Their return value contains successful data and refetch controls, so loading
-and error branches are handled outside the component.
+## Parameters
 
-Use ordinary query hooks when loading and error UI should remain local to the component.
+Suspense hooks accept the same action parameters and query options as standard hooks except
+`query.enabled`. They always execute when rendered.
+
+## Return type
+
+`EnsSuspenseQueryResult<Success>` contains:
+
+- `data`: guaranteed successful selected data.
+- `isFetching`: whether a background refresh is active.
+- `updatedAt`: timestamp of the successful value.
+
+Use standard hooks when loading and error UI should remain local to a component.

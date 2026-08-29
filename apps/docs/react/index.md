@@ -8,7 +8,7 @@ description: Reactive ENS queries and mutations powered by Effect Atom.
 Reactive ENS queries and mutations powered by Effect Atom.
 
 ```tsx
-const owner = useOwner({ name: "ens.eth" });
+const owner = useOwner({ name: "sdk.eth" });
 const setText = useSetText();
 ```
 

@@ -15,7 +15,11 @@ import { useSetResolverAndRecords } from "@ensforge/react";
 
 ## Usage
 
-```tsx
+::: code-group
+
+```tsx [component.tsx]
+import { useSetResolverAndRecords } from "@ensforge/react";
+
 function Component() {
   const mutation = useSetResolverAndRecords();
 
@@ -35,105 +39,75 @@ function Component() {
 }
 ```
 
+<<< @/snippets/react/provider.tsx
+
+:::
+
 ## Parameters
-
-```ts
-type Parameters = Parameters<typeof useSetResolverAndRecords>[0];
-```
-
-## Hook Parameters
 
 ```ts
 import type { EnsMutationOptions } from "@ensforge/react";
 ```
 
-The hook accepts `retry`, `onSuccess`, `onError`, and `onSettled`. See [Mutation Options](/react/api/mutation-options).
+The hook accepts an optional callbacks object.
+
+### retry
+
+`false | number | undefined`
+
+Number of times to retry a failed mutation. It defaults to `false`; only retry operations known to be safe and idempotent.
+
+### onSuccess
+
+Called with the successful result and mutation parameters.
+
+### onError
+
+Called with the typed action error and mutation parameters.
+
+### onSettled
+
+Called after success or failure with the result, error, and mutation parameters.
+
+See [Mutation Options](/react/api/mutation-options) for callback signatures and per-call callbacks.
 
 ## Mutation Parameters
 
-### name
-
-`string`
-
-ENS name used by the query or mutation.
-
-### records
-
-`ReadonlyArray<SetRecordInput>`
-
-Records selected, read, or written.
-
-### resolver
-
-`string | undefined`
-
-Resolver address used by the operation.
-
-### salt
-
-`bigint | undefined`
-
-Value used for `salt` by this operation.
-
-### admin
-
-`string | undefined`
-
-Value used for `admin` by this operation.
-
-### roles
-
-`bigint | undefined`
-
-Role bitmask to inspect, grant, or revoke.
-
-### setters
-
-`ReadonlyArray<Hex> | undefined`
-
-Value used for `setters` by this operation.
-
-### walletClient
-
-`WalletClient | undefined`
-
-Wallet client override.
-
-### account
-
-`Account | Address | undefined`
-
-Account used for authorization and execution.
-
-### confirmation
-
-`ConfirmationPolicy | undefined`
-
-Confirmation policy for the write.
-
-### resume
-
-`SetResolverAndRecordsProgress | undefined`
-
-Previously returned progress used to continue the workflow.
+```ts
+import type { SetResolverAndRecordsParameters } from "@ensforge/react";
+```
 
 ## Return Type
-
-Returns [`EnsMutationResult`](/react/api/mutation-result) with `mutate`, `mutateAsync`, `mutateEffect`, status flags, data, error, interruption, and reset.
 
 ```ts
 type Result = ReturnType<typeof useSetResolverAndRecords>;
 ```
 
+Returns an [`EnsMutationResult`](/react/api/mutation-result).
+
+| Property       | Description                                                    |
+| -------------- | -------------------------------------------------------------- |
+| `mutate`       | Starts the mutation and reports through callbacks.             |
+| `mutateAsync`  | Starts the mutation and returns a Promise.                     |
+| `mutateEffect` | Starts the mutation and returns an Effect with typed failures. |
+| `data`         | Latest successful value, or `undefined`.                       |
+| `error`        | Latest typed failure, an unexpected `Error`, or `null`.        |
+| `status`       | `"idle"`, `"pending"`, `"success"`, or `"error"`.              |
+| `parameters`   | Parameters used by the latest execution.                       |
+| `interrupt`    | Interrupts the active Effect.                                  |
+| `reset`        | Restores the mutation to its idle state.                       |
+| `result`       | Underlying Effect `AsyncResult`.                               |
+
 ## Effect Atom
 
 ```ts
 import { createSetResolverAndRecordsMutationAtom } from "@ensforge/react/atoms";
+import { sdk } from "./client";
 
-const atom = createSetResolverAndRecordsMutationAtom(sdk);
+const atom = createSetResolverAndRecordsMutationAtom(ens);
 ```
 
-The hook uses this atom with the SDK and registry from `EnsforgeProvider`.
+The hook creates this atom with the SDK and registry supplied by [`EnsforgeProvider`](/react/api/ensforge-provider).
 
 ## Action
 

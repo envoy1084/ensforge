@@ -1,38 +1,47 @@
 ---
 title: Caching and Invalidation
-description: Control Effect Atom caching, prefetching, and invalidation.
+description: Share, prefetch, refresh, and invalidate Effect Atom query state.
 ---
 
 # Caching and Invalidation
 
-ensforge creates stable query atoms from the SDK instance, action group, action name, and parameters.
-Components requesting the same key share work and cached state.
+Query identity includes the SDK instance, action group, action name, and normalized parameters.
+Mounted components requesting the same key share execution and cached state.
+
+## Freshness and retention
+
+`staleTime` controls when successful data should be refreshed. `gcTime` controls how long an
+inactive query remains reusable. The registry's `defaultIdleTTL` controls atom lifetime separately.
 
 ## Invalidate from React
 
 ```tsx
+import { useInvalidateEnsforge } from "@ensforge/react";
+
 const invalidate = useInvalidateEnsforge();
 
 await invalidate({ name: "example.eth" });
 ```
 
-Call `invalidate()` without parameters, or with `{ all: true }`, to refresh every ensforge query in
-the current registry.
+Pass no parameters, or `{ all: true }`, to invalidate every ensforge query in the active registry.
+Use the Effect counterpart when invalidation belongs to a larger program.
 
-## Prefetch outside components
-
-```ts
-await prefetchEnsforge(registry, sdk, getOwnerAtom, {
-  name: "ens.eth",
-});
+```tsx
+const effect = invalidate.effect({ name: "example.eth" });
 ```
 
-Use `prefetchEnsforgeEffect` when composing with Effect.
+## Prefetch
 
-## Custom registry
+```ts [prefetch.ts]
+import { getOwnerAtom, prefetchEnsforge } from "@ensforge/react";
 
-`createEnsforgeRegistry` creates a registry for SSR, tests, prefetching, or an application-owned
-cache. Pass it to `EnsforgeProvider` through `registry`.
+await prefetchEnsforge(registry, ens, getOwnerAtom, { name: "example.eth" });
+```
 
-`defaultIdleTTL` controls how long unused atoms remain mounted. Query `gcTime` controls how long their
-cached entries remain reusable.
+`prefetchEnsforgeEffect` performs the same work without leaving Effect.
+
+## Own the registry
+
+Use `createEnsforgeRegistry` for tests, request-scoped server work, or application-level prefetching,
+then pass the registry to `EnsforgeProvider`. Never share a mutable per-user registry between SSR
+requests.

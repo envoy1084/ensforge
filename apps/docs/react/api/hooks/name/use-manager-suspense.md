@@ -15,7 +15,11 @@ import { useManagerSuspense } from "@ensforge/react";
 
 ## Usage
 
-```tsx
+::: code-group
+
+```tsx [component.tsx]
+import { useManagerSuspense } from "@ensforge/react";
+
 function Component() {
   const result = useManagerSuspense({
     name: "example.eth",
@@ -25,17 +29,21 @@ function Component() {
 }
 ```
 
+<<< @/snippets/react/provider.tsx
+
+:::
+
 ## Parameters
 
 ```ts
-type Parameters = Parameters<typeof useManagerSuspense>[0];
+import type { GetNameStateParameters, UseEnsSuspenseQueryParameters } from "@ensforge/react";
 ```
 
 ### name
 
 `string`
 
-ENS name used by the query or mutation.
+ENS name used by the operation. ensforge normalizes it before creating the query key or interacting with a contract.
 
 ### blockNumber
 
@@ -47,31 +55,43 @@ Block number to read from. Cannot be combined with `blockTag`.
 
 `"latest" | "earliest" | "pending" | "safe" | "finalized" | undefined`
 
-Block tag to read from. Cannot be combined with `blockNumber`.
+Named block state to read from. Cannot be combined with `blockNumber`.
 
 ### query
 
 `EnsQueryOptions | undefined`
 
-Controls execution, freshness, retries, polling, garbage collection, and selection. Suspense hooks always execute and do not accept `enabled`.
+Controls caching, retries, polling, and data selection. Suspense queries always execute and do not accept `enabled`.
+
+| Property               | Type                  | Default  | Description                                                      |
+| ---------------------- | --------------------- | -------- | ---------------------------------------------------------------- |
+| `gcTime`               | `number`              | `300000` | Milliseconds an unused result remains in the cache.              |
+| `refetchInterval`      | `false \| number`     | `false`  | Polling interval in milliseconds, or `false` to disable polling. |
+| `refetchOnWindowFocus` | `boolean`             | `false`  | Refetch stale data when the document regains focus.              |
+| `retry`                | `false \| number`     | `false`  | Number of retries after a typed failure.                         |
+| `select`               | `(value) => selected` | identity | Transforms cached action data into the hook's `data` type.       |
+| `staleTime`            | `number`              | `30000`  | Milliseconds successful data remains fresh.                      |
+
+See [Query Options](/react/api/query-options) for focused examples.
 
 ## Return Type
-
-Returns successful data and refetch controls. Pending work suspends, and failures are thrown to the nearest error boundary.
 
 ```ts
 type Result = ReturnType<typeof useManagerSuspense>;
 ```
 
+Returns `EnsSuspenseQueryResult` with successful `data`, background `isFetching` state, and `updatedAt`. Pending work suspends rendering and failures are thrown to the nearest error boundary.
+
 ## Effect Atom
 
 ```ts
 import { getManagerAtom } from "@ensforge/react/atoms";
+import { sdk } from "./client";
 
-const atom = getManagerAtom(sdk, parameters, options);
+const atom = getManagerAtom(ens, parameters, options);
 ```
 
-The hook uses this atom with the SDK and registry from `EnsforgeProvider`.
+The hook creates this atom with the SDK and registry supplied by [`EnsforgeProvider`](/react/api/ensforge-provider).
 
 ## Action
 

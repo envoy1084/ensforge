@@ -10,7 +10,7 @@ Every generated query or mutation hook is backed by a public Effect Atom factory
 ```ts
 import { getOwnerAtom } from "@ensforge/react";
 
-const atom = getOwnerAtom(sdk, { name: "ens.eth" }, options);
+const atom = getOwnerAtom(sdk, { name: "sdk.eth" }, options);
 ```
 
 Use the hook for normal components. Import the atom when you need derived atoms, an external registry,

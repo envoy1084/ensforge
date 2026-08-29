@@ -1,37 +1,50 @@
 ---
 title: Query Hooks
-description: Fetch and cache ENS reads with React query hooks.
+description: Fetch, select, and refresh cached ENS reads with React query hooks.
 ---
 
 # Query Hooks
 
-Query hooks start from action parameters and return a typed `EnsQueryResult`.
+Query hooks combine action parameters with an optional `query` object and return a typed
+`EnsQueryResult`.
+
+```tsx
+const owner = useOwner({ name: "example.eth", query: { staleTime: 60_000 } });
+```
+
+## Dependent queries
+
+Use `enabled` when a query depends on another result.
+
+```tsx
+const resolver = useResolver({ name });
+const capabilities = useResolverCapabilities({
+  resolver: resolver.data?.address!,
+  query: { enabled: resolver.data?.address !== null && resolver.data !== undefined },
+});
+```
+
+## Select data
+
+`select` changes the hook's data type without duplicating the cached RPC result.
 
 ```tsx
 const owner = useOwner({
-  name: "ens.eth",
-  query: { staleTime: 60_000 },
+  name,
+  query: { select: (result) => result?.owner ?? null },
 });
 ```
 
-## Query options
+## Background state
 
-`enabled` disables execution. `staleTime` controls freshness, `gcTime` controls inactive retention,
-`retry` retries failed Effects, `refetchInterval` enables polling, and `select` derives a typed value.
+`isLoading` is only true during the first fetch. Use `isFetching` for any active fetch and
+`isRefetching` for background work when existing data can remain visible.
+
+## Manual refresh
 
 ```tsx
-const address = useAddress({
-  name,
-  query: {
-    enabled: name.length > 0,
-    select: (record) => record.address,
-  },
-});
+const latest = await owner.refetch();
+const effect = owner.refetchEffect();
 ```
 
-## Result
-
-Use `isPending`, `isLoading`, `isFetching`, `isSuccess`, and `isError` to render state. `data`,
-`error`, and `cause` preserve the selected success and typed Effect failure.
-
-Call `refetch()` for a Promise or `refetchEffect()` for an Effect.
+The Promise and Effect controls refresh the same cache entry. See [Query Result](/react/api/query-result).

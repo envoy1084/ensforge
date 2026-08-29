@@ -20,7 +20,7 @@ const effect = prefetchEnsforgeEffect(
   registry,
   sdk,
   getOwnerAtom,
-  { name: "ens.eth" },
+  { name: "sdk.eth" },
   { gcTime: 300_000, refetchOnWindowFocus: false, retry: false },
 );
 ```

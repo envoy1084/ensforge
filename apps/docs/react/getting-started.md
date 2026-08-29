@@ -1,45 +1,82 @@
 ---
 title: Getting Started
-description: Configure EnsforgeProvider and render your first ENS query.
+description: Configure ensforge React and render your first ENS query and mutation.
 ---
 
 # Getting Started
 
-Add `EnsforgeProvider` near the root of the client application. It accepts either SDK configuration
-or an existing `Ensforge` instance.
+## Add the provider
 
-```tsx
-import { EnsforgeProvider } from "@ensforge/react";
+Place `EnsforgeProvider` once near the root of your client application. It accepts SDK configuration
+directly, so you do not need to construct an SDK just for React.
 
-export function Providers({ children }: { children: React.ReactNode }) {
+::: code-group
+
+<<< @/snippets/react/provider.tsx
+
+<<< @/snippets/wagmi/config.ts
+
+:::
+
+The provider creates one immutable SDK and one Effect Atom registry. If you already have an
+`Ensforge` instance, pass it through `sdk` instead of `config`.
+
+## Read a name
+
+Query hooks execute below the provider and share cached work for identical parameters.
+
+```tsx [profile.tsx]
+import { useAvatar, useOwner } from "@ensforge/react";
+
+export function Profile({ name }: { name: string }) {
+  const owner = useOwner({ name });
+  const avatar = useAvatar({ name });
+
+  if (owner.isLoading || avatar.isLoading) return <p>Loading…</p>;
+  if (owner.isError) return <p>{owner.error.message}</p>;
+  if (avatar.isError) return <p>{avatar.error.message}</p>;
+
   return (
-    <EnsforgeProvider config={{ network: "mainnet", wagmiConfig }}>{children}</EnsforgeProvider>
+    <article>
+      {avatar.data?.url && <img alt="" src={avatar.data.url} />}
+      <p>{owner.data?.owner ?? "Unowned"}</p>
+    </article>
   );
 }
 ```
 
-Use query hooks below the provider.
+Use `query.enabled` for conditional reads and `query.select` to expose only the value needed by a
+component.
 
-```tsx
-import { useOwner } from "@ensforge/react";
+## Write a record
 
-export function Owner({ name }: { name: string }) {
-  const owner = useOwner({ name });
+Mutation hooks are idle until one of their execution functions is called.
 
-  if (owner.isLoading) return <span>Loading…</span>;
-  if (owner.isError) return <span>{owner.error.message}</span>;
-  return <span>{owner.data?.owner ?? "No owner"}</span>;
+```tsx [website-form.tsx]
+import { useSetText } from "@ensforge/react";
+
+export function WebsiteForm({ name }: { name: string }) {
+  const update = useSetText({
+    onSuccess: () => console.log("Record updated"),
+  });
+
+  return (
+    <button
+      disabled={update.isPending}
+      onClick={() => update.mutate({ name, key: "url", value: "https://example.com" })}
+    >
+      {update.isPending ? "Updating…" : "Update website"}
+    </button>
+  );
 }
 ```
 
-Write hooks return mutation controls and state.
+Use `mutate` for callbacks, `mutateAsync` for Promise control flow, or `mutateEffect` to stay inside
+Effect.
 
-```tsx
-const setText = useSetText();
+## Next steps
 
-setText.mutate({
-  name: "example.eth",
-  key: "url",
-  value: "https://example.com",
-});
-```
+- Configure [query options](/react/api/query-options).
+- Learn [caching and invalidation](/react/guides/caching).
+- Use [Effect Atom](/react/guides/effect-atom) directly.
+- Browse all [hooks](/react/api/hooks/records/use-address).
