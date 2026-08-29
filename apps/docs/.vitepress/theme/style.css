@@ -92,9 +92,10 @@
 }
 
 .nav-npm::before {
-  height: 13px;
-  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 8'%3E%3Cpath d='M0 0v8h6V2h2v6h3V2h2v6h3V2h2v6h6V0H0Zm3 2h1v4H3V2Zm17 0h1v4h-1V2Z'/%3E%3C/svg%3E");
-  width: 24px;
+  background: url("/brand/npm.svg") center / contain no-repeat;
+  height: 16px;
+  mask-image: none;
+  width: 16px;
 }
 
 /**
@@ -119,29 +120,48 @@
 
 :root {
   --vp-home-hero-name-color: transparent;
-  --vp-home-hero-name-background: -webkit-linear-gradient(
-    120deg,
-    var(--vp-c-brand-1) 30%,
-    var(--vp-c-brand-3)
+  --ensforge-brand-gradient: linear-gradient(
+    108deg,
+    #4559d8 0%,
+    #665fdf 48%,
+    #8b6fd4 78%,
+    #ae779d 112%
   );
-  --vp-home-hero-image-background-image: linear-gradient(
-    -45deg,
-    var(--vp-c-brand-1) 50%,
-    var(--vp-c-brand-3) 50%
+  --vp-home-hero-name-background: var(--ensforge-brand-gradient);
+  --vp-home-hero-image-background-image: radial-gradient(
+    circle at center,
+    rgba(100, 108, 255, 0.2),
+    rgba(139, 114, 255, 0.11) 42%,
+    rgba(174, 119, 157, 0.04) 62%,
+    transparent 72%
   );
-  --vp-home-hero-image-filter: blur(44px);
+  --vp-home-hero-image-filter: blur(30px);
+}
+
+.dark {
+  --ensforge-brand-gradient: linear-gradient(
+    108deg,
+    #a9b6ff 0%,
+    #8f8cff 48%,
+    #b58ce2 82%,
+    #d29aaf 112%
+  );
 }
 
 @media (min-width: 640px) {
   :root {
-    --vp-home-hero-image-filter: blur(56px);
+    --vp-home-hero-image-filter: blur(38px);
   }
 }
 
 @media (min-width: 960px) {
   :root {
-    --vp-home-hero-image-filter: blur(68px);
+    --vp-home-hero-image-filter: blur(44px);
   }
+}
+
+.dark .VPHomeHero .image-src {
+  content: url("/brand/wordmark-dark.svg");
 }
 
 /**

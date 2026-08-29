@@ -19,8 +19,8 @@ hero:
       text: View on GitHub
       link: https://github.com/envoy1084/ensforge
   image:
-    src: /brand/mark.svg
-    alt: Ensforge logo
+    src: /brand/wordmark-light.svg
+    alt: Ensforge
 
 features:
   - icon: 🔨
