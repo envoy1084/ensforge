@@ -1,4 +1,4 @@
-import { Context, Layer, Option } from "effect";
+import { Context, Layer, Option, Semaphore } from "effect";
 
 import type { PublicClient, WalletClient } from "viem";
 
@@ -7,6 +7,7 @@ import type {
   EnsRuntimeChainId,
   EnsRuntimeNetwork,
 } from "../../config/config.js";
+import type { ResolvedReadOptions } from "../../config/read-options.js";
 import { EthereumClient, makeEthereumClient } from "../client/ethereum-client.js";
 import { ReadExecution, makeReadExecution } from "../read/execution-context.js";
 import { WriteClient, makeWriteClient } from "../write/write-client.js";
@@ -28,26 +29,40 @@ export interface EnsforgeServiceValues {
   readonly network: EnsRuntimeNetwork;
   readonly chainId: EnsRuntimeChainId;
   readonly publicClient: PublicClient;
+  readonly reads: ResolvedReadOptions;
   readonly walletClient?: WalletClient;
   readonly deployments: EnsDeploymentProfile;
 }
 
 export const makeServicesContext = (
   values: EnsforgeServiceValues,
-): Context.Context<EnsforgeServices> =>
-  Context.make(EnsNetworkService, {
+): Context.Context<EnsforgeServices> => {
+  const readSemaphore = Semaphore.makeUnsafe(values.reads.concurrency);
+
+  return Context.make(EnsNetworkService, {
     network: values.network,
     chainId: values.chainId,
   }).pipe(
     Context.add(PublicClientService, { client: values.publicClient }),
-    Context.add(EthereumClient, makeEthereumClient({ publicClient: values.publicClient })),
-    Context.add(ReadExecution, makeReadExecution({ publicClient: values.publicClient })),
+    Context.add(
+      EthereumClient,
+      makeEthereumClient({ publicClient: values.publicClient, readSemaphore }),
+    ),
+    Context.add(
+      ReadExecution,
+      makeReadExecution({
+        publicClient: values.publicClient,
+        readSemaphore,
+        multicallBatchSize: values.reads.multicallBatchSize,
+      }),
+    ),
     Context.add(WriteClient, makeWriteClient(values.publicClient)),
     Context.add(WalletClientService, {
       client: Option.fromNullishOr(values.walletClient),
     }),
     Context.add(DeploymentService, { profile: values.deployments }),
   );
+};
 
 export const makeServicesLayer = (values: EnsforgeServiceValues): Layer.Layer<EnsforgeServices> =>
   Layer.succeedContext(makeServicesContext(values));

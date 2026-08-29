@@ -8,6 +8,7 @@ export const ConfigErrorCode = Schema.Literals([
   "DUPLICATE_DEPLOYMENT",
   "WALLET_CLIENT_UNAVAILABLE",
   "WALLET_ACCOUNT_UNAVAILABLE",
+  "INVALID_READ_OPTIONS",
 ]);
 
 export type ConfigErrorCode = typeof ConfigErrorCode.Type;

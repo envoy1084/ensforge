@@ -2,6 +2,8 @@ import type { PublicClient, WalletClient } from "viem";
 
 import type { EnsDeploymentProfile, EnsforgeConfig } from "../config/config.js";
 import { EnsforgeConfigTypeId } from "../config/config.js";
+import type { ReadOptions } from "../config/read-options.js";
+import { resolveReadOptions } from "../config/read-options.js";
 import { attachConfigContext } from "../internal/config/context.js";
 import { validateClientChain, validateDeployments } from "../internal/config/validation.js";
 import { makeServicesContext } from "../internal/services/context.js";
@@ -12,6 +14,7 @@ export interface CreateTestConfigParameters {
   readonly deployments: EnsDeploymentProfile;
   readonly publicClient: PublicClient;
   readonly walletClient?: WalletClient;
+  readonly reads?: ReadOptions;
 }
 
 export const createTestConfig = (parameters: CreateTestConfigParameters): EnsforgeConfig => {
@@ -22,11 +25,13 @@ export const createTestConfig = (parameters: CreateTestConfigParameters): Ensfor
   }
 
   validateDeployments(parameters.deployments, ensTestChainId);
+  const reads = resolveReadOptions(parameters.reads);
 
   const serviceValues = {
     network: "devnet",
     chainId: ensTestChainId,
     publicClient: parameters.publicClient,
+    reads,
     deployments: parameters.deployments,
     ...(parameters.walletClient === undefined ? {} : { walletClient: parameters.walletClient }),
   } as const;

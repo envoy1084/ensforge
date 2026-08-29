@@ -1,8 +1,9 @@
-import { Context, Effect, Predicate } from "effect";
+import { Context, Effect, Predicate, Semaphore } from "effect";
 
 import type { PublicClient } from "viem";
 
 import { getBlockReference, type BlockParameters } from "../../action/block.js";
+import { defaultReadOptions } from "../../config/read-options.js";
 import { RpcError } from "../../errors/rpc-error.js";
 import { viemErrorToEffectError } from "../errors/viem-error.js";
 import { makeContractReadResolver, type ContractReadResolver } from "./contract-read-resolver.js";
@@ -45,12 +46,20 @@ export class ReadExecution extends Context.Service<ReadExecution, ReadExecutionS
 
 export interface MakeReadExecutionOptions {
   readonly publicClient: Pick<PublicClient, "getBlock" | "multicall">;
+  readonly readSemaphore?: Semaphore.Semaphore;
+  readonly multicallBatchSize?: number;
 }
 
 export const makeReadExecution = ({
   publicClient,
+  readSemaphore = Semaphore.makeUnsafe(defaultReadOptions.concurrency),
+  multicallBatchSize = defaultReadOptions.multicallBatchSize,
 }: MakeReadExecutionOptions): ReadExecutionService => {
-  const contractReadResolver = makeContractReadResolver({ publicClient });
+  const contractReadResolver = makeContractReadResolver({
+    publicClient,
+    readSemaphore,
+    multicallBatchSize,
+  });
   const makeContext = Effect.fn("ReadExecution.makeContext")(function* (
     options: ReadExecutionOptions = {},
   ): Effect.fn.Return<ReadExecutionContext, RpcError> {
@@ -81,10 +90,12 @@ export const makeReadExecution = ({
       });
     }
 
-    const block = yield* Effect.tryPromise({
-      try: () => publicClient.getBlock({ blockTag }),
-      catch: (cause) => viemErrorToEffectError(cause, "getBlock"),
-    });
+    const block = yield* readSemaphore.withPermit(
+      Effect.tryPromise({
+        try: () => publicClient.getBlock({ blockTag }),
+        catch: (cause) => viemErrorToEffectError(cause, "getBlock"),
+      }),
+    );
 
     if (!Predicate.isBigInt(block.number)) {
       return yield* new RpcError({

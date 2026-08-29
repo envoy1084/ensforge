@@ -12,6 +12,7 @@ import {
   type EnsforgeConfig,
 } from "./config.js";
 import { ensChainIds, EnsNetworkSchema } from "./network.js";
+import { resolveReadOptions } from "./read-options.js";
 
 export const createConfig = (parameters: CreateConfigParameters): EnsforgeConfig => {
   if (!Schema.is(EnsNetworkSchema)(parameters.network)) {
@@ -24,6 +25,7 @@ export const createConfig = (parameters: CreateConfigParameters): EnsforgeConfig
   const network = parameters.network;
   const chainId = ensChainIds[network];
   const deployments = getNetworkProfile(network);
+  const reads = resolveReadOptions(parameters.reads);
 
   validateClientChain(parameters.publicClient, "public", network, chainId);
 
@@ -37,6 +39,7 @@ export const createConfig = (parameters: CreateConfigParameters): EnsforgeConfig
     network,
     chainId,
     publicClient: parameters.publicClient,
+    reads,
     deployments,
     ...(parameters.walletClient === undefined ? {} : { walletClient: parameters.walletClient }),
   };
@@ -46,6 +49,7 @@ export const createConfig = (parameters: CreateConfigParameters): EnsforgeConfig
       network,
       chainId,
       publicClient: parameters.publicClient,
+      reads,
       deployments,
       ...(parameters.walletClient === undefined ? {} : { walletClient: parameters.walletClient }),
     },

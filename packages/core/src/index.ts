@@ -16,6 +16,7 @@ export {
 export * from "./actions/index.js";
 export {
   createConfig,
+  defaultReadOptions,
   ensNetworks,
   type CreateConfigParameters,
   type EnsChainId,
@@ -23,6 +24,8 @@ export {
   type EnsDeploymentProfile,
   type EnsforgeConfig,
   type EnsNetwork,
+  type ReadOptions,
+  type ResolvedReadOptions,
 } from "./config/index.js";
 export {
   AuthorizationError,

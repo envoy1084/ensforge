@@ -8,6 +8,7 @@ import {
   type ContractFunctionName,
   type ContractFunctionParameters,
   type ContractFunctionReturnType,
+  type Hex,
 } from "viem";
 
 import type { BlockParameters } from "../../action/block.js";
@@ -33,6 +34,7 @@ interface ContractReadRequestFields {
   readonly requestKey: string;
   readonly groupKey: string;
   readonly contract: ContractFunctionParameters;
+  readonly callData: Hex;
   readonly blockNumber?: bigint;
   readonly blockTag?: ContractReadParameters["blockTag"];
   readonly account?: Address;
@@ -72,6 +74,7 @@ export const makeContractReadRequest = Effect.fn("makeContractReadRequest")(func
     requestKey,
     groupKey,
     contract,
+    callData,
     ...(parameters.blockNumber === undefined
       ? parameters.blockTag === undefined
         ? {}

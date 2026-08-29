@@ -147,7 +147,7 @@ const renewNamesEffect = Effect.fn("ensforge.renewNames")(function* (
             parameters.resume?.renewals[index]?.previousExpiry ?? expiry?.expiry ?? null,
         })),
       ),
-    { concurrency: "unbounded" },
+    { concurrency: config.reads.concurrency },
   );
   for (const entry of entries) {
     if (entry.parameters.maxPrice !== undefined && entry.quote.price > entry.parameters.maxPrice) {

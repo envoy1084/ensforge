@@ -1,4 +1,4 @@
-import { Context, Effect } from "effect";
+import { Context, Effect, Semaphore } from "effect";
 
 import type {
   Abi,
@@ -12,6 +12,7 @@ import type {
   ReadContractReturnType,
 } from "viem";
 
+import { defaultReadOptions } from "../../config/read-options.js";
 import type { ViemError } from "../errors/viem-error.js";
 import { viemErrorToEffectError } from "../errors/viem-error.js";
 import { executeContractRead } from "../read/contract-read-resolver.js";
@@ -20,6 +21,7 @@ import { ReadContext } from "../read/execution-context.js";
 
 export interface EthereumClientOptions {
   readonly publicClient: PublicClient;
+  readonly readSemaphore?: Semaphore.Semaphore;
 }
 
 export interface EthereumClientService {
@@ -57,6 +59,7 @@ export class EthereumClient extends Context.Service<EthereumClient, EthereumClie
 
 export const makeEthereumClient = ({
   publicClient,
+  readSemaphore = Semaphore.makeUnsafe(defaultReadOptions.concurrency),
 }: EthereumClientOptions): EthereumClientService => {
   const readContract = Effect.fn("EthereumClient.readContract")(function* <
     const abi extends Abi,
@@ -86,16 +89,20 @@ export const makeEthereumClient = ({
   return EthereumClient.of({
     readContract,
     readContractDirect: Effect.fn("EthereumClient.readContractDirect")((parameters) =>
-      Effect.tryPromise({
-        try: () => publicClient.readContract(parameters),
-        catch: (cause) => viemErrorToEffectError(cause, "readContract"),
-      }),
+      readSemaphore.withPermit(
+        Effect.tryPromise({
+          try: () => publicClient.readContract(parameters),
+          catch: (cause) => viemErrorToEffectError(cause, "readContract"),
+        }),
+      ),
     ),
     multicall: Effect.fn("EthereumClient.multicall")((parameters) =>
-      Effect.tryPromise({
-        try: () => publicClient.multicall(parameters),
-        catch: (cause) => viemErrorToEffectError(cause, "multicall"),
-      }),
+      readSemaphore.withPermit(
+        Effect.tryPromise({
+          try: () => publicClient.multicall(parameters),
+          catch: (cause) => viemErrorToEffectError(cause, "multicall"),
+        }),
+      ),
     ),
   });
 };

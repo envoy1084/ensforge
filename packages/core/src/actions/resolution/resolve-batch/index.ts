@@ -15,7 +15,9 @@ const resolveBatchEffect = Effect.fn("ensforge.resolveBatch")(function* (
   return yield* executeRead(
     config,
     parameters,
-    Effect.forEach(parameters.calls, executeResolveCall, { concurrency: "unbounded" }),
+    Effect.forEach(parameters.calls, executeResolveCall, {
+      concurrency: config.reads.concurrency,
+    }),
   );
 });
 

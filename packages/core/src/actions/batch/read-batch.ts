@@ -97,7 +97,7 @@ const readBatchEffect = Effect.fn("ensforge.readBatch")(function* <
 ): Effect.fn.Return<ReadBatchResult<Requests>, ReadBatchError<Requests>> {
   const context = yield* makeReadContext(config, options);
   const entries = yield* Effect.all(getRequestEntries(config, requests, context), {
-    concurrency: "unbounded",
+    concurrency: config.reads.concurrency,
   });
   return Object.fromEntries(entries) as ReadBatchResult<Requests>;
 });
@@ -136,7 +136,7 @@ const readBatchSettledEffect = Effect.fn("ensforge.readBatchSettled")(function* 
       }),
     ),
   );
-  const entries = yield* Effect.all(settled, { concurrency: "unbounded" });
+  const entries = yield* Effect.all(settled, { concurrency: config.reads.concurrency });
 
   return Object.fromEntries(entries) as ReadBatchSettledResult<Requests>;
 });

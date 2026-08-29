@@ -125,7 +125,7 @@ const migrateNamesEffect = Effect.fn("ensforge.migrateNames")(function* (
         ] as const,
         { concurrency: "unbounded" },
       ).pipe(Effect.map(([plan, steps]) => ({ migration, plan, steps }))),
-    { concurrency: "unbounded" },
+    { concurrency: config.reads.concurrency },
   );
   const steps = parameters.resume?.steps ?? [
     ...new Map(

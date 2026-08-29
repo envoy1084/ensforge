@@ -35,6 +35,7 @@ describe("createConfig", () => {
     expect(config.chainId).toBe(1);
     expect(config.publicClient).toBe(publicClient);
     expect(config.walletClient).toBeUndefined();
+    expect(config.reads).toEqual({ concurrency: 8, multicallBatchSize: 1024 });
     expect(config.deployments.protocol).toBe("v1");
     expect(config.deployments.v1).toBe(mainnetV1Deployment);
     expect(config.deployments.v2).toBeUndefined();
@@ -71,6 +72,34 @@ describe("createConfig", () => {
 
     expect(Object.isFrozen(config)).toBe(true);
     expect(Object.isFrozen(config.deployments)).toBe(true);
+    expect(Object.isFrozen(config.reads)).toBe(true);
+  });
+
+  it("accepts custom read limits", () => {
+    const config = createConfig({
+      network: "mainnet",
+      publicClient: makeMainnetPublicClient(),
+      reads: { concurrency: 3, multicallBatchSize: 4096 },
+    });
+
+    expect(config.reads).toEqual({ concurrency: 3, multicallBatchSize: 4096 });
+  });
+
+  it.each([
+    { concurrency: 0 },
+    { concurrency: 1.5 },
+    { multicallBatchSize: -1 },
+    { multicallBatchSize: 0.5 },
+  ])("rejects invalid read limits: %o", (reads) => {
+    expectConfigError(
+      () =>
+        createConfig({
+          network: "mainnet",
+          publicClient: makeMainnetPublicClient(),
+          reads,
+        }),
+      "INVALID_READ_OPTIONS",
+    );
   });
 
   it("rejects a public client for another network", () => {
