@@ -1,7 +1,7 @@
 import { Effect } from "effect";
 
-import { erc20Abi } from "@ensforge/contracts/shared";
-import { standardRentPriceOracleV2Abi } from "@ensforge/contracts/v2";
+import { erc20DecimalsAbi, erc20SymbolAbi } from "@ensforge/contracts/shared";
+import { standardRentPriceOracleV2IsPaymentTokenAbi } from "@ensforge/contracts/v2";
 
 import type { EthereumAddress } from "../../schemas/identity.js";
 import { EthereumClient } from "../client/ethereum-client.js";
@@ -13,7 +13,7 @@ export const readPaymentTokenSupport = Effect.fn("readPaymentTokenSupport")(func
   const ethereum = yield* EthereumClient;
   const supported = yield* ethereum.readContract({
     address: oracle,
-    abi: standardRentPriceOracleV2Abi,
+    abi: standardRentPriceOracleV2IsPaymentTokenAbi,
     functionName: "isPaymentToken",
     args: [token],
   });
@@ -21,8 +21,8 @@ export const readPaymentTokenSupport = Effect.fn("readPaymentTokenSupport")(func
 
   const [symbol, decimals] = yield* Effect.all(
     [
-      ethereum.readContract({ address: token, abi: erc20Abi, functionName: "symbol" }),
-      ethereum.readContract({ address: token, abi: erc20Abi, functionName: "decimals" }),
+      ethereum.readContract({ address: token, abi: erc20SymbolAbi, functionName: "symbol" }),
+      ethereum.readContract({ address: token, abi: erc20DecimalsAbi, functionName: "decimals" }),
     ] as const,
     { concurrency: "unbounded" },
   );

@@ -1,6 +1,9 @@
 import { Effect, Schema } from "effect";
 
-import { dnsRegistrarV1Abi } from "@ensforge/contracts/v1";
+import {
+  dnsRegistrarV1ProveAndClaimAbi,
+  dnsRegistrarV1ProveAndClaimWithResolverAbi,
+} from "@ensforge/contracts/v1";
 import { encodeFunctionData, zeroAddress } from "viem";
 
 import type { EnsWriteIntentPreparer } from "../../../action/write-intent.js";
@@ -54,12 +57,12 @@ const prepare: EnsWriteIntentPreparer<ClaimDnsNameParameters, WriteError> = Effe
     try: () =>
       resolver === null
         ? encodeFunctionData({
-            abi: dnsRegistrarV1Abi,
+            abi: dnsRegistrarV1ProveAndClaimAbi,
             functionName: "proveAndClaim",
             args: [dnsName, proof],
           })
         : encodeFunctionData({
-            abi: dnsRegistrarV1Abi,
+            abi: dnsRegistrarV1ProveAndClaimWithResolverAbi,
             functionName: "proveAndClaimWithResolver",
             args: [dnsName, proof, resolver, address],
           }),

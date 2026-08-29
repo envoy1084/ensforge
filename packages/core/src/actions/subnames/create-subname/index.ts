@@ -3,7 +3,7 @@ import { Effect, Schema } from "effect";
 import {
   enhancedAccessControlRoles,
   registryRoles,
-  verifiableFactoryV2Abi,
+  verifiableFactoryV2DeployProxyAbi,
 } from "@ensforge/contracts/v2";
 import { decodeFunctionResult, keccak256, stringToHex, zeroAddress } from "viem";
 
@@ -121,7 +121,7 @@ const createSubnameEffect = Effect.fn("ensforge.createSubname")(function* (
         try: () =>
           Schema.decodeUnknownSync(EthereumAddress)(
             decodeFunctionResult({
-              abi: verifiableFactoryV2Abi,
+              abi: verifiableFactoryV2DeployProxyAbi,
               functionName: "deployProxy",
               data: raw,
             }),

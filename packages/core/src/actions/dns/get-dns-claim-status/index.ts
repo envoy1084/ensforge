@@ -1,6 +1,10 @@
 import { Effect } from "effect";
 
-import { dnsRegistrarV1Abi, ensRegistryV1Abi } from "@ensforge/contracts/v1";
+import {
+  dnsRegistrarV1InceptionsAbi,
+  ensRegistryV1OwnerAbi,
+  ensRegistryV1ResolverAbi,
+} from "@ensforge/contracts/v1";
 import { isAddressEqual, zeroAddress } from "viem";
 
 import type { BlockParameters } from "../../../action/block.js";
@@ -39,19 +43,19 @@ const getDnsClaimStatusEffect = Effect.fn("ensforge.getDnsClaimStatus")(function
         [
           ethereum.readContract({
             address: v1.contracts.registry,
-            abi: ensRegistryV1Abi,
+            abi: ensRegistryV1OwnerAbi,
             functionName: "owner",
             args: [node],
           }),
           ethereum.readContract({
             address: v1.contracts.registry,
-            abi: ensRegistryV1Abi,
+            abi: ensRegistryV1ResolverAbi,
             functionName: "resolver",
             args: [node],
           }),
           ethereum.readContract({
             address: v1.contracts.dnsRegistrar,
-            abi: dnsRegistrarV1Abi,
+            abi: dnsRegistrarV1InceptionsAbi,
             functionName: "inceptions",
             args: [node],
           }),

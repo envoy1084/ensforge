@@ -1,6 +1,6 @@
 import { Effect } from "effect";
 
-import { permissionedResolverV2InterfaceAbi } from "@ensforge/contracts/v2";
+import { permissionedResolverV2InterfaceHasRolesAbi } from "@ensforge/contracts/v2";
 import { toHex } from "viem";
 
 import { defineReadAction } from "../../../action/read-request.js";
@@ -55,7 +55,7 @@ const hasResolverRolesEffect = Effect.fn("ensforge.hasResolverRoles")(function* 
         resources.map((candidate) =>
           ethereum.readContract({
             address: target.resolver,
-            abi: permissionedResolverV2InterfaceAbi,
+            abi: permissionedResolverV2InterfaceHasRolesAbi,
             functionName: "hasRoles",
             args: [candidate, parameters.roles, parameters.account],
           }),

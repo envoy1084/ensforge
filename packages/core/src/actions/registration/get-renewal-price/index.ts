@@ -1,7 +1,7 @@
 import { Effect } from "effect";
 
-import { ethRegistrarControllerV1Abi } from "@ensforge/contracts/v1";
-import { ethRegistrarV2Abi, ethRenewerV1Abi } from "@ensforge/contracts/v2";
+import { ethRegistrarControllerV1RentPriceAbi } from "@ensforge/contracts/v1";
+import { ethRegistrarV2RenewalPriceAbi, ethRenewerV1RenewalPriceAbi } from "@ensforge/contracts/v2";
 
 import { defineReadAction } from "../../../action/read-request.js";
 import type { EnsforgeConfig } from "../../../config/config.js";
@@ -44,7 +44,7 @@ const getRenewalPriceEffect = Effect.fn("ensforge.getRenewalPrice")(function* (
         const renewer = route.deployment.contracts.ethRegistrarController;
         const quote = yield* ethereum.readContract({
           address: renewer,
-          abi: ethRegistrarControllerV1Abi,
+          abi: ethRegistrarControllerV1RentPriceAbi,
           functionName: "rentPrice",
           args: [label, parameters.duration],
         });
@@ -67,7 +67,8 @@ const getRenewalPriceEffect = Effect.fn("ensforge.getRenewalPrice")(function* (
         route.kind === "reserved"
           ? route.deployment.migration.ethRenewerV1
           : route.deployment.contracts.ethRegistrar;
-      const abi = route.kind === "reserved" ? ethRenewerV1Abi : ethRegistrarV2Abi;
+      const abi =
+        route.kind === "reserved" ? ethRenewerV1RenewalPriceAbi : ethRegistrarV2RenewalPriceAbi;
       const priceOracle = yield* ethereum.readContract({
         address: renewer,
         abi,

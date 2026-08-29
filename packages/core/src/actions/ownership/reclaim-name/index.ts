@@ -1,6 +1,6 @@
 import { Effect } from "effect";
 
-import { baseRegistrarV1Abi } from "@ensforge/contracts/v1";
+import { baseRegistrarV1ReclaimAbi } from "@ensforge/contracts/v1";
 import { encodeFunctionData } from "viem";
 
 import type { EnsWriteIntentPreparer } from "../../../action/write-intent.js";
@@ -23,7 +23,7 @@ const prepare: EnsWriteIntentPreparer<ReclaimNameParameters, WriteError> = Effec
   const data = yield* Effect.try({
     try: () =>
       encodeFunctionData({
-        abi: baseRegistrarV1Abi,
+        abi: baseRegistrarV1ReclaimAbi,
         functionName: "reclaim",
         args: [target.tokenId, manager],
       }),

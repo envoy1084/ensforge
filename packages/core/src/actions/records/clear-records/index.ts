@@ -1,6 +1,6 @@
 import { Effect } from "effect";
 
-import { publicResolverV1Abi } from "@ensforge/contracts/v1";
+import { publicResolverV1ClearRecordsAbi } from "@ensforge/contracts/v1";
 import { encodeFunctionData } from "viem";
 
 import { ContractError } from "../../../errors/contract-error.js";
@@ -14,7 +14,7 @@ export const clearRecords = makeResolverWriteAction<ClearRecordsParameters>({
     Effect.try({
       try: () =>
         encodeFunctionData({
-          abi: publicResolverV1Abi,
+          abi: publicResolverV1ClearRecordsAbi,
           functionName: "clearRecords",
           args: [context.node],
         }),

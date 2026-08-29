@@ -1,10 +1,20 @@
 import { Effect } from "effect";
 
-import { nameWrapperFuses, nameWrapperV1Abi } from "@ensforge/contracts/v1";
 import {
-  permissionedRegistryV2InterfaceAbi,
+  nameWrapperFuses,
+  nameWrapperV1CanExtendSubnamesAbi,
+  nameWrapperV1CanModifyNameAbi,
+  nameWrapperV1GetApprovedAbi,
+  nameWrapperV1GetDataAbi,
+  nameWrapperV1IsApprovedForAllAbi,
+  nameWrapperV1IsWrappedAbi,
+} from "@ensforge/contracts/v1";
+import {
+  permissionedRegistryV2InterfaceGetSubregistryAbi,
   registryInterfaceIds,
-  wrapperRegistryV2InterfaceAbi,
+  wrapperRegistryV2InterfaceGetResourceAbi,
+  wrapperRegistryV2InterfaceIsApprovedForAllAbi,
+  wrapperRegistryV2InterfaceRolesAbi,
 } from "@ensforge/contracts/v2";
 import { isAddressEqual, zeroAddress } from "viem";
 
@@ -40,7 +50,7 @@ const getWrapperPermissionsEffect = Effect.fn("ensforge.getWrapperPermissions")(
         const tokenId = BigInt(namehash(name));
         const wrapped = yield* ethereum.readContract({
           address: deployment.contracts.nameWrapper,
-          abi: nameWrapperV1Abi,
+          abi: nameWrapperV1IsWrappedAbi,
           functionName: "isWrapped",
           args: [namehash(name)],
         });
@@ -49,7 +59,7 @@ const getWrapperPermissionsEffect = Effect.fn("ensforge.getWrapperPermissions")(
         }
         const [owner, fuses, expiry] = yield* ethereum.readContract({
           address: deployment.contracts.nameWrapper,
-          abi: nameWrapperV1Abi,
+          abi: nameWrapperV1GetDataAbi,
           functionName: "getData",
           args: [tokenId],
         });
@@ -57,25 +67,25 @@ const getWrapperPermissionsEffect = Effect.fn("ensforge.getWrapperPermissions")(
           [
             ethereum.readContract({
               address: deployment.contracts.nameWrapper,
-              abi: nameWrapperV1Abi,
+              abi: nameWrapperV1GetApprovedAbi,
               functionName: "getApproved",
               args: [tokenId],
             }),
             ethereum.readContract({
               address: deployment.contracts.nameWrapper,
-              abi: nameWrapperV1Abi,
+              abi: nameWrapperV1IsApprovedForAllAbi,
               functionName: "isApprovedForAll",
               args: [owner, parameters.account],
             }),
             ethereum.readContract({
               address: deployment.contracts.nameWrapper,
-              abi: nameWrapperV1Abi,
+              abi: nameWrapperV1CanModifyNameAbi,
               functionName: "canModifyName",
               args: [namehash(name), parameters.account],
             }),
             ethereum.readContract({
               address: deployment.contracts.nameWrapper,
-              abi: nameWrapperV1Abi,
+              abi: nameWrapperV1CanExtendSubnamesAbi,
               functionName: "canExtendSubnames",
               args: [namehash(name), parameters.account],
             }),
@@ -112,7 +122,7 @@ const getWrapperPermissionsEffect = Effect.fn("ensforge.getWrapperPermissions")(
         ? route.parentRegistry
         : yield* ethereum.readContract({
             address: route.parentRegistry,
-            abi: permissionedRegistryV2InterfaceAbi,
+            abi: permissionedRegistryV2InterfaceGetSubregistryAbi,
             functionName: "getSubregistry",
             args: [route.label],
           });
@@ -128,13 +138,13 @@ const getWrapperPermissionsEffect = Effect.fn("ensforge.getWrapperPermissions")(
         [
           ethereum.readContract({
             address: childRegistry,
-            abi: wrapperRegistryV2InterfaceAbi,
+            abi: wrapperRegistryV2InterfaceGetResourceAbi,
             functionName: "getResource",
             args: [anyId],
           }),
           ethereum.readContract({
             address: childRegistry,
-            abi: wrapperRegistryV2InterfaceAbi,
+            abi: wrapperRegistryV2InterfaceRolesAbi,
             functionName: "roles",
             args: [anyId, parameters.account],
           }),
@@ -144,7 +154,7 @@ const getWrapperPermissionsEffect = Effect.fn("ensforge.getWrapperPermissions")(
       const operatorApproved = parentWrapped
         ? yield* ethereum.readContract({
             address: childRegistry,
-            abi: wrapperRegistryV2InterfaceAbi,
+            abi: wrapperRegistryV2InterfaceIsApprovedForAllAbi,
             functionName: "isApprovedForAll",
             args: [route.state.latestOwner, parameters.account],
           })

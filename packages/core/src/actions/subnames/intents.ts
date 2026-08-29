@@ -1,10 +1,14 @@
 import { Effect } from "effect";
 
-import { ensRegistryV1Abi, nameWrapperV1Abi } from "@ensforge/contracts/v1";
 import {
-  permissionedRegistryV2InterfaceAbi,
-  userRegistryV2Abi,
-  verifiableFactoryV2Abi,
+  ensRegistryV1SetSubnodeRecordAbi,
+  nameWrapperV1SetSubnodeRecordAbi,
+} from "@ensforge/contracts/v1";
+import {
+  permissionedRegistryV2InterfaceRegisterAbi,
+  permissionedRegistryV2InterfaceSetSubregistryAbi,
+  userRegistryV2SetParentAbi,
+  verifiableFactoryV2DeployProxyAbi,
 } from "@ensforge/contracts/v2";
 import { encodeFunctionData } from "viem";
 
@@ -67,7 +71,7 @@ export const v1CreateSubnameIntent = Effect.fn("ensforge.v1CreateSubnameIntent")
     const data = yield* encode("the V1 subname creation", () =>
       parameters.parentWrapped
         ? encodeFunctionData({
-            abi: nameWrapperV1Abi,
+            abi: nameWrapperV1SetSubnodeRecordAbi,
             functionName: "setSubnodeRecord",
             args: [
               parameters.parentNode,
@@ -80,7 +84,7 @@ export const v1CreateSubnameIntent = Effect.fn("ensforge.v1CreateSubnameIntent")
             ],
           })
         : encodeFunctionData({
-            abi: ensRegistryV1Abi,
+            abi: ensRegistryV1SetSubnodeRecordAbi,
             functionName: "setSubnodeRecord",
             args: [
               parameters.parentNode,
@@ -133,7 +137,7 @@ export const deployUserRegistryIntent = Effect.fn("ensforge.deployUserRegistryIn
         args: [[{ account: parameters.owner, roleBitmap: parameters.roles }]],
       });
       return encodeFunctionData({
-        abi: verifiableFactoryV2Abi,
+        abi: verifiableFactoryV2DeployProxyAbi,
         functionName: "deployProxy",
         args: [parameters.implementation, parameters.salt, initialization],
       });
@@ -155,7 +159,7 @@ export const setRegistryParentIntent = Effect.fn("ensforge.setRegistryParentInte
   }) {
     const data = yield* encode("the ENSv2 registry parent update", () =>
       encodeFunctionData({
-        abi: userRegistryV2Abi,
+        abi: userRegistryV2SetParentAbi,
         functionName: "setParent",
         args: [parameters.parentRegistry, parameters.parentLabel],
       }),
@@ -177,7 +181,7 @@ export const attachSubregistryIntent = Effect.fn("ensforge.attachSubregistryInte
   }) {
     const data = yield* encode("the ENSv2 subregistry attachment", () =>
       encodeFunctionData({
-        abi: permissionedRegistryV2InterfaceAbi,
+        abi: permissionedRegistryV2InterfaceSetSubregistryAbi,
         functionName: "setSubregistry",
         args: [parameters.parentTokenId, parameters.subregistry],
       }),
@@ -202,7 +206,7 @@ export const registerV2SubnameIntent = Effect.fn("ensforge.registerV2SubnameInte
   }) {
     const data = yield* encode("the ENSv2 subname registration", () =>
       encodeFunctionData({
-        abi: permissionedRegistryV2InterfaceAbi,
+        abi: permissionedRegistryV2InterfaceRegisterAbi,
         functionName: "register",
         args: [
           parameters.label,

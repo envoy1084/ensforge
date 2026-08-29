@@ -1,7 +1,11 @@
 import { Effect } from "effect";
 
-import { nameWrapperFuses, nameWrapperV1Abi } from "@ensforge/contracts/v1";
-import { universalResolverV2Abi } from "@ensforge/contracts/v2";
+import {
+  nameWrapperFuses,
+  nameWrapperV1GetDataAbi,
+  nameWrapperV1IsWrappedAbi,
+} from "@ensforge/contracts/v1";
+import { universalResolverV2FindExactRegistryAbi } from "@ensforge/contracts/v2";
 import { isAddressEqual, zeroAddress } from "viem";
 
 import { defineReadAction } from "../../../action/read-request.js";
@@ -39,20 +43,20 @@ const getMigrationStatusEffect = Effect.fn("ensforge.getMigrationStatus")(functi
       if (v1 !== undefined && analysis.parent !== undefined && analysis.depth > 2) {
         const wrapped = yield* ethereum.readContract({
           address: v1.contracts.nameWrapper,
-          abi: nameWrapperV1Abi,
+          abi: nameWrapperV1IsWrappedAbi,
           functionName: "isWrapped",
           args: [namehash(name)],
         });
         if (wrapped) {
           const [, fuses] = yield* ethereum.readContract({
             address: v1.contracts.nameWrapper,
-            abi: nameWrapperV1Abi,
+            abi: nameWrapperV1GetDataAbi,
             functionName: "getData",
             args: [BigInt(namehash(name))],
           });
           const parentRegistry = yield* ethereum.readContract({
             address: profile.v2.contracts.universalResolver,
-            abi: universalResolverV2Abi,
+            abi: universalResolverV2FindExactRegistryAbi,
             functionName: "findExactRegistry",
             args: [yield* dnsEncodeName.effect(analysis.parent)],
           });
@@ -93,7 +97,7 @@ const getMigrationStatusEffect = Effect.fn("ensforge.getMigrationStatus")(functi
 
       const [, fuses] = yield* ethereum.readContract({
         address: v1.contracts.nameWrapper,
-        abi: nameWrapperV1Abi,
+        abi: nameWrapperV1GetDataAbi,
         functionName: "getData",
         args: [BigInt(namehash(name))],
       });

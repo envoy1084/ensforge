@@ -1,6 +1,6 @@
 import { Effect, Schema } from "effect";
 
-import { publicResolverV1Abi } from "@ensforge/contracts/v1";
+import { publicResolverV1SetZonehashAbi } from "@ensforge/contracts/v1";
 import { encodeFunctionData } from "viem";
 
 import { CodecError } from "../../../errors/codec-error.js";
@@ -23,7 +23,7 @@ export const setZoneHash = makeResolverWriteAction<SetZoneHashParameters>({
       return yield* Effect.try({
         try: () =>
           encodeFunctionData({
-            abi: publicResolverV1Abi,
+            abi: publicResolverV1SetZonehashAbi,
             functionName: "setZonehash",
             args: [context.node, parameters.value],
           }),

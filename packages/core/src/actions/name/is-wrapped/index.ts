@@ -1,8 +1,11 @@
 import { Effect } from "effect";
 
 import { erc165Abi } from "@ensforge/contracts/shared";
-import { nameWrapperV1Abi } from "@ensforge/contracts/v1";
-import { permissionedRegistryV2InterfaceAbi, registryInterfaceIds } from "@ensforge/contracts/v2";
+import { nameWrapperV1IsWrappedAbi } from "@ensforge/contracts/v1";
+import {
+  permissionedRegistryV2InterfaceGetSubregistryAbi,
+  registryInterfaceIds,
+} from "@ensforge/contracts/v2";
 import { isAddressEqual, zeroAddress } from "viem";
 
 import { defineReadAction } from "../../../action/read-request.js";
@@ -30,7 +33,7 @@ const isWrappedEffect = Effect.fn("ensforge.isWrapped")(function* (
         const deployment = route.kind === "reserved" ? route.v1 : route.deployment;
         return yield* ethereum.readContract({
           address: deployment.contracts.nameWrapper,
-          abi: nameWrapperV1Abi,
+          abi: nameWrapperV1IsWrappedAbi,
           functionName: "isWrapped",
           args: [namehash(name)],
         });
@@ -39,7 +42,7 @@ const isWrappedEffect = Effect.fn("ensforge.isWrapped")(function* (
 
       const subregistry = yield* ethereum.readContract({
         address: route.parentRegistry,
-        abi: permissionedRegistryV2InterfaceAbi,
+        abi: permissionedRegistryV2InterfaceGetSubregistryAbi,
         functionName: "getSubregistry",
         args: [route.label],
       });

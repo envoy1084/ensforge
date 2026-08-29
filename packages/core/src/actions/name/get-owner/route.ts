@@ -1,7 +1,13 @@
 import { Effect, Result } from "effect";
 
 import type { EnsV1Deployment, EnsV2Deployment } from "@ensforge/contracts/deployments";
-import { ethRegistryV2Abi, ethRenewerV1Abi, universalResolverV2Abi } from "@ensforge/contracts/v2";
+import {
+  ethRegistryV2GetStateAbi,
+  ethRenewerV1IsRenewableAbi,
+  universalResolverV2FindOwnerAbi,
+  universalResolverV2FindParentRegistryAbi,
+  universalResolverV2FindResolverAbi,
+} from "@ensforge/contracts/v2";
 import { isAddressEqual, zeroAddress } from "viem";
 
 import type { CodecError } from "../../../errors/codec-error.js";
@@ -34,7 +40,7 @@ const routeEthOwner = Effect.fn("routeEthOwner")(function* (
       Effect.result(
         ethereum.readContract({
           address: v2.contracts.universalResolver,
-          abi: universalResolverV2Abi,
+          abi: universalResolverV2FindOwnerAbi,
           functionName: "findOwner",
           args: [dnsName],
         }),
@@ -42,7 +48,7 @@ const routeEthOwner = Effect.fn("routeEthOwner")(function* (
       Effect.result(
         ethereum.readContract({
           address: v2.contracts.ethRegistry,
-          abi: ethRegistryV2Abi,
+          abi: ethRegistryV2GetStateAbi,
           functionName: "getState",
           args: [ownerId],
         }),
@@ -50,7 +56,7 @@ const routeEthOwner = Effect.fn("routeEthOwner")(function* (
       Effect.result(
         ethereum.readContract({
           address: v2.migration.ethRenewerV1,
-          abi: ethRenewerV1Abi,
+          abi: ethRenewerV1IsRenewableAbi,
           functionName: "isRenewable",
           args: [label],
         }),
@@ -108,7 +114,7 @@ const routeOtherOwner = Effect.fn("routeOtherOwner")(function* (
       Effect.result(
         ethereum.readContract({
           address: v2.contracts.universalResolver,
-          abi: universalResolverV2Abi,
+          abi: universalResolverV2FindOwnerAbi,
           functionName: "findOwner",
           args: [dnsName],
         }),
@@ -116,7 +122,7 @@ const routeOtherOwner = Effect.fn("routeOtherOwner")(function* (
       Effect.result(
         ethereum.readContract({
           address: v2.contracts.universalResolver,
-          abi: universalResolverV2Abi,
+          abi: universalResolverV2FindParentRegistryAbi,
           functionName: "findParentRegistry",
           args: [dnsName],
         }),
@@ -124,7 +130,7 @@ const routeOtherOwner = Effect.fn("routeOtherOwner")(function* (
       Effect.result(
         ethereum.readContract({
           address: v2.contracts.universalResolver,
-          abi: universalResolverV2Abi,
+          abi: universalResolverV2FindResolverAbi,
           functionName: "findResolver",
           args: [dnsName],
         }),

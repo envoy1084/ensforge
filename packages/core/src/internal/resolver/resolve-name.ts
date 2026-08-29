@@ -1,7 +1,13 @@
 import { Effect } from "effect";
 
-import { universalResolverV1Abi } from "@ensforge/contracts/v1";
-import { universalResolverV2Abi } from "@ensforge/contracts/v2";
+import {
+  universalResolverV1ResolveAbi,
+  universalResolverV1ResolveWithResolverAbi,
+} from "@ensforge/contracts/v1";
+import {
+  universalResolverV2ResolveAbi,
+  universalResolverV2ResolveWithResolverAbi,
+} from "@ensforge/contracts/v2";
 import type { Address, Hex } from "viem";
 
 import { EthereumClient } from "../client/ethereum-client.js";
@@ -37,7 +43,7 @@ export const resolveName = Effect.fn("resolveName")(function* ({
   if (protocol === "v1") {
     return yield* ethereum.readContractDirect({
       address: universalResolver,
-      abi: universalResolverV1Abi,
+      abi: universalResolverV1ResolveAbi,
       functionName: "resolve",
       args: [name, data],
       ...block,
@@ -46,7 +52,7 @@ export const resolveName = Effect.fn("resolveName")(function* ({
 
   return yield* ethereum.readContractDirect({
     address: universalResolver,
-    abi: universalResolverV2Abi,
+    abi: universalResolverV2ResolveAbi,
     functionName: "resolve",
     args: [name, data],
     ...block,
@@ -78,12 +84,12 @@ export const resolveNameWithResolver = Effect.fn("resolveNameWithResolver")(func
   if (protocol === "v1") {
     return yield* ethereum.readContractDirect({
       ...parameters,
-      abi: universalResolverV1Abi,
+      abi: universalResolverV1ResolveWithResolverAbi,
     });
   }
 
   return yield* ethereum.readContractDirect({
     ...parameters,
-    abi: universalResolverV2Abi,
+    abi: universalResolverV2ResolveWithResolverAbi,
   });
 });

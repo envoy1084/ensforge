@@ -1,6 +1,6 @@
 import { Effect } from "effect";
 
-import { dnsRegistrarV1Abi } from "@ensforge/contracts/v1";
+import { dnsRegistrarV1OracleAbi } from "@ensforge/contracts/v1";
 
 import type { BlockParameters } from "../../../action/block.js";
 import { defineReadAction } from "../../../action/read-request.js";
@@ -39,7 +39,7 @@ const getDnsImportPlanEffect = Effect.fn("ensforge.getDnsImportPlan")(function* 
       const ethereum = yield* EthereumClient;
       const oracle = yield* ethereum.readContract({
         address: v1.contracts.dnsRegistrar,
-        abi: dnsRegistrarV1Abi,
+        abi: dnsRegistrarV1OracleAbi,
         functionName: "oracle",
       });
       if (claim.status === "claimed") {

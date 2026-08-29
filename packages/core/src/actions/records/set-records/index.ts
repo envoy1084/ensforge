@@ -1,6 +1,6 @@
 import { Effect, Result } from "effect";
 
-import { publicResolverV1Abi } from "@ensforge/contracts/v1";
+import { publicResolverV1MulticallWithNodeCheckAbi } from "@ensforge/contracts/v1";
 import { encodeFunctionData, isAddressEqual } from "viem";
 
 import { defineExtendedAction } from "../../../action/action.js";
@@ -132,7 +132,7 @@ const resolverMulticallPreparer: EnsWriteIntentPreparer<SetRecordsParameters, Se
     const data = yield* Effect.try({
       try: () =>
         encodeFunctionData({
-          abi: publicResolverV1Abi,
+          abi: publicResolverV1MulticallWithNodeCheckAbi,
           functionName: "multicallWithNodeCheck",
           args: [namehash(name), prepared.map((call) => call.data as `0x${string}`)],
         }),

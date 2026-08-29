@@ -1,7 +1,11 @@
 import { Effect } from "effect";
 
-import { reverseRegistrarV1Abi } from "@ensforge/contracts/v1";
-import { defaultReverseRegistrarAdapterV2Abi } from "@ensforge/contracts/v2";
+import {
+  reverseRegistrarV1DefaultResolverAbi,
+  reverseRegistrarV1SetNameAbi,
+  reverseRegistrarV1SetNameForAddrAbi,
+} from "@ensforge/contracts/v1";
+import { defaultReverseRegistrarAdapterV2SetNameAbi } from "@ensforge/contracts/v2";
 import { encodeFunctionData, isAddressEqual, type Address } from "viem";
 
 import type { EnsWriteIntentPreparer } from "../../action/write-intent.js";
@@ -74,7 +78,7 @@ const prepare: EnsWriteIntentPreparer<ReverseMutationParameters, WriteError> = E
       to: config.deployments.v2.contracts.defaultReverseRegistrarAdapter,
       data: yield* encode("the ENSv2 primary-name update", target, () =>
         encodeFunctionData({
-          abi: defaultReverseRegistrarAdapterV2Abi,
+          abi: defaultReverseRegistrarAdapterV2SetNameAbi,
           functionName: "setName",
           args: [target, name],
         }),
@@ -90,7 +94,7 @@ const prepare: EnsWriteIntentPreparer<ReverseMutationParameters, WriteError> = E
       to: registrar,
       data: yield* encode("the ENSv1 primary-name update", target, () =>
         encodeFunctionData({
-          abi: reverseRegistrarV1Abi,
+          abi: reverseRegistrarV1SetNameAbi,
           functionName: "setName",
           args: [name],
         }),
@@ -104,7 +108,7 @@ const prepare: EnsWriteIntentPreparer<ReverseMutationParameters, WriteError> = E
     try: () =>
       config.publicClient.readContract({
         address: registrar,
-        abi: reverseRegistrarV1Abi,
+        abi: reverseRegistrarV1DefaultResolverAbi,
         functionName: "defaultResolver",
       }),
     catch: (cause) => viemErrorToEffectError(cause, "readContract"),
@@ -113,7 +117,7 @@ const prepare: EnsWriteIntentPreparer<ReverseMutationParameters, WriteError> = E
     to: registrar,
     data: yield* encode("the delegated ENSv1 primary-name update", target, () =>
       encodeFunctionData({
-        abi: reverseRegistrarV1Abi,
+        abi: reverseRegistrarV1SetNameForAddrAbi,
         functionName: "setNameForAddr",
         args: [target, target, defaultResolver, name],
       }),

@@ -1,7 +1,7 @@
 import { Effect, Option } from "effect";
 
-import { ensRegistryV1Abi } from "@ensforge/contracts/v1";
-import { contractNamerV2InterfaceAbi } from "@ensforge/contracts/v2";
+import { ensRegistryV1IsApprovedForAllAbi } from "@ensforge/contracts/v1";
+import { contractNamerV2InterfaceIsContractNamerAbi } from "@ensforge/contracts/v2";
 import { isAddressEqual, type Address } from "viem";
 
 import type { EnsforgeConfig } from "../../config/config.js";
@@ -62,7 +62,7 @@ export const requireReverseAuthorization = Effect.fn("ensforge.reverse.requireAu
             try: () =>
               config.publicClient.readContract({
                 address: registry,
-                abi: ensRegistryV1Abi,
+                abi: ensRegistryV1IsApprovedForAllAbi,
                 functionName: "isApprovedForAll",
                 args: [target, caller],
               }),
@@ -80,7 +80,7 @@ export const requireReverseAuthorization = Effect.fn("ensforge.reverse.requireAu
           Effect.tryPromise(() =>
             config.publicClient.readContract({
               address: target,
-              abi: contractNamerV2InterfaceAbi,
+              abi: contractNamerV2InterfaceIsContractNamerAbi,
               functionName: "isContractNamer",
               args: [caller],
             }),

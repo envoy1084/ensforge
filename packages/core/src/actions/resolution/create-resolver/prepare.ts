@@ -2,8 +2,8 @@ import { Effect, Schema } from "effect";
 
 import {
   enhancedAccessControlRoles,
-  permissionedResolverInitializableV2InterfaceAbi,
-  verifiableFactoryV2Abi,
+  permissionedResolverInitializableV2InterfaceInitializeAbi,
+  verifiableFactoryV2DeployProxyAbi,
 } from "@ensforge/contracts/v2";
 import { encodeFunctionData } from "viem";
 
@@ -45,7 +45,7 @@ export const prepareCreateResolver: EnsWriteIntentPreparer<CreateResolverParamet
     const data = yield* Effect.try({
       try: () => {
         const initialization = encodeFunctionData({
-          abi: permissionedResolverInitializableV2InterfaceAbi,
+          abi: permissionedResolverInitializableV2InterfaceInitializeAbi,
           functionName: "initialize",
           args: [
             [
@@ -58,7 +58,7 @@ export const prepareCreateResolver: EnsWriteIntentPreparer<CreateResolverParamet
           ],
         });
         return encodeFunctionData({
-          abi: verifiableFactoryV2Abi,
+          abi: verifiableFactoryV2DeployProxyAbi,
           functionName: "deployProxy",
           args: [profile.v2.implementations.permissionedResolver, parameters.salt, initialization],
         });

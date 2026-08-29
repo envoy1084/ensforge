@@ -1,6 +1,6 @@
 import { Effect } from "effect";
 
-import { publicResolverV1Abi } from "@ensforge/contracts/v1";
+import { publicResolverV1ApproveAbi } from "@ensforge/contracts/v1";
 import { encodeFunctionData, isAddressEqual } from "viem";
 
 import type { EnsWriteIntentPreparer } from "../../../action/write-intent.js";
@@ -50,7 +50,7 @@ const preparer: EnsWriteIntentPreparer<SetResolverDelegateApprovalParameters, Wr
       const data = yield* Effect.try({
         try: () =>
           encodeFunctionData({
-            abi: publicResolverV1Abi,
+            abi: publicResolverV1ApproveAbi,
             functionName: "approve",
             args: [namehash(name), delegate, parameters.approved],
           }),

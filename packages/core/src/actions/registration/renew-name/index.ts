@@ -1,6 +1,6 @@
 import { Effect } from "effect";
 
-import { erc20Abi } from "@ensforge/contracts/shared";
+import { erc20AllowanceAbi } from "@ensforge/contracts/shared";
 import { keccak256, stringToHex } from "viem";
 
 import { defineExtendedAction } from "../../../action/action.js";
@@ -124,7 +124,7 @@ const renewNameEffect = Effect.fn("ensforge.renewName")(function* (
       try: () =>
         config.publicClient.readContract({
           address: currency.address,
-          abi: erc20Abi,
+          abi: erc20AllowanceAbi,
           functionName: "allowance",
           args: [payer, quote.renewer],
         }),

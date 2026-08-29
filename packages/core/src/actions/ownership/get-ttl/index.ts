@@ -1,6 +1,6 @@
 import { Effect } from "effect";
 
-import { ensRegistryV1Abi } from "@ensforge/contracts/v1";
+import { ensRegistryV1TtlAbi } from "@ensforge/contracts/v1";
 
 import { defineReadAction } from "../../../action/read-request.js";
 import type { EnsforgeConfig } from "../../../config/config.js";
@@ -29,7 +29,7 @@ const getTtlEffect = Effect.fn("ensforge.getTtl")(function* (
       const deployment = route.kind === "reserved" ? route.v1 : route.deployment;
       const ttl = yield* ethereum.readContract({
         address: deployment.contracts.registry,
-        abi: ensRegistryV1Abi,
+        abi: ensRegistryV1TtlAbi,
         functionName: "ttl",
         args: [namehash(name)],
       });

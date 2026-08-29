@@ -1,6 +1,6 @@
 import { Effect } from "effect";
 
-import { publicResolverV1Abi } from "@ensforge/contracts/v1";
+import { publicResolverV1MulticallAbi, publicResolverV1SetAddrAbi } from "@ensforge/contracts/v1";
 import { encodeFunctionData } from "viem";
 
 import { CodecError } from "../../../errors/codec-error.js";
@@ -13,7 +13,7 @@ const ethereumCoinType = 60n;
 
 const encodeAddressCall = (node: `0x${string}`, record: AddressRecordInput) =>
   encodeFunctionData({
-    abi: publicResolverV1Abi,
+    abi: publicResolverV1SetAddrAbi,
     functionName: "setAddr",
     args: [
       node,
@@ -54,7 +54,7 @@ export const setAddresses = makeResolverWriteAction<SetAddressesParameters>({
       try: () => {
         const calls = parameters.addresses.map((record) => encodeAddressCall(context.node, record));
         return encodeFunctionData({
-          abi: publicResolverV1Abi,
+          abi: publicResolverV1MulticallAbi,
           functionName: "multicall",
           args: [calls],
         });

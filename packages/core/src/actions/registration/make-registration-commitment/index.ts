@@ -1,7 +1,7 @@
 import { Effect } from "effect";
 
-import { ethRegistrarControllerV1Abi } from "@ensforge/contracts/v1";
-import { ethRegistrarV2Abi } from "@ensforge/contracts/v2";
+import { ethRegistrarControllerV1MakeCommitmentAbi } from "@ensforge/contracts/v1";
+import { ethRegistrarV2MakeCommitmentAbi } from "@ensforge/contracts/v2";
 import { zeroAddress, zeroHash } from "viem";
 
 import { defineReadAction } from "../../../action/read-request.js";
@@ -31,7 +31,7 @@ const makeRegistrationCommitmentEffect = Effect.fn("ensforge.makeRegistrationCom
           const registrar = profile.v1.contracts.ethRegistrarController;
           const commitment = yield* ethereum.readContract({
             address: registrar,
-            abi: ethRegistrarControllerV1Abi,
+            abi: ethRegistrarControllerV1MakeCommitmentAbi,
             functionName: "makeCommitment",
             args: [
               {
@@ -52,7 +52,7 @@ const makeRegistrationCommitmentEffect = Effect.fn("ensforge.makeRegistrationCom
         const registrar = profile.v2.contracts.ethRegistrar;
         const commitment = yield* ethereum.readContract({
           address: registrar,
-          abi: ethRegistrarV2Abi,
+          abi: ethRegistrarV2MakeCommitmentAbi,
           functionName: "makeCommitment",
           args: [
             label,

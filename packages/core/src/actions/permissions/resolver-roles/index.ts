@@ -1,8 +1,11 @@
 import { Effect } from "effect";
 
 import {
-  permissionedResolverV2Abi,
-  permissionedResolverV2InterfaceAbi,
+  permissionedResolverV2AuthorizeAddrRolesAbi,
+  permissionedResolverV2AuthorizeDataRolesAbi,
+  permissionedResolverV2AuthorizeNameRolesAbi,
+  permissionedResolverV2AuthorizeTextRolesAbi,
+  permissionedResolverV2RootRoleMutationAbi,
 } from "@ensforge/contracts/v2";
 import { encodeFunctionData } from "viem";
 
@@ -67,27 +70,27 @@ const makeScopedPreparer = (
           const grant = mutation === "grantRoles";
           if (parameters.record.type === "address") {
             return encodeFunctionData({
-              abi: permissionedResolverV2Abi,
+              abi: permissionedResolverV2AuthorizeAddrRolesAbi,
               functionName: "authorizeAddrRoles",
               args: [encodedName, parameters.record.coinType, account, grant],
             });
           }
           if (parameters.record.type === "text") {
             return encodeFunctionData({
-              abi: permissionedResolverV2Abi,
+              abi: permissionedResolverV2AuthorizeTextRolesAbi,
               functionName: "authorizeTextRoles",
               args: [encodedName, parameters.record.key, account, grant],
             });
           }
           if (parameters.record.type === "data") {
             return encodeFunctionData({
-              abi: permissionedResolverV2Abi,
+              abi: permissionedResolverV2AuthorizeDataRolesAbi,
               functionName: "authorizeDataRoles",
               args: [encodedName, parameters.record.key, account, grant],
             });
           }
           return encodeFunctionData({
-            abi: permissionedResolverV2Abi,
+            abi: permissionedResolverV2AuthorizeNameRolesAbi,
             functionName: "authorizeNameRoles",
             args: [encodedName, roles, account, grant],
           });
@@ -115,7 +118,7 @@ const makeRootPreparer = (
     const data = yield* Effect.try({
       try: () =>
         encodeFunctionData({
-          abi: permissionedResolverV2InterfaceAbi,
+          abi: permissionedResolverV2RootRoleMutationAbi,
           functionName: mutation,
           args: [roles, account],
         }),

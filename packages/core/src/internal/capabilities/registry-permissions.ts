@@ -1,6 +1,9 @@
 import { Effect } from "effect";
 
-import { permissionedRegistryV2InterfaceAbi, registryInterfaceIds } from "@ensforge/contracts/v2";
+import {
+  permissionedRegistryV2InterfaceGetResourceAbi,
+  registryInterfaceIds,
+} from "@ensforge/contracts/v2";
 
 import { labelhash } from "../../names/hashes.js";
 import type { NormalizedName } from "../../schemas/name.js";
@@ -36,7 +39,7 @@ export const readRegistryPermissionTarget = Effect.fn("readRegistryPermissionTar
   const anyId = BigInt(labelhash(route.label));
   const resource = yield* ethereum.readContract({
     address: route.parentRegistry,
-    abi: permissionedRegistryV2InterfaceAbi,
+    abi: permissionedRegistryV2InterfaceGetResourceAbi,
     functionName: "getResource",
     args: [anyId],
   });

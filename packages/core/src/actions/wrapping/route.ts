@@ -1,7 +1,7 @@
 import { Effect } from "effect";
 
 import type { EnsV1Deployment } from "@ensforge/contracts/deployments";
-import { nameWrapperV1Abi } from "@ensforge/contracts/v1";
+import { nameWrapperV1GetDataAbi } from "@ensforge/contracts/v1";
 import { isAddressEqual, zeroAddress } from "viem";
 
 import type { BlockParameters } from "../../action/block.js";
@@ -55,7 +55,7 @@ export const resolveWrapperRoute = Effect.fn("ensforge.resolveWrapperRoute")(fun
       const ethereum = yield* EthereumClient;
       const [owner, fuses, expiry] = yield* ethereum.readContract({
         address: deployment.contracts.nameWrapper,
-        abi: nameWrapperV1Abi,
+        abi: nameWrapperV1GetDataAbi,
         functionName: "getData",
         args: [BigInt(node)],
       });

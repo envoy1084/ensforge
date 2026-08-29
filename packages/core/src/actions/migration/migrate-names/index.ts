@@ -1,6 +1,9 @@
 import { Effect } from "effect";
 
-import { baseRegistrarV1Abi, nameWrapperV1Abi } from "@ensforge/contracts/v1";
+import {
+  baseRegistrarV1IsApprovedForAllAbi,
+  nameWrapperV1IsApprovedForAllAbi,
+} from "@ensforge/contracts/v1";
 import { isAddressEqual, keccak256, stringToHex } from "viem";
 
 import { defineAction } from "../../../action/action.js";
@@ -66,7 +69,10 @@ const readApproval = Effect.fn("ensforge.migrateNames.readApproval")(function* (
     try: () =>
       config.publicClient.readContract({
         address: entry.plan.target.tokenContract,
-        abi: entry.plan.target.tokenStandard === "erc721" ? baseRegistrarV1Abi : nameWrapperV1Abi,
+        abi:
+          entry.plan.target.tokenStandard === "erc721"
+            ? baseRegistrarV1IsApprovedForAllAbi
+            : nameWrapperV1IsApprovedForAllAbi,
         functionName: "isApprovedForAll",
         args: [entry.tokenOwner, helper],
       }),

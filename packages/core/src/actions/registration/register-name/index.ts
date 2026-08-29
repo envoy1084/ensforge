@@ -1,6 +1,6 @@
 import { Effect } from "effect";
 
-import { erc20Abi } from "@ensforge/contracts/shared";
+import { erc20AllowanceAbi } from "@ensforge/contracts/shared";
 import { keccak256, stringToHex } from "viem";
 
 import { defineAction } from "../../../action/action.js";
@@ -77,7 +77,7 @@ const readAllowance = Effect.fn("ensforge.registerName.readAllowance")(function*
     try: () =>
       config.publicClient.readContract({
         address: paymentToken,
-        abi: erc20Abi,
+        abi: erc20AllowanceAbi,
         functionName: "allowance",
         args: [owner, deployment.contracts.ethRegistrar],
       }),

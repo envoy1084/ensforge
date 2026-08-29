@@ -1,6 +1,9 @@
 import { Effect } from "effect";
 
-import { permissionedResolverV2InterfaceAbi, resolverInterfaceIds } from "@ensforge/contracts/v2";
+import {
+  permissionedResolverV2InterfaceGetAliasAbi,
+  resolverInterfaceIds,
+} from "@ensforge/contracts/v2";
 
 import { defineReadAction } from "../../../action/read-request.js";
 import type { EnsforgeConfig } from "../../../config/config.js";
@@ -44,7 +47,7 @@ const getAliasEffect = Effect.fn("ensforge.getAlias")(function* (
       const ethereum = yield* EthereumClient;
       const raw = yield* ethereum.readContract({
         address: discovery.address,
-        abi: permissionedResolverV2InterfaceAbi,
+        abi: permissionedResolverV2InterfaceGetAliasAbi,
         functionName: "getAlias",
         args: [yield* dnsEncodeName.effect(name)],
       });

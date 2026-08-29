@@ -1,7 +1,10 @@
 import { Effect } from "effect";
 
-import { publicResolverV1Abi } from "@ensforge/contracts/v1";
-import { permissionedResolverV2InterfaceAbi } from "@ensforge/contracts/v2";
+import {
+  publicResolverV1IsApprovedForAbi,
+  publicResolverV1IsApprovedForAllAbi,
+} from "@ensforge/contracts/v1";
+import { permissionedResolverV2InterfaceHasRolesAbi } from "@ensforge/contracts/v2";
 
 import { defineReadAction } from "../../../action/read-request.js";
 import type { EnsforgeConfig } from "../../../config/config.js";
@@ -105,7 +108,7 @@ const getRecordPermissionsEffect = Effect.fn("ensforge.getRecordPermissions")(fu
             ethereum
               .readContract({
                 address: resolverAddress,
-                abi: publicResolverV1Abi,
+                abi: publicResolverV1IsApprovedForAllAbi,
                 functionName: "isApprovedForAll",
                 args: [manager, parameters.account],
               })
@@ -113,7 +116,7 @@ const getRecordPermissionsEffect = Effect.fn("ensforge.getRecordPermissions")(fu
             ethereum
               .readContract({
                 address: resolverAddress,
-                abi: publicResolverV1Abi,
+                abi: publicResolverV1IsApprovedForAbi,
                 functionName: "isApprovedFor",
                 args: [manager, namehash(name), parameters.account],
               })
@@ -192,7 +195,7 @@ const getRecordPermissionsEffect = Effect.fn("ensforge.getRecordPermissions")(fu
             resources.map((resource) =>
               ethereum.readContract({
                 address: resolverAddress,
-                abi: permissionedResolverV2InterfaceAbi,
+                abi: permissionedResolverV2InterfaceHasRolesAbi,
                 functionName: "hasRoles",
                 args: [resource, requiredRole, parameters.account],
               }),

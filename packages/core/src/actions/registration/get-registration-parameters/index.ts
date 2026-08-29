@@ -1,7 +1,18 @@
 import { Effect } from "effect";
 
-import { ethRegistrarControllerV1Abi } from "@ensforge/contracts/v1";
-import { ethRegistrarV2Abi } from "@ensforge/contracts/v2";
+import {
+  ethRegistrarControllerV1MaxCommitmentAgeAbi,
+  ethRegistrarControllerV1MinCommitmentAgeAbi,
+  ethRegistrarControllerV1MinRegistrationDurationAbi,
+  ethRegistrarControllerV1PricesAbi,
+} from "@ensforge/contracts/v1";
+import {
+  ethRegistrarV2MaxCommitmentAgeAbi,
+  ethRegistrarV2MinCommitmentAgeAbi,
+  ethRegistrarV2MinRegisterDurationAbi,
+  ethRegistrarV2MinRenewDurationAbi,
+  ethRegistrarV2RentPriceOracleAbi,
+} from "@ensforge/contracts/v2";
 
 import type { BlockParameters } from "../../../action/block.js";
 import { defineReadAction } from "../../../action/read-request.js";
@@ -34,22 +45,22 @@ const getRegistrationParametersEffect = Effect.fn("ensforge.getRegistrationParam
           [
             ethereum.readContract({
               address: controller,
-              abi: ethRegistrarControllerV1Abi,
+              abi: ethRegistrarControllerV1MinRegistrationDurationAbi,
               functionName: "MIN_REGISTRATION_DURATION",
             }),
             ethereum.readContract({
               address: controller,
-              abi: ethRegistrarControllerV1Abi,
+              abi: ethRegistrarControllerV1MinCommitmentAgeAbi,
               functionName: "minCommitmentAge",
             }),
             ethereum.readContract({
               address: controller,
-              abi: ethRegistrarControllerV1Abi,
+              abi: ethRegistrarControllerV1MaxCommitmentAgeAbi,
               functionName: "maxCommitmentAge",
             }),
             ethereum.readContract({
               address: controller,
-              abi: ethRegistrarControllerV1Abi,
+              abi: ethRegistrarControllerV1PricesAbi,
               functionName: "prices",
             }),
           ] as const,
@@ -78,27 +89,27 @@ const getRegistrationParametersEffect = Effect.fn("ensforge.getRegistrationParam
         [
           ethereum.readContract({
             address: registrar,
-            abi: ethRegistrarV2Abi,
+            abi: ethRegistrarV2MinRegisterDurationAbi,
             functionName: "MIN_REGISTER_DURATION",
           }),
           ethereum.readContract({
             address: registrar,
-            abi: ethRegistrarV2Abi,
+            abi: ethRegistrarV2MinRenewDurationAbi,
             functionName: "MIN_RENEW_DURATION",
           }),
           ethereum.readContract({
             address: registrar,
-            abi: ethRegistrarV2Abi,
+            abi: ethRegistrarV2MinCommitmentAgeAbi,
             functionName: "MIN_COMMITMENT_AGE",
           }),
           ethereum.readContract({
             address: registrar,
-            abi: ethRegistrarV2Abi,
+            abi: ethRegistrarV2MaxCommitmentAgeAbi,
             functionName: "MAX_COMMITMENT_AGE",
           }),
           ethereum.readContract({
             address: registrar,
-            abi: ethRegistrarV2Abi,
+            abi: ethRegistrarV2RentPriceOracleAbi,
             functionName: "rentPriceOracle",
           }),
         ] as const,

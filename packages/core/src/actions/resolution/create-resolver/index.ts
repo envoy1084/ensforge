@@ -1,6 +1,6 @@
 import { Effect, Schema } from "effect";
 
-import { verifiableFactoryV2Abi } from "@ensforge/contracts/v2";
+import { verifiableFactoryV2DeployProxyAbi } from "@ensforge/contracts/v2";
 import { decodeFunctionResult } from "viem";
 
 import { defineAction, defineExtendedAction } from "../../../action/action.js";
@@ -38,7 +38,7 @@ export const predictResolverAddressEffect = Effect.fn("ensforge.predictResolverA
     try: () =>
       Schema.decodeUnknownSync(EthereumAddress)(
         decodeFunctionResult({
-          abi: verifiableFactoryV2Abi,
+          abi: verifiableFactoryV2DeployProxyAbi,
           functionName: "deployProxy",
           data: raw,
         }),

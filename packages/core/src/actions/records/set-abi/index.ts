@@ -1,6 +1,6 @@
 import { Effect, Schema } from "effect";
 
-import { publicResolverV1Abi } from "@ensforge/contracts/v1";
+import { publicResolverV1SetABIAbi } from "@ensforge/contracts/v1";
 import { encode as encodeCbor } from "cborg";
 import { zlibSync } from "fflate";
 import { bytesToHex, encodeFunctionData, stringToBytes, stringToHex } from "viem";
@@ -44,7 +44,7 @@ export const setAbi = makeResolverWriteAction<SetAbiParameters>({
       return yield* Effect.try({
         try: () =>
           encodeFunctionData({
-            abi: publicResolverV1Abi,
+            abi: publicResolverV1SetABIAbi,
             functionName: "setABI",
             args: [
               context.node,

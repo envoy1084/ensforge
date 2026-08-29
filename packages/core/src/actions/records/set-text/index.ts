@@ -1,6 +1,6 @@
 import { Effect } from "effect";
 
-import { publicResolverV1Abi } from "@ensforge/contracts/v1";
+import { publicResolverV1SetTextAbi } from "@ensforge/contracts/v1";
 import { encodeFunctionData } from "viem";
 
 import { ContractError } from "../../../errors/contract-error.js";
@@ -14,7 +14,7 @@ export const setText = makeResolverWriteAction<SetTextParameters>({
     Effect.try({
       try: () =>
         encodeFunctionData({
-          abi: publicResolverV1Abi,
+          abi: publicResolverV1SetTextAbi,
           functionName: "setText",
           args: [context.node, parameters.key, parameters.value],
         }),

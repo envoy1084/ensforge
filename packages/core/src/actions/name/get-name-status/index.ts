@@ -1,6 +1,6 @@
 import { Effect } from "effect";
 
-import { ethRegistrarV2Abi } from "@ensforge/contracts/v2";
+import { ethRegistrarV2IsRenewableAbi } from "@ensforge/contracts/v2";
 
 import { defineReadAction } from "../../../action/read-request.js";
 import type { EnsforgeConfig } from "../../../config/config.js";
@@ -38,7 +38,7 @@ const getNameStatusEffect = Effect.fn("ensforge.getNameStatus")(function* (
         }
         const renewable = yield* (yield* EthereumClient).readContract({
           address: route.deployment.contracts.ethRegistrar,
-          abi: ethRegistrarV2Abi,
+          abi: ethRegistrarV2IsRenewableAbi,
           functionName: "isRenewable",
           args: [route.label],
         });

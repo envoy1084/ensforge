@@ -1,6 +1,6 @@
 import { Effect } from "effect";
 
-import { ensRegistryV1Abi } from "@ensforge/contracts/v1";
+import { ensRegistryV1SetOwnerAbi } from "@ensforge/contracts/v1";
 import { encodeFunctionData } from "viem";
 
 import type { EnsWriteIntentPreparer } from "../../../action/write-intent.js";
@@ -31,7 +31,7 @@ const prepare: EnsWriteIntentPreparer<SetManagerParameters, WriteError> = Effect
   const data = yield* Effect.try({
     try: () =>
       encodeFunctionData({
-        abi: ensRegistryV1Abi,
+        abi: ensRegistryV1SetOwnerAbi,
         functionName: "setOwner",
         args: [namehash(name), manager],
       }),

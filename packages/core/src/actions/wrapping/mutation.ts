@@ -1,6 +1,13 @@
 import { Effect } from "effect";
 
-import { nameWrapperFuses, nameWrapperV1Abi } from "@ensforge/contracts/v1";
+import {
+  nameWrapperFuses,
+  nameWrapperV1ExtendExpiryAbi,
+  nameWrapperV1SetChildFusesAbi,
+  nameWrapperV1SetFusesAbi,
+  nameWrapperV1UnwrapAbi,
+  nameWrapperV1UnwrapETH2LDAbi,
+} from "@ensforge/contracts/v1";
 import { encodeFunctionData, type Address } from "viem";
 
 import type { EnsWriteIntentPreparer } from "../../action/write-intent.js";
@@ -77,12 +84,12 @@ const unwrapPreparer: EnsWriteIntentPreparer<UnwrapNameParameters, WriteError> =
   const data = yield* encode("unwrapName", () =>
     route.analysis.isSecondLevelEth
       ? encodeFunctionData({
-          abi: nameWrapperV1Abi,
+          abi: nameWrapperV1UnwrapETH2LDAbi,
           functionName: "unwrapETH2LD",
           args: [labelhash(route.analysis.ethSecondLevelLabel ?? ""), registrant, manager],
         })
       : encodeFunctionData({
-          abi: nameWrapperV1Abi,
+          abi: nameWrapperV1UnwrapAbi,
           functionName: "unwrap",
           args: [
             namehash(route.analysis.parent ?? ""),
@@ -114,7 +121,7 @@ const setFusesPreparer: EnsWriteIntentPreparer<SetFusesParameters, WriteError> =
   const fuses = yield* encodeFuseMask(parameters.fuses, wrapperFuseMasks.ownerControlledMask);
   const data = yield* encode("setFuses", () =>
     encodeFunctionData({
-      abi: nameWrapperV1Abi,
+      abi: nameWrapperV1SetFusesAbi,
       functionName: "setFuses",
       args: [route.node, fuses],
     }),
@@ -167,7 +174,7 @@ const setChildFusesPreparer: EnsWriteIntentPreparer<SetChildFusesParameters, Wri
     }
     const data = yield* encode("setChildFuses", () =>
       encodeFunctionData({
-        abi: nameWrapperV1Abi,
+        abi: nameWrapperV1SetChildFusesAbi,
         functionName: "setChildFuses",
         args: [parent.node, labelhash(child.analysis.label ?? ""), fuses, expiry],
       }),
@@ -205,7 +212,7 @@ const extendExpiryPreparer: EnsWriteIntentPreparer<ExtendSubnameExpiryParameters
     }
     const data = yield* encode("extendSubnameExpiry", () =>
       encodeFunctionData({
-        abi: nameWrapperV1Abi,
+        abi: nameWrapperV1ExtendExpiryAbi,
         functionName: "extendExpiry",
         args: [
           namehash(child.analysis.parent ?? ""),

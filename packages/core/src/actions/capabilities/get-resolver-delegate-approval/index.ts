@@ -1,6 +1,6 @@
 import { Effect } from "effect";
 
-import { publicResolverV1Abi } from "@ensforge/contracts/v1";
+import { publicResolverV1IsApprovedForAbi } from "@ensforge/contracts/v1";
 
 import { defineReadAction } from "../../../action/read-request.js";
 import type { EnsforgeConfig } from "../../../config/config.js";
@@ -40,7 +40,7 @@ const getResolverDelegateApprovalEffect = Effect.fn("ensforge.getResolverDelegat
         const approved = yield* ethereum
           .readContract({
             address: discovery.address,
-            abi: publicResolverV1Abi,
+            abi: publicResolverV1IsApprovedForAbi,
             functionName: "isApprovedFor",
             args: [parameters.owner, discovery.node, parameters.delegate],
           })

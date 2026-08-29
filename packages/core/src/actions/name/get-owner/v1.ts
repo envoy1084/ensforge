@@ -1,7 +1,11 @@
 import { Effect, Result } from "effect";
 
 import type { EnsV1Deployment } from "@ensforge/contracts/deployments";
-import { baseRegistrarV1Abi, ensRegistryV1Abi, nameWrapperV1Abi } from "@ensforge/contracts/v1";
+import {
+  baseRegistrarV1OwnerOfAbi,
+  ensRegistryV1OwnerAbi,
+  nameWrapperV1OwnerOfAbi,
+} from "@ensforge/contracts/v1";
 import {
   BaseError,
   ContractFunctionRevertedError,
@@ -32,7 +36,7 @@ export const readV1Owner = Effect.fn("readV1Owner")(function* (
     Effect.result(
       ethereum.readContract({
         address: deployment.contracts.registry,
-        abi: ensRegistryV1Abi,
+        abi: ensRegistryV1OwnerAbi,
         functionName: "owner",
         args: [node],
       }),
@@ -40,7 +44,7 @@ export const readV1Owner = Effect.fn("readV1Owner")(function* (
     Effect.result(
       ethereum.readContract({
         address: deployment.contracts.nameWrapper,
-        abi: nameWrapperV1Abi,
+        abi: nameWrapperV1OwnerOfAbi,
         functionName: "ownerOf",
         args: [BigInt(node)],
       }),
@@ -52,7 +56,7 @@ export const readV1Owner = Effect.fn("readV1Owner")(function* (
       Effect.result(
         ethereum.readContract({
           address: deployment.contracts.baseRegistrar,
-          abi: baseRegistrarV1Abi,
+          abi: baseRegistrarV1OwnerOfAbi,
           functionName: "ownerOf",
           args: [BigInt(labelhash(analysis.label))],
         }),

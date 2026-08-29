@@ -1,7 +1,7 @@
 import { Effect } from "effect";
 
-import { baseRegistrarV1Abi } from "@ensforge/contracts/v1";
-import { ethRegistrarV2Abi, ethRenewerV1Abi } from "@ensforge/contracts/v2";
+import { baseRegistrarV1AvailableAbi } from "@ensforge/contracts/v1";
+import { ethRegistrarV2IsRenewableAbi, ethRenewerV1IsRenewableAbi } from "@ensforge/contracts/v2";
 
 import { defineReadAction } from "../../../action/read-request.js";
 import type { EnsforgeConfig } from "../../../config/config.js";
@@ -31,7 +31,7 @@ const isRenewableEffect = Effect.fn("ensforge.isRenewable")(function* (
       if (route.kind === "reserved") {
         return yield* ethereum.readContract({
           address: route.deployment.migration.ethRenewerV1,
-          abi: ethRenewerV1Abi,
+          abi: ethRenewerV1IsRenewableAbi,
           functionName: "isRenewable",
           args: [label],
         });
@@ -39,7 +39,7 @@ const isRenewableEffect = Effect.fn("ensforge.isRenewable")(function* (
       if (route.kind === "v2" || route.kind === "available") {
         return yield* ethereum.readContract({
           address: route.deployment.contracts.ethRegistrar,
-          abi: ethRegistrarV2Abi,
+          abi: ethRegistrarV2IsRenewableAbi,
           functionName: "isRenewable",
           args: [label],
         });
@@ -47,7 +47,7 @@ const isRenewableEffect = Effect.fn("ensforge.isRenewable")(function* (
 
       const available = yield* ethereum.readContract({
         address: route.deployment.contracts.baseRegistrar,
-        abi: baseRegistrarV1Abi,
+        abi: baseRegistrarV1AvailableAbi,
         functionName: "available",
         args: [BigInt(labelhash(label))],
       });

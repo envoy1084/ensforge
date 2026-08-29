@@ -1,6 +1,6 @@
 import { Effect } from "effect";
 
-import { nameWrapperV1Abi } from "@ensforge/contracts/v1";
+import { nameWrapperV1IsWrappedAbi } from "@ensforge/contracts/v1";
 import { registryInterfaceIds } from "@ensforge/contracts/v2";
 
 import { defineReadAction } from "../../../action/read-request.js";
@@ -28,7 +28,7 @@ const getRegistryCapabilitiesEffect = Effect.fn("ensforge.getRegistryCapabilitie
         const deployment = route.kind === "reserved" ? route.v1 : route.deployment;
         const wrapped = yield* ethereum.readContract({
           address: deployment.contracts.nameWrapper,
-          abi: nameWrapperV1Abi,
+          abi: nameWrapperV1IsWrappedAbi,
           functionName: "isWrapped",
           args: [namehash(name)],
         });

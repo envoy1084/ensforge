@@ -1,8 +1,11 @@
 import { Effect } from "effect";
 
 import type { EnsV1Deployment, EnsV2Deployment } from "@ensforge/contracts/deployments";
-import { nameWrapperV1Abi } from "@ensforge/contracts/v1";
-import { permissionedRegistryV2InterfaceAbi } from "@ensforge/contracts/v2";
+import { nameWrapperV1GetDataAbi, nameWrapperV1IsWrappedAbi } from "@ensforge/contracts/v1";
+import {
+  permissionedRegistryV2InterfaceGetStateAbi,
+  permissionedRegistryV2InterfaceGetSubregistryAbi,
+} from "@ensforge/contracts/v2";
 import { zeroAddress } from "viem";
 
 import type { EnsforgeConfig } from "../../config/config.js";
@@ -93,25 +96,25 @@ export const resolveSubnameRoute = Effect.fn("ensforge.resolveSubnameRoute")(fun
           [
             ethereum.readContract({
               address: deployment.contracts.nameWrapper,
-              abi: nameWrapperV1Abi,
+              abi: nameWrapperV1IsWrappedAbi,
               functionName: "isWrapped",
               args: [shared.parentNode],
             }),
             ethereum.readContract({
               address: deployment.contracts.nameWrapper,
-              abi: nameWrapperV1Abi,
+              abi: nameWrapperV1IsWrappedAbi,
               functionName: "isWrapped",
               args: [shared.node],
             }),
             ethereum.readContract({
               address: deployment.contracts.nameWrapper,
-              abi: nameWrapperV1Abi,
+              abi: nameWrapperV1GetDataAbi,
               functionName: "getData",
               args: [BigInt(shared.parentNode)],
             }),
             ethereum.readContract({
               address: deployment.contracts.nameWrapper,
-              abi: nameWrapperV1Abi,
+              abi: nameWrapperV1GetDataAbi,
               functionName: "getData",
               args: [BigInt(shared.node)],
             }),
@@ -137,7 +140,7 @@ export const resolveSubnameRoute = Effect.fn("ensforge.resolveSubnameRoute")(fun
       }
       const subregistryAddress = yield* ethereum.readContract({
         address: parentRoute.parentRegistry,
-        abi: permissionedRegistryV2InterfaceAbi,
+        abi: permissionedRegistryV2InterfaceGetSubregistryAbi,
         functionName: "getSubregistry",
         args: [parentRoute.label],
       });
@@ -147,7 +150,7 @@ export const resolveSubnameRoute = Effect.fn("ensforge.resolveSubnameRoute")(fun
           ? null
           : yield* ethereum.readContract({
               address: subregistry,
-              abi: permissionedRegistryV2InterfaceAbi,
+              abi: permissionedRegistryV2InterfaceGetStateAbi,
               functionName: "getState",
               args: [BigInt(shared.labelhash)],
             });

@@ -1,7 +1,7 @@
 import { Effect } from "effect";
 
 import type { EnsV2Deployment } from "@ensforge/contracts/deployments";
-import { universalResolverV2InterfaceAbi } from "@ensforge/contracts/v2";
+import { universalResolverV2InterfaceFindOwnerAbi } from "@ensforge/contracts/v2";
 import { isAddressEqual, zeroAddress } from "viem";
 
 import type { CodecError } from "../../../errors/codec-error.js";
@@ -20,7 +20,7 @@ export const getOwnerV2 = Effect.fn("getOwnerV2")(function* (
   const dnsName = yield* dnsEncodeName.effect(name);
   const owner = yield* ethereum.readContract({
     address: deployment.contracts.universalResolver,
-    abi: universalResolverV2InterfaceAbi,
+    abi: universalResolverV2InterfaceFindOwnerAbi,
     functionName: "findOwner",
     args: [dnsName],
   });

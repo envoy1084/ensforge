@@ -1,6 +1,6 @@
 import { Effect, Schema } from "effect";
 
-import { publicResolverV1Abi } from "@ensforge/contracts/v1";
+import { publicResolverV1SetPubkeyAbi } from "@ensforge/contracts/v1";
 import { encodeFunctionData } from "viem";
 
 import { CodecError } from "../../../errors/codec-error.js";
@@ -23,7 +23,7 @@ export const setPubkey = makeResolverWriteAction<SetPubkeyParameters>({
       return yield* Effect.try({
         try: () =>
           encodeFunctionData({
-            abi: publicResolverV1Abi,
+            abi: publicResolverV1SetPubkeyAbi,
             functionName: "setPubkey",
             args: [context.node, parameters.x, parameters.y],
           }),

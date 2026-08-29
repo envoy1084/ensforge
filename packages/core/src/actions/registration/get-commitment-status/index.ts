@@ -1,7 +1,15 @@
 import { Effect } from "effect";
 
-import { ethRegistrarControllerV1Abi } from "@ensforge/contracts/v1";
-import { ethRegistrarV2Abi } from "@ensforge/contracts/v2";
+import {
+  ethRegistrarControllerV1CommitmentsAbi,
+  ethRegistrarControllerV1MaxCommitmentAgeAbi,
+  ethRegistrarControllerV1MinCommitmentAgeAbi,
+} from "@ensforge/contracts/v1";
+import {
+  ethRegistrarV2CommitmentAtAbi,
+  ethRegistrarV2MaxCommitmentAgeAbi,
+  ethRegistrarV2MinCommitmentAgeAbi,
+} from "@ensforge/contracts/v2";
 
 import type { BlockParameters } from "../../../action/block.js";
 import { defineReadAction } from "../../../action/read-request.js";
@@ -34,18 +42,18 @@ const getCommitmentStatusEffect = Effect.fn("ensforge.getCommitmentStatus")(func
               [
                 ethereum.readContract({
                   address: profile.v1.contracts.ethRegistrarController,
-                  abi: ethRegistrarControllerV1Abi,
+                  abi: ethRegistrarControllerV1CommitmentsAbi,
                   functionName: "commitments",
                   args: [parameters.commitment],
                 }),
                 ethereum.readContract({
                   address: profile.v1.contracts.ethRegistrarController,
-                  abi: ethRegistrarControllerV1Abi,
+                  abi: ethRegistrarControllerV1MinCommitmentAgeAbi,
                   functionName: "minCommitmentAge",
                 }),
                 ethereum.readContract({
                   address: profile.v1.contracts.ethRegistrarController,
-                  abi: ethRegistrarControllerV1Abi,
+                  abi: ethRegistrarControllerV1MaxCommitmentAgeAbi,
                   functionName: "maxCommitmentAge",
                 }),
                 readBlockTimestamp(),
@@ -56,18 +64,18 @@ const getCommitmentStatusEffect = Effect.fn("ensforge.getCommitmentStatus")(func
               [
                 ethereum.readContract({
                   address: profile.v2.contracts.ethRegistrar,
-                  abi: ethRegistrarV2Abi,
+                  abi: ethRegistrarV2CommitmentAtAbi,
                   functionName: "commitmentAt",
                   args: [parameters.commitment],
                 }),
                 ethereum.readContract({
                   address: profile.v2.contracts.ethRegistrar,
-                  abi: ethRegistrarV2Abi,
+                  abi: ethRegistrarV2MinCommitmentAgeAbi,
                   functionName: "MIN_COMMITMENT_AGE",
                 }),
                 ethereum.readContract({
                   address: profile.v2.contracts.ethRegistrar,
-                  abi: ethRegistrarV2Abi,
+                  abi: ethRegistrarV2MaxCommitmentAgeAbi,
                   functionName: "MAX_COMMITMENT_AGE",
                 }),
                 readBlockTimestamp(),

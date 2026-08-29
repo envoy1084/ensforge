@@ -1,6 +1,14 @@
 import { Effect } from "effect";
 
-import { baseRegistrarV1Abi, nameWrapperFuses, nameWrapperV1Abi } from "@ensforge/contracts/v1";
+import {
+  baseRegistrarV1GetApprovedAbi,
+  baseRegistrarV1IsApprovedForAllAbi,
+  baseRegistrarV1OwnerOfAbi,
+  nameWrapperFuses,
+  nameWrapperV1GetApprovedAbi,
+  nameWrapperV1GetDataAbi,
+  nameWrapperV1IsApprovedForAllAbi,
+} from "@ensforge/contracts/v1";
 import { isAddressEqual, zeroAddress } from "viem";
 
 import { defineReadAction } from "../../../action/read-request.js";
@@ -62,14 +70,14 @@ const getMigrationEligibilityEffect = Effect.fn("ensforge.getMigrationEligibilit
         target.tokenStandard === "erc721"
           ? yield* ethereum.readContract({
               address: target.tokenContract,
-              abi: baseRegistrarV1Abi,
+              abi: baseRegistrarV1OwnerOfAbi,
               functionName: "ownerOf",
               args: [target.tokenId],
             })
           : yield* ethereum
               .readContract({
                 address: target.tokenContract,
-                abi: nameWrapperV1Abi,
+                abi: nameWrapperV1GetDataAbi,
                 functionName: "getData",
                 args: [target.tokenId],
               })
@@ -80,13 +88,13 @@ const getMigrationEligibilityEffect = Effect.fn("ensforge.getMigrationEligibilit
               [
                 ethereum.readContract({
                   address: target.tokenContract,
-                  abi: baseRegistrarV1Abi,
+                  abi: baseRegistrarV1GetApprovedAbi,
                   functionName: "getApproved",
                   args: [target.tokenId],
                 }),
                 ethereum.readContract({
                   address: target.tokenContract,
-                  abi: baseRegistrarV1Abi,
+                  abi: baseRegistrarV1IsApprovedForAllAbi,
                   functionName: "isApprovedForAll",
                   args: [owner, parameters.account],
                 }),
@@ -97,13 +105,13 @@ const getMigrationEligibilityEffect = Effect.fn("ensforge.getMigrationEligibilit
               [
                 ethereum.readContract({
                   address: target.tokenContract,
-                  abi: nameWrapperV1Abi,
+                  abi: nameWrapperV1GetApprovedAbi,
                   functionName: "getApproved",
                   args: [target.tokenId],
                 }),
                 ethereum.readContract({
                   address: target.tokenContract,
-                  abi: nameWrapperV1Abi,
+                  abi: nameWrapperV1IsApprovedForAllAbi,
                   functionName: "isApprovedForAll",
                   args: [owner, parameters.account],
                 }),

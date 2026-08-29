@@ -1,6 +1,6 @@
 import { Effect, Result, Schema } from "effect";
 
-import { baseRegistrarV1Abi } from "@ensforge/contracts/v1";
+import { baseRegistrarV1OwnerOfAbi } from "@ensforge/contracts/v1";
 import { isAddressEqual, zeroAddress } from "viem";
 
 import { defineReadAction } from "../../../action/read-request.js";
@@ -35,7 +35,7 @@ const getRegistrantEffect = Effect.fn("ensforge.getRegistrant")(function* (
       const result = yield* Effect.result(
         ethereum.readContract({
           address: deployment.contracts.baseRegistrar,
-          abi: baseRegistrarV1Abi,
+          abi: baseRegistrarV1OwnerOfAbi,
           functionName: "ownerOf",
           args: [BigInt(labelhash(analysis.label))],
         }),

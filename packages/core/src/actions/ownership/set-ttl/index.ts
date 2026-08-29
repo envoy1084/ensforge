@@ -1,6 +1,6 @@
 import { Effect } from "effect";
 
-import { ensRegistryV1Abi, nameWrapperV1Abi } from "@ensforge/contracts/v1";
+import { ensRegistryV1SetTTLAbi, nameWrapperV1SetTTLAbi } from "@ensforge/contracts/v1";
 import { encodeFunctionData } from "viem";
 
 import type { EnsWriteIntentPreparer } from "../../../action/write-intent.js";
@@ -31,12 +31,12 @@ const prepare: EnsWriteIntentPreparer<SetTtlParameters, WriteError> = Effect.fn(
     try: () =>
       wrapped
         ? encodeFunctionData({
-            abi: nameWrapperV1Abi,
+            abi: nameWrapperV1SetTTLAbi,
             functionName: "setTTL",
             args: [namehash(name), parameters.ttl],
           })
         : encodeFunctionData({
-            abi: ensRegistryV1Abi,
+            abi: ensRegistryV1SetTTLAbi,
             functionName: "setTTL",
             args: [namehash(name), parameters.ttl],
           }),

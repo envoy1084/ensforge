@@ -1,6 +1,6 @@
 import { Effect } from "effect";
 
-import { permissionedRegistryV2InterfaceAbi } from "@ensforge/contracts/v2";
+import { permissionedRegistryV2InterfaceRolesAbi } from "@ensforge/contracts/v2";
 
 import { defineReadAction } from "../../../action/read-request.js";
 import type { EnsforgeConfig } from "../../../config/config.js";
@@ -28,7 +28,7 @@ const getRegistryRolesEffect = Effect.fn("ensforge.getRegistryRoles")(function* 
       const ethereum = yield* EthereumClient;
       const roles = yield* ethereum.readContract({
         address: target.registry,
-        abi: permissionedRegistryV2InterfaceAbi,
+        abi: permissionedRegistryV2InterfaceRolesAbi,
         functionName: "roles",
         args: [target.anyId, parameters.account],
       });

@@ -1,10 +1,11 @@
 import { Effect, Schema } from "effect";
 
 import {
-  permissionedResolverV2Abi,
-  permissionedResolverV2InterfaceAbi,
+  permissionedResolverV2CanUpgradeFromAbi,
+  permissionedResolverV2InterfaceHasRootRolesAbi,
+  permissionedResolverV2UpgradeToAndCallAbi,
   resolverRoles,
-  verifiableFactoryV2Abi,
+  verifiableFactoryV2VerifyContractAbi,
 } from "@ensforge/contracts/v2";
 import { encodeFunctionData, isAddressEqual, type Address } from "viem";
 
@@ -85,13 +86,13 @@ const readUpgradeState = Effect.fn("ensforge.upgradeResolver.state")(function* (
       const ethereum = yield* EthereumClient;
       const currentImplementation = yield* ethereum.readContract({
         address: config.deployments.v2.contracts.verifiableFactory,
-        abi: verifiableFactoryV2Abi,
+        abi: verifiableFactoryV2VerifyContractAbi,
         functionName: "verifyContract",
         args: [capabilities.address],
       });
       const compatible = yield* ethereum.readContract({
         address: implementation,
-        abi: permissionedResolverV2Abi,
+        abi: permissionedResolverV2CanUpgradeFromAbi,
         functionName: "canUpgradeFrom",
         args: [currentImplementation],
       });
@@ -105,7 +106,7 @@ const readUpgradeState = Effect.fn("ensforge.upgradeResolver.state")(function* (
       if (!current || parameters.force === true) {
         const authorized = yield* ethereum.readContract({
           address: capabilities.address,
-          abi: permissionedResolverV2InterfaceAbi,
+          abi: permissionedResolverV2InterfaceHasRootRolesAbi,
           functionName: "hasRootRoles",
           args: [resolverRoles.upgrade, account],
         });
@@ -142,7 +143,7 @@ const preparer: EnsWriteIntentPreparer<UpgradeResolverParameters, WriteError> = 
   const data = yield* Effect.try({
     try: () =>
       encodeFunctionData({
-        abi: permissionedResolverV2Abi,
+        abi: permissionedResolverV2UpgradeToAndCallAbi,
         functionName: "upgradeToAndCall",
         args: [state.implementation, state.data],
       }),

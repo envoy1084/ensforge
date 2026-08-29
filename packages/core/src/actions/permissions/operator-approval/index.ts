@@ -1,6 +1,6 @@
 import { Effect } from "effect";
 
-import { ensRegistryV1Abi } from "@ensforge/contracts/v1";
+import { ensRegistryV1SetApprovalForAllAbi } from "@ensforge/contracts/v1";
 import { encodeFunctionData } from "viem";
 
 import type { EnsWriteIntentPreparer } from "../../../action/write-intent.js";
@@ -38,7 +38,7 @@ const preparer: EnsWriteIntentPreparer<SetOperatorApprovalParameters, WriteError
   const data = yield* Effect.try({
     try: () =>
       encodeFunctionData({
-        abi: ensRegistryV1Abi,
+        abi: ensRegistryV1SetApprovalForAllAbi,
         functionName: "setApprovalForAll",
         args: [operator, parameters.approved],
       }),

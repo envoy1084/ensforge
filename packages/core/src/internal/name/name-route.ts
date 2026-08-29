@@ -3,9 +3,9 @@ import { Effect } from "effect";
 import type { EnsV1Deployment, EnsV2Deployment } from "@ensforge/contracts/deployments";
 import { universalResolverFindResolverAbi } from "@ensforge/contracts/shared";
 import {
-  ethRenewerV1Abi,
-  permissionedRegistryV2InterfaceAbi,
-  universalResolverV2InterfaceAbi,
+  ethRenewerV1IsRenewableAbi,
+  permissionedRegistryV2InterfaceGetStateAbi,
+  universalResolverV2InterfaceFindParentRegistryAbi,
 } from "@ensforge/contracts/v2";
 import { isAddressEqual, zeroAddress } from "viem";
 
@@ -92,7 +92,7 @@ export const readNameRoute = Effect.fn("readNameRoute")(function* (
   const dnsName = yield* dnsEncodeName.effect(name);
   const parentRegistry = yield* ethereum.readContract({
     address: deployment.contracts.universalResolver,
-    abi: universalResolverV2InterfaceAbi,
+    abi: universalResolverV2InterfaceFindParentRegistryAbi,
     functionName: "findParentRegistry",
     args: [dnsName],
   });
@@ -112,7 +112,7 @@ export const readNameRoute = Effect.fn("readNameRoute")(function* (
 
   const state = yield* ethereum.readContract({
     address: parentRegistry,
-    abi: permissionedRegistryV2InterfaceAbi,
+    abi: permissionedRegistryV2InterfaceGetStateAbi,
     functionName: "getState",
     args: [BigInt(labelhash(analysis.label))],
   });
@@ -131,7 +131,7 @@ export const readNameRoute = Effect.fn("readNameRoute")(function* (
       ? false
       : yield* ethereum.readContract({
           address: deployment.migration.ethRenewerV1,
-          abi: ethRenewerV1Abi,
+          abi: ethRenewerV1IsRenewableAbi,
           functionName: "isRenewable",
           args: [secondLevelLabel],
         });

@@ -1,7 +1,7 @@
 import { Effect } from "effect";
 
-import { ethRegistrarControllerV1Abi } from "@ensforge/contracts/v1";
-import { ethRegistrarV2Abi } from "@ensforge/contracts/v2";
+import { ethRegistrarControllerV1RentPriceAbi } from "@ensforge/contracts/v1";
+import { ethRegistrarV2GetRegisterPriceAbi } from "@ensforge/contracts/v2";
 
 import { defineReadAction } from "../../../action/read-request.js";
 import type { EnsforgeConfig } from "../../../config/config.js";
@@ -44,7 +44,7 @@ const getRegistrationPriceEffect = Effect.fn("ensforge.getRegistrationPrice")(fu
         const registrar = profile.v1.contracts.ethRegistrarController;
         const price = yield* ethereum.readContract({
           address: registrar,
-          abi: ethRegistrarControllerV1Abi,
+          abi: ethRegistrarControllerV1RentPriceAbi,
           functionName: "rentPrice",
           args: [label, parameters.duration],
         });
@@ -79,7 +79,7 @@ const getRegistrationPriceEffect = Effect.fn("ensforge.getRegistrationPrice")(fu
       const registrar = profile.v2.contracts.ethRegistrar;
       const [base, premium] = yield* ethereum.readContract({
         address: registrar,
-        abi: ethRegistrarV2Abi,
+        abi: ethRegistrarV2GetRegisterPriceAbi,
         functionName: "getRegisterPrice",
         args: [label, parameters.duration, parameters.paymentToken],
       });

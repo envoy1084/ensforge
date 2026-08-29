@@ -1,6 +1,6 @@
 import { Effect, Schema } from "effect";
 
-import { publicResolverV1Abi } from "@ensforge/contracts/v1";
+import { publicResolverV1SetDataAbi } from "@ensforge/contracts/v1";
 import { encodeFunctionData } from "viem";
 
 import { CodecError } from "../../../errors/codec-error.js";
@@ -23,7 +23,7 @@ export const setData = makeResolverWriteAction<SetDataParameters>({
       return yield* Effect.try({
         try: () =>
           encodeFunctionData({
-            abi: publicResolverV1Abi,
+            abi: publicResolverV1SetDataAbi,
             functionName: "setData",
             args: [context.node, parameters.key, parameters.value],
           }),

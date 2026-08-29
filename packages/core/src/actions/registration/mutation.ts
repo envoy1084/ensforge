@@ -1,8 +1,11 @@
 import { Effect } from "effect";
 
-import { erc20Abi } from "@ensforge/contracts/shared";
-import { ethRegistrarControllerV1Abi } from "@ensforge/contracts/v1";
-import { ethRegistrarV2Abi } from "@ensforge/contracts/v2";
+import { erc20AllowanceAbi, erc20ApproveAbi } from "@ensforge/contracts/shared";
+import {
+  ethRegistrarControllerV1CommitAbi,
+  ethRegistrarControllerV1RegisterAbi,
+} from "@ensforge/contracts/v1";
+import { ethRegistrarV2CommitAbi, ethRegistrarV2RegisterAbi } from "@ensforge/contracts/v2";
 import { encodeFunctionData, zeroAddress, zeroHash } from "viem";
 
 import type { EnsWriteIntentPreparer } from "../../action/write-intent.js";
@@ -43,7 +46,8 @@ const commitPreparer: EnsWriteIntentPreparer<CommitNameParameters, WriteError> =
         : profile.v2.contracts.ethRegistrar,
     data: yield* encode("commitName", () =>
       encodeFunctionData({
-        abi: profile.protocol === "v1" ? ethRegistrarControllerV1Abi : ethRegistrarV2Abi,
+        abi:
+          profile.protocol === "v1" ? ethRegistrarControllerV1CommitAbi : ethRegistrarV2CommitAbi,
         functionName: "commit",
         args: [parameters.commitment],
       }),
@@ -82,7 +86,7 @@ const approvePaymentTokenPreparer: EnsWriteIntentPreparer<
     to: paymentToken,
     data: yield* encode("approvePaymentToken", () =>
       encodeFunctionData({
-        abi: erc20Abi,
+        abi: erc20ApproveAbi,
         functionName: "approve",
         args: [profile.v2.contracts.ethRegistrar, parameters.amount],
       }),
@@ -153,7 +157,7 @@ const completeRegistrationPreparer: EnsWriteIntentPreparer<
       to: profile.v1.contracts.ethRegistrarController,
       data: yield* encode("completeRegistration", () =>
         encodeFunctionData({
-          abi: ethRegistrarControllerV1Abi,
+          abi: ethRegistrarControllerV1RegisterAbi,
           functionName: "register",
           args: [
             {
@@ -186,7 +190,7 @@ const completeRegistrationPreparer: EnsWriteIntentPreparer<
     try: () =>
       config.publicClient.readContract({
         address: paymentToken,
-        abi: erc20Abi,
+        abi: erc20AllowanceAbi,
         functionName: "allowance",
         args: [account, profile.v2.contracts.ethRegistrar],
       }),
@@ -202,7 +206,7 @@ const completeRegistrationPreparer: EnsWriteIntentPreparer<
     to: profile.v2.contracts.ethRegistrar,
     data: yield* encode("completeRegistration", () =>
       encodeFunctionData({
-        abi: ethRegistrarV2Abi,
+        abi: ethRegistrarV2RegisterAbi,
         functionName: "register",
         args: [
           label,

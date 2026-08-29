@@ -1,6 +1,10 @@
 import { Effect } from "effect";
 
-import { baseRegistrarV1Abi, nameWrapperV1Abi } from "@ensforge/contracts/v1";
+import {
+  baseRegistrarV1GetApprovedAbi,
+  nameWrapperV1GetApprovedAbi,
+  nameWrapperV1IsWrappedAbi,
+} from "@ensforge/contracts/v1";
 import { isAddressEqual, zeroAddress } from "viem";
 
 import { defineReadAction } from "../../../action/read-request.js";
@@ -35,14 +39,14 @@ const getTokenApprovalEffect = Effect.fn("ensforge.getTokenApproval")(function* 
       const node = namehash(name);
       const wrapped = yield* ethereum.readContract({
         address: deployment.contracts.nameWrapper,
-        abi: nameWrapperV1Abi,
+        abi: nameWrapperV1IsWrappedAbi,
         functionName: "isWrapped",
         args: [node],
       });
       if (wrapped) {
         const approved = yield* ethereum.readContract({
           address: deployment.contracts.nameWrapper,
-          abi: nameWrapperV1Abi,
+          abi: nameWrapperV1GetApprovedAbi,
           functionName: "getApproved",
           args: [BigInt(node)],
         });
@@ -62,7 +66,7 @@ const getTokenApprovalEffect = Effect.fn("ensforge.getTokenApproval")(function* 
       const tokenId = BigInt(labelhash(analysis.ethSecondLevelLabel));
       const approved = yield* ethereum.readContract({
         address: deployment.contracts.baseRegistrar,
-        abi: baseRegistrarV1Abi,
+        abi: baseRegistrarV1GetApprovedAbi,
         functionName: "getApproved",
         args: [tokenId],
       });

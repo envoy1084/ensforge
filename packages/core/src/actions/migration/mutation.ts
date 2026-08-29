@@ -1,7 +1,15 @@
 import { Effect } from "effect";
 
-import { baseRegistrarV1Abi, nameWrapperV1Abi } from "@ensforge/contracts/v1";
-import { migrationHelperV2Abi } from "@ensforge/contracts/v2";
+import {
+  baseRegistrarV1SafeTransferFromAbi,
+  baseRegistrarV1SetApprovalForAllAbi,
+  nameWrapperV1SafeTransferFromAbi,
+  nameWrapperV1SetApprovalForAllAbi,
+} from "@ensforge/contracts/v1";
+import {
+  migrationHelperV2MigrateAbi,
+  migrationHelperV2NameWrapperAbi,
+} from "@ensforge/contracts/v2";
 import { encodeAbiParameters, encodeFunctionData, isAddressEqual } from "viem";
 
 import {
@@ -59,7 +67,7 @@ export const getCompatibleMigrationHelper = Effect.fn("ensforge.migration.getCom
     const wrapper = yield* Effect.tryPromise(() =>
       config.publicClient.readContract({
         address: helper,
-        abi: migrationHelperV2Abi,
+        abi: migrationHelperV2NameWrapperAbi,
         functionName: "NAME_WRAPPER",
       }),
     ).pipe(Effect.catch(() => Effect.succeed(null)));
@@ -139,7 +147,10 @@ const approvalPreparer: EnsWriteIntentPreparer<ApproveMigrationParameters, Write
     to: target.tokenContract,
     data: yield* encode("approveMigration", () =>
       encodeFunctionData({
-        abi: target.tokenStandard === "erc721" ? baseRegistrarV1Abi : nameWrapperV1Abi,
+        abi:
+          target.tokenStandard === "erc721"
+            ? baseRegistrarV1SetApprovalForAllAbi
+            : nameWrapperV1SetApprovalForAllAbi,
         functionName: "setApprovalForAll",
         args: [helper, parameters.approved ?? true],
       }),
@@ -177,12 +188,12 @@ const migrationPreparer: EnsWriteIntentPreparer<MigrateNameCallParameters, Write
     data: yield* encode("migrateName", () =>
       plan.target.tokenStandard === "erc721"
         ? encodeFunctionData({
-            abi: baseRegistrarV1Abi,
+            abi: baseRegistrarV1SafeTransferFromAbi,
             functionName: "safeTransferFrom",
             args: [tokenOwner, plan.target.receiver, plan.target.tokenId, payload],
           })
         : encodeFunctionData({
-            abi: nameWrapperV1Abi,
+            abi: nameWrapperV1SafeTransferFromAbi,
             functionName: "safeTransferFrom",
             args: [tokenOwner, plan.target.receiver, plan.target.tokenId, 1n, payload],
           }),
@@ -256,7 +267,7 @@ const helperPreparer: EnsWriteIntentPreparer<HelperMigrationParameters, WriteErr
     to: helper,
     data: yield* encode("migrateNames", () =>
       encodeFunctionData({
-        abi: migrationHelperV2Abi,
+        abi: migrationHelperV2MigrateAbi,
         functionName: "migrate",
         args: [
           entries

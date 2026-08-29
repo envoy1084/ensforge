@@ -1,7 +1,18 @@
 import { Effect } from "effect";
 
-import { ensRegistryV1Abi, nameWrapperV1Abi } from "@ensforge/contracts/v1";
-import { permissionedRegistryV2InterfaceAbi } from "@ensforge/contracts/v2";
+import {
+  ensRegistryV1SetResolverAbi,
+  ensRegistryV1SetSubnodeOwnerAbi,
+  nameWrapperV1ExtendExpiryAbi,
+  nameWrapperV1SetResolverAbi,
+  nameWrapperV1SetSubnodeOwnerAbi,
+} from "@ensforge/contracts/v1";
+import {
+  permissionedRegistryV2InterfaceRenewAbi,
+  permissionedRegistryV2InterfaceSafeTransferFromAbi,
+  permissionedRegistryV2InterfaceSetResolverAbi,
+  permissionedRegistryV2InterfaceUnregisterAbi,
+} from "@ensforge/contracts/v2";
 import { encodeFunctionData, zeroAddress } from "viem";
 
 import type { EnsWriteIntentPreparer } from "../../action/write-intent.js";
@@ -48,12 +59,12 @@ const deletePreparer: EnsWriteIntentPreparer<SubnameParameters, WriteError> = Ef
     const data = yield* encoded("deleteSubname", () =>
       route.parentWrapped
         ? encodeFunctionData({
-            abi: nameWrapperV1Abi,
+            abi: nameWrapperV1SetSubnodeOwnerAbi,
             functionName: "setSubnodeOwner",
             args: [route.parentNode, route.label, zeroAddress, 0, route.childExpiry],
           })
         : encodeFunctionData({
-            abi: ensRegistryV1Abi,
+            abi: ensRegistryV1SetSubnodeOwnerAbi,
             functionName: "setSubnodeOwner",
             args: [route.parentNode, route.labelhash, zeroAddress],
           }),
@@ -81,7 +92,7 @@ const deletePreparer: EnsWriteIntentPreparer<SubnameParameters, WriteError> = Ef
   const subregistry = route.subregistry;
   const data = yield* encoded("deleteSubname", () =>
     encodeFunctionData({
-      abi: permissionedRegistryV2InterfaceAbi,
+      abi: permissionedRegistryV2InterfaceUnregisterAbi,
       functionName: "unregister",
       args: [childState.tokenId],
     }),
@@ -98,12 +109,12 @@ const managerPreparer: EnsWriteIntentPreparer<SetSubnameManagerParameters, Write
     const data = yield* encoded("setSubnameManager", () =>
       route.parentWrapped
         ? encodeFunctionData({
-            abi: nameWrapperV1Abi,
+            abi: nameWrapperV1SetSubnodeOwnerAbi,
             functionName: "setSubnodeOwner",
             args: [route.parentNode, route.label, manager, 0, route.childExpiry],
           })
         : encodeFunctionData({
-            abi: ensRegistryV1Abi,
+            abi: ensRegistryV1SetSubnodeOwnerAbi,
             functionName: "setSubnodeOwner",
             args: [route.parentNode, route.labelhash, manager],
           }),
@@ -131,7 +142,7 @@ const managerPreparer: EnsWriteIntentPreparer<SetSubnameManagerParameters, Write
   const subregistry = route.subregistry;
   const data = yield* encoded("setSubnameManager", () =>
     encodeFunctionData({
-      abi: permissionedRegistryV2InterfaceAbi,
+      abi: permissionedRegistryV2InterfaceSafeTransferFromAbi,
       functionName: "safeTransferFrom",
       args: [childState.latestOwner, manager, childState.tokenId, 1n, "0x"],
     }),
@@ -147,12 +158,12 @@ const resolverPreparer: EnsWriteIntentPreparer<SetSubnameResolverParameters, Wri
       const data = yield* encoded("setSubnameResolver", () =>
         route.childWrapped
           ? encodeFunctionData({
-              abi: nameWrapperV1Abi,
+              abi: nameWrapperV1SetResolverAbi,
               functionName: "setResolver",
               args: [route.node, resolver],
             })
           : encodeFunctionData({
-              abi: ensRegistryV1Abi,
+              abi: ensRegistryV1SetResolverAbi,
               functionName: "setResolver",
               args: [route.node, resolver],
             }),
@@ -180,7 +191,7 @@ const resolverPreparer: EnsWriteIntentPreparer<SetSubnameResolverParameters, Wri
     const subregistry = route.subregistry;
     const data = yield* encoded("setSubnameResolver", () =>
       encodeFunctionData({
-        abi: permissionedRegistryV2InterfaceAbi,
+        abi: permissionedRegistryV2InterfaceSetResolverAbi,
         functionName: "setResolver",
         args: [childState.tokenId, resolver],
       }),
@@ -207,7 +218,7 @@ const expiryPreparer: EnsWriteIntentPreparer<SetSubnameExpiryParameters, WriteEr
     }
     const data = yield* encoded("setSubnameExpiry", () =>
       encodeFunctionData({
-        abi: nameWrapperV1Abi,
+        abi: nameWrapperV1ExtendExpiryAbi,
         functionName: "extendExpiry",
         args: [route.parentNode, route.labelhash, parameters.expiry],
       }),
@@ -233,7 +244,7 @@ const expiryPreparer: EnsWriteIntentPreparer<SetSubnameExpiryParameters, WriteEr
   const subregistry = route.subregistry;
   const data = yield* encoded("setSubnameExpiry", () =>
     encodeFunctionData({
-      abi: permissionedRegistryV2InterfaceAbi,
+      abi: permissionedRegistryV2InterfaceRenewAbi,
       functionName: "renew",
       args: [childState.tokenId, parameters.expiry],
     }),

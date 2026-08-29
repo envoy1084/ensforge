@@ -1,7 +1,7 @@
 import { Effect } from "effect";
 
-import { nameWrapperV1Abi } from "@ensforge/contracts/v1";
-import { tokenizedRegistryV2InterfaceAbi } from "@ensforge/contracts/v2";
+import { nameWrapperV1SafeTransferFromAbi } from "@ensforge/contracts/v1";
+import { tokenizedRegistryV2InterfaceSafeTransferFromAbi } from "@ensforge/contracts/v2";
 import { encodeFunctionData } from "viem";
 
 import type { EnsWriteIntentPreparer } from "../../action/write-intent.js";
@@ -31,12 +31,12 @@ const prepare: EnsWriteIntentPreparer<TransferTokenParameters, WriteError> = Eff
     try: () =>
       parameters.protocol === "v1"
         ? encodeFunctionData({
-            abi: nameWrapperV1Abi,
+            abi: nameWrapperV1SafeTransferFromAbi,
             functionName: "safeTransferFrom",
             args: [parameters.from, parameters.to, parameters.tokenId, 1n, "0x"],
           })
         : encodeFunctionData({
-            abi: tokenizedRegistryV2InterfaceAbi,
+            abi: tokenizedRegistryV2InterfaceSafeTransferFromAbi,
             functionName: "safeTransferFrom",
             args: [parameters.from, parameters.to, parameters.tokenId, 1n, "0x"],
           }),

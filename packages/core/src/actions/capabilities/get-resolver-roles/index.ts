@@ -1,6 +1,6 @@
 import { Effect } from "effect";
 
-import { permissionedResolverV2InterfaceAbi } from "@ensforge/contracts/v2";
+import { permissionedResolverV2InterfaceRolesAbi } from "@ensforge/contracts/v2";
 
 import { defineReadAction } from "../../../action/read-request.js";
 import type { EnsforgeConfig } from "../../../config/config.js";
@@ -43,7 +43,7 @@ const getResolverRolesEffect = Effect.fn("ensforge.getResolverRoles")(function* 
       const ethereum = yield* EthereumClient;
       const roles = yield* ethereum.readContract({
         address: target.resolver,
-        abi: permissionedResolverV2InterfaceAbi,
+        abi: permissionedResolverV2InterfaceRolesAbi,
         functionName: "roles",
         args: [resource, parameters.account],
       });

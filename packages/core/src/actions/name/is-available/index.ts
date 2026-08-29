@@ -1,7 +1,7 @@
 import { Effect } from "effect";
 
-import { baseRegistrarV1Abi, ensRegistryV1Abi } from "@ensforge/contracts/v1";
-import { ethRegistrarV2Abi } from "@ensforge/contracts/v2";
+import { baseRegistrarV1AvailableAbi, ensRegistryV1OwnerAbi } from "@ensforge/contracts/v1";
+import { ethRegistrarV2IsAvailableAbi } from "@ensforge/contracts/v2";
 import { isAddressEqual, zeroAddress } from "viem";
 
 import { defineReadAction } from "../../../action/read-request.js";
@@ -33,7 +33,7 @@ const isAvailableEffect = Effect.fn("ensforge.isAvailable")(function* (
           ? route.kind === "available" || route.state.status === 0
           : yield* ethereum.readContract({
               address: route.deployment.contracts.ethRegistrar,
-              abi: ethRegistrarV2Abi,
+              abi: ethRegistrarV2IsAvailableAbi,
               functionName: "isAvailable",
               args: [analysis.ethSecondLevelLabel],
             });
@@ -42,7 +42,7 @@ const isAvailableEffect = Effect.fn("ensforge.isAvailable")(function* (
       if (analysis.isSecondLevelEth && analysis.label !== undefined) {
         return yield* ethereum.readContract({
           address: route.deployment.contracts.baseRegistrar,
-          abi: baseRegistrarV1Abi,
+          abi: baseRegistrarV1AvailableAbi,
           functionName: "available",
           args: [BigInt(labelhash(analysis.label))],
         });
@@ -50,7 +50,7 @@ const isAvailableEffect = Effect.fn("ensforge.isAvailable")(function* (
 
       const owner = yield* ethereum.readContract({
         address: route.deployment.contracts.registry,
-        abi: ensRegistryV1Abi,
+        abi: ensRegistryV1OwnerAbi,
         functionName: "owner",
         args: [namehash(name)],
       });

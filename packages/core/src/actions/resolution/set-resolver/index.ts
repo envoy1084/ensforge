@@ -1,9 +1,9 @@
 import { Effect, Schema } from "effect";
 
-import { ensRegistryV1Abi, nameWrapperV1Abi } from "@ensforge/contracts/v1";
+import { ensRegistryV1SetResolverAbi, nameWrapperV1SetResolverAbi } from "@ensforge/contracts/v1";
 import {
-  standardRegistryV2InterfaceAbi,
-  wrapperRegistryV2InterfaceAbi,
+  standardRegistryV2SetResolverAbi,
+  wrapperRegistryV2SetResolverAbi,
 } from "@ensforge/contracts/v2";
 import { encodeFunctionData } from "viem";
 
@@ -57,14 +57,14 @@ const preparer: EnsWriteIntentPreparer<SetResolverParameters, WriteError> = Effe
     try: () => {
       if (target.kind === "name-wrapper") {
         return encodeFunctionData({
-          abi: nameWrapperV1Abi,
+          abi: nameWrapperV1SetResolverAbi,
           functionName: "setResolver",
           args: [target.node, resolver],
         });
       }
       if (target.kind === "registry" && target.protocol === "v1") {
         return encodeFunctionData({
-          abi: ensRegistryV1Abi,
+          abi: ensRegistryV1SetResolverAbi,
           functionName: "setResolver",
           args: [target.node, resolver],
         });
@@ -73,8 +73,8 @@ const preparer: EnsWriteIntentPreparer<SetResolverParameters, WriteError> = Effe
       return encodeFunctionData({
         abi:
           target.kind === "wrapper-registry"
-            ? wrapperRegistryV2InterfaceAbi
-            : standardRegistryV2InterfaceAbi,
+            ? wrapperRegistryV2SetResolverAbi
+            : standardRegistryV2SetResolverAbi,
         functionName: "setResolver",
         args: [target.tokenId, resolver],
       });

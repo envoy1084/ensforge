@@ -1,12 +1,14 @@
 import { Effect } from "effect";
 
-import { erc20Abi } from "@ensforge/contracts/shared";
-import { bulkRenewalV1Abi, ethRegistrarControllerV1Abi } from "@ensforge/contracts/v1";
+import { erc20AllowanceAbi, erc20ApproveAbi } from "@ensforge/contracts/shared";
+import { bulkRenewalV1RenewAllAbi, ethRegistrarControllerV1RenewAbi } from "@ensforge/contracts/v1";
 import {
-  ethRegistrarV2Abi,
-  ethRegistrarV2InterfaceAbi,
-  ethRenewerV1Abi,
-  ethRenewerV2InterfaceAbi,
+  ethRegistrarV2InterfaceRenewBatchAbi,
+  ethRegistrarV2InterfaceRenewAbi,
+  ethRegistrarV2RenewAbi,
+  ethRenewerV1RenewAbi,
+  ethRenewerV2InterfaceRenewBatchAbi,
+  ethRenewerV2InterfaceRenewAbi,
 } from "@ensforge/contracts/v2";
 import { encodeFunctionData, zeroHash } from "viem";
 
@@ -88,7 +90,7 @@ const readAllowance = Effect.fn("ensforge.renewal.readAllowance")(function* (
     try: () =>
       config.publicClient.readContract({
         address: token,
-        abi: erc20Abi,
+        abi: erc20AllowanceAbi,
         functionName: "allowance",
         args: [account, spender],
       }),
@@ -120,7 +122,7 @@ const approvalPreparer: EnsWriteIntentPreparer<ApproveRenewalPaymentParameters, 
       to: paymentToken,
       data: yield* encode("approveRenewalPayment", () =>
         encodeFunctionData({
-          abi: erc20Abi,
+          abi: erc20ApproveAbi,
           functionName: "approve",
           args: [quote.renewer, parameters.amount],
         }),
@@ -141,7 +143,7 @@ const renewalPreparer: EnsWriteIntentPreparer<RenewNameCallParameters, WriteErro
       to: quote.renewer,
       data: yield* encode("renewName", () =>
         encodeFunctionData({
-          abi: ethRegistrarControllerV1Abi,
+          abi: ethRegistrarControllerV1RenewAbi,
           functionName: "renew",
           args: [label, parameters.duration, referrer],
         }),
@@ -170,13 +172,15 @@ const renewalPreparer: EnsWriteIntentPreparer<RenewNameCallParameters, WriteErro
     data: yield* encode("renewName", () =>
       usesFlatRenewalAbi(config)
         ? encodeFunctionData({
-            abi: quote.route === "v1-renewer" ? ethRenewerV1Abi : ethRegistrarV2Abi,
+            abi: quote.route === "v1-renewer" ? ethRenewerV1RenewAbi : ethRegistrarV2RenewAbi,
             functionName: "renew",
             args: [label, parameters.duration, currency.address, referrer],
           })
         : encodeFunctionData({
             abi:
-              quote.route === "v1-renewer" ? ethRenewerV2InterfaceAbi : ethRegistrarV2InterfaceAbi,
+              quote.route === "v1-renewer"
+                ? ethRenewerV2InterfaceRenewAbi
+                : ethRegistrarV2InterfaceRenewAbi,
             functionName: "renew",
             args: [{ label, duration: parameters.duration, referrer }, currency.address],
           }),
@@ -234,7 +238,7 @@ const batchRenewalPreparer: EnsWriteIntentPreparer<RenewBatchCallParameters, Wri
         to: v1.contracts.bulkRenewal,
         data: yield* encode("renewNames", () =>
           encodeFunctionData({
-            abi: bulkRenewalV1Abi,
+            abi: bulkRenewalV1RenewAllAbi,
             functionName: "renewAll",
             args: [labels, duration, parameters.renewals[0]?.referrer ?? zeroHash],
           }),
@@ -273,7 +277,10 @@ const batchRenewalPreparer: EnsWriteIntentPreparer<RenewBatchCallParameters, Wri
       to: first.renewer,
       data: yield* encode("renewNames", () =>
         encodeFunctionData({
-          abi: first.route === "v1-renewer" ? ethRenewerV2InterfaceAbi : ethRegistrarV2InterfaceAbi,
+          abi:
+            first.route === "v1-renewer"
+              ? ethRenewerV2InterfaceRenewBatchAbi
+              : ethRegistrarV2InterfaceRenewBatchAbi,
           functionName: "renewBatch",
           args: [
             parameters.renewals.map((renewal, index) => ({

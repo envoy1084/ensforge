@@ -1,6 +1,10 @@
 import { Effect } from "effect";
 
-import { baseRegistrarV1Abi, nameWrapperV1Abi } from "@ensforge/contracts/v1";
+import {
+  baseRegistrarV1ApproveAbi,
+  nameWrapperV1WrapAbi,
+  nameWrapperV1WrapETH2LDAbi,
+} from "@ensforge/contracts/v1";
 import { encodeFunctionData } from "viem";
 
 import { makeWriteIntent, type EnsWriteIntentPreparer } from "../../action/write-intent.js";
@@ -45,7 +49,7 @@ export const approveWrapperIntent = Effect.fn("ensforge.approveWrapperIntent")(f
 ) {
   const data = yield* encode("Name Wrapper approval", () =>
     encodeFunctionData({
-      abi: baseRegistrarV1Abi,
+      abi: baseRegistrarV1ApproveAbi,
       functionName: "approve",
       args: [wrapper, tokenId],
     }),
@@ -61,7 +65,7 @@ export const wrapIntent = Effect.fn("ensforge.wrapIntent")(function* (parameters
 }) {
   const data = yield* encode("Name Wrapper wrap", () =>
     encodeFunctionData({
-      abi: nameWrapperV1Abi,
+      abi: nameWrapperV1WrapAbi,
       functionName: "wrap",
       args: [parameters.name, parameters.owner, parameters.resolver],
     }),
@@ -78,7 +82,7 @@ export const wrapEth2ldIntent = Effect.fn("ensforge.wrapEth2ldIntent")(function*
 }) {
   const data = yield* encode("Name Wrapper .eth wrapping", () =>
     encodeFunctionData({
-      abi: nameWrapperV1Abi,
+      abi: nameWrapperV1WrapETH2LDAbi,
       functionName: "wrapETH2LD",
       args: [parameters.label, parameters.owner, parameters.fuses, parameters.resolver],
     }),

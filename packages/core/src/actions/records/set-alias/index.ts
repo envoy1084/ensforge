@@ -1,6 +1,6 @@
 import { Effect } from "effect";
 
-import { permissionedResolverV2InterfaceAbi } from "@ensforge/contracts/v2";
+import { permissionedResolverV2InterfaceSetAliasAbi } from "@ensforge/contracts/v2";
 import { encodeFunctionData } from "viem";
 
 import { ContractError } from "../../../errors/contract-error.js";
@@ -19,7 +19,7 @@ export const setAlias = makeResolverWriteAction<SetAliasParameters>({
       return yield* Effect.try({
         try: () =>
           encodeFunctionData({
-            abi: permissionedResolverV2InterfaceAbi,
+            abi: permissionedResolverV2InterfaceSetAliasAbi,
             functionName: "setAlias",
             args: [fromName, toName],
           }),

@@ -1,6 +1,6 @@
 import { Effect } from "effect";
 
-import { publicResolverV1Abi } from "@ensforge/contracts/v1";
+import { publicResolverV1SetTextAbi } from "@ensforge/contracts/v1";
 import { encodeFunctionData } from "viem";
 
 import { ContractError } from "../../../errors/contract-error.js";
@@ -11,7 +11,7 @@ const encodeAvatar = (node: `0x${string}`, value: string, name: string) =>
   Effect.try({
     try: () =>
       encodeFunctionData({
-        abi: publicResolverV1Abi,
+        abi: publicResolverV1SetTextAbi,
         functionName: "setText",
         args: [node, "avatar", value],
       }),

@@ -1,6 +1,6 @@
 import { Effect, Schema } from "effect";
 
-import { publicResolverV1Abi } from "@ensforge/contracts/v1";
+import { publicResolverV1SetDNSRecordsAbi } from "@ensforge/contracts/v1";
 import { encodeFunctionData } from "viem";
 
 import { CodecError } from "../../../errors/codec-error.js";
@@ -23,7 +23,7 @@ export const setDnsRecords = makeResolverWriteAction<SetDnsRecordsParameters>({
       return yield* Effect.try({
         try: () =>
           encodeFunctionData({
-            abi: publicResolverV1Abi,
+            abi: publicResolverV1SetDNSRecordsAbi,
             functionName: "setDNSRecords",
             args: [context.node, parameters.data],
           }),

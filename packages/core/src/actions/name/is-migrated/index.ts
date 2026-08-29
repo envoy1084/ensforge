@@ -1,6 +1,6 @@
 import { Effect } from "effect";
 
-import { permissionedRegistryV2InterfaceAbi, registryRoles } from "@ensforge/contracts/v2";
+import { permissionedRegistryV2InterfaceRolesAbi, registryRoles } from "@ensforge/contracts/v2";
 import { isAddressEqual, zeroAddress } from "viem";
 
 import { defineReadAction } from "../../../action/read-request.js";
@@ -26,7 +26,7 @@ const isMigratedEffect = Effect.fn("ensforge.isMigrated")(function* (
       const ethereum = yield* EthereumClient;
       const roles = yield* ethereum.readContract({
         address: route.parentRegistry,
-        abi: permissionedRegistryV2InterfaceAbi,
+        abi: permissionedRegistryV2InterfaceRolesAbi,
         functionName: "roles",
         args: [route.state.resource, route.state.latestOwner],
       });
