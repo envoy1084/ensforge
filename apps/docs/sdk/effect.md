@@ -1,23 +1,93 @@
 ---
 title: Effect
-description: Compose config-bound SDK methods as Effect programs.
+description: Compose config-bound SDK methods as typed Effect programs.
 ---
 
 # Effect
 
-Every SDK method exposes the Core Effect implementation with configuration already bound.
+Every SDK method exposes the Core Effect implementation with configuration already bound. The
+Promise method and `.effect` method share normalization, routing, contract calls, and error
+translation.
 
-```ts
+## Run an Effect
+
+::: code-group
+
+```ts [profile.ts]
 import { Effect } from "effect";
+import { sdk } from "./client";
 
-const program = Effect.gen(function* () {
+const getProfile = Effect.gen(function* () {
   const owner = yield* sdk.name.getOwner.effect({ name: "ens.eth" });
   const avatar = yield* sdk.records.getAvatar.effect({ name: "ens.eth" });
+
   return { owner, avatar };
 });
 
-const profile = await Effect.runPromise(program);
+const profile = await Effect.runPromise(getProfile);
 ```
 
-The ordinary method runs the same Effect as a Promise. Choose either interface at the call site
-without maintaining separate clients or implementations.
+<<< @/snippets/sdk/client.ts[client.ts]
+
+:::
+
+## Keep errors typed
+
+Failures remain in the Effect error channel, so `catchTag` narrows the exact tagged error.
+
+::: code-group
+
+```ts [owner.ts]
+import { Effect } from "effect";
+import { sdk } from "./client";
+
+const owner = sdk.name.getOwner.effect({ name: userInput }).pipe(
+  Effect.catchTag("NameError", (error) =>
+    Effect.logWarning("Invalid ENS name", {
+      code: error.code,
+      input: userInput,
+    }).pipe(Effect.as(null)),
+  ),
+);
+```
+
+<<< @/snippets/sdk/client.ts[client.ts]
+
+:::
+
+Use `Effect.catchTags` when several error families need different recovery behavior. Unexpected
+defects remain defects; ensforge does not convert them into successful values.
+
+## Run independent actions concurrently
+
+```ts
+const profile = Effect.all(
+  {
+    owner: sdk.name.getOwner.effect({ name }),
+    resolver: sdk.resolution.getResolver.effect({ name }),
+    avatar: sdk.records.getAvatar.effect({ name }),
+  },
+  { concurrency: "unbounded" },
+);
+```
+
+This is application-level concurrency. Use [`readBatch`](/sdk/api/batch/read-batch) when compatible
+contract reads should be encoded into Multicall instead.
+
+## Retry reads
+
+```ts
+const owner = sdk.name.getOwner.effect({ name }).pipe(Effect.retry({ times: 2 }));
+```
+
+Retry transient reads deliberately. Do not automatically retry writes unless the operation is
+idempotent and its submission state is known.
+
+## Promise interop
+
+```ts
+const promise = Effect.runPromise(sdk.records.getText.effect({ name: "ens.eth", key: "url" }));
+```
+
+Calling `sdk.records.getText(...)` is equivalent at the boundary and is usually clearer when no
+Effect composition is needed.

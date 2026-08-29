@@ -1,32 +1,85 @@
 ---
 title: Batching
-description: Batch SDK reads and writes with bound action requests and intents.
+description: Batch SDK reads and wallet writes with typed requests and calls.
 ---
 
 # Batching
 
-Create requests through methods in any group, then execute them through `sdk.batch`.
+ensforge has separate batching models for reads and writes. Reads use Multicall when calls are
+compatible. Writes use wallet call capabilities when available and preserve a sequential fallback.
 
-```ts
+## Batch reads
+
+Create requests through methods in any group, then execute them through `sdk.batch.readBatch`.
+
+::: code-group
+
+```ts [profile.ts]
+import { sdk } from "./client";
+
 const profile = await sdk.batch.readBatch({
   owner: sdk.name.getOwner.request({ name: "ens.eth" }),
   resolver: sdk.resolution.getResolver.request({ name: "ens.eth" }),
   avatar: sdk.records.getAvatar.request({ name: "ens.eth" }),
 });
+
+profile.owner;
+profile.resolver;
+profile.avatar;
 ```
 
-Use `readBatchSettled` when one failed entry should not discard successful entries.
+<<< @/snippets/sdk/client.ts[client.ts]
 
-Write methods expose `.call`:
+:::
+
+The result object retains the key and result type of every request. Compatible direct contract reads
+are grouped by chain, block context, and Multicall requirements. CCIP Read and other incompatible
+requests execute through their required transport path.
+
+## Settle reads independently
+
+Use `readBatchSettled` when one failure should not discard successful entries.
 
 ```ts
+const results = await sdk.batch.readBatchSettled({
+  owner: sdk.name.getOwner.request({ name }),
+  avatar: sdk.records.getAvatar.request({ name }),
+});
+
+if (results.avatar.status === "failure") {
+  console.error(results.avatar.cause);
+}
+```
+
+## Batch writes
+
+Write methods expose `.call`, which prepares calldata without submitting it.
+
+```ts
+const calls = [
+  sdk.records.setText.call({ name, key: "url", value: url }),
+  sdk.records.setText.call({ name, key: "com.github", value: github }),
+];
+
 const result = await sdk.batch.sendCalls({
-  calls: [
-    sdk.records.setText.call({ name, key: "url", value: url }),
-    sdk.records.setText.call({ name, key: "com.github", value: github }),
-  ],
+  calls,
   mode: "auto",
 });
 ```
 
-See the Core [Batching guide](/core/guides/batching) for execution and atomicity semantics.
+In `auto` mode, ensforge inspects wallet capabilities. It uses wallet call batching when supported
+and otherwise executes the prepared calls sequentially. Sequential fallback is **not atomic**: an
+earlier transaction can succeed before a later transaction fails.
+
+## Prepare and inspect first
+
+```ts
+const prepared = await sdk.batch.prepareCalls({ calls });
+const simulations = await sdk.batch.simulateCalls({ calls: prepared });
+```
+
+Use this path when the application needs to display targets, values, estimated gas, or simulation
+failures before requesting wallet approval.
+
+See the Core [Batching guide](/core/guides/batching) for grouping, CCIP Read, capability, and
+atomicity details.

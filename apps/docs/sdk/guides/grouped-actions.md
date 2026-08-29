@@ -1,11 +1,12 @@
 ---
 title: Grouped Actions
-description: Navigate the capability groups on an ensforge SDK instance.
+description: Navigate capability groups on an ensforge SDK instance.
 ---
 
 # Grouped Actions
 
-The SDK binds one Core config and organizes all actions by ENS capability.
+The SDK binds one Core config and organizes actions by ENS capability. Grouping keeps discovery
+predictable without changing action behavior or result types.
 
 | Group          | Responsibility                                                             |
 | -------------- | -------------------------------------------------------------------------- |
@@ -24,5 +25,39 @@ The SDK binds one Core config and organizes all actions by ENS capability.
 | `subnames`     | Subname creation, updates, expiry, transfer, and deletion.                 |
 | `wrapping`     | Wrapping, unwrapping, fuses, and wrapper expiry.                           |
 
-Groups are immutable. Methods retain `.effect`, `.request`, `.call`, and `.stream` extensions from
-their Core action where applicable.
+## Read across groups
+
+::: code-group
+
+```ts [profile.ts]
+import { sdk } from "./client";
+
+const state = await sdk.name.getNameState({ name: "ens.eth" });
+const resolver = await sdk.resolution.getResolver({ name: "ens.eth" });
+const avatar = await sdk.records.getAvatar({ name: "ens.eth" });
+```
+
+<<< @/snippets/sdk/client.ts[client.ts]
+
+:::
+
+Use `name` for registration and ownership state, `resolution` for resolver infrastructure, and
+`records` for data stored by a resolver.
+
+## Retained action interfaces
+
+Binding configuration does not remove the additional Core interfaces:
+
+```ts
+const effect = sdk.records.getAddress.effect({ name });
+const request = sdk.records.getAddress.request({ name });
+const call = sdk.records.setText.call({ name, key: "url", value });
+const stream = sdk.events.watchEnsEvents.stream({ name });
+```
+
+- `.effect` returns the typed Effect.
+- `.request` prepares a read for `readBatch`.
+- `.call` prepares a write for wallet batching.
+- `.stream` exposes event watchers as an Effect Stream.
+
+The method path and Core action always share the same parameter, result, and error contracts.

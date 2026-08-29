@@ -1,33 +1,106 @@
 ---
 title: Writes
-description: Execute direct and resumable writes through the grouped SDK.
+description: Configure a wallet and execute ENS writes through the SDK.
 ---
 
 # Writes
 
-Configure a wallet when creating the SDK, or construct it from a Wagmi config.
+Write methods simulate the contract call before sending it. The SDK resolves the correct ENS
+contract and authorization route from the name state.
+
+## Configure a wallet
+
+Create public and wallet clients once, then pass them to `Ensforge`.
+
+```ts [client.ts]
+import { Ensforge } from "@ensforge/sdk";
+import { createPublicClient, createWalletClient, custom, http } from "viem";
+import { mainnet } from "viem/chains";
+
+const publicClient = createPublicClient({ chain: mainnet, transport: http() });
+const walletClient = createWalletClient({
+  chain: mainnet,
+  transport: custom(window.ethereum),
+});
+
+export const ens = new Ensforge({ network: "mainnet", publicClient, walletClient });
+```
+
+```ts [profile.ts]
+import { ens } from "./client";
+
+const result = await ens.records.setText({
+  name: "example.eth",
+  key: "url",
+  value: "https://example.com",
+});
+
+console.log(result.hash);
+```
+
+When configured with Wagmi, the active wallet client is resolved when the method runs. Account and
+connector changes therefore do not require a new SDK instance.
+
+## Execution policy
+
+Write methods accept common execution controls in addition to their action-specific parameters.
+
+- `mode` controls whether eligible calls use wallet batching or sequential transactions.
+- `confirmation` controls whether the method returns after submission or waits for a receipt.
+- `account` and `walletClient` override the configured wallet for one call.
 
 ```ts
-const sdk = new Ensforge({
-  network: "mainnet",
-  publicClient,
-  walletClient,
+const result = await ens.records.setText({
+  name: "example.eth",
+  key: "com.github",
+  value: "envoy1084",
+  mode: "auto",
+  confirmation: { confirmations: 2 },
 });
 ```
 
-Direct methods execute immediately:
+`mode: "auto"` inspects wallet capabilities and uses the safest supported execution path. A batch
+is only atomic when the wallet reports atomic batch support.
+
+## Prepare calls
+
+Write methods expose `.call` when the operation can be represented as a prepared call. This is
+useful for previews, custom wallet flows, and [`sendCalls`](/sdk/api/batch/send-calls).
 
 ```ts
-const result = await sdk.records.setText({ name, key: "url", value });
+const call = ens.records.setText.call({
+  name: "example.eth",
+  key: "url",
+  value: "https://example.com",
+});
+
+const prepared = await ens.batch.prepareCalls({ calls: [call] });
+const simulation = await ens.batch.simulateCalls(prepared);
 ```
 
-Use `.call` to defer execution and compose writes. Resumable workflow methods accept their previously
-returned progress through `resume`.
+## Resumable workflows
+
+Registration and migration can span several transactions or a protocol waiting period. Their
+result is a progress snapshot that can be persisted and passed back as `resume`.
 
 ```ts
-const progress = await sdk.registration.registerName(parameters);
-const completed = await sdk.registration.registerName({ ...parameters, resume: progress });
+const progress = await ens.registration.registerName({
+  name: "example.eth",
+  owner: account.address,
+  duration: 365n * 24n * 60n * 60n,
+  secret,
+});
+
+if (progress.status !== "completed") {
+  const completed = await ens.registration.registerName({
+    name: "example.eth",
+    owner: account.address,
+    duration: 365n * 24n * 60n * 60n,
+    secret,
+    resume: progress,
+  });
+}
 ```
 
-Configuration defaults control simulation and confirmation. Action parameters override them where
-the public type includes those fields.
+Persist the complete progress value rather than reconstructing it. This keeps transaction hashes,
+completed steps, and protocol timing intact.

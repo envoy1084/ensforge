@@ -1,41 +1,114 @@
 ---
 title: Getting Started
-description: Create an ensforge SDK instance and call grouped ENS methods.
+description: Create an ensforge client and call Promise or Effect methods.
 ---
 
 # Getting Started
 
-Create an `Ensforge` instance with a viem public client.
+The SDK binds one ensforge configuration and exposes actions through capability groups such as
+`name`, `records`, and `registration`. Create the client once for a network and reuse it.
 
-```ts
-import { Ensforge } from "@ensforge/sdk";
-import { createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
+## Create a client
 
-export const sdk = new Ensforge({
-  network: "mainnet",
-  publicClient: createPublicClient({
-    chain: mainnet,
-    transport: http(),
-  }),
+Create a viem `PublicClient`, then pass it to `Ensforge`.
+
+::: code-group
+
+```ts [index.ts]
+import { sdk } from "./client";
+
+const owner = await sdk.name.getOwner({ name: "ens.eth" });
+
+if (owner === null) {
+  console.log("The name has no owner");
+} else {
+  console.log(owner.address, owner.protocol);
+}
+```
+
+<<< @/snippets/sdk/client.ts[client.ts]
+
+:::
+
+The selected `network` and viem client chain must match. A mainnet client cannot be used with
+`network: "sepolia"`.
+
+## Read resolver records
+
+Methods are grouped by the ENS capability they operate on.
+
+::: code-group
+
+```ts [profile.ts]
+import { sdk } from "./client";
+
+const [address, avatar, url] = await Promise.all([
+  sdk.records.getAddress({ name: "ens.eth" }),
+  sdk.records.getAvatar({ name: "ens.eth" }),
+  sdk.records.getText({ name: "ens.eth", key: "url" }),
+]);
+```
+
+<<< @/snippets/sdk/client.ts[client.ts]
+
+:::
+
+Use [`sdk.batch.readBatch`](/sdk/api/batch/read-batch) when compatible reads should share a
+Multicall request while retaining their individual result types.
+
+## Use Effect
+
+Every method is Promise-first and also exposes the underlying Effect through `.effect`.
+
+::: code-group
+
+```ts [profile.ts]
+import { Effect } from "effect";
+import { sdk } from "./client";
+
+const profile = Effect.gen(function* () {
+  const owner = yield* sdk.name.getOwner.effect({ name: "ens.eth" });
+  const avatar = yield* sdk.records.getAvatar.effect({ name: "ens.eth" });
+
+  return { owner, avatar };
 });
+
+const result = await Effect.runPromise(profile);
 ```
 
-Call methods through their capability group.
+<<< @/snippets/sdk/client.ts[client.ts]
 
-```ts
-const state = await sdk.name.getNameState({ name: "ens.eth" });
-const resolver = await sdk.resolution.getResolver({ name: "ens.eth" });
-const url = await sdk.records.getText({ name: "ens.eth", key: "url" });
-```
+:::
 
-Use an existing Wagmi config by passing `wagmiConfig` instead of viem clients.
+Both forms execute the same implementation. Use Promises at conventional application boundaries and
+Effects when you need typed failures, interruption, retries, concurrency, or tracing.
 
-```ts
+## Use a Wagmi config
+
+If the application already uses Wagmi, provide its config instead of creating viem clients twice.
+
+::: code-group
+
+```ts [client.ts]
+import { Ensforge } from "@ensforge/sdk";
+import { wagmiConfig } from "./wagmi";
+
 export const sdk = new Ensforge({
   network: "mainnet",
   wagmiConfig,
 });
 ```
 
-The instance and all action groups are immutable. Create one per network configuration and reuse it.
+<<< @/snippets/wagmi/config.ts[wagmi.ts]
+
+:::
+
+The public client is selected immediately. The wallet client is resolved when a write runs, so
+account and connector changes do not require recreating the SDK.
+
+## Next steps
+
+- Learn the [`Ensforge` constructor](/sdk/api/ensforge).
+- Browse [Grouped Actions](/sdk/guides/grouped-actions).
+- Compose reads and writes in [Batching](/sdk/guides/batching).
+- Handle typed failures in [Error Handling](/sdk/guides/error-handling).
