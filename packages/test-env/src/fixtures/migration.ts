@@ -185,6 +185,15 @@ export const seedMigrationFixtures = Effect.fn("seedMigrationFixtures")(function
   );
   yield* reserveV2(environment, "v2-reserved-wrapped-locked", reservedWrappedLockedExpiry);
 
+  const renewalReservedExpiry = yield* registerV1MigrationName(environment, "v2-renewal-reserved");
+  yield* reserveV2(environment, "v2-renewal-reserved", renewalReservedExpiry);
+
+  const renewalReservedBatchExpiry = yield* registerV1MigrationName(
+    environment,
+    "v2-renewal-reserved-batch",
+  );
+  yield* reserveV2(environment, "v2-renewal-reserved-batch", renewalReservedBatchExpiry);
+
   const unlockedExpiry = yield* registerV1MigrationName(environment, "v2-migrated-unlocked");
   yield* reserveV2(environment, "v2-migrated-unlocked", unlockedExpiry);
   yield* seedTransaction(
@@ -336,6 +345,18 @@ export const seedMigrationFixtures = Effect.fn("seedMigrationFixtures")(function
     reservedWrappedLocked: fixture(
       "v2-reserved-wrapped-locked.eth",
       reservedWrappedLockedExpiry,
+      environment.deployments.v2.migration.ensV1Resolver,
+      environment.accounts.owner,
+    ),
+    renewalReserved: fixture(
+      "v2-renewal-reserved.eth",
+      renewalReservedExpiry,
+      environment.deployments.v2.migration.ensV1Resolver,
+      environment.accounts.owner,
+    ),
+    renewalReservedBatch: fixture(
+      "v2-renewal-reserved-batch.eth",
+      renewalReservedBatchExpiry,
       environment.deployments.v2.migration.ensV1Resolver,
       environment.accounts.owner,
     ),

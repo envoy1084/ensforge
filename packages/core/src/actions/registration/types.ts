@@ -2,6 +2,7 @@ import { Schema } from "effect";
 
 import type { Account, Address, WalletClient } from "viem";
 
+import type { EnsAction } from "../../action/action.js";
 import type { BlockParameters } from "../../action/block.js";
 import type { EnsWriteIntent } from "../../action/write-intent.js";
 import type { CodecError } from "../../errors/codec-error.js";
@@ -300,3 +301,76 @@ export type RegistrationWriteIntent = EnsWriteIntent<
   RegistrationWriteResult,
   RegistrationWriteError
 >;
+
+export type RenewNameCallParameters = {
+  readonly name: string;
+  readonly duration: bigint;
+  readonly paymentToken?: EthereumAddress;
+  readonly maxPrice?: bigint;
+  readonly referrer?: Bytes32;
+};
+
+export interface ApproveRenewalPaymentParameters {
+  readonly name: string;
+  readonly duration: bigint;
+  readonly paymentToken: string;
+  readonly amount: bigint;
+}
+
+export type RenewNameParameters = RenewNameCallParameters &
+  RegistrationWalletParameters & {
+    readonly resume?: RenewNameResult;
+  };
+
+export interface RenewalApproval {
+  readonly required: boolean;
+  readonly spender: EthereumAddress | null;
+  readonly token: EthereumAddress | null;
+  readonly amount: bigint;
+}
+
+export interface RenewNameResult {
+  readonly status: "completed" | "partial";
+  readonly name: NormalizedName;
+  readonly protocol: typeof EnsProtocol.Type;
+  readonly route: RenewalRoute;
+  readonly duration: bigint;
+  readonly previousExpiry: bigint | null;
+  readonly newExpiry: bigint | null;
+  readonly price: bigint;
+  readonly currency: PaymentCurrency;
+  readonly approval: RenewalApproval;
+  readonly write: WritePlanProgress;
+  readonly finalState: NameState | null;
+}
+
+export interface RenewNameAction extends EnsAction<
+  RenewNameParameters,
+  RenewNameResult,
+  WriteError
+> {
+  readonly call: (
+    parameters: RenewNameCallParameters,
+  ) => EnsWriteIntent<CallExecutionResult, WriteError>;
+}
+
+export type RenewNamesEntryParameters = RenewNameCallParameters;
+
+export interface RenewNamesParameters extends RegistrationWalletParameters {
+  readonly renewals: ReadonlyArray<RenewNamesEntryParameters>;
+  readonly maxTotalPrice?: bigint;
+  readonly resume?: RenewNamesResult;
+}
+
+export interface RenewNamesResult {
+  readonly status: "completed" | "partial";
+  readonly renewals: ReadonlyArray<
+    Omit<RenewNameResult, "write" | "status" | "approval" | "finalState"> & {
+      readonly newExpiry: bigint | null;
+      readonly finalState: NameState | null;
+    }
+  >;
+  readonly approvals: ReadonlyArray<RenewalApproval>;
+  readonly totalPrice: bigint;
+  readonly write: WritePlanProgress;
+}

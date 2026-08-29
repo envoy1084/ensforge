@@ -41,6 +41,8 @@ export {
   RpcErrorCode,
   RegistrationError,
   RegistrationErrorCode,
+  RenewalError,
+  RenewalErrorCode,
   TransactionError,
   TransactionErrorCode,
   WalletError,

@@ -23,6 +23,10 @@ export interface EnsV1FixtureManifest {
   readonly noResolver: EnsNameFixture;
   readonly recordWrites: EnsNameFixture;
   readonly resolverLifecycle: EnsNameFixture;
+  readonly renewal: EnsNameFixture;
+  readonly renewalGrace: EnsNameFixture;
+  readonly renewalBatchOne: EnsNameFixture;
+  readonly renewalBatchTwo: EnsNameFixture;
   readonly writeReady: EnsNameFixture;
   readonly wrapperLifecycle: EnsNameFixture;
   readonly grace: EnsNameFixture;
@@ -43,6 +47,8 @@ export interface EnsV2FixtureManifest {
   readonly inheritedResolver: EnsNameFixture;
   readonly noResolver: EnsNameFixture;
   readonly resolverLifecycle: EnsNameFixture;
+  readonly renewal: EnsNameFixture;
+  readonly renewalBatch: EnsNameFixture;
   readonly writeReady: EnsNameFixture;
   readonly grace: EnsNameFixture;
   readonly expired: EnsNameFixture;
@@ -53,6 +59,8 @@ export interface EnsMigrationFixtureManifest {
   readonly reservedUnwrappedApproved: EnsNameFixture;
   readonly reservedWrapped: EnsNameFixture;
   readonly reservedWrappedLocked: EnsNameFixture;
+  readonly renewalReserved: EnsNameFixture;
+  readonly renewalReservedBatch: EnsNameFixture;
   readonly migratedUnlocked: EnsNameFixture;
   readonly migratedLocked: EnsNameFixture;
   readonly mirroredChild: EnsNameFixture;

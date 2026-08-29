@@ -27,6 +27,13 @@ const registrarSecurityControllerAbi = [
     inputs: [{ name: "controller", type: "address" }],
     outputs: [],
   },
+  {
+    type: "function",
+    name: "transferRegistrarOwnership",
+    stateMutability: "nonpayable",
+    inputs: [{ name: "newOwner", type: "address" }],
+    outputs: [],
+  },
 ] as const;
 
 const v1Fixture = (
@@ -132,10 +139,33 @@ export const seedV1Fixtures = Effect.fn("seedV1Fixtures")(function* (
     "Unable to authorize the ENS devnet fixture registrar",
     "owner",
   );
+  yield* seedTransaction(
+    environment,
+    {
+      abi: registrarSecurityControllerAbi,
+      address: registrarOwner,
+      functionName: "addRegistrarController",
+      args: [environment.deployments.v2.migration.ethRenewerV1],
+    },
+    "Unable to authorize ETHRenewerV1 as an ENS v1 registrar controller",
+    "owner",
+  );
+  yield* seedTransaction(
+    environment,
+    {
+      abi: registrarSecurityControllerAbi,
+      address: registrarOwner,
+      functionName: "transferRegistrarOwnership",
+      args: [environment.deployments.v2.migration.ethRenewerV1],
+    },
+    "Unable to transfer ENS v1 registrar ownership to ETHRenewerV1",
+    "owner",
+  );
 
   const expiredExpiry = yield* registerV1(environment, "v1-expired", 1n);
   yield* environment.state.advanceTime(v1GracePeriod + 2);
   const graceExpiry = yield* registerV1(environment, "v1-grace", 1n);
+  const renewalGraceExpiry = yield* registerV1(environment, "v1-renewal-grace", 1n);
   yield* environment.state.advanceTime(2);
 
   const activeUnwrapped = yield* activeV1Fixture(environment, "v1-unwrapped");
@@ -153,6 +183,9 @@ export const seedV1Fixtures = Effect.fn("seedV1Fixtures")(function* (
     "v1-resolver-lifecycle",
     zeroAddress,
   );
+  const renewal = yield* activeV1Fixture(environment, "v1-renewal", zeroAddress);
+  const renewalBatchOne = yield* activeV1Fixture(environment, "v1-renewal-batch-one", zeroAddress);
+  const renewalBatchTwo = yield* activeV1Fixture(environment, "v1-renewal-batch-two", zeroAddress);
   const writeReady = yield* activeV1Fixture(environment, "v1-write-ready", zeroAddress);
   const wrapperLifecycle = yield* activeV1Fixture(environment, "v1-wrapper-lifecycle", zeroAddress);
 
@@ -292,6 +325,28 @@ export const seedV1Fixtures = Effect.fn("seedV1Fixtures")(function* (
         "v1-resolver-lifecycle.eth",
         "active",
         resolverLifecycle.expiry,
+        zeroAddress,
+        owner,
+      ),
+      renewal: v1Fixture("v1-renewal.eth", "active", renewal.expiry, zeroAddress, owner),
+      renewalGrace: v1Fixture(
+        "v1-renewal-grace.eth",
+        "grace",
+        renewalGraceExpiry,
+        zeroAddress,
+        owner,
+      ),
+      renewalBatchOne: v1Fixture(
+        "v1-renewal-batch-one.eth",
+        "active",
+        renewalBatchOne.expiry,
+        zeroAddress,
+        owner,
+      ),
+      renewalBatchTwo: v1Fixture(
+        "v1-renewal-batch-two.eth",
+        "active",
+        renewalBatchTwo.expiry,
         zeroAddress,
         owner,
       ),

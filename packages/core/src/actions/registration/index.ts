@@ -45,6 +45,18 @@ export {
   type RegisterNamesResult,
 } from "./register-names/index.js";
 export {
+  renewName,
+  type RenewNameAction,
+  type RenewNameParameters,
+  type RenewNameResult,
+} from "./renew-name/index.js";
+export {
+  renewNames,
+  type RenewNamesParameters,
+  type RenewNamesResult,
+} from "./renew-names/index.js";
+export { approveRenewalPayment } from "./renewal-mutation.js";
+export {
   CommitmentStatus,
   Erc20PaymentCurrency,
   NativePaymentCurrency,
@@ -60,6 +72,10 @@ export {
   type ApprovePaymentTokenParameters,
   type CommitNameParameters,
   type CompleteRegistrationParameters,
+  type ApproveRenewalPaymentParameters,
+  type RenewNameCallParameters,
+  type RenewNamesEntryParameters,
+  type RenewalApproval,
   type RegisterNamesEntryParameters,
   type RegistrationWriteError,
   type RegistrationWriteIntent,

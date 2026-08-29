@@ -16,6 +16,7 @@ import type { ConfigError } from "../errors/config-error.js";
 import type { ContractError } from "../errors/contract-error.js";
 import type { NameError } from "../errors/name-error.js";
 import type { RegistrationError } from "../errors/registration-error.js";
+import type { RenewalError } from "../errors/renewal-error.js";
 import type { RpcError } from "../errors/rpc-error.js";
 import type { TransactionError } from "../errors/transaction-error.js";
 import type { WalletError } from "../errors/wallet-error.js";
@@ -48,6 +49,7 @@ export type WriteError =
   | NameError
   | RpcError
   | RegistrationError
+  | RenewalError
   | TransactionError
   | WalletError
   | WritePlanError;
