@@ -77,17 +77,18 @@ describe("resolver write integration", () => {
     Effect.gen(function* () {
       const devnet = getIntegrationDevnet();
       const fixture = devnet.fixtures.records.v1;
+      const name = devnet.fixtures.v1.recordWrites.name;
       const bitcoinAddress = yield* Effect.sync(() =>
         decodeAddressRecord({ coinType: 0n, data: fixture.addresses.bitcoin.value }),
       );
       assert.isNotNull(bitcoinAddress);
 
       const result = yield* sendCalls.effect(devnet.configs.v1, {
-        calls: completeRecordCalls(devnet, fixture.name, "v1", bitcoinAddress),
+        calls: completeRecordCalls(devnet, name, "v1", bitcoinAddress),
         mode: "sequential",
       });
       const records = yield* getRecords.effect(devnet.configs.v1, {
-        name: fixture.name,
+        name,
         records: {
           addresses: [60n, 0n],
           texts: ["com.ensforge.phase10.v1.one", "com.ensforge.phase10.v1.two", "avatar"],

@@ -21,6 +21,7 @@ export interface EnsV1FixtureManifest {
   readonly unwrappedSubname: EnsNameFixture;
   readonly wrappedSubname: EnsNameFixture;
   readonly noResolver: EnsNameFixture;
+  readonly recordWrites: EnsNameFixture;
   readonly writeReady: EnsNameFixture;
   readonly grace: EnsNameFixture;
   readonly expired: EnsNameFixture;

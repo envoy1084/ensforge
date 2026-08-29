@@ -147,6 +147,7 @@ export const seedV1Fixtures = Effect.fn("seedV1Fixtures")(function* (
     environment.deployments.v1.contracts.publicResolver,
     "owner2",
   );
+  const recordWrites = yield* activeV1Fixture(environment, "v1-record-writes");
   const writeReady = yield* activeV1Fixture(environment, "v1-write-ready", zeroAddress);
 
   yield* seedTransaction(
@@ -274,6 +275,13 @@ export const seedV1Fixtures = Effect.fn("seedV1Fixtures")(function* (
         environment.accounts.owner2,
       ),
       noResolver: v1Fixture("v1-no-resolver.eth", "active", noResolver.expiry, zeroAddress, owner),
+      recordWrites: v1Fixture(
+        "v1-record-writes.eth",
+        "active",
+        recordWrites.expiry,
+        publicResolver,
+        owner,
+      ),
       writeReady: v1Fixture("v1-write-ready.eth", "active", writeReady.expiry, zeroAddress, owner),
       grace: v1Fixture("v1-grace.eth", "grace", graceExpiry, zeroAddress, owner),
       expired: v1Fixture("v1-expired.eth", "expired", expiredExpiry, zeroAddress, owner),
