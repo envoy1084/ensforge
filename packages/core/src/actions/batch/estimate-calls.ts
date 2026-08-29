@@ -34,6 +34,11 @@ const estimateCallsEffect = Effect.fn("ensforge.estimateCalls")(function* (
       const blockNumber = context.block.blockNumber;
 
       const calls = yield* prepareWriteIntents(config, parameters);
+      yield* Effect.annotateCurrentSpan({
+        "ens.network": config.network,
+        "ens.write.call_count": calls.length,
+        "ens.write.operation": "estimate",
+      });
       const client = yield* WriteClient;
       const fee: FeeEstimate = yield* client.estimateFeesPerGas();
       const price = fee.type === "legacy" ? fee.gasPrice : fee.maxFeePerGas;

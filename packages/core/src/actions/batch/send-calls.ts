@@ -13,6 +13,12 @@ const sendCallsEffect = Effect.fn("ensforge.sendCalls")(function* (
   parameters: SendCallsParameters,
 ) {
   const mode = parameters.mode ?? "auto";
+  yield* Effect.annotateCurrentSpan({
+    "ens.network": config.network,
+    "ens.write.call_count": parameters.calls.length,
+    "ens.write.mode": mode,
+    "ens.write.atomicity": parameters.atomicity ?? "preferred",
+  });
   if (mode === "sequential") return yield* executeSequential(config, parameters);
 
   const capabilities = yield* getWalletCapabilities.effect(config, parameters);

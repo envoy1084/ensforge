@@ -45,6 +45,7 @@
   },
   "scripts": {
     "build": "tsdown",
+    "bench": "vitest bench --run bench",
     "dev": "tsdown --watch",
     "lint": "oxlint --deny-warnings .",
     "pack:check": "publint && attw --pack . --profile esm-only --exclude-entrypoints ./testing",

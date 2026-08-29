@@ -86,6 +86,12 @@ const executeWritePlanEffect = Effect.fn("ensforge.executeWritePlan")(function* 
 ): Effect.fn.Return<WritePlanProgress, WriteError> {
   const invalid = validatePlan(parameters);
   if (invalid !== undefined) return yield* invalid;
+  yield* Effect.annotateCurrentSpan({
+    "ens.network": config.network,
+    "ens.write.operation": "execute-plan",
+    "ens.write.stage_count": parameters.plan.stages.length,
+    "ens.write.resumed": parameters.resume !== undefined,
+  });
 
   const completed = [...(parameters.resume?.completedStages ?? [])];
   const completedIds = new Set(

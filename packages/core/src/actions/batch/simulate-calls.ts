@@ -13,6 +13,11 @@ const simulateCallsEffect = Effect.fn("ensforge.simulateCalls")(function* (
   parameters: SimulateCallsParameters,
 ) {
   const calls = yield* prepareWriteIntents(config, parameters);
+  yield* Effect.annotateCurrentSpan({
+    "ens.network": config.network,
+    "ens.write.call_count": calls.length,
+    "ens.write.operation": "simulate",
+  });
   return yield* provideConfig(config, simulatePreparedCalls(calls, config.reads.concurrency)).pipe(
     Effect.mapError((error) => redactSensitiveWriteError(parameters.calls, error)),
   );

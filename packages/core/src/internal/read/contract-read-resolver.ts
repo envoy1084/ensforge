@@ -69,6 +69,12 @@ export const makeContractReadResolver = ({
       }
       if (currentChunk.length > 0) chunks.push(currentChunk);
 
+      yield* Effect.annotateCurrentSpan({
+        "ens.read.call_count": entries.length,
+        "ens.read.unique_call_count": unique.length,
+        "ens.read.chunk_count": chunks.length,
+      });
+
       const outcomes = yield* Effect.forEach(
         chunks,
         (chunk) =>
