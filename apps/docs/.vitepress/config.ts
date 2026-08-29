@@ -6,7 +6,16 @@ import llmstxt, { copyOrDownloadAsMarkdownButtons } from "vitepress-plugin-llms"
 
 import { sidebar } from "./sidebar.js";
 
-const siteUrl = process.env.DOCS_URL ?? "https://ensforge.dev";
+const configuredSiteUrl =
+  process.env.SITE_URL ??
+  process.env.VERCEL_PROJECT_PRODUCTION_URL ??
+  process.env.DOCS_URL ??
+  "https://ensforge.vercel.app";
+const siteUrl =
+  `${configuredSiteUrl.startsWith("http") ? "" : "https://"}${configuredSiteUrl}`.replace(
+    /\/+$/,
+    "",
+  );
 const siteDescription =
   "Type-safe TypeScript SDK for ENS names, records, registration, renewals, migration, React hooks, batching, and ENSv1 and ENSv2 contracts.";
 const withTwoslashInlineCache = createTwoslashWithInlineCache();
@@ -125,7 +134,7 @@ export default withTwoslashInlineCache(
         light: "vitesse-light",
       },
     },
-    sitemap: { hostname: siteUrl },
+    sitemap: { hostname: siteUrl, lastmodDateOnly: true },
     srcExclude: ["README.md"],
     themeConfig: {
       editLink: {
