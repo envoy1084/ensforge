@@ -1,0 +1,85 @@
+---
+title: grantResolverRoles
+description: Grants resolver roles for approvals and roles.
+---
+
+# grantResolverRoles
+
+Grants resolver roles for approvals and roles.
+
+## Import
+
+```ts
+import { Ensforge } from "@ensforge/sdk";
+```
+
+## Usage
+
+```ts
+import { sdk } from "./sdk";
+
+const result = await sdk.permissions.grantResolverRoles({
+  name: "example.eth",
+  account: "value",
+  record: {},
+});
+```
+
+## Parameters
+
+```ts
+type GrantResolverRolesParameters = Parameters<typeof sdk.permissions.grantResolverRoles>[0];
+```
+
+### name
+
+`string`
+
+ENS name used by the method. It is normalized before contract interaction.
+
+### account
+
+`string`
+
+Account used for authorization and execution.
+
+### record
+
+`ResolverRecord`
+
+Value used for `record` by this method.
+
+### roles
+
+`bigint | undefined`
+
+Role bitmask to inspect, grant, or revoke.
+
+## Return Type
+
+```ts
+type GrantResolverRolesResult = Awaited<ReturnType<typeof sdk.permissions.grantResolverRoles>>;
+```
+
+The result is identical to the corresponding Core action with configuration already bound.
+
+## Effect
+
+```ts
+const effect = sdk.permissions.grantResolverRoles.effect(parameters);
+
+type Success = Effect.Effect.Success<typeof effect>;
+type Failure = Effect.Effect.Error<typeof effect>;
+```
+
+## Call
+
+The bound method retains `.call` for deferred write composition.
+
+```ts
+const intent = sdk.permissions.grantResolverRoles.call(parameters);
+```
+
+## Action
+
+- [`grantResolverRoles`](/core/api/actions/permissions/grant-resolver-roles)
