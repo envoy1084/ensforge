@@ -24,6 +24,7 @@ export interface EnsV1FixtureManifest {
   readonly recordWrites: EnsNameFixture;
   readonly resolverLifecycle: EnsNameFixture;
   readonly writeReady: EnsNameFixture;
+  readonly wrapperLifecycle: EnsNameFixture;
   readonly grace: EnsNameFixture;
   readonly expired: EnsNameFixture;
   readonly reverse: {

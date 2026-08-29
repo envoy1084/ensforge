@@ -154,6 +154,7 @@ export const seedV1Fixtures = Effect.fn("seedV1Fixtures")(function* (
     zeroAddress,
   );
   const writeReady = yield* activeV1Fixture(environment, "v1-write-ready", zeroAddress);
+  const wrapperLifecycle = yield* activeV1Fixture(environment, "v1-wrapper-lifecycle", zeroAddress);
 
   yield* seedTransaction(
     environment,
@@ -295,6 +296,13 @@ export const seedV1Fixtures = Effect.fn("seedV1Fixtures")(function* (
         owner,
       ),
       writeReady: v1Fixture("v1-write-ready.eth", "active", writeReady.expiry, zeroAddress, owner),
+      wrapperLifecycle: v1Fixture(
+        "v1-wrapper-lifecycle.eth",
+        "active",
+        wrapperLifecycle.expiry,
+        zeroAddress,
+        owner,
+      ),
       grace: v1Fixture("v1-grace.eth", "grace", graceExpiry, zeroAddress, owner),
       expired: v1Fixture("v1-expired.eth", "expired", expiredExpiry, zeroAddress, owner),
       reverse: {
