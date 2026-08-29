@@ -9,26 +9,30 @@ permissions:
   id-token: write
   pull-requests: write
 
-concurrency:
-  group: release
-  cancel-in-progress: false
+concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
   release:
+    name: Release
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v7
-      - uses: pnpm/setup@v2
+      - name: Checkout Repo
+        uses: actions/checkout@v7
         with:
-          runtime: node@24.18.0
-          cache: true
-          install: false
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm check
-      - run: pnpm pack:check
-      - uses: changesets/action@v1
+          fetch-depth: 0
+
+      - name: Setup pnpm and Node.js
+        uses: ./.github/actions/setup
+        with:
+          registry-url: https://registry.npmjs.org
+
+      - name: Create Release Pull Request or Publish to npm
+        id: changesets
+        uses: changesets/action@v1
         with:
           publish: pnpm release
+          commit: "chore: release"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

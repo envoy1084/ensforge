@@ -1,0 +1,28 @@
+name: Setup pnpm
+description: Install the repository's pnpm and Node.js versions, restore the pnpm cache, and install dependencies.
+
+inputs:
+  registry-url:
+    description: npm registry used for package authentication.
+    required: false
+    default: https://registry.npmjs.org
+
+runs:
+  using: composite
+  steps:
+    - name: Install pnpm
+      uses: pnpm/action-setup@v6
+      with:
+        run_install: false
+
+    - name: Install Node.js
+      uses: actions/setup-node@v6
+      with:
+        node-version-file: .node-version
+        cache: pnpm
+        cache-dependency-path: pnpm-lock.yaml
+        registry-url: ${{ inputs.registry-url }}
+
+    - name: Install dependencies
+      shell: bash
+      run: pnpm install --frozen-lockfile
