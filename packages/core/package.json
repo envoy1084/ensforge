@@ -1,7 +1,6 @@
 {
   "name": "@ensforge/core",
-  "version": "0.0.0",
-  "private": true,
+  "version": "0.1.0-beta.0",
   "description": "Effect-native ENS actions, workflows, and Promise APIs for JavaScript and TypeScript",
   "keywords": [
     "effect",
@@ -12,7 +11,14 @@
     "typescript",
     "viem"
   ],
+  "homepage": "https://github.com/envoy1084/ensforge#readme",
+  "bugs": "https://github.com/envoy1084/ensforge/issues",
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/envoy1084/ensforge.git",
+    "directory": "packages/core"
+  },
   "files": [
     "dist"
   ],

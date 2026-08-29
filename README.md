@@ -25,3 +25,9 @@ pnpm check
 ## License
 
 Apache-2.0
+
+## Release status
+
+Ensforge is currently beta software. Public APIs follow semantic versioning, but breaking changes
+may be released in new beta versions before `1.0.0`. Deprecated APIs will be retained for at least
+one minor release after the stable release.
