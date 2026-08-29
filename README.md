@@ -1,16 +1,92 @@
 # Ensforge
 
-Effect-native ENS SDK for TypeScript, with Promise APIs for applications that do not use Effect
-directly. Ensforge targets ENSv2 while preserving the ENSv1 and migration behavior applications need.
+Type-safe tools for reading, writing, and building applications on ENS.
 
-## Workspace
+## Features
+
+- Unified ENS actions across supported deployments and migration states
+- Names, resolver records, registration, renewals, migration, wrapping, DNS, and reverse resolution
+- Automatic contract routing with typed results and errors
+- Batched reads and wallet-aware write workflows
+- Bring your own viem clients or Wagmi config
+- Framework-independent actions, a grouped SDK client, and reactive React hooks
+
+## Packages
+
+| Package                                                 | Description                                                |
+| ------------------------------------------------------- | ---------------------------------------------------------- |
+| [`@ensforge/contracts`](./packages/contracts/README.md) | Contract ABIs, deployment addresses, and shared interfaces |
+| [`@ensforge/core`](./packages/core/README.md)           | Framework-independent ENS actions and utilities            |
+| [`@ensforge/sdk`](./packages/sdk/README.md)             | Config-bound client with actions grouped by capability     |
+| [`@ensforge/react`](./packages/react/README.md)         | Providers, queries, mutations, and cache primitives        |
+
+## Quick start
+
+Install the high-level SDK:
+
+```sh
+pnpm add @ensforge/sdk
+```
+
+Create a client and call any grouped action:
+
+```ts
+import { Ensforge } from "@ensforge/sdk";
+import { createPublicClient, http } from "viem";
+import { mainnet } from "viem/chains";
+
+const sdk = new Ensforge({
+  network: "mainnet",
+  publicClient: createPublicClient({
+    chain: mainnet,
+    transport: http(),
+  }),
+});
+
+const owner = await sdk.name.getOwner({ name: "ens.eth" });
+const avatar = await sdk.records.getAvatar({ name: "ens.eth" });
+```
+
+Use `@ensforge/core` when you prefer standalone actions:
+
+```ts
+import { createConfig, getAddress, getOwner, readBatch } from "@ensforge/core";
+import { createPublicClient, http } from "viem";
+import { mainnet } from "viem/chains";
+
+const publicClient = createPublicClient({ chain: mainnet, transport: http() });
+const config = createConfig({ network: "mainnet", publicClient });
+
+const profile = await readBatch(config, {
+  owner: getOwner.request({ name: "ens.eth" }),
+  address: getAddress.request({ name: "ens.eth" }),
+});
+```
+
+For React applications, pass an SDK instance or the same configuration to `EnsforgeProvider` and
+use typed hooks:
+
+```tsx
+import { EnsforgeProvider, useOwner } from "@ensforge/react";
+
+const Profile = () => {
+  const owner = useOwner({ name: "ens.eth" });
+  return <span>{owner.data?.owner}</span>;
+};
+
+const App = () => (
+  <EnsforgeProvider sdk={sdk}>
+    <Profile />
+  </EnsforgeProvider>
+);
+```
+
+## Repository
+
+The monorepo also contains private development packages:
 
 ```text
 packages/
-  contracts/   ENSv1/ENSv2 ABIs, interfaces, constants, and deployments
-  core/        Semantic ENS actions with Promise and Effect APIs
-  react/       Effect Atom-powered React hooks and providers
-  sdk/         Config-bound grouped SDK client
   test-env/    Private deterministic ENS integration environment
   template/    Starter for future packages
 ```
@@ -27,9 +103,3 @@ pnpm check
 ## License
 
 Apache-2.0
-
-## Release status
-
-Ensforge is currently beta software. Public APIs follow semantic versioning, but breaking changes
-may be released in new beta versions before `1.0.0`. Deprecated APIs will be retained for at least
-one minor release after the stable release.
