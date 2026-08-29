@@ -14,9 +14,12 @@ export default defineConfig({
     ["meta", { content: "#315cf5", name: "theme-color" }],
     ["meta", { content: "website", property: "og:type" }],
     ["meta", { content: siteUrl, property: "og:url" }],
-    ["meta", { content: `${siteUrl}/og.svg`, property: "og:image" }],
+    ["meta", { content: `${siteUrl}/og.png`, property: "og:image" }],
+    ["meta", { content: "image/png", property: "og:image:type" }],
+    ["meta", { content: "1200", property: "og:image:width" }],
+    ["meta", { content: "630", property: "og:image:height" }],
     ["meta", { content: "summary_large_image", name: "twitter:card" }],
-    ["meta", { content: `${siteUrl}/og.svg`, name: "twitter:image" }],
+    ["meta", { content: `${siteUrl}/og.png`, name: "twitter:image" }],
   ],
   ignoreDeadLinks: false,
   lang: "en-US",
@@ -87,7 +90,7 @@ export default defineConfig({
     socialLinks: [{ icon: "github", link: "https://github.com/envoy1084/ensforge" }],
   },
   title: "ensforge",
-  titleTemplate: ":title · ensforge",
+  titleTemplate: ":title | ensforge",
   transformHead({ pageData }) {
     const canonicalUrl = new URL(pageData.relativePath.replace(/index\.md$/, ""), `${siteUrl}/`);
     return [
