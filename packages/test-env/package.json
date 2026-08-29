@@ -1,6 +1,6 @@
 {
   "name": "@ensforge/test-env",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
   "description": "Private local ENS v1 and v2 contract test environment for Ensforge",
   "license": "Apache-2.0",
