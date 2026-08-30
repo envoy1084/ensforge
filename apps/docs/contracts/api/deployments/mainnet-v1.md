@@ -7,9 +7,6 @@ description: Versioned ENS deployment addresses with chain and source provenance
 
 Versioned ENS deployment addresses with chain and source provenance.
 
-Overlapping L1 client addresses are checked against
-[`ensdomains/ensjs` L1 metadata](https://github.com/ensdomains/ensjs/blob/main/packages/ensjs/src/clients/l1.ts).
-
 ## Import
 
 ```ts
