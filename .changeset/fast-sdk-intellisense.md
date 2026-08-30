@@ -1,6 +1,9 @@
 ---
-"@ensforge/sdk": patch
+"@ensforge/core": minor
+"@ensforge/sdk": minor
+"@ensforge/react": minor
 ---
 
-Reduce TypeScript declaration expansion for grouped SDK actions to improve editor IntelliSense
-responsiveness while preserving the existing runtime and action APIs.
+Add group-scoped Core and SDK type entrypoints, slim the SDK and React root type surfaces, and
+resolve workspace packages through generated declarations to improve editor IntelliSense. Import
+action-specific SDK types from `@ensforge/sdk/<group>`.
