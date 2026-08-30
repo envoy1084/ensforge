@@ -235,7 +235,7 @@ const renewNamesEffect = Effect.fn("ensforge.renewNames")(function* (
         confirmation: confirmed,
       });
     }
-    const contractBatch = supportsContractRenewalBatch(config, first.quote.route);
+    const contractBatch = supportsContractRenewalBatch(first.quote.route);
     stages.push({
       type: "calls",
       id: renewalStageId,
@@ -286,7 +286,7 @@ const renewNamesEffect = Effect.fn("ensforge.renewNames")(function* (
       const completed =
         completedIds.has(stageId) ||
         (group !== undefined &&
-          !supportsContractRenewalBatch(config, entry.quote.route) &&
+          !supportsContractRenewalBatch(entry.quote.route) &&
           callResult !== undefined &&
           callResult.status !== "not-started");
       if (!completed) {

@@ -576,7 +576,6 @@ const contractGroups = {
     "v2/fragments/permissioned-registry",
     "v2/fragments/permissioned-resolver",
     "v2/fragments/registration",
-    "v2/fragments/renewal-batch",
     "v2/fragments/renewal",
     "v2/fragments/rent-price-oracle",
     "v2/fragments/resolution",

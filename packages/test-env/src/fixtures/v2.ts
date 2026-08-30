@@ -4,6 +4,7 @@ import {
   enhancedAccessControlRoles,
   ethRegistryV2Abi,
   registryRoles,
+  userRegistryV2InitializeAbi,
   userRegistryV2Abi,
   verifiableFactoryV2Abi,
 } from "@ensforge/contracts/v2";
@@ -19,25 +20,6 @@ const day = 86_400;
 const v2GracePeriod = 28 * day;
 const activeDuration = BigInt(365 * day);
 const v2OwnerRoles = enhancedAccessControlRoles.allRoles & ~registryRoles.wasReserved;
-
-const julyUserRegistryInitializeAbi = [
-  {
-    type: "function",
-    name: "initialize",
-    stateMutability: "nonpayable",
-    inputs: [
-      {
-        name: "grants",
-        type: "tuple[]",
-        components: [
-          { name: "account", type: "address" },
-          { name: "roleBitmap", type: "uint256" },
-        ],
-      },
-    ],
-    outputs: [],
-  },
-] as const;
 
 const v2Fixture = (
   name: string,
@@ -129,16 +111,9 @@ export const seedV2Fixtures = Effect.fn("seedV2Fixtures")(function* (
   let ensRegistry = existingEnsRegistry;
   if (ensRegistry === zeroAddress) {
     const initialization = encodeFunctionData({
-      abi: julyUserRegistryInitializeAbi,
+      abi: userRegistryV2InitializeAbi,
       functionName: "initialize",
-      args: [
-        [
-          {
-            account: environment.accounts.owner,
-            roleBitmap: enhancedAccessControlRoles.allRoles,
-          },
-        ],
-      ],
+      args: [environment.accounts.owner, enhancedAccessControlRoles.allRoles],
     });
     ensRegistry = yield* seedRead(
       () =>

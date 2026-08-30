@@ -12,7 +12,6 @@ export * from "./public-resolver.js";
 export * from "./registration.js";
 export * from "./rent-price-oracle.js";
 export * from "./renewal.js";
-export * from "./renewal-batch.js";
 export * from "./resolution.js";
 export * from "./standard-registry.js";
 export * from "./tokenized-registry.js";

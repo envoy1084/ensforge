@@ -13,7 +13,6 @@ import {
   renewNames,
   RenewalError,
 } from "../../../../src/index.js";
-import { createTestConfig } from "../../../../src/testing/index.js";
 import { getIntegrationDevnet } from "../../setup/devnet.js";
 
 const duration = 30n * 86_400n;
@@ -43,24 +42,13 @@ describe("renewal writes integration", () => {
     }),
   );
 
-  it.effect("uses the flat renewal ABI from the Sepolia beta deployment", () =>
+  it.effect("uses the deployed flat renewal ABI", () =>
     Effect.gen(function* () {
       const devnet = getIntegrationDevnet();
       const paymentToken = devnet.fixtures.registration.paymentTokens.dai.address;
-      const config = createTestConfig({
-        deployments: {
-          protocol: "v2",
-          v1: devnet.deployments.v1,
-          v2: { ...devnet.deployments.v2, id: "sepolia-v2" },
-        },
-        publicClient: devnet.configs.v2.publicClient,
-        ...(devnet.configs.v2.walletClient === undefined
-          ? {}
-          : { walletClient: devnet.configs.v2.walletClient }),
-      });
       const nativeName = devnet.fixtures.v2.renewalBatch.name;
       const reservedName = devnet.fixtures.migration.renewalReservedBatch.name;
-      const calls = yield* prepareCalls.effect(config, {
+      const calls = yield* prepareCalls.effect(devnet.configs.v2, {
         calls: [
           renewName.call({ name: nativeName, duration, paymentToken }),
           renewName.call({ name: reservedName, duration, paymentToken }),

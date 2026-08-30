@@ -2,14 +2,7 @@ import { Effect } from "effect";
 
 import { erc20AllowanceAbi, erc20ApproveAbi } from "@ensforge/contracts/shared";
 import { bulkRenewalV1RenewAllAbi, ethRegistrarControllerV1RenewAbi } from "@ensforge/contracts/v1";
-import {
-  ethRegistrarV2InterfaceRenewBatchAbi,
-  ethRegistrarV2InterfaceRenewAbi,
-  ethRegistrarV2RenewAbi,
-  ethRenewerV1RenewAbi,
-  ethRenewerV2InterfaceRenewBatchAbi,
-  ethRenewerV2InterfaceRenewAbi,
-} from "@ensforge/contracts/v2";
+import { ethRegistrarV2RenewAbi, ethRenewerV1RenewAbi } from "@ensforge/contracts/v2";
 import { encodeFunctionData, zeroHash } from "viem";
 
 import {
@@ -27,19 +20,14 @@ import { decodeOwnershipAddress } from "../ownership/address.js";
 import { getRenewalPrice } from "./get-renewal-price/index.js";
 import type { ApproveRenewalPaymentParameters, RenewNameCallParameters } from "./types.js";
 
+export const supportsContractRenewalBatch = (
+  route: "v1-controller" | "v1-renewer" | "v2-registrar",
+) => route === "v1-controller";
+
 export interface RenewBatchCallParameters {
   readonly renewals: ReadonlyArray<RenewNameCallParameters>;
   readonly maxTotalPrice?: bigint;
 }
-
-const usesFlatRenewalAbi = (config: Parameters<typeof getRenewalPrice.effect>[0]) =>
-  // The July Sepolia beta predates the tuple-based renewals and registrar-level batch methods.
-  config.deployments.protocol === "v2" && config.deployments.v2.id === "sepolia-v2";
-
-export const supportsContractRenewalBatch = (
-  config: Parameters<typeof getRenewalPrice.effect>[0],
-  route: "v1-controller" | "v1-renewer" | "v2-registrar",
-) => route === "v1-controller" || !usesFlatRenewalAbi(config);
 
 const encode = (operation: string, makeData: () => `0x${string}`) =>
   Effect.try({
@@ -170,42 +158,39 @@ const renewalPreparer: EnsWriteIntentPreparer<RenewNameCallParameters, WriteErro
   return {
     to: quote.renewer,
     data: yield* encode("renewName", () =>
-      usesFlatRenewalAbi(config)
-        ? encodeFunctionData({
-            abi: quote.route === "v1-renewer" ? ethRenewerV1RenewAbi : ethRegistrarV2RenewAbi,
-            functionName: "renew",
-            args: [label, parameters.duration, currency.address, referrer],
-          })
-        : encodeFunctionData({
-            abi:
-              quote.route === "v1-renewer"
-                ? ethRenewerV2InterfaceRenewAbi
-                : ethRegistrarV2InterfaceRenewAbi,
-            functionName: "renew",
-            args: [{ label, duration: parameters.duration, referrer }, currency.address],
-          }),
+      encodeFunctionData({
+        abi: quote.route === "v1-renewer" ? ethRenewerV1RenewAbi : ethRegistrarV2RenewAbi,
+        functionName: "renew",
+        args: [label, parameters.duration, currency.address, referrer],
+      }),
     ),
     value: 0n,
     protocol: quote.protocol,
   };
 });
 
-const batchRenewalPreparer: EnsWriteIntentPreparer<RenewBatchCallParameters, WriteError> =
-  Effect.fn("ensforge.renewNames.prepareBatch")(function* (config, parameters, context) {
+const v1BatchRenewalPreparer: EnsWriteIntentPreparer<RenewBatchCallParameters, WriteError> =
+  Effect.fn("ensforge.renewNames.prepareV1Batch")(function* (config, parameters) {
     if (parameters.renewals.length === 0) {
       return yield* new RenewalError({ code: "RENEWAL_FAILED", message: "Renewal batch is empty" });
+    }
+    const duration = parameters.renewals[0]?.duration;
+    if (
+      duration === undefined ||
+      parameters.renewals.some((renewal) => renewal.duration !== duration)
+    ) {
+      return yield* new RenewalError({
+        code: "RENEWAL_FAILED",
+        message: "ENSv1 bulk renewal requires a shared duration",
+      });
     }
     const quotes = yield* Effect.forEach(parameters.renewals, (renewal) =>
       requireQuote(config, renewal),
     );
-    const first = quotes[0];
-    if (first === undefined) {
-      return yield* new RenewalError({ code: "RENEWAL_FAILED", message: "Renewal batch is empty" });
-    }
-    if (quotes.some((quote) => quote.route !== first.route || quote.renewer !== first.renewer)) {
+    if (quotes.some((quote) => quote.route !== "v1-controller")) {
       return yield* new RenewalError({
         code: "ROUTE_CHANGED",
-        message: "All names in a renewal batch must use the same renewal contract",
+        message: "ENSv1 bulk renewal only accepts names routed through the V1 controller",
       });
     }
     const total = quotes.reduce((sum, quote) => sum + quote.price, 0n);
@@ -215,85 +200,25 @@ const batchRenewalPreparer: EnsWriteIntentPreparer<RenewBatchCallParameters, Wri
         message: "The current renewal batch price exceeds maxTotalPrice",
       });
     }
+    const v1 = config.deployments.v1;
+    if (v1 === undefined) {
+      return yield* new RenewalError({
+        code: "ROUTE_CHANGED",
+        message: "The ENSv1 bulk renewal deployment is unavailable",
+      });
+    }
     const labels = yield* Effect.forEach(quotes, (quote) => getSecondLevelEthLabel(quote.name));
-    if (first.route === "v1-controller") {
-      const v1 = config.deployments.v1;
-      if (v1 === undefined) {
-        return yield* new RenewalError({
-          code: "ROUTE_CHANGED",
-          message: "The ENSv1 bulk renewal deployment is unavailable",
-        });
-      }
-      const duration = parameters.renewals[0]?.duration;
-      if (
-        duration === undefined ||
-        parameters.renewals.some((renewal) => renewal.duration !== duration)
-      ) {
-        return yield* new RenewalError({
-          code: "RENEWAL_FAILED",
-          message: "ENSv1 bulk renewal requires a shared duration",
-        });
-      }
-      return {
-        to: v1.contracts.bulkRenewal,
-        data: yield* encode("renewNames", () =>
-          encodeFunctionData({
-            abi: bulkRenewalV1RenewAllAbi,
-            functionName: "renewAll",
-            args: [labels, duration, parameters.renewals[0]?.referrer ?? zeroHash],
-          }),
-        ),
-        value: total,
-        protocol: "v1" as const,
-      };
-    }
-    if (!supportsContractRenewalBatch(config, first.route)) {
-      return yield* new RenewalError({
-        code: "RENEWAL_FAILED",
-        message: "The selected renewal deployment does not support contract-native batching",
-      });
-    }
-    const currency = first.currency;
-    if (
-      currency.kind !== "erc20" ||
-      quotes.some(
-        (quote) => quote.currency.kind !== "erc20" || quote.currency.address !== currency.address,
-      )
-    ) {
-      return yield* new RenewalError({
-        code: "PAYMENT_TOKEN_UNSUPPORTED",
-        message: "All names in an ENSv2 renewal batch must use the same payment token",
-      });
-    }
-    const account = typeof context.account === "string" ? context.account : context.account.address;
-    const allowance = yield* readAllowance(config, currency.address, first.renewer, account);
-    if (allowance < total) {
-      return yield* new RenewalError({
-        code: "INSUFFICIENT_ALLOWANCE",
-        message: "Payment-token allowance is insufficient for the renewal batch",
-      });
-    }
     return {
-      to: first.renewer,
+      to: v1.contracts.bulkRenewal,
       data: yield* encode("renewNames", () =>
         encodeFunctionData({
-          abi:
-            first.route === "v1-renewer"
-              ? ethRenewerV2InterfaceRenewBatchAbi
-              : ethRegistrarV2InterfaceRenewBatchAbi,
-          functionName: "renewBatch",
-          args: [
-            parameters.renewals.map((renewal, index) => ({
-              label: labels[index] ?? "",
-              duration: renewal.duration,
-              referrer: renewal.referrer ?? zeroHash,
-            })),
-            currency.address,
-          ],
+          abi: bulkRenewalV1RenewAllAbi,
+          functionName: "renewAll",
+          args: [labels, duration, parameters.renewals[0]?.referrer ?? zeroHash],
         }),
       ),
-      value: 0n,
-      protocol: first.protocol,
+      value: total,
+      protocol: "v1" as const,
     };
   });
 
@@ -310,4 +235,4 @@ export const makeRenewalIntent = (
 export const makeRenewalBatchIntent = (
   parameters: RenewBatchCallParameters,
 ): EnsWriteIntent<CallExecutionResult, WriteError> =>
-  makeWriteIntent("renewNames", parameters, batchRenewalPreparer);
+  makeWriteIntent("renewNames", parameters, v1BatchRenewalPreparer);
