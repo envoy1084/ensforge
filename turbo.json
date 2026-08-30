@@ -8,7 +8,7 @@
     "dev": { "cache": false, "persistent": true },
     "lint": { "outputs": [] },
     "pack:check": { "dependsOn": ["build"], "outputs": [] },
-    "typecheck": { "dependsOn": ["^typecheck"], "outputs": [] },
+    "typecheck": { "dependsOn": ["^build", "^typecheck"], "outputs": [] },
     "test": { "dependsOn": ["^build"], "outputs": [] },
     "test:watch": { "cache": false, "persistent": true },
     "clean": { "cache": false }

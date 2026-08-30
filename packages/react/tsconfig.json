@@ -1,7 +1,6 @@
 {
   "extends": "klarity/tsconfig/library",
   "compilerOptions": {
-    "customConditions": ["workspace-source"],
     "jsx": "react-jsx",
     "rootDir": ".",
     "types": ["node"]

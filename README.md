@@ -97,8 +97,13 @@ Requires Node.js 24+ and pnpm 11.10.0.
 
 ```sh
 pnpm install
+pnpm build
 pnpm check
 ```
+
+Package boundaries resolve through generated declarations during editor and type-checking sessions.
+Run `pnpm build` after cloning, or keep `pnpm dev` running while changing multiple packages, so
+downstream packages see current declarations without loading every dependency's source graph.
 
 ## License
 
