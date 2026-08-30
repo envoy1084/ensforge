@@ -73,6 +73,18 @@ pnpm test:integration
 The test environment starts once for the suite, seeds its fixtures, and resets chain state between
 tests. Normal runs pull the published image and do not build ENS contracts locally.
 
+Live read-only smoke suites verify the public deployments separately. They require provider URLs and
+never submit transactions:
+
+```sh
+ENSFORGE_MAINNET_RPC_URL=https://… pnpm test:live:mainnet
+ENSFORGE_SEPOLIA_RPC_URL=https://… pnpm test:live:sepolia
+```
+
+The Sepolia suite uses `ENSFORGE_SEPOLIA_V2_NAME` when set and otherwise reads the public
+`ensforge-smoke.eth` fixture tree. Run `pnpm setup:sepolia-v2` separately when that fixture needs to
+be created or refreshed.
+
 When adding an action, cover domain logic with focused unit tests and contract behavior with an
 integration test when the behavior depends on deployed bytecode or chain state. Use `@effect/vitest`
 for Effect-based tests and preserve the existing test folder conventions.
