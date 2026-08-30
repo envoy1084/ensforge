@@ -247,7 +247,7 @@ export type CompleteRegistrationParameters = RegistrationCommitmentWriteParamete
   readonly maxPrice?: bigint;
 };
 
-interface RegistrationWalletParameters {
+export interface RegistrationWalletParameters {
   readonly walletClient?: WalletClient;
   readonly account?: Account | Address;
   readonly mode?: WriteMode;

@@ -1,5 +1,28 @@
-export { ConfigError, ConfigErrorCode } from "@ensforge/core";
-export type * from "@ensforge/core";
+export {
+  ConfigError,
+  ConfigErrorCode,
+  type BlockParameters,
+  type CallExecutionResult,
+  type ConfirmationPolicy,
+  type CreateConfigParameters,
+  type CreateViemConfigParameters,
+  type CreateWagmiConfigParameters,
+  type EnsChainId,
+  type EnsDeployment,
+  type EnsDeploymentProfile,
+  type EnsReadRequest,
+  type EnsforgeConfig,
+  type EnsNetwork,
+  type GatewayOptions,
+  type ReadOptions,
+  type ResolvedGatewayOptions,
+  type ResolvedReadOptions,
+  type ResolvedWriteOptions,
+  type RpcError,
+  type SimulationPolicy,
+  type WriteOptions,
+  type WriteError,
+} from "@ensforge/core";
 
 export { Ensforge } from "./ensforge.js";
 export type {

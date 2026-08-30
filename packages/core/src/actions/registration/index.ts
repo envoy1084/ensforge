@@ -80,5 +80,6 @@ export {
   type RegistrationWriteError,
   type RegistrationWriteIntent,
   type RegistrationWriteResult,
+  type RegistrationWalletParameters,
   type RegistrationReadError,
 } from "./types.js";

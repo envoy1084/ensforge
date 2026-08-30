@@ -1,16 +1,17 @@
+import type { EnsReadRequest, RpcError } from "@ensforge/sdk";
+import type { Ensforge } from "@ensforge/sdk";
 import type {
-  EnsReadRequest,
-  GetRecordsError,
-  GetRecordsParameters,
-  GetRecordsResult,
-  GetRecordsSelection,
   ReadBatchError,
   ReadBatchOptions,
   ReadBatchResult,
   ReadBatchSettledResult,
-  RpcError,
-} from "@ensforge/sdk";
-import type { Ensforge } from "@ensforge/sdk";
+} from "@ensforge/sdk/batch";
+import type {
+  GetRecordsError,
+  GetRecordsParameters,
+  GetRecordsResult,
+  GetRecordsSelection,
+} from "@ensforge/sdk/records";
 
 import type { EnsAtomOptions } from "../query/options.js";
 import { makeQueryAtom, type EnsAtom } from "./query.js";

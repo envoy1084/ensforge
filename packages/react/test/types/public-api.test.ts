@@ -1,6 +1,6 @@
+import type { SetTextParameters } from "@ensforge/sdk/records";
 import { expectTypeOf, it } from "vitest";
 
-import type { SetTextParameters } from "../../src/index.js";
 import {
   createRegistry,
   invalidate,

@@ -33,6 +33,62 @@
       "workspace-source": "./src/index.ts",
       "default": "./dist/index.js"
     },
+    "./batch": {
+      "workspace-source": "./src/actions/batch/index.ts",
+      "default": "./dist/batch.js"
+    },
+    "./capabilities": {
+      "workspace-source": "./src/actions/capabilities/index.ts",
+      "default": "./dist/capabilities.js"
+    },
+    "./dns": {
+      "workspace-source": "./src/actions/dns/index.ts",
+      "default": "./dist/dns.js"
+    },
+    "./events": {
+      "workspace-source": "./src/actions/events/index.ts",
+      "default": "./dist/events.js"
+    },
+    "./migration": {
+      "workspace-source": "./src/actions/migration/index.ts",
+      "default": "./dist/migration.js"
+    },
+    "./name": {
+      "workspace-source": "./src/actions/name/index.ts",
+      "default": "./dist/name.js"
+    },
+    "./ownership": {
+      "workspace-source": "./src/actions/ownership/index.ts",
+      "default": "./dist/ownership.js"
+    },
+    "./permissions": {
+      "workspace-source": "./src/actions/permissions/index.ts",
+      "default": "./dist/permissions.js"
+    },
+    "./records": {
+      "workspace-source": "./src/actions/records/index.ts",
+      "default": "./dist/records.js"
+    },
+    "./registration": {
+      "workspace-source": "./src/actions/registration/index.ts",
+      "default": "./dist/registration.js"
+    },
+    "./resolution": {
+      "workspace-source": "./src/actions/resolution/index.ts",
+      "default": "./dist/resolution.js"
+    },
+    "./reverse": {
+      "workspace-source": "./src/actions/reverse/index.ts",
+      "default": "./dist/reverse.js"
+    },
+    "./subnames": {
+      "workspace-source": "./src/actions/subnames/index.ts",
+      "default": "./dist/subnames.js"
+    },
+    "./wrapping": {
+      "workspace-source": "./src/actions/wrapping/index.ts",
+      "default": "./dist/wrapping.js"
+    },
     "./package.json": "./package.json",
     "./testing": {
       "workspace-source": "./src/testing/index.ts",
@@ -45,6 +101,20 @@
     },
     "exports": {
       ".": "./dist/index.js",
+      "./batch": "./dist/batch.js",
+      "./capabilities": "./dist/capabilities.js",
+      "./dns": "./dist/dns.js",
+      "./events": "./dist/events.js",
+      "./migration": "./dist/migration.js",
+      "./name": "./dist/name.js",
+      "./ownership": "./dist/ownership.js",
+      "./permissions": "./dist/permissions.js",
+      "./records": "./dist/records.js",
+      "./registration": "./dist/registration.js",
+      "./resolution": "./dist/resolution.js",
+      "./reverse": "./dist/reverse.js",
+      "./subnames": "./dist/subnames.js",
+      "./wrapping": "./dist/wrapping.js",
       "./package.json": "./package.json"
     },
     "access": "public",

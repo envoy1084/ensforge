@@ -57,6 +57,7 @@ export {
   ZoneHashResult,
   type DnsReadError,
   type DnsRecordQuery,
+  type DnsWriteWalletParameters,
   type GetDnsRecordParameters,
   type GetDnsRecordsParameters,
 } from "./types.js";

@@ -33,7 +33,7 @@ export const DnssecProofChain = Schema.Array(DnssecProof).pipe(
 );
 export type DnssecProofChain = typeof DnssecProofChain.Type;
 
-interface DnsWriteWalletParameters {
+export interface DnsWriteWalletParameters {
   readonly walletClient?: WalletClient;
   readonly account?: Account | Address;
   readonly mode?: WriteMode;

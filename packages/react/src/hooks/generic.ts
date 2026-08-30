@@ -1,16 +1,13 @@
 "use client";
 
+import type { EnsReadRequest, RpcError } from "@ensforge/sdk";
+import type { ReadBatchError, ReadBatchResult, ReadBatchSettledResult } from "@ensforge/sdk/batch";
 import type {
-  EnsReadRequest,
   GetRecordsError,
   GetRecordsParameters,
   GetRecordsResult,
   GetRecordsSelection,
-  ReadBatchError,
-  ReadBatchResult,
-  ReadBatchSettledResult,
-  RpcError,
-} from "@ensforge/sdk";
+} from "@ensforge/sdk/records";
 
 import {
   getRecordsAtom,
