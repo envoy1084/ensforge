@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      ENSFORGE_TEST_IMAGE: ghcr.io/envoy1084/ensforge-devnet@sha256:5efb35e1f12153c605d37a913a162580749f56fe4a270466f7c62fbf927bcfeb
+      ENSFORGE_TEST_IMAGE: ghcr.io/envoy1084/ensforge-devnet@sha256:63415642daad6f3486d305b5660a0b9c659203fc20194bafb50b6b1e1bedeef3
     steps:
       - uses: actions/checkout@v7
       - name: Setup pnpm and Node.js
