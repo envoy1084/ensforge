@@ -1,6 +1,6 @@
 ---
 title: Config
-description: Configure clients, Wagmi, and query defaults for ensforge React.
+description: Configure clients, Wagmi, and Effect Atom defaults for ensforge React.
 ---
 
 # Config
@@ -52,17 +52,18 @@ Omit `walletClient` for a read-only application.
 The active wallet is resolved when a mutation executes, so account and connector changes do not
 require recreating the provider.
 
-## Query defaults
+## Atom defaults
 
 ```tsx
 <EnsforgeProvider
   config={{ network: "mainnet", wagmiConfig }}
   defaults={{
-    queries: {
-      staleTime: 60_000,
-      gcTime: 10 * 60_000,
-      retry: 2,
-      refetchOnWindowFocus: true,
+    atoms: {
+      idleTTL: "10 minutes",
+      swr: {
+        staleTime: "1 minute",
+        revalidateOnFocus: true,
+      },
     },
   }}
 >
@@ -70,4 +71,4 @@ require recreating the provider.
 </EnsforgeProvider>
 ```
 
-See [Query Options](/react/api/query-options) for defaults and per-hook overrides.
+See [Atom Options](/react/api/atom-options) for defaults, Effect schedules, and per-hook overrides.

@@ -216,7 +216,7 @@ const actionGroups = {
 } as const;
 const hookGroups = {
   context: ["useEnsforge", "useEnsforgeRegistry"],
-  cache: ["useInvalidateEnsforge"],
+  cache: ["useInvalidate"],
   batch: [
     "useReadBatch",
     "useReadBatchSettled",
@@ -775,8 +775,8 @@ export const sidebar: DefaultTheme.Sidebar = {
       items: [
         { link: "/react/api/config", text: "Config" },
         { link: "/react/api/ensforge-provider", text: "EnsforgeProvider" },
-        { link: "/react/api/query-options", text: "Query Options" },
-        { link: "/react/api/query-result", text: "Query Result" },
+        { link: "/react/api/atom-options", text: "Atom Options" },
+        { link: "/react/api/atom-result", text: "Atom Result" },
         { link: "/react/api/mutation-options", text: "Mutation Options" },
         { link: "/react/api/mutation-result", text: "Mutation Result" },
       ],
@@ -784,13 +784,13 @@ export const sidebar: DefaultTheme.Sidebar = {
     },
     {
       items: [
-        { link: "/react/api/cache/create-ensforge-registry", text: "createEnsforgeRegistry" },
-        { link: "/react/api/cache/prefetch-ensforge", text: "prefetchEnsforge" },
-        { link: "/react/api/cache/prefetch-ensforge-effect", text: "prefetchEnsforgeEffect" },
-        { link: "/react/api/cache/invalidate-ensforge", text: "invalidateEnsforge" },
+        { link: "/react/api/cache/create-registry", text: "createRegistry" },
+        { link: "/react/api/cache/prefetch", text: "prefetch" },
+        { link: "/react/api/cache/prefetch-effect", text: "prefetchEffect" },
+        { link: "/react/api/cache/invalidate", text: "invalidate" },
         {
-          link: "/react/api/cache/invalidate-ensforge-effect",
-          text: "invalidateEnsforgeEffect",
+          link: "/react/api/cache/invalidate-effect",
+          text: "invalidateEffect",
         },
         { link: "/react/api/cache/make-invalidation-keys", text: "makeInvalidationKeys" },
       ],
@@ -807,7 +807,7 @@ export const sidebar: DefaultTheme.Sidebar = {
           link: "/react/api/hooks/make-suspense-query-hook",
           text: "makeSuspenseQueryHook",
         },
-        { link: "/react/api/hooks/prefetch-query-atom", text: "prefetchQueryAtom" },
+        { link: "/react/api/hooks/prefetch-atom", text: "prefetchAtom" },
       ],
       text: "Advanced",
     },

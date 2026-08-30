@@ -6,13 +6,19 @@ export type * from "@ensforge/sdk";
 export * from "./cache/index.js";
 export * from "./hooks/index.js";
 export {
-  defaultEnsQueryOptions,
-  type EnsQueryDefaults,
-  type EnsQueryOptions,
-  type ResolvedEnsQueryOptions,
-  type UseEnsQueryParameters,
+  defaultEnsAtomOptions,
+  type EnsAtomDefaults,
+  type EnsAtomOptions,
+  type EnsAtomSwrOptions,
+  type ResolvedEnsAtomOptions,
+  type ResolvedEnsAtomSwrOptions,
+  type UseEnsAtomParameters,
 } from "./query/options.js";
-export { type EnsFetchStatus, type EnsQueryResult, type EnsQueryStatus } from "./query/result.js";
-export type { EnsMutationCallbacks, EnsMutationOptions } from "./mutation/options.js";
-export type { EnsMutationResult, EnsMutationStatus } from "./mutation/result.js";
+export { type EnsAtomResult } from "./query/result.js";
+export type {
+  EnsMutationDefaults,
+  EnsMutationExecutionOptions,
+  EnsMutationOptions,
+} from "./mutation/options.js";
+export type { EnsMutationResult } from "./mutation/result.js";
 export * from "./provider/index.js";

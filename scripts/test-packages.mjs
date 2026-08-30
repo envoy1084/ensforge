@@ -242,7 +242,7 @@ const Profile = () => {
 
   return (
     <button
-      disabled={owner.isLoading || setText.isPending}
+      disabled={owner.isWaiting || setText.isWaiting}
       onClick={() => setText.mutate({ name: "ens.eth", key: "url", value: "https://ens.domains" })}
       type="button"
     >

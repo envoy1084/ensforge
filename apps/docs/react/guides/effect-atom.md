@@ -8,7 +8,7 @@ description: Compose the atoms that power ensforge React hooks.
 Every generated query or mutation hook is backed by a public Effect Atom factory.
 
 ```ts
-import { getOwnerAtom } from "@ensforge/react";
+import { getOwnerAtom } from "@ensforge/react/atoms";
 
 const atom = getOwnerAtom(sdk, { name: "sdk.eth" }, options);
 ```
@@ -16,8 +16,8 @@ const atom = getOwnerAtom(sdk, { name: "sdk.eth" }, options);
 Use the hook for normal components. Import the atom when you need derived atoms, an external registry,
 server prefetching, or composition with other Effect Atom state.
 
-Query atom factories receive the SDK, action parameters, and resolved query options. Mutation atom
-factories receive the SDK and accept parameters through the registry when executed.
+Read atom factories receive the SDK, action parameters, and optional `EnsAtomOptions`. Mutation
+atom factories receive the SDK and accept parameters through the registry when executed.
 
 `makeQueryAtom`, `makeMutationAtom`, and `makeStreamAtom` are public for extensions that follow the
 same cache-key and AsyncResult conventions.

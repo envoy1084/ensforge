@@ -1,6 +1,6 @@
 ---
 title: Mutation Options
-description: Configure retries and lifecycle callbacks for ensforge mutation hooks.
+description: Configure Effect schedules and Exit handlers for ensforge mutation hooks.
 ---
 
 # Mutation Options
@@ -8,53 +8,73 @@ description: Configure retries and lifecycle callbacks for ensforge mutation hoo
 Mutation hooks accept an optional `EnsMutationOptions` object.
 
 ```ts
-import type { EnsMutationCallbacks, EnsMutationOptions } from "@ensforge/react";
+import type { EnsMutationExecutionOptions, EnsMutationOptions } from "@ensforge/react";
 ```
 
 ## retry
 
-`false | number | undefined`
+`false | Schedule<unknown, Failure> | undefined`
 
-Number of times to retry the Effect after failure. It defaults to `false`. Do not enable automatic
-retries for writes unless the operation is known to be safe and idempotent.
-
-## onSuccess
-
-`(data: Success, parameters: Parameters) => void`
-
-Runs after a successful mutation with the result and exact parameters passed to it.
+Defaults to `false`. Pass an Effect `Schedule` to control retries while preserving the mutation's
+typed failure channel.
 
 ```tsx
+import { Schedule } from "effect";
+
 const setText = useSetText({
-  onSuccess(data, parameters) {
-    console.log(parameters.name, data.status);
-  },
+  retry: Schedule.recurs(2),
 });
 ```
 
-## onError
+Only retry a write when repeating the operation is known to be safe. A submitted transaction may
+succeed even when local receipt tracking is interrupted or times out.
 
-`(error: Failure | Error, parameters: Parameters) => void`
+## onExit
 
-Runs after failure. Typed action failures are preserved; defects are exposed as `Error`.
+`(exit: Exit<Success, Failure>, parameters: Parameters) => void`
 
-## onSettled
+Runs after `mutate` or `mutateAsync` execution with the complete Effect `Exit` and exact mutation
+parameters. It handles success, typed failure, defects, and interruption through one lossless
+callback. `mutateEffect` returns the Effect directly, so its exit is handled through Effect
+operators instead.
 
-`(data: Success | undefined, error: Failure | Error | null, parameters: Parameters) => void`
+```tsx
+import { Exit } from "effect";
 
-Runs after either outcome. Exactly one of `data` and `error` is present.
+const setText = useSetText({
+  onExit: Exit.match({
+    onFailure: (cause) => console.error(cause),
+    onSuccess: (result) => console.log(result),
+  }),
+});
+```
 
-## Per-call callbacks
+## Per-call options
 
-`mutate` accepts callbacks for one execution. Hook callbacks run first, followed by per-call
-callbacks.
+`mutate` accepts a per-execution `onExit` handler. The hook-level handler runs first.
 
 ```tsx
 setText.mutate(
   { name: "example.eth", key: "url", value: "https://example.com" },
-  { onSuccess: (data) => console.log(data.hash) },
+  {
+    onExit(exit, parameters) {
+      console.log(parameters.name, exit);
+    },
+  },
 );
 ```
 
-`mutateAsync` and `mutateEffect` report through their Promise or Effect result instead of accepting
-per-call callbacks.
+`mutateAsync` reports through its Promise. `mutateEffect` returns the typed Effect directly, so
+normal Effect operators such as `Effect.tap`, `Effect.catchTag`, and `Effect.timeout` can be used.
+
+## Provider defaults
+
+Provider defaults can supply a retry schedule for all mutations. Per-hook options take precedence.
+
+```tsx
+import { Schedule } from "effect";
+
+<EnsforgeProvider config={config} defaults={{ mutations: { retry: Schedule.recurs(1) } }}>
+  <App />
+</EnsforgeProvider>;
+```

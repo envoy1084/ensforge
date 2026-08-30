@@ -1,6 +1,6 @@
 ---
 title: Mutation Hooks
-description: Execute ENS writes and workflows with callbacks, Promises, or Effect.
+description: Execute ENS writes and workflows with Exit callbacks, Promises, or Effect.
 ---
 
 # Mutation Hooks
@@ -9,16 +9,16 @@ Mutation hooks stay idle until execution and preserve the Core action's success 
 
 ```tsx
 const setText = useSetText({
-  onSuccess: (_result, parameters) => console.log(parameters.key),
+  onExit: (exit, parameters) => console.log(parameters.key, exit),
 });
 ```
 
-## Callback execution
+## Exit callback execution
 
 Use `mutate` when state and callbacks drive the UI.
 
 ```tsx
-setText.mutate({ name, key: "url", value }, { onError: (error) => console.error(error.code) });
+setText.mutate({ name, key: "url", value }, { onExit: (exit) => console.log(exit) });
 ```
 
 ## Promise execution
@@ -46,5 +46,5 @@ const update = setText
   .pipe(Effect.tap(() => Effect.log("record updated")));
 ```
 
-After a write, invalidate affected read keys with `useInvalidateEnsforge` when the workflow result
+After a write, invalidate affected read keys with `useInvalidate` when the workflow result
 does not already contain the final state.

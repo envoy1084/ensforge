@@ -24,4 +24,4 @@ Retry, cache lifetime, and window-focus behavior follow the supplied query atom 
 
 ## Return Type
 
-`EnsQueryAtomFactory<Parameters, Success, Failure | NoSuchElementError>`
+`EnsAtomFactory<Parameters, Success, Failure | NoSuchElementError>`

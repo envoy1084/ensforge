@@ -21,7 +21,7 @@ function Component() {
 
   return (
     <button
-      disabled={mutation.isPending}
+      disabled={mutation.isWaiting}
       onClick={() =>
         mutation.mutate({
           address: "0x0000000000000000000000000000000000000001",
@@ -47,7 +47,7 @@ type Parameters = Parameters<typeof useSetPrimaryNameForAddress>[0];
 import type { EnsMutationOptions } from "@ensforge/react";
 ```
 
-The hook accepts `retry`, `onSuccess`, `onError`, and `onSettled`. See [Mutation Options](/react/api/mutation-options).
+The hook accepts an Effect `Schedule` through `retry` and a complete Effect `Exit` through `onExit`. See [Mutation Options](/react/api/mutation-options).
 
 ## Mutation Parameters
 
@@ -71,7 +71,7 @@ Value used for `verifyForward` by this operation.
 
 ## Return Type
 
-Returns [`EnsMutationResult`](/react/api/mutation-result) with `mutate`, `mutateAsync`, `mutateEffect`, status flags, data, error, interruption, and reset.
+Returns [`EnsMutationResult`](/react/api/mutation-result) with `mutate`, `mutateAsync`, `mutateEffect`, native `AsyncResult` state, data, cause, interruption, and reset.
 
 ```ts
 type Result = ReturnType<typeof useSetPrimaryNameForAddress>;

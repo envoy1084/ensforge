@@ -1,8 +1,8 @@
 export {
-  invalidateEnsforge,
-  invalidateEnsforgeEffect,
+  invalidate,
+  invalidateEffect,
   makeInvalidationKeys,
-  type EnsforgeInvalidation,
+  type Invalidation,
 } from "./invalidation.js";
-export { prefetchEnsforge, prefetchEnsforgeEffect } from "./prefetch.js";
-export { createEnsforgeRegistry, type CreateEnsforgeRegistryOptions } from "./registry.js";
+export { prefetch, prefetchEffect } from "./prefetch.js";
+export { createRegistry, type CreateRegistryOptions } from "./registry.js";

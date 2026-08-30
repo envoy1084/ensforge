@@ -2,43 +2,50 @@
 
 import { useAtomSuspense } from "@effect/atom-react";
 
-import type { EnsQueryAtomFactory } from "../atoms/query.js";
+import type { EnsAtomFactory } from "../atoms/query.js";
 import { useEnsforgeContext } from "../provider/context.js";
 import {
-  resolveEnsQueryOptions,
-  type EnsQueryOptions,
-  type UseEnsQueryParameters,
+  resolveEnsAtomOptions,
+  type EnsAtomOptions,
+  type UseEnsAtomParameters,
 } from "../query/options.js";
 
-export type UseEnsSuspenseQueryParameters<Parameters, Success, Selected = Success> = Parameters & {
-  readonly query?: Omit<EnsQueryOptions<Success, Selected>, "enabled">;
+export type UseEnsSuspenseAtomParameters<
+  Parameters,
+  Success,
+  Failure,
+  Mapped = Success,
+> = Parameters & {
+  readonly atom?: EnsAtomOptions<Failure>;
+  readonly map?: (value: Success) => Mapped;
 };
 
-export interface EnsSuspenseQueryResult<Success> {
+export interface EnsSuspenseAtomResult<Success> {
   readonly data: Success;
-  readonly isFetching: boolean;
+  readonly isWaiting: boolean;
   readonly updatedAt: number;
 }
 
 export const makeSuspenseQueryHook =
   <Parameters extends object, Success, Failure>(
-    factory: EnsQueryAtomFactory<Parameters, Success, Failure>,
+    factory: EnsAtomFactory<Parameters, Success, Failure>,
   ) =>
-  <Selected = Success>(
-    input: UseEnsSuspenseQueryParameters<Parameters, Success, Selected>,
-  ): EnsSuspenseQueryResult<Selected> => {
+  <Mapped = Success>(
+    input: UseEnsSuspenseAtomParameters<Parameters, Success, Failure, Mapped>,
+  ): EnsSuspenseAtomResult<Mapped> => {
     const { defaults, sdk } = useEnsforgeContext();
-    const { query, ...parameters } = input as UseEnsQueryParameters<Parameters, Success, Selected>;
-    const options = resolveEnsQueryOptions(defaults.queries, query);
+    const {
+      atom: atomOptions,
+      map,
+      ...parameters
+    } = input as UseEnsAtomParameters<Parameters, Success, Failure, Mapped>;
+    const options = resolveEnsAtomOptions(defaults.atoms, atomOptions);
     const atom = factory(sdk, parameters as Parameters, options);
     const result = useAtomSuspense(atom, { suspendOnWaiting: false });
 
     return {
-      data:
-        query?.select === undefined
-          ? (result.value as unknown as Selected)
-          : query.select(result.value),
-      isFetching: result.waiting,
+      data: map === undefined ? (result.value as unknown as Mapped) : map(result.value),
+      isWaiting: result.waiting,
       updatedAt: result.timestamp,
     };
   };

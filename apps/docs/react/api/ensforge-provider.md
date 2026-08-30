@@ -5,7 +5,7 @@ description: Provide an ensforge SDK and Effect Atom registry to React hooks.
 
 # EnsforgeProvider
 
-Provides the SDK, query defaults, and Effect Atom registry used by every ensforge hook.
+Provides the SDK, atom defaults, and Effect Atom registry used by every ensforge hook.
 
 ## Import
 
@@ -60,7 +60,7 @@ Existing SDK instance to share. Use this when non-React code and hooks should us
 
 `EnsforgeReactDefaults | undefined`
 
-Default cache, retry, polling, and freshness options. A hook's `query` options take precedence.
+Default atom and mutation behavior. A hook's `atom` options or mutation options take precedence.
 
 ### registry
 
@@ -73,8 +73,8 @@ Application-owned Effect Atom registry. When omitted, the provider creates and o
 
 `number | undefined`
 
-Idle lifetime passed to the internally created registry. It controls atom retention independently
-from a query's `gcTime` cache policy.
+Idle lifetime passed to the internally created registry. Individual reads can override it with
+`atom.idleTTL`.
 
 ### children
 

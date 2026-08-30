@@ -25,7 +25,7 @@ function Component() {
 
   return (
     <button
-      disabled={mutation.isPending}
+      disabled={mutation.isWaiting}
       onClick={() =>
         mutation.mutate({
           name: "example.eth",
@@ -51,27 +51,21 @@ function Component() {
 import type { EnsMutationOptions } from "@ensforge/react";
 ```
 
-The hook accepts an optional callbacks object.
+The hook accepts an optional `EnsMutationOptions` object.
 
 ### retry
 
-`false | number | undefined`
+`false | Schedule<unknown, Failure> | undefined`
 
-Number of times to retry a failed mutation. It defaults to `false`; only retry operations known to be safe and idempotent.
+An Effect schedule used to retry typed failures. It defaults to `false`. Only retry writes that are known to be safe and idempotent.
 
-### onSuccess
+### onExit
 
-Called with the successful result and mutation parameters.
+`(exit: Exit<Success, Failure>, parameters: Parameters) => void`
 
-### onError
+Receives the complete Effect `Exit` and the exact mutation parameters after execution. Use `Exit.match` or `Exit.isSuccess` to handle both outcomes without losing typed failures.
 
-Called with the typed action error and mutation parameters.
-
-### onSettled
-
-Called after success or failure with the result, error, and mutation parameters.
-
-See [Mutation Options](/react/api/mutation-options) for callback signatures and per-call callbacks.
+See [Mutation Options](/react/api/mutation-options) for schedules, provider defaults, and per-call `onExit` handlers.
 
 ## Mutation Parameters
 
@@ -89,15 +83,19 @@ Returns an [`EnsMutationResult`](/react/api/mutation-result).
 
 | Property       | Description                                                    |
 | -------------- | -------------------------------------------------------------- |
-| `mutate`       | Starts the mutation and reports through callbacks.             |
+| `mutate`       | Starts the mutation and optionally reports its `Exit`.         |
 | `mutateAsync`  | Starts the mutation and returns a Promise.                     |
 | `mutateEffect` | Starts the mutation and returns an Effect with typed failures. |
 | `data`         | Latest successful value, or `undefined`.                       |
 | `error`        | Latest typed failure, an unexpected `Error`, or `null`.        |
-| `status`       | `"idle"`, `"pending"`, `"success"`, or `"error"`.              |
+| `cause`        | Complete Effect cause for the latest failure.                  |
+| `isInitial`    | The mutation has not executed since creation or reset.         |
+| `isWaiting`    | The mutation Effect is currently running.                      |
+| `isSuccess`    | The latest execution succeeded.                                |
+| `isFailure`    | The latest execution failed.                                   |
 | `parameters`   | Parameters used by the latest execution.                       |
 | `interrupt`    | Interrupts the active Effect.                                  |
-| `reset`        | Restores the mutation to its idle state.                       |
+| `reset`        | Restores the mutation to its initial state.                    |
 | `result`       | Underlying Effect `AsyncResult`.                               |
 
 ## Effect Atom
@@ -106,7 +104,7 @@ Returns an [`EnsMutationResult`](/react/api/mutation-result).
 import { createCompleteRegistrationMutationAtom } from "@ensforge/react/atoms";
 import { sdk } from "./client";
 
-const atom = createCompleteRegistrationMutationAtom(ens);
+const atom = createCompleteRegistrationMutationAtom(sdk);
 ```
 
 The hook creates this atom with the SDK and registry supplied by [`EnsforgeProvider`](/react/api/ensforge-provider).

@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import { Effect } from "effect";
+import { Effect, Schedule } from "effect";
 
 import { renderHook, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
@@ -8,7 +8,7 @@ import { describe, expect, it, vi } from "vitest";
 import { makeQueryAtom } from "../../../src/atoms/index.js";
 import { makeQueryHook } from "../../../src/hooks/index.js";
 import { EnsforgeProvider } from "../../../src/provider/index.js";
-import { defaultEnsQueryOptions } from "../../../src/query/options.js";
+import { defaultEnsAtomOptions } from "../../../src/query/options.js";
 import { makeSdk } from "../fixtures/sdk.js";
 
 interface TestParameters {
@@ -22,8 +22,8 @@ describe("query hooks", () => {
       effect: ({ value }: TestParameters) => Effect.succeed(value),
     }));
 
-    expect(factory(sdk, { value: 1 }, defaultEnsQueryOptions)).toBe(
-      factory(sdk, { value: 1 }, defaultEnsQueryOptions),
+    expect(factory(sdk, { value: 1 }, defaultEnsAtomOptions)).toBe(
+      factory(sdk, { value: 1 }, defaultEnsAtomOptions),
     );
   });
 
@@ -40,14 +40,14 @@ describe("query hooks", () => {
       () =>
         useTestQuery({
           value: 21,
-          query: { select: (value) => value * 2 },
+          map: (value) => value * 2,
         }),
       { wrapper },
     );
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(result.current.data).toBe(42);
-    expect(result.current.status).toBe("success");
+    expect(result.current.isWaiting).toBe(false);
   });
 
   it("does not execute disabled queries", async () => {
@@ -59,14 +59,13 @@ describe("query hooks", () => {
     const wrapper = ({ children }: { readonly children: ReactNode }) => (
       <EnsforgeProvider sdk={sdk}>{children}</EnsforgeProvider>
     );
-    const { result } = renderHook(() => useTestQuery({ value: 1, query: { enabled: false } }), {
+    const { result } = renderHook(() => useTestQuery({ value: 1, enabled: false }), {
       wrapper,
     });
 
-    await waitFor(() => expect(result.current.fetchStatus).toBe("idle"));
+    await waitFor(() => expect(result.current.isWaiting).toBe(false));
     expect(execute).not.toHaveBeenCalled();
-    expect(result.current.isPending).toBe(true);
-    expect(result.current.isLoading).toBe(false);
+    expect(result.current.isInitial).toBe(true);
   });
 
   it("retries typed query failures when configured", async () => {
@@ -84,9 +83,10 @@ describe("query hooks", () => {
     const wrapper = ({ children }: { readonly children: ReactNode }) => (
       <EnsforgeProvider sdk={sdk}>{children}</EnsforgeProvider>
     );
-    const { result } = renderHook(() => useTestQuery({ value: 3, query: { retry: 1 } }), {
-      wrapper,
-    });
+    const { result } = renderHook(
+      () => useTestQuery({ value: 3, atom: { retry: Schedule.recurs(1) } }),
+      { wrapper },
+    );
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(result.current.data).toBe(3);

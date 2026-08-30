@@ -1,24 +1,17 @@
 import { Cause, Option, type Effect } from "effect";
 import { AsyncResult } from "effect/unstable/reactivity";
 
-export type EnsQueryStatus = "pending" | "success" | "error";
-export type EnsFetchStatus = "idle" | "fetching";
-
-export interface EnsQueryResult<Success, Failure> {
+export interface EnsAtomResult<Success, Failure> {
   readonly cause: Cause.Cause<Failure> | null;
   readonly data: Success | undefined;
   readonly error: Failure | Error | null;
-  readonly fetchStatus: EnsFetchStatus;
-  readonly isError: boolean;
-  readonly isFetching: boolean;
-  readonly isLoading: boolean;
-  readonly isPending: boolean;
-  readonly isRefetching: boolean;
+  readonly isFailure: boolean;
+  readonly isInitial: boolean;
   readonly isSuccess: boolean;
-  readonly refetch: () => Promise<Success>;
-  readonly refetchEffect: () => Effect.Effect<Success, Failure>;
+  readonly isWaiting: boolean;
+  readonly refresh: () => Promise<Success>;
+  readonly refreshEffect: () => Effect.Effect<Success, Failure>;
   readonly result: AsyncResult.AsyncResult<Success, Failure>;
-  readonly status: EnsQueryStatus;
   readonly updatedAt: number | undefined;
 }
 

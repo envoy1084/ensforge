@@ -13,8 +13,8 @@ import { Suspense } from "react";
 import { useOwnerSuspense } from "@ensforge/react";
 
 function Profile({ name }: { name: string }) {
-  const { data, isFetching } = useOwnerSuspense({ name });
-  return <span aria-busy={isFetching}>{data?.owner ?? "Unowned"}</span>;
+  const { data, isWaiting } = useOwnerSuspense({ name });
+  return <span aria-busy={isWaiting}>{data?.owner ?? "Unowned"}</span>;
 }
 
 export function Page() {
@@ -30,15 +30,15 @@ export function Page() {
 
 ## Parameters
 
-Suspense hooks accept the same action parameters and query options as standard hooks except
-`query.enabled`. They always execute when rendered.
+Suspense hooks accept the same action parameters and nested `atom` options as standard hooks. They
+also accept `map`, but not `enabled`: a Suspense hook always executes when rendered.
 
 ## Return type
 
-`EnsSuspenseQueryResult<Success>` contains:
+`EnsSuspenseAtomResult<Success>` contains:
 
 - `data`: guaranteed successful selected data.
-- `isFetching`: whether a background refresh is active.
+- `isWaiting`: whether a background refresh is active.
 - `updatedAt`: timestamp of the successful value.
 
 Use standard hooks when loading and error UI should remain local to a component.

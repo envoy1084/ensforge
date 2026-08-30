@@ -1,6 +1,6 @@
 ---
 title: Mutation Result
-description: Understand mutation execution, status, errors, and Effect controls.
+description: Understand mutation execution and Effect AsyncResult state in ensforge React.
 ---
 
 # Mutation Result
@@ -8,27 +8,27 @@ description: Understand mutation execution, status, errors, and Effect controls.
 Mutation hooks return `EnsMutationResult<Parameters, Success, Failure>`.
 
 ```ts
-import type { EnsMutationResult, EnsMutationStatus } from "@ensforge/react";
+import type { EnsMutationResult } from "@ensforge/react";
 ```
 
 ## mutate
 
-`(parameters, callbacks?) => void`
+`(parameters, options?) => void`
 
-Starts the mutation and reports its result through hook-level and per-call callbacks.
+Starts the mutation without returning a Promise. Use hook-level or per-call `onExit` when the caller
+needs the complete execution outcome.
 
 ## mutateAsync
 
 `(parameters) => Promise<Success>`
 
-Starts the mutation and returns a Promise. It rejects with the same typed action failure exposed by
-the hook.
+Starts the mutation and returns a Promise. It rejects when the Effect fails.
 
 ## mutateEffect
 
 `(parameters) => Effect<Success, Failure>`
 
-Starts the mutation as an Effect for composing retries, timeouts, logging, or other workflows.
+Returns the typed Effect for composition with schedules, timeouts, logging, tracing, and recovery.
 
 ```tsx
 import { Effect } from "effect";
@@ -38,11 +38,20 @@ const program = setText
   .pipe(Effect.tap(() => Effect.log("ENS record updated")));
 ```
 
-## status
+## result
 
-`"idle" | "pending" | "success" | "error"`
+`AsyncResult<Success, Failure>`
 
-The current state. Matching `isIdle`, `isPending`, `isSuccess`, and `isError` flags are provided.
+The native Effect Atom result for the latest execution.
+
+## State
+
+| Property    | Meaning                                                  |
+| ----------- | -------------------------------------------------------- |
+| `isInitial` | No mutation has executed since creation or reset.        |
+| `isWaiting` | The mutation Effect is currently running.                |
+| `isSuccess` | The latest execution succeeded and is no longer waiting. |
+| `isFailure` | The latest execution failed.                             |
 
 ## data
 
@@ -50,17 +59,17 @@ The current state. Matching `isIdle`, `isPending`, `isSuccess`, and `isError` fl
 
 The latest successful result.
 
-## error
-
-`Failure | Error | null`
-
-The latest typed action failure or unexpected `Error`.
-
 ## cause
 
 `Cause<Failure> | null`
 
 The complete Effect cause for the latest failure.
+
+## error
+
+`Failure | Error | null`
+
+The latest typed action failure or a squashed unexpected error.
 
 ## parameters
 
@@ -72,17 +81,11 @@ The parameters used by the latest execution.
 
 `() => void`
 
-Interrupts the active Effect. An already-submitted transaction cannot be stopped; interruption
-still cancels local waiting and follow-up work.
+Interrupts the active Effect. An already-submitted transaction cannot be stopped, but local waiting
+and follow-up work are interrupted.
 
 ## reset
 
 `() => void`
 
-Restores the mutation atom to its idle state and clears the latest parameters, data, and error.
-
-## result
-
-`AsyncResult<Success, Failure>`
-
-The underlying Effect `AsyncResult` for advanced Atom composition.
+Restores the mutation atom to its initial state and clears its latest parameters, value, and cause.

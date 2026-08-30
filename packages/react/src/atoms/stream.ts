@@ -1,18 +1,19 @@
-import { Data, Schedule, Stream, type Cause } from "effect";
+import { Data, Stream, type Cause } from "effect";
 import { Atom } from "effect/unstable/reactivity";
 
 import type { Ensforge } from "@ensforge/sdk";
 
 import { atomRuntime } from "../internal/runtime.js";
 import { makeReactivityKeys } from "../query/keys.js";
-import type { EnsQueryAtom, EnsQueryAtomFactory, QueryAtomOptions } from "./query.js";
+import { resolveEnsAtomOptions, type ResolvedEnsAtomOptions } from "../query/options.js";
+import { configureAtom, type EnsAtom, type EnsAtomFactory } from "./query.js";
 
 interface BoundStreamAction<Parameters, Success, Failure> {
   readonly stream: (parameters: Parameters) => Stream.Stream<Success, Failure>;
 }
 
-class StreamAtomInput<Parameters> extends Data.Class<{
-  readonly options: QueryAtomOptions;
+class StreamAtomInput<Parameters, Failure> extends Data.Class<{
+  readonly options: ResolvedEnsAtomOptions<Failure>;
   readonly parameters: Parameters;
   readonly sdk: Ensforge;
 }> {}
@@ -20,21 +21,28 @@ class StreamAtomInput<Parameters> extends Data.Class<{
 export const makeStreamAtom = <Parameters, Success, Failure>(
   group: string,
   getAction: (sdk: Ensforge) => BoundStreamAction<Parameters, Success, Failure>,
-): EnsQueryAtomFactory<Parameters, Success, Failure | Cause.NoSuchElementError> => {
-  const family = Atom.family((input: StreamAtomInput<Parameters>) => {
-    const actionStream = Stream.suspend(() => getAction(input.sdk).stream(input.parameters));
-    const stream =
-      input.options.retry === false
-        ? actionStream
-        : actionStream.pipe(Stream.retry(Schedule.recurs(input.options.retry)));
-    return atomRuntime
-      .atom(stream)
-      .pipe(
-        Atom.withReactivity(makeReactivityKeys(input.sdk, group, input.parameters)),
-        Atom.setIdleTTL(input.options.gcTime),
+): EnsAtomFactory<Parameters, Success, Failure | Cause.NoSuchElementError> => {
+  const family = Atom.family(
+    (input: StreamAtomInput<Parameters, Failure | Cause.NoSuchElementError>) => {
+      const actionStream = Stream.suspend(() => getAction(input.sdk).stream(input.parameters));
+      const stream =
+        input.options.retry === false
+          ? actionStream
+          : actionStream.pipe(Stream.retry(input.options.retry));
+      return configureAtom(
+        atomRuntime.atom(stream),
+        input.options,
+        makeReactivityKeys(input.sdk, group, input.parameters),
       );
-  });
+    },
+  );
 
-  return (sdk, parameters, options): EnsQueryAtom<Success, Failure | Cause.NoSuchElementError> =>
-    family(new StreamAtomInput({ options, parameters, sdk }));
+  return (sdk, parameters, options): EnsAtom<Success, Failure | Cause.NoSuchElementError> =>
+    family(
+      new StreamAtomInput({
+        options: resolveEnsAtomOptions(undefined, options),
+        parameters,
+        sdk,
+      }),
+    );
 };

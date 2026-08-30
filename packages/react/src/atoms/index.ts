@@ -19,11 +19,10 @@ export {
   type ReadBatchAtomParameters,
 } from "./generic.js";
 export { makeMutationAtom, type EnsMutationAtom, type EnsMutationAtomFactory } from "./mutation.js";
+export { makeQueryAtom, type EnsAtom, type EnsAtomFactory } from "./query.js";
 export {
-  defaultQueryAtomOptions,
-  makeQueryAtom,
-  type EnsQueryAtom,
-  type EnsQueryAtomFactory,
-  type QueryAtomOptions,
-} from "./query.js";
+  defaultEnsAtomOptions,
+  type EnsAtomOptions,
+  type ResolvedEnsAtomOptions,
+} from "../query/options.js";
 export { makeStreamAtom } from "./stream.js";

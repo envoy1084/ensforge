@@ -5,20 +5,20 @@ import { useContext } from "react";
 import { RegistryContext } from "@effect/atom-react";
 import { Effect } from "effect";
 
-import { invalidateEnsforgeEffect, type EnsforgeInvalidation } from "../cache/invalidation.js";
+import { invalidateEffect, type Invalidation } from "../cache/invalidation.js";
 import { useEnsforgeContext } from "../provider/context.js";
 
-export interface InvalidateEnsforge {
-  (invalidation?: EnsforgeInvalidation, options?: Effect.RunOptions): Promise<void>;
-  readonly effect: (invalidation?: EnsforgeInvalidation) => Effect.Effect<void>;
+export interface Invalidate {
+  (invalidation?: Invalidation, options?: Effect.RunOptions): Promise<void>;
+  readonly effect: (invalidation?: Invalidation) => Effect.Effect<void>;
 }
 
-export const useInvalidateEnsforge = (): InvalidateEnsforge => {
+export const useInvalidate = (): Invalidate => {
   const registry = useContext(RegistryContext);
   const { sdk } = useEnsforgeContext();
-  const effect = (invalidation: EnsforgeInvalidation = { all: true }) =>
-    invalidateEnsforgeEffect(registry, sdk, invalidation);
-  const invalidate = (invalidation?: EnsforgeInvalidation, options?: Effect.RunOptions) =>
+  const effect = (invalidation: Invalidation = { all: true }) =>
+    invalidateEffect(registry, sdk, invalidation);
+  const invalidate = (invalidation?: Invalidation, options?: Effect.RunOptions) =>
     Effect.runPromise(effect(invalidation), options);
 
   return Object.assign(invalidate, { effect });

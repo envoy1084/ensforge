@@ -22,4 +22,4 @@ export const useProfileSuspense = makeSuspenseQueryHook(getProfileAtom);
 
 ## Return Type
 
-`EnsSuspenseQueryResult<Selected>`
+`EnsSuspenseAtomResult<Selected>`

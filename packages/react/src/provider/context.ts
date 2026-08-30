@@ -4,10 +4,12 @@ import { createContext, useContext } from "react";
 
 import type { Ensforge } from "@ensforge/sdk";
 
-import type { EnsQueryDefaults } from "../query/options.js";
+import type { EnsMutationDefaults } from "../mutation/options.js";
+import type { EnsAtomDefaults } from "../query/options.js";
 
 export interface EnsforgeReactDefaults {
-  readonly queries?: EnsQueryDefaults;
+  readonly atoms?: EnsAtomDefaults;
+  readonly mutations?: EnsMutationDefaults;
 }
 
 export interface EnsforgeReactContextValue {

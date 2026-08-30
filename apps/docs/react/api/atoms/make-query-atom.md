@@ -26,6 +26,6 @@ method.
 
 ## Return Type
 
-`EnsQueryAtomFactory<Parameters, Success, Failure>`
+`EnsAtomFactory<Parameters, Success, Failure>`
 
-The factory receives an SDK, action parameters, and `QueryAtomOptions`.
+The factory receives an SDK, action parameters, and optional `EnsAtomOptions<Failure>`.

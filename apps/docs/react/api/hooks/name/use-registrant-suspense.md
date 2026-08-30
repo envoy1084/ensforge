@@ -36,7 +36,7 @@ function Component() {
 ## Parameters
 
 ```ts
-import type { GetNameStateParameters, UseEnsSuspenseQueryParameters } from "@ensforge/react";
+import type { GetNameStateParameters, UseEnsSuspenseAtomParameters } from "@ensforge/react";
 ```
 
 ### name
@@ -57,22 +57,26 @@ Block number to read from. Cannot be combined with `blockTag`.
 
 Named block state to read from. Cannot be combined with `blockNumber`.
 
-### query
+### map
 
-`EnsQueryOptions | undefined`
+`(value: Success) => Mapped | undefined`
 
-Controls caching, retries, polling, and data selection. Suspense queries always execute and do not accept `enabled`.
+Maps successful data for this hook without changing the value stored by the underlying atom.
 
-| Property               | Type                  | Default  | Description                                                      |
-| ---------------------- | --------------------- | -------- | ---------------------------------------------------------------- |
-| `gcTime`               | `number`              | `300000` | Milliseconds an unused result remains in the cache.              |
-| `refetchInterval`      | `false \| number`     | `false`  | Polling interval in milliseconds, or `false` to disable polling. |
-| `refetchOnWindowFocus` | `boolean`             | `false`  | Refetch stale data when the document regains focus.              |
-| `retry`                | `false \| number`     | `false`  | Number of retries after a typed failure.                         |
-| `select`               | `(value) => selected` | identity | Transforms cached action data into the hook's `data` type.       |
-| `staleTime`            | `number`              | `30000`  | Milliseconds successful data remains fresh.                      |
+### atom
 
-See [Query Options](/react/api/query-options) for focused examples.
+`EnsAtomOptions<Failure> | undefined`
+
+Controls retries, refreshes, disposal, and stale-while-revalidate behavior. Suspense hooks always execute and do not accept `enabled`.
+
+| Property          | Type                         | Default       | Description                                     |
+| ----------------- | ---------------------------- | ------------- | ----------------------------------------------- |
+| `idleTTL`         | `Duration.Input`             | `"5 minutes"` | Retains an unused atom before it is disposed.   |
+| `refreshInterval` | `false \| Duration.Input`    | `false`       | Refreshes the atom while it remains subscribed. |
+| `retry`           | `false \| Schedule`          | `false`       | Retries typed failures with an Effect schedule. |
+| `swr`             | `false \| EnsAtomSwrOptions` | enabled       | Configures stale-while-revalidate behavior.     |
+
+See [Atom Options](/react/api/atom-options) for focused examples.
 
 ## Return Type
 
@@ -80,7 +84,7 @@ See [Query Options](/react/api/query-options) for focused examples.
 type Result = ReturnType<typeof useRegistrantSuspense>;
 ```
 
-Returns `EnsSuspenseQueryResult` with successful `data`, background `isFetching` state, and `updatedAt`. Pending work suspends rendering and failures are thrown to the nearest error boundary.
+Returns `EnsSuspenseAtomResult` with successful `data`, background `isWaiting` state, and `updatedAt`. Pending work suspends rendering and failures are thrown to the nearest error boundary.
 
 ## Effect Atom
 
@@ -88,7 +92,7 @@ Returns `EnsSuspenseQueryResult` with successful `data`, background `isFetching`
 import { getRegistrantAtom } from "@ensforge/react/atoms";
 import { sdk } from "./client";
 
-const atom = getRegistrantAtom(ens, parameters, options);
+const atom = getRegistrantAtom(sdk, parameters, options);
 ```
 
 The hook creates this atom with the SDK and registry supplied by [`EnsforgeProvider`](/react/api/ensforge-provider).

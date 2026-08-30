@@ -4,10 +4,10 @@ Reactive React hooks for building ENS applications.
 
 ## Features
 
-- Queries and mutations for the full ensforge action surface
-- Request caching, deduplication, retries, and stale-time controls
-- Refetching and Suspense variants for read hooks
-- Typed loading, success, and error states
+- Effect Atom reads and mutations for the full ensforge action surface
+- Shared execution, typed retry schedules, SWR, and idle lifecycle controls
+- Refresh and Suspense variants for read hooks
+- Native `AsyncResult` state with convenient React projections
 - Provider setup from an ensforge config or existing SDK instance
 - Shared cache primitives for prefetching and advanced composition
 
@@ -35,7 +35,7 @@ import { EnsforgeProvider } from "@ensforge/react";
 </EnsforgeProvider>;
 ```
 
-Use query hooks anywhere below the provider:
+Use read hooks anywhere below the provider:
 
 ```tsx
 import { useAvatar, useOwner } from "@ensforge/react";
@@ -44,11 +44,11 @@ function Profile({ name }: { name: string }) {
   const owner = useOwner({ name });
   const avatar = useAvatar({
     name,
-    query: { staleTime: 60_000 },
+    atom: { swr: { staleTime: "1 minute" } },
   });
 
-  if (owner.isLoading || avatar.isLoading) return <span>Loading…</span>;
-  if (owner.isError) return <span>{owner.error.message}</span>;
+  if (owner.isInitial || avatar.isInitial) return <span>Loading…</span>;
+  if (owner.isFailure) return <span>{owner.error.message}</span>;
 
   return (
     <section>

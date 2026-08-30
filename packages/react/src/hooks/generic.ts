@@ -18,8 +18,8 @@ import {
   readBatchSettledAtom,
   type ReadBatchAtomParameters,
 } from "../atoms/generic.js";
-import type { UseEnsQueryParameters } from "../query/options.js";
-import type { EnsQueryResult } from "../query/result.js";
+import type { UseEnsAtomParameters } from "../query/options.js";
+import type { EnsAtomResult } from "../query/result.js";
 import { useQueryAtom } from "./use-query.js";
 
 type ReadRequests = Readonly<Record<string, EnsReadRequest<unknown, unknown>>>;
@@ -28,31 +28,34 @@ export const useRecords = <
   const Selection extends GetRecordsSelection,
   Selected = GetRecordsResult<Selection>,
 >(
-  input: UseEnsQueryParameters<
+  input: UseEnsAtomParameters<
     GetRecordsParameters<Selection>,
     GetRecordsResult<Selection>,
+    GetRecordsError,
     Selected
   >,
-): EnsQueryResult<Selected, GetRecordsError> => useQueryAtom(getRecordsAtom, input);
+): EnsAtomResult<Selected, GetRecordsError> => useQueryAtom(getRecordsAtom, input);
 
 export const useReadBatch = <
   const Requests extends ReadRequests,
   Selected = ReadBatchResult<Requests>,
 >(
-  input: UseEnsQueryParameters<
+  input: UseEnsAtomParameters<
     ReadBatchAtomParameters<Requests>,
     ReadBatchResult<Requests>,
+    ReadBatchError<Requests>,
     Selected
   >,
-): EnsQueryResult<Selected, ReadBatchError<Requests>> => useQueryAtom(readBatchAtom, input);
+): EnsAtomResult<Selected, ReadBatchError<Requests>> => useQueryAtom(readBatchAtom, input);
 
 export const useReadBatchSettled = <
   const Requests extends ReadRequests,
   Selected = ReadBatchSettledResult<Requests>,
 >(
-  input: UseEnsQueryParameters<
+  input: UseEnsAtomParameters<
     ReadBatchAtomParameters<Requests>,
     ReadBatchSettledResult<Requests>,
+    RpcError,
     Selected
   >,
-): EnsQueryResult<Selected, RpcError> => useQueryAtom(readBatchSettledAtom, input);
+): EnsAtomResult<Selected, RpcError> => useQueryAtom(readBatchSettledAtom, input);

@@ -26,5 +26,5 @@ const keys = makeInvalidationKeys(sdk, {
 
 `EnsforgeReactivityKeys`
 
-Most applications should call `invalidateEnsforge` or `useInvalidateEnsforge`. Use this function when
+Most applications should call `invalidate` or `useInvalidate`. Use this function when
 integrating ensforge keys with another Effect reactivity operation.

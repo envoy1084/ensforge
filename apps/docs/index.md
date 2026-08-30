@@ -11,7 +11,7 @@ hero:
   actions:
     - theme: brand
       text: Get started
-      link: /core/getting-started
+      link: /react/getting-started
     - theme: alt
       text: Explore the SDK
       link: /sdk/
@@ -23,6 +23,16 @@ hero:
     alt: ensforge
 
 features:
+  - icon: ⚛️
+    title: Reactive React hooks
+    details: Provider-driven read and mutation hooks powered by Effect Atom, with caching, Suspense, and invalidation.
+    link: /react/
+    linkText: Build with React
+  - icon: 🧭
+    title: A client that stays organized
+    details: Bind configuration once and navigate focused groups for names, records, registration, migration, DNS, and more.
+    link: /sdk/
+    linkText: Explore the SDK
   - icon: 🔨
     title: One ENS model
     details: Read and write ENS names through a consistent API across supported protocol generations and migration states.
@@ -38,16 +48,6 @@ features:
     details: Compose compatible requests into Multicall-backed batches while preserving each action's result type.
     link: /core/
     linkText: Explore Core
-  - icon: 🧭
-    title: A client that stays organized
-    details: Bind configuration once and navigate focused groups for names, records, registration, migration, DNS, and more.
-    link: /sdk/
-    linkText: Explore the SDK
-  - icon: ⚛️
-    title: Reactive React hooks
-    details: Provider-driven query and mutation hooks powered by Effect Atom, with caching, Suspense, and invalidation.
-    link: /react/
-    linkText: Build with React
   - icon: 📜
     title: Contracts included
     details: Tree-shakable ABI fragments, complete interfaces, and versioned deployment metadata for direct viem usage.

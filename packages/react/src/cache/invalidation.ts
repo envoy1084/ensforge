@@ -6,7 +6,7 @@ import type { Ensforge } from "@ensforge/sdk";
 import { atomRuntime } from "../internal/runtime.js";
 import { queryKeys, type EnsforgeReactivityKeys } from "../query/keys.js";
 
-export interface EnsforgeInvalidation {
+export interface Invalidation {
   readonly address?: string;
   readonly all?: boolean;
   readonly group?: string;
@@ -20,7 +20,7 @@ const invalidateAtom = atomRuntime.fn((keys: EnsforgeReactivityKeys) =>
 
 export const makeInvalidationKeys = (
   sdk: Ensforge,
-  invalidation: EnsforgeInvalidation,
+  invalidation: Invalidation,
 ): EnsforgeReactivityKeys => {
   const keys: Record<string, ReadonlyArray<unknown>> = {};
   const network = sdk.config.network;
@@ -42,10 +42,10 @@ export const makeInvalidationKeys = (
   return Object.keys(keys).length === 0 ? { [queryKeys.all]: [network] } : keys;
 };
 
-export const invalidateEnsforgeEffect = (
+export const invalidateEffect = (
   registry: AtomRegistry.AtomRegistry,
   sdk: Ensforge,
-  invalidation: EnsforgeInvalidation = { all: true },
+  invalidation: Invalidation = { all: true },
 ): Effect.Effect<void> =>
   Effect.sync(() => registry.set(invalidateAtom, makeInvalidationKeys(sdk, invalidation))).pipe(
     Effect.andThen(
@@ -55,10 +55,9 @@ export const invalidateEnsforgeEffect = (
     ),
   );
 
-export const invalidateEnsforge = (
+export const invalidate = (
   registry: AtomRegistry.AtomRegistry,
   sdk: Ensforge,
-  invalidation: EnsforgeInvalidation = { all: true },
+  invalidation: Invalidation = { all: true },
   options?: Effect.RunOptions,
-): Promise<void> =>
-  Effect.runPromise(invalidateEnsforgeEffect(registry, sdk, invalidation), options);
+): Promise<void> => Effect.runPromise(invalidateEffect(registry, sdk, invalidation), options);

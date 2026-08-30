@@ -7,7 +7,7 @@ description: Common questions about ensforge React.
 
 ## Does ensforge React use TanStack Query?
 
-No. It uses Effect Atom and exposes `AsyncResult` while providing familiar query and mutation state.
+No. It uses Effect Atom directly and exposes `AsyncResult` with small React-friendly projections.
 
 ## Do I pass an SDK to every hook?
 
@@ -19,7 +19,7 @@ Yes. The atom factories used by hooks are public.
 
 ## How do I refresh data after a write?
 
-Use `useInvalidateEnsforge` with a name, group, action, or all-cache selector.
+Use `useInvalidate` with a name, group, action, or all-cache selector.
 
 ## Are Suspense hooks separate?
 

@@ -13,11 +13,11 @@ export * from "./reverse.js";
 export * from "./subnames.js";
 export * from "./wrapping.js";
 export { useReadBatch, useReadBatchSettled, useRecords } from "./generic.js";
-export { useInvalidateEnsforge, type InvalidateEnsforge } from "./use-cache.js";
+export { useInvalidate, type Invalidate } from "./use-cache.js";
 export { makeMutationHook } from "./use-mutation.js";
-export { makeQueryHook, prefetchQueryAtom } from "./use-query.js";
+export { makeQueryHook, prefetchAtom } from "./use-query.js";
 export {
   makeSuspenseQueryHook,
-  type EnsSuspenseQueryResult,
-  type UseEnsSuspenseQueryParameters,
+  type EnsSuspenseAtomResult,
+  type UseEnsSuspenseAtomParameters,
 } from "./use-suspense-query.js";

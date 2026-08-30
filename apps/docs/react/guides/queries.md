@@ -1,50 +1,53 @@
 ---
-title: Query Hooks
-description: Fetch, select, and refresh cached ENS reads with React query hooks.
+title: Read Hooks
+description: Fetch, map, and refresh ENS reads with Effect Atom React hooks.
 ---
 
-# Query Hooks
+# Read Hooks
 
-Query hooks combine action parameters with an optional `query` object and return a typed
-`EnsQueryResult`.
+Read hooks combine action parameters with optional Effect Atom behavior and return a typed
+`EnsAtomResult`.
 
 ```tsx
-const owner = useOwner({ name: "example.eth", query: { staleTime: 60_000 } });
+const owner = useOwner({
+  name: "example.eth",
+  atom: { swr: { staleTime: "1 minute" } },
+});
 ```
 
 ## Dependent queries
 
-Use `enabled` when a query depends on another result.
+Use `enabled` when a read depends on another result.
 
 ```tsx
 const resolver = useResolver({ name });
 const capabilities = useResolverCapabilities({
   resolver: resolver.data?.address!,
-  query: { enabled: resolver.data?.address !== null && resolver.data !== undefined },
+  enabled: resolver.data?.address !== null && resolver.data !== undefined,
 });
 ```
 
-## Select data
+## Map data
 
-`select` changes the hook's data type without duplicating the cached RPC result.
+`map` changes the hook's data type without duplicating the underlying atom or RPC result.
 
 ```tsx
 const owner = useOwner({
   name,
-  query: { select: (result) => result?.owner ?? null },
+  map: (result) => result.owner,
 });
 ```
 
 ## Background state
 
-`isLoading` is only true during the first fetch. Use `isFetching` for any active fetch and
-`isRefetching` for background work when existing data can remain visible.
+`isInitial` identifies an atom without a settled result. `isWaiting` is true for initial and
+background work while previous successful data can remain visible.
 
 ## Manual refresh
 
 ```tsx
-const latest = await owner.refetch();
-const effect = owner.refetchEffect();
+const latest = await owner.refresh();
+const effect = owner.refreshEffect();
 ```
 
-The Promise and Effect controls refresh the same cache entry. See [Query Result](/react/api/query-result).
+The Promise and Effect controls refresh the same atom. See [Atom Result](/react/api/atom-result).

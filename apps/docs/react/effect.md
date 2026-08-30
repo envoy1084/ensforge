@@ -8,7 +8,7 @@ description: Compose ensforge React queries and mutations with Effect and Effect
 ensforge React exposes Effect at every asynchronous boundary instead of forcing Promise-only UI
 control flow.
 
-## Refetch a query
+## Refresh a query
 
 ```tsx
 import { Effect } from "effect";
@@ -16,7 +16,7 @@ import { useOwner } from "@ensforge/react";
 
 const owner = useOwner({ name: "example.eth" });
 
-const refresh = owner.refetchEffect().pipe(
+const refresh = owner.refreshEffect().pipe(
   Effect.retry({ times: 2 }),
   Effect.tap((result) => Effect.log(`owner: ${result?.owner}`)),
 );
@@ -45,7 +45,13 @@ Import atom factories from `@ensforge/react/atoms` for derived state or registry
 import { getOwnerAtom } from "@ensforge/react/atoms";
 import { sdk } from "./client";
 
-export const ownerAtom = getOwnerAtom(ens, { name: "example.eth" }, { staleTime: 60_000 });
+export const ownerAtom = getOwnerAtom(
+  sdk,
+  { name: "example.eth" },
+  {
+    swr: { staleTime: "1 minute" },
+  },
+);
 ```
 
 Hooks use the same factories with the SDK and registry supplied by `EnsforgeProvider`, so direct

@@ -21,7 +21,7 @@ function Component() {
 
   return (
     <button
-      disabled={mutation.isPending}
+      disabled={mutation.isWaiting}
       onClick={() =>
         mutation.mutate({
           name: "example.eth",
@@ -48,7 +48,7 @@ type Parameters = Parameters<typeof useRevokeResolverRootRoles>[0];
 import type { EnsMutationOptions } from "@ensforge/react";
 ```
 
-The hook accepts `retry`, `onSuccess`, `onError`, and `onSettled`. See [Mutation Options](/react/api/mutation-options).
+The hook accepts an Effect `Schedule` through `retry` and a complete Effect `Exit` through `onExit`. See [Mutation Options](/react/api/mutation-options).
 
 ## Mutation Parameters
 
@@ -72,7 +72,7 @@ Role bitmask to inspect, grant, or revoke.
 
 ## Return Type
 
-Returns [`EnsMutationResult`](/react/api/mutation-result) with `mutate`, `mutateAsync`, `mutateEffect`, status flags, data, error, interruption, and reset.
+Returns [`EnsMutationResult`](/react/api/mutation-result) with `mutate`, `mutateAsync`, `mutateEffect`, native `AsyncResult` state, data, cause, interruption, and reset.
 
 ```ts
 type Result = ReturnType<typeof useRevokeResolverRootRoles>;
