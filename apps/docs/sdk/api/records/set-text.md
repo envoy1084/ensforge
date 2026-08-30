@@ -34,7 +34,7 @@ const result = await sdk.records.setText({
 ## Parameters
 
 ```ts
-import type { SetTextParameters } from "@ensforge/sdk";
+import type { SetTextParameters } from "@ensforge/sdk/records";
 ```
 
 ### name
@@ -96,7 +96,7 @@ const call = sdk.records.setText.call(parameters);
 ## Error
 
 ```ts
-import type { SetTextError } from "@ensforge/sdk";
+import type { SetTextError } from "@ensforge/sdk/records";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

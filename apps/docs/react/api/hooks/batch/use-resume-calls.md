@@ -47,7 +47,7 @@ function Component() {
 ## Mutation Parameters
 
 ```ts
-import type { ResumeCallsParameters } from "@ensforge/react";
+import type { ResumeCallsParameters } from "@ensforge/sdk/batch";
 ```
 
 ## Return Type

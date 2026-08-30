@@ -36,7 +36,8 @@ function Component() {
 ## Parameters
 
 ```ts
-import type { GetAddressParameters, UseEnsSuspenseAtomParameters } from "@ensforge/react";
+import type { UseEnsSuspenseAtomParameters } from "@ensforge/react";
+import type { GetAddressParameters } from "@ensforge/sdk/records";
 ```
 
 ### name

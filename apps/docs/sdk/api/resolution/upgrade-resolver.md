@@ -32,7 +32,7 @@ const result = await sdk.resolution.upgradeResolver({
 ## Parameters
 
 ```ts
-import type { UpgradeResolverParameters } from "@ensforge/sdk";
+import type { UpgradeResolverParameters } from "@ensforge/sdk/resolution";
 ```
 
 ### name
@@ -80,7 +80,7 @@ Controls whether the action returns after submission or waits for one or more co
 ## Return Type
 
 ```ts
-import type { UpgradeResolverResult } from "@ensforge/sdk";
+import type { UpgradeResolverResult } from "@ensforge/sdk/resolution";
 ```
 
 | Property                 | Type                                 | Description                                                 |
@@ -118,7 +118,7 @@ const call = sdk.resolution.upgradeResolver.call(parameters);
 ## Error
 
 ```ts
-import type { UpgradeResolverError } from "@ensforge/sdk";
+import type { UpgradeResolverError } from "@ensforge/sdk/resolution";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

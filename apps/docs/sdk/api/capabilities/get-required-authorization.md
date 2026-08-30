@@ -34,7 +34,7 @@ const result = await sdk.capabilities.getRequiredAuthorization({
 ## Parameters
 
 ```ts
-import type { GetRequiredAuthorizationParameters } from "@ensforge/sdk";
+import type { GetRequiredAuthorizationParameters } from "@ensforge/sdk/capabilities";
 ```
 
 ### name
@@ -108,7 +108,7 @@ const request = sdk.capabilities.getRequiredAuthorization.request(parameters);
 ## Error
 
 ```ts
-import type { GetRequiredAuthorizationError } from "@ensforge/sdk";
+import type { GetRequiredAuthorizationError } from "@ensforge/sdk/capabilities";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

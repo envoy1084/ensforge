@@ -38,7 +38,8 @@ function Component() {
 ## Parameters
 
 ```ts
-import type { GetRecordPermissionsParameters, UseEnsAtomParameters } from "@ensforge/react";
+import type { UseEnsAtomParameters } from "@ensforge/react";
+import type { GetRecordPermissionsParameters } from "@ensforge/sdk/capabilities";
 ```
 
 ### name

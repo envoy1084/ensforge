@@ -43,6 +43,14 @@ const text = await sdk.records.getText({ name: "ens.eth", key: "url" });
 const price = await sdk.registration.getRegistrationPrice({ name: "example.eth", duration });
 ```
 
+Import action-specific types from the corresponding group entrypoint. This keeps editor type
+loading focused while method calls remain fully inferred.
+
+```ts
+import type { GetOwnerParameters } from "@ensforge/sdk/name";
+import type { SetTextParameters } from "@ensforge/sdk/records";
+```
+
 Compatible reads can be executed together:
 
 ```ts

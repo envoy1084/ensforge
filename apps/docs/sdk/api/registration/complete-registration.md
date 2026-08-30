@@ -35,7 +35,7 @@ const result = await sdk.registration.completeRegistration({
 ## Parameters
 
 ```ts
-import type { CompleteRegistrationParameters } from "@ensforge/sdk";
+import type { CompleteRegistrationParameters } from "@ensforge/sdk/registration";
 ```
 
 ### name

@@ -36,7 +36,8 @@ function Component() {
 ## Parameters
 
 ```ts
-import type { GetAliasParameters, UseEnsAtomParameters } from "@ensforge/react";
+import type { UseEnsAtomParameters } from "@ensforge/react";
+import type { GetAliasParameters } from "@ensforge/sdk/resolution";
 ```
 
 ### name

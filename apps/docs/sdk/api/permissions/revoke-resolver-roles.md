@@ -34,7 +34,7 @@ const result = await sdk.permissions.revokeResolverRoles({
 ## Parameters
 
 ```ts
-import type { ResolverRolesMutationParameters } from "@ensforge/sdk";
+import type { ResolverRolesMutationParameters } from "@ensforge/sdk/permissions";
 ```
 
 ### name
@@ -102,7 +102,7 @@ const call = sdk.permissions.revokeResolverRoles.call(parameters);
 ## Error
 
 ```ts
-import type { RevokeResolverRolesError } from "@ensforge/sdk";
+import type { RevokeResolverRolesError } from "@ensforge/sdk/permissions";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

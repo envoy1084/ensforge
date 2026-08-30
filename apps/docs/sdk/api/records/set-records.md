@@ -33,7 +33,7 @@ const result = await sdk.records.setRecords({
 ## Parameters
 
 ```ts
-import type { SetRecordsParameters } from "@ensforge/sdk";
+import type { SetRecordsParameters } from "@ensforge/sdk/records";
 ```
 
 ### name
@@ -93,7 +93,7 @@ Account used to authorize this operation. Defaults to the account exposed by the
 ## Return Type
 
 ```ts
-import type { SetRecordsResult } from "@ensforge/sdk";
+import type { SetRecordsResult } from "@ensforge/sdk/records";
 ```
 
 | Property       | Type                                                     | Description                                                 |
@@ -135,7 +135,7 @@ const call = sdk.records.setRecords.call(parameters);
 ## Error
 
 ```ts
-import type { SetRecordsError } from "@ensforge/sdk";
+import type { SetRecordsError } from "@ensforge/sdk/records";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

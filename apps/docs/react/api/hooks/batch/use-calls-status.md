@@ -36,7 +36,8 @@ function Component() {
 ## Parameters
 
 ```ts
-import type { GetCallsStatusParameters, UseEnsAtomParameters } from "@ensforge/react";
+import type { UseEnsAtomParameters } from "@ensforge/react";
+import type { GetCallsStatusParameters } from "@ensforge/sdk/batch";
 ```
 
 ### id

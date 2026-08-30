@@ -50,7 +50,7 @@ function Component() {
 ## Mutation Parameters
 
 ```ts
-import type { SetOperatorApprovalParameters } from "@ensforge/react";
+import type { SetOperatorApprovalParameters } from "@ensforge/sdk/permissions";
 ```
 
 ## Return Type

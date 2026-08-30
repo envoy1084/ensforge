@@ -49,7 +49,7 @@ function Component() {
 ## Mutation Parameters
 
 ```ts
-import type { RegistryRolesMutationParameters } from "@ensforge/react";
+import type { RegistryRolesMutationParameters } from "@ensforge/sdk/permissions";
 ```
 
 ## Return Type

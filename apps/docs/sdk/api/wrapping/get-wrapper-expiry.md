@@ -32,7 +32,7 @@ const result = await sdk.wrapping.getWrapperExpiry({
 ## Parameters
 
 ```ts
-import type { WrapperReadParameters } from "@ensforge/sdk";
+import type { WrapperReadParameters } from "@ensforge/sdk/wrapping";
 ```
 
 ### name
@@ -56,7 +56,7 @@ Named block state to read from. Cannot be combined with `blockNumber`.
 ## Return Type
 
 ```ts
-import type { GetWrapperExpiryResult } from "@ensforge/sdk";
+import type { GetWrapperExpiryResult } from "@ensforge/sdk/wrapping";
 ```
 
 | Property    | Type                                          | Description                                            |
@@ -94,7 +94,7 @@ const request = sdk.wrapping.getWrapperExpiry.request(parameters);
 ## Error
 
 ```ts
-import type { GetWrapperExpiryError } from "@ensforge/sdk";
+import type { GetWrapperExpiryError } from "@ensforge/sdk/wrapping";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

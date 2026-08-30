@@ -34,7 +34,7 @@ const result = await sdk.records.setAbi({
 ## Parameters
 
 ```ts
-import type { SetAbiParameters } from "@ensforge/sdk";
+import type { SetAbiParameters } from "@ensforge/sdk/records";
 ```
 
 ### name
@@ -96,7 +96,7 @@ const call = sdk.records.setAbi.call(parameters);
 ## Error
 
 ```ts
-import type { SetAbiError } from "@ensforge/sdk";
+import type { SetAbiError } from "@ensforge/sdk/records";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

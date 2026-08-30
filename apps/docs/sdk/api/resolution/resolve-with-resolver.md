@@ -34,7 +34,7 @@ const result = await sdk.resolution.resolveWithResolver({
 ## Parameters
 
 ```ts
-import type { ResolveWithResolverParameters } from "@ensforge/sdk";
+import type { ResolveWithResolverParameters } from "@ensforge/sdk/resolution";
 ```
 
 ### name
@@ -111,7 +111,7 @@ const request = sdk.resolution.resolveWithResolver.request(parameters);
 ## Error
 
 ```ts
-import type { ResolveWithResolverError } from "@ensforge/sdk";
+import type { ResolveWithResolverError } from "@ensforge/sdk/resolution";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

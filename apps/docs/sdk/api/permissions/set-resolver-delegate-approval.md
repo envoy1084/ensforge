@@ -34,7 +34,7 @@ const result = await sdk.permissions.setResolverDelegateApproval({
 ## Parameters
 
 ```ts
-import type { SetResolverDelegateApprovalParameters } from "@ensforge/sdk";
+import type { SetResolverDelegateApprovalParameters } from "@ensforge/sdk/permissions";
 ```
 
 ### name
@@ -96,7 +96,7 @@ const call = sdk.permissions.setResolverDelegateApproval.call(parameters);
 ## Error
 
 ```ts
-import type { SetResolverDelegateApprovalError } from "@ensforge/sdk";
+import type { SetResolverDelegateApprovalError } from "@ensforge/sdk/permissions";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

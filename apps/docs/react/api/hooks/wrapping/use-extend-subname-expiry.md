@@ -48,7 +48,7 @@ function Component() {
 ## Mutation Parameters
 
 ```ts
-import type { ExtendSubnameExpiryParameters } from "@ensforge/react";
+import type { ExtendSubnameExpiryParameters } from "@ensforge/sdk/wrapping";
 ```
 
 ## Return Type

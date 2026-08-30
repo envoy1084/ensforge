@@ -48,7 +48,7 @@ function Component() {
 ## Mutation Parameters
 
 ```ts
-import type { SetRecordsParameters } from "@ensforge/react";
+import type { SetRecordsParameters } from "@ensforge/sdk/records";
 ```
 
 ## Return Type

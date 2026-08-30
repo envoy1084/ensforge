@@ -34,7 +34,8 @@ function Component() {
 ## Parameters
 
 ```ts
-import type { WatchEnsEventsParameters, UseEnsAtomParameters } from "@ensforge/react";
+import type { UseEnsAtomParameters } from "@ensforge/react";
+import type { WatchEnsEventsParameters } from "@ensforge/sdk/events";
 ```
 
 ### account

@@ -32,7 +32,7 @@ const result = await sdk.registration.renewNames({
 ## Parameters
 
 ```ts
-import type { RenewNamesParameters } from "@ensforge/sdk";
+import type { RenewNamesParameters } from "@ensforge/sdk/registration";
 ```
 
 ### renewals
@@ -80,7 +80,7 @@ Controls whether the action returns after submission or waits for one or more co
 ## Return Type
 
 ```ts
-import type { RenewNamesResult } from "@ensforge/sdk";
+import type { RenewNamesResult } from "@ensforge/sdk/registration";
 ```
 
 | Property     | Type                                                                                                                                                                      | Description                                            |

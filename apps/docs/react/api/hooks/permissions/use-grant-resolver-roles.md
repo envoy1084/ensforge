@@ -49,7 +49,7 @@ function Component() {
 ## Mutation Parameters
 
 ```ts
-import type { ResolverRolesMutationParameters } from "@ensforge/react";
+import type { ResolverRolesMutationParameters } from "@ensforge/sdk/permissions";
 ```
 
 ## Return Type

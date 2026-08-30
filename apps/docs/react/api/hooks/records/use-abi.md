@@ -36,7 +36,8 @@ function Component() {
 ## Parameters
 
 ```ts
-import type { GetAbiParameters, UseEnsAtomParameters } from "@ensforge/react";
+import type { UseEnsAtomParameters } from "@ensforge/react";
+import type { GetAbiParameters } from "@ensforge/sdk/records";
 ```
 
 ### name

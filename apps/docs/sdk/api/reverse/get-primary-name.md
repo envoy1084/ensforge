@@ -32,7 +32,7 @@ const result = await sdk.reverse.getPrimaryName({
 ## Parameters
 
 ```ts
-import type { GetPrimaryNameParameters } from "@ensforge/sdk";
+import type { GetPrimaryNameParameters } from "@ensforge/sdk/reverse";
 ```
 
 ### address
@@ -97,7 +97,7 @@ const request = sdk.reverse.getPrimaryName.request(parameters);
 ## Error
 
 ```ts
-import type { GetPrimaryNameError } from "@ensforge/sdk";
+import type { GetPrimaryNameError } from "@ensforge/sdk/reverse";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

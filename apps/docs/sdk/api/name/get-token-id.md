@@ -32,7 +32,7 @@ const result = await sdk.name.getTokenId({
 ## Parameters
 
 ```ts
-import type { GetNameStateParameters } from "@ensforge/sdk";
+import type { GetNameStateParameters } from "@ensforge/sdk/name";
 ```
 
 ### name
@@ -90,7 +90,7 @@ const request = sdk.name.getTokenId.request(parameters);
 ## Error
 
 ```ts
-import type { GetTokenIdError } from "@ensforge/sdk";
+import type { GetTokenIdError } from "@ensforge/sdk/name";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

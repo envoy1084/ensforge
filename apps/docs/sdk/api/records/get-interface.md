@@ -33,7 +33,7 @@ const result = await sdk.records.getInterface({
 ## Parameters
 
 ```ts
-import type { GetInterfaceParameters } from "@ensforge/sdk";
+import type { GetInterfaceParameters } from "@ensforge/sdk/records";
 ```
 
 ### name
@@ -98,7 +98,7 @@ const request = sdk.records.getInterface.request(parameters);
 ## Error
 
 ```ts
-import type { GetInterfaceError } from "@ensforge/sdk";
+import type { GetInterfaceError } from "@ensforge/sdk/records";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

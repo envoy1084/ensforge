@@ -36,7 +36,8 @@ function Component() {
 ## Parameters
 
 ```ts
-import type { WrapperReadParameters, UseEnsSuspenseAtomParameters } from "@ensforge/react";
+import type { UseEnsSuspenseAtomParameters } from "@ensforge/react";
+import type { WrapperReadParameters } from "@ensforge/sdk/wrapping";
 ```
 
 ### name

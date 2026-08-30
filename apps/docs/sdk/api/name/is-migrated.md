@@ -32,7 +32,7 @@ const result = await sdk.name.isMigrated({
 ## Parameters
 
 ```ts
-import type { GetNameStateParameters } from "@ensforge/sdk";
+import type { GetNameStateParameters } from "@ensforge/sdk/name";
 ```
 
 ### name
@@ -90,7 +90,7 @@ const request = sdk.name.isMigrated.request(parameters);
 ## Error
 
 ```ts
-import type { IsMigratedError } from "@ensforge/sdk";
+import type { IsMigratedError } from "@ensforge/sdk/name";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

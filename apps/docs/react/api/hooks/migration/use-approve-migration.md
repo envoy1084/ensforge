@@ -47,7 +47,7 @@ function Component() {
 ## Mutation Parameters
 
 ```ts
-import type { ApproveMigrationParameters } from "@ensforge/react";
+import type { ApproveMigrationParameters } from "@ensforge/sdk/migration";
 ```
 
 ## Return Type

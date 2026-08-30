@@ -36,7 +36,8 @@ function Component() {
 ## Parameters
 
 ```ts
-import type { IsPaymentTokenSupportedParameters, UseEnsAtomParameters } from "@ensforge/react";
+import type { UseEnsAtomParameters } from "@ensforge/react";
+import type { IsPaymentTokenSupportedParameters } from "@ensforge/sdk/registration";
 ```
 
 ### paymentToken

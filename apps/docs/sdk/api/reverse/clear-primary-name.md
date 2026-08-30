@@ -30,7 +30,7 @@ const result = await sdk.reverse.clearPrimaryName({});
 ## Parameters
 
 ```ts
-import type { ClearPrimaryNameParameters } from "@ensforge/sdk";
+import type { ClearPrimaryNameParameters } from "@ensforge/sdk/reverse";
 ```
 
 ### parameters
@@ -86,7 +86,7 @@ const call = sdk.reverse.clearPrimaryName.call(parameters);
 ## Error
 
 ```ts
-import type { ClearPrimaryNameError } from "@ensforge/sdk";
+import type { ClearPrimaryNameError } from "@ensforge/sdk/reverse";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

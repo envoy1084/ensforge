@@ -47,7 +47,7 @@ function Component() {
 ## Mutation Parameters
 
 ```ts
-import type { SendCallsParameters } from "@ensforge/react";
+import type { SendCallsParameters } from "@ensforge/sdk/batch";
 ```
 
 ## Return Type

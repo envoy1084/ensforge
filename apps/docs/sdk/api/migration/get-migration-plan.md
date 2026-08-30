@@ -33,7 +33,7 @@ const result = await sdk.migration.getMigrationPlan({
 ## Parameters
 
 ```ts
-import type { GetMigrationPlanParameters } from "@ensforge/sdk";
+import type { GetMigrationPlanParameters } from "@ensforge/sdk/migration";
 ```
 
 ### name
@@ -123,7 +123,7 @@ const request = sdk.migration.getMigrationPlan.request(parameters);
 ## Error
 
 ```ts
-import type { GetMigrationPlanError } from "@ensforge/sdk";
+import type { GetMigrationPlanError } from "@ensforge/sdk/migration";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

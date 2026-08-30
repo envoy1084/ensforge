@@ -32,7 +32,7 @@ const result = await sdk.name.isWrapped({
 ## Parameters
 
 ```ts
-import type { GetNameStateParameters } from "@ensforge/sdk";
+import type { GetNameStateParameters } from "@ensforge/sdk/name";
 ```
 
 ### name
@@ -90,7 +90,7 @@ const request = sdk.name.isWrapped.request(parameters);
 ## Error
 
 ```ts
-import type { IsWrappedError } from "@ensforge/sdk";
+import type { IsWrappedError } from "@ensforge/sdk/name";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

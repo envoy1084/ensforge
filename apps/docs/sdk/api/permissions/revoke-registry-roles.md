@@ -34,7 +34,7 @@ const result = await sdk.permissions.revokeRegistryRoles({
 ## Parameters
 
 ```ts
-import type { RegistryRolesMutationParameters } from "@ensforge/sdk";
+import type { RegistryRolesMutationParameters } from "@ensforge/sdk/permissions";
 ```
 
 ### name
@@ -96,7 +96,7 @@ const call = sdk.permissions.revokeRegistryRoles.call(parameters);
 ## Error
 
 ```ts
-import type { RevokeRegistryRolesError } from "@ensforge/sdk";
+import type { RevokeRegistryRolesError } from "@ensforge/sdk/permissions";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

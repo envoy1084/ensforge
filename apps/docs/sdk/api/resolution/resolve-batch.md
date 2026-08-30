@@ -32,7 +32,7 @@ const result = await sdk.resolution.resolveBatch({
 ## Parameters
 
 ```ts
-import type { ResolveBatchParameters } from "@ensforge/sdk";
+import type { ResolveBatchParameters } from "@ensforge/sdk/resolution";
 ```
 
 ### calls
@@ -56,7 +56,7 @@ Named block state to read from. Cannot be combined with `blockNumber`.
 ## Return Type
 
 ```ts
-import type { ResolveBatchResult } from "@ensforge/sdk";
+import type { ResolveBatchResult } from "@ensforge/sdk/resolution";
 ```
 
 Returns `ResolveBatchResult`.
@@ -88,7 +88,7 @@ const request = sdk.resolution.resolveBatch.request(parameters);
 ## Error
 
 ```ts
-import type { ResolveBatchError } from "@ensforge/sdk";
+import type { ResolveBatchError } from "@ensforge/sdk/resolution";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

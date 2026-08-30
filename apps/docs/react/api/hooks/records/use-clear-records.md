@@ -47,7 +47,7 @@ function Component() {
 ## Mutation Parameters
 
 ```ts
-import type { ClearRecordsParameters } from "@ensforge/react";
+import type { ClearRecordsParameters } from "@ensforge/sdk/records";
 ```
 
 ## Return Type

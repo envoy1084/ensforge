@@ -36,7 +36,8 @@ function Component() {
 ## Parameters
 
 ```ts
-import type { GetPrimaryNameParameters, UseEnsAtomParameters } from "@ensforge/react";
+import type { UseEnsAtomParameters } from "@ensforge/react";
+import type { GetPrimaryNameParameters } from "@ensforge/sdk/reverse";
 ```
 
 ### address

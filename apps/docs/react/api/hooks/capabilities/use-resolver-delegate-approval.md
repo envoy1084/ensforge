@@ -38,7 +38,8 @@ function Component() {
 ## Parameters
 
 ```ts
-import type { GetResolverDelegateApprovalParameters, UseEnsAtomParameters } from "@ensforge/react";
+import type { UseEnsAtomParameters } from "@ensforge/react";
+import type { GetResolverDelegateApprovalParameters } from "@ensforge/sdk/capabilities";
 ```
 
 ### name

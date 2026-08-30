@@ -48,7 +48,7 @@ function Component() {
 ## Mutation Parameters
 
 ```ts
-import type { ReclaimNameParameters } from "@ensforge/react";
+import type { ReclaimNameParameters } from "@ensforge/sdk/ownership";
 ```
 
 ## Return Type

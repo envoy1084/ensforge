@@ -34,7 +34,7 @@ const result = await sdk.permissions.grantResolverRootRoles({
 ## Parameters
 
 ```ts
-import type { ResolverRootRolesMutationParameters } from "@ensforge/sdk";
+import type { ResolverRootRolesMutationParameters } from "@ensforge/sdk/permissions";
 ```
 
 ### name
@@ -96,7 +96,7 @@ const call = sdk.permissions.grantResolverRootRoles.call(parameters);
 ## Error
 
 ```ts
-import type { GrantResolverRootRolesError } from "@ensforge/sdk";
+import type { GrantResolverRootRolesError } from "@ensforge/sdk/permissions";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

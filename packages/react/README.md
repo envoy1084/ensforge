@@ -74,6 +74,13 @@ const updateUrl = () =>
   });
 ```
 
+Hook inputs are inferred automatically. When an action parameter type is needed explicitly, import
+it from the matching SDK group.
+
+```ts
+import type { SetTextParameters } from "@ensforge/sdk/records";
+```
+
 An existing SDK instance can also be shared through the provider:
 
 ```tsx

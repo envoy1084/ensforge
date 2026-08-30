@@ -32,7 +32,7 @@ const result = await sdk.resolution.getResolverVersion({
 ## Parameters
 
 ```ts
-import type { GetResolverVersionParameters } from "@ensforge/sdk";
+import type { GetResolverVersionParameters } from "@ensforge/sdk/resolution";
 ```
 
 ### name
@@ -94,7 +94,7 @@ const request = sdk.resolution.getResolverVersion.request(parameters);
 ## Error
 
 ```ts
-import type { GetResolverVersionError } from "@ensforge/sdk";
+import type { GetResolverVersionError } from "@ensforge/sdk/resolution";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

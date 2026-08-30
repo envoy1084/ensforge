@@ -33,7 +33,7 @@ const result = await sdk.dns.setDnsRecords({
 ## Parameters
 
 ```ts
-import type { SetDnsRecordsParameters } from "@ensforge/sdk";
+import type { SetDnsRecordsParameters } from "@ensforge/sdk/dns";
 ```
 
 ### name
@@ -89,7 +89,7 @@ const call = sdk.dns.setDnsRecords.call(parameters);
 ## Error
 
 ```ts
-import type { SetDnsRecordsError } from "@ensforge/sdk";
+import type { SetDnsRecordsError } from "@ensforge/sdk/dns";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

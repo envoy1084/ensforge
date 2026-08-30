@@ -32,7 +32,7 @@ const result = await sdk.resolution.getResolver({
 ## Parameters
 
 ```ts
-import type { GetResolverParameters } from "@ensforge/sdk";
+import type { GetResolverParameters } from "@ensforge/sdk/resolution";
 ```
 
 ### name
@@ -56,7 +56,7 @@ Named block state to read from. Cannot be combined with `blockNumber`.
 ## Return Type
 
 ```ts
-import type { GetResolverResult } from "@ensforge/sdk";
+import type { GetResolverResult } from "@ensforge/sdk/resolution";
 ```
 
 | Property            | Type                                                                                                                                                                                                                                                                                                                                              | Description                                            |
@@ -113,7 +113,7 @@ const request = sdk.resolution.getResolver.request(parameters);
 ## Error
 
 ```ts
-import type { GetResolverError } from "@ensforge/sdk";
+import type { GetResolverError } from "@ensforge/sdk/resolution";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

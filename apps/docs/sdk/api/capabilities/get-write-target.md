@@ -33,7 +33,7 @@ const result = await sdk.capabilities.getWriteTarget({
 ## Parameters
 
 ```ts
-import type { GetWriteTargetParameters } from "@ensforge/sdk";
+import type { GetWriteTargetParameters } from "@ensforge/sdk/capabilities";
 ```
 
 ### name
@@ -106,7 +106,7 @@ const request = sdk.capabilities.getWriteTarget.request(parameters);
 ## Error
 
 ```ts
-import type { GetWriteTargetError } from "@ensforge/sdk";
+import type { GetWriteTargetError } from "@ensforge/sdk/capabilities";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

@@ -33,7 +33,7 @@ const result = await sdk.registration.renewName({
 ## Parameters
 
 ```ts
-import type { RenewNameParameters } from "@ensforge/sdk";
+import type { RenewNameParameters } from "@ensforge/sdk/registration";
 ```
 
 ### name
@@ -99,7 +99,7 @@ Previously returned progress used to continue the workflow.
 ## Return Type
 
 ```ts
-import type { RenewNameResult } from "@ensforge/sdk";
+import type { RenewNameResult } from "@ensforge/sdk/registration";
 ```
 
 | Property         | Type                                                                                                                                                                                                                                                                                                        | Description                                                      |

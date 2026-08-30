@@ -113,7 +113,7 @@ const request = sdk.registration.getRegistrationPrice.request(parameters);
 ## Error
 
 ```ts
-import type { GetRegistrationPriceError } from "@ensforge/sdk";
+import type { GetRegistrationPriceError } from "@ensforge/sdk/registration";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

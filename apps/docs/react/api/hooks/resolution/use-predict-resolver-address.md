@@ -36,7 +36,8 @@ function Component() {
 ## Parameters
 
 ```ts
-import type { CreateResolverParameters, UseEnsAtomParameters } from "@ensforge/react";
+import type { UseEnsAtomParameters } from "@ensforge/react";
+import type { CreateResolverParameters } from "@ensforge/sdk/resolution";
 ```
 
 ### salt

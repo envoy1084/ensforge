@@ -33,7 +33,7 @@ const result = await sdk.resolution.setResolverAndRecords({
 ## Parameters
 
 ```ts
-import type { SetResolverAndRecordsParameters } from "@ensforge/sdk";
+import type { SetResolverAndRecordsParameters } from "@ensforge/sdk/resolution";
 ```
 
 ### name
@@ -105,7 +105,7 @@ Previously returned progress used to continue the workflow.
 ## Return Type
 
 ```ts
-import type { SetResolverAndRecordsProgress } from "@ensforge/sdk";
+import type { SetResolverAndRecordsProgress } from "@ensforge/sdk/resolution";
 ```
 
 | Property         | Type                    | Description                                         |
@@ -134,7 +134,7 @@ const result = await Effect.runPromise(program);
 ## Error
 
 ```ts
-import type { SetResolverAndRecordsError } from "@ensforge/sdk";
+import type { SetResolverAndRecordsError } from "@ensforge/sdk/resolution";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

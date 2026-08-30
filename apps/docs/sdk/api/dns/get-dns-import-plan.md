@@ -32,7 +32,7 @@ const result = await sdk.dns.getDnsImportPlan({
 ## Parameters
 
 ```ts
-import type { GetDnsImportPlanParameters } from "@ensforge/sdk";
+import type { GetDnsImportPlanParameters } from "@ensforge/sdk/dns";
 ```
 
 ### name
@@ -97,7 +97,7 @@ const request = sdk.dns.getDnsImportPlan.request(parameters);
 ## Error
 
 ```ts
-import type { GetDnsImportPlanError } from "@ensforge/sdk";
+import type { GetDnsImportPlanError } from "@ensforge/sdk/dns";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

@@ -33,7 +33,7 @@ const result = await sdk.ownership.transferName({
 ## Parameters
 
 ```ts
-import type { TransferNameParameters } from "@ensforge/sdk";
+import type { TransferNameParameters } from "@ensforge/sdk/ownership";
 ```
 
 ### name
@@ -81,7 +81,7 @@ Previously returned progress used to continue the workflow.
 ## Return Type
 
 ```ts
-import type { TransferNameProgress } from "@ensforge/sdk";
+import type { TransferNameProgress } from "@ensforge/sdk/ownership";
 ```
 
 | Property     | Type                                                                                                                                                                                                                                                                                                        | Description                                                      |
@@ -113,7 +113,7 @@ const result = await Effect.runPromise(program);
 ## Error
 
 ```ts
-import type { TransferNameError } from "@ensforge/sdk";
+import type { TransferNameError } from "@ensforge/sdk/ownership";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

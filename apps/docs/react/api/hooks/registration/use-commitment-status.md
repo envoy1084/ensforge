@@ -36,7 +36,8 @@ function Component() {
 ## Parameters
 
 ```ts
-import type { GetCommitmentStatusParameters, UseEnsAtomParameters } from "@ensforge/react";
+import type { UseEnsAtomParameters } from "@ensforge/react";
+import type { GetCommitmentStatusParameters } from "@ensforge/sdk/registration";
 ```
 
 ### commitment

@@ -32,7 +32,7 @@ const result = await sdk.batch.prepareCalls({
 ## Parameters
 
 ```ts
-import type { PrepareCallsParameters } from "@ensforge/sdk";
+import type { PrepareCallsParameters } from "@ensforge/sdk/batch";
 ```
 
 ### calls

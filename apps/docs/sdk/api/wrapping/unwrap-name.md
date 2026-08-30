@@ -33,7 +33,7 @@ const result = await sdk.wrapping.unwrapName({
 ## Parameters
 
 ```ts
-import type { UnwrapNameParameters } from "@ensforge/sdk";
+import type { UnwrapNameParameters } from "@ensforge/sdk/wrapping";
 ```
 
 ### name
@@ -95,7 +95,7 @@ const call = sdk.wrapping.unwrapName.call(parameters);
 ## Error
 
 ```ts
-import type { UnwrapNameError } from "@ensforge/sdk";
+import type { UnwrapNameError } from "@ensforge/sdk/wrapping";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

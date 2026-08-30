@@ -32,7 +32,7 @@ const result = await sdk.records.getAvatar({
 ## Parameters
 
 ```ts
-import type { GetAvatarParameters } from "@ensforge/sdk";
+import type { GetAvatarParameters } from "@ensforge/sdk/records";
 ```
 
 ### name
@@ -99,7 +99,7 @@ const request = sdk.records.getAvatar.request(parameters);
 ## Error
 
 ```ts
-import type { GetAvatarError } from "@ensforge/sdk";
+import type { GetAvatarError } from "@ensforge/sdk/records";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

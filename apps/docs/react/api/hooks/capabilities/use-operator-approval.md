@@ -38,7 +38,8 @@ function Component() {
 ## Parameters
 
 ```ts
-import type { GetOperatorApprovalParameters, UseEnsAtomParameters } from "@ensforge/react";
+import type { UseEnsAtomParameters } from "@ensforge/react";
+import type { GetOperatorApprovalParameters } from "@ensforge/sdk/capabilities";
 ```
 
 ### name

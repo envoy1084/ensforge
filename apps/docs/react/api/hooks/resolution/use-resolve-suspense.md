@@ -37,7 +37,8 @@ function Component() {
 ## Parameters
 
 ```ts
-import type { ResolveParameters, UseEnsSuspenseAtomParameters } from "@ensforge/react";
+import type { UseEnsSuspenseAtomParameters } from "@ensforge/react";
+import type { ResolveParameters } from "@ensforge/sdk/resolution";
 ```
 
 ### name

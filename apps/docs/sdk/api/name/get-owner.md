@@ -32,7 +32,7 @@ const result = await sdk.name.getOwner({
 ## Parameters
 
 ```ts
-import type { GetOwnerParameters } from "@ensforge/sdk";
+import type { GetOwnerParameters } from "@ensforge/sdk/name";
 ```
 
 ### name
@@ -94,7 +94,7 @@ const request = sdk.name.getOwner.request(parameters);
 ## Error
 
 ```ts
-import type { GetOwnerError } from "@ensforge/sdk";
+import type { GetOwnerError } from "@ensforge/sdk/name";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

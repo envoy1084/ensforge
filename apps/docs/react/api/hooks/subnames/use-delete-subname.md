@@ -47,7 +47,7 @@ function Component() {
 ## Mutation Parameters
 
 ```ts
-import type { DeleteSubnameParameters } from "@ensforge/react";
+import type { DeleteSubnameParameters } from "@ensforge/sdk/subnames";
 ```
 
 ## Return Type

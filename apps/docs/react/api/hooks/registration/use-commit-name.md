@@ -47,7 +47,7 @@ function Component() {
 ## Mutation Parameters
 
 ```ts
-import type { CommitNameParameters } from "@ensforge/react";
+import type { CommitNameParameters } from "@ensforge/sdk/registration";
 ```
 
 ## Return Type

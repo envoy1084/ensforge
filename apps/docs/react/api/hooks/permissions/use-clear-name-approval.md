@@ -47,7 +47,7 @@ function Component() {
 ## Mutation Parameters
 
 ```ts
-import type { ClearNameApprovalParameters } from "@ensforge/react";
+import type { ClearNameApprovalParameters } from "@ensforge/sdk/permissions";
 ```
 
 ## Return Type

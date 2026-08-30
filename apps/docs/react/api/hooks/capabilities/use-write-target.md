@@ -37,7 +37,8 @@ function Component() {
 ## Parameters
 
 ```ts
-import type { GetWriteTargetParameters, UseEnsAtomParameters } from "@ensforge/react";
+import type { UseEnsAtomParameters } from "@ensforge/react";
+import type { GetWriteTargetParameters } from "@ensforge/sdk/capabilities";
 ```
 
 ### name

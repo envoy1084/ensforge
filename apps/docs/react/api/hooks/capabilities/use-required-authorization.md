@@ -38,7 +38,8 @@ function Component() {
 ## Parameters
 
 ```ts
-import type { GetRequiredAuthorizationParameters, UseEnsAtomParameters } from "@ensforge/react";
+import type { UseEnsAtomParameters } from "@ensforge/react";
+import type { GetRequiredAuthorizationParameters } from "@ensforge/sdk/capabilities";
 ```
 
 ### name

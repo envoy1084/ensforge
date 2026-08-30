@@ -80,7 +80,7 @@ const result = await Effect.runPromise(program);
 ## Error
 
 ```ts
-import type { ReadBatchError } from "@ensforge/sdk";
+import type { ReadBatchError } from "@ensforge/sdk/batch";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

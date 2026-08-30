@@ -33,7 +33,7 @@ const result = await sdk.resolution.setResolver({
 ## Parameters
 
 ```ts
-import type { SetResolverParameters } from "@ensforge/sdk";
+import type { SetResolverParameters } from "@ensforge/sdk/resolution";
 ```
 
 ### name
@@ -89,7 +89,7 @@ const call = sdk.resolution.setResolver.call(parameters);
 ## Error
 
 ```ts
-import type { SetResolverError } from "@ensforge/sdk";
+import type { SetResolverError } from "@ensforge/sdk/resolution";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

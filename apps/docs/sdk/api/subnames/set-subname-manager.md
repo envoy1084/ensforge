@@ -33,7 +33,7 @@ const result = await sdk.subnames.setSubnameManager({
 ## Parameters
 
 ```ts
-import type { SetSubnameManagerParameters } from "@ensforge/sdk";
+import type { SetSubnameManagerParameters } from "@ensforge/sdk/subnames";
 ```
 
 ### manager
@@ -89,7 +89,7 @@ const call = sdk.subnames.setSubnameManager.call(parameters);
 ## Error
 
 ```ts
-import type { SetSubnameManagerError } from "@ensforge/sdk";
+import type { SetSubnameManagerError } from "@ensforge/sdk/subnames";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

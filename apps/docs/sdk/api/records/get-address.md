@@ -32,7 +32,7 @@ const result = await sdk.records.getAddress({
 ## Parameters
 
 ```ts
-import type { GetAddressParameters } from "@ensforge/sdk";
+import type { GetAddressParameters } from "@ensforge/sdk/records";
 ```
 
 ### name
@@ -98,7 +98,7 @@ const request = sdk.records.getAddress.request(parameters);
 ## Error
 
 ```ts
-import type { GetAddressError } from "@ensforge/sdk";
+import type { GetAddressError } from "@ensforge/sdk/records";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

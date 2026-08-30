@@ -33,7 +33,7 @@ const result = await sdk.wrapping.extendSubnameExpiry({
 ## Parameters
 
 ```ts
-import type { ExtendSubnameExpiryParameters } from "@ensforge/sdk";
+import type { ExtendSubnameExpiryParameters } from "@ensforge/sdk/wrapping";
 ```
 
 ### name
@@ -89,7 +89,7 @@ const call = sdk.wrapping.extendSubnameExpiry.call(parameters);
 ## Error
 
 ```ts
-import type { ExtendSubnameExpiryError } from "@ensforge/sdk";
+import type { ExtendSubnameExpiryError } from "@ensforge/sdk/wrapping";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

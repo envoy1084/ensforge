@@ -50,7 +50,7 @@ function Component() {
 ## Mutation Parameters
 
 ```ts
-import type { ApproveRenewalPaymentParameters } from "@ensforge/react";
+import type { ApproveRenewalPaymentParameters } from "@ensforge/sdk/registration";
 ```
 
 ## Return Type

@@ -32,7 +32,7 @@ const result = await sdk.records.getAbi({
 ## Parameters
 
 ```ts
-import type { GetAbiParameters } from "@ensforge/sdk";
+import type { GetAbiParameters } from "@ensforge/sdk/records";
 ```
 
 ### name
@@ -98,7 +98,7 @@ const request = sdk.records.getAbi.request(parameters);
 ## Error
 
 ```ts
-import type { GetAbiError } from "@ensforge/sdk";
+import type { GetAbiError } from "@ensforge/sdk/records";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

@@ -32,7 +32,7 @@ const result = await sdk.migration.approveMigration({
 ## Parameters
 
 ```ts
-import type { ApproveMigrationParameters } from "@ensforge/sdk";
+import type { ApproveMigrationParameters } from "@ensforge/sdk/migration";
 ```
 
 ### name

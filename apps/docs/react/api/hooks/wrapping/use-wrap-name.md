@@ -48,7 +48,7 @@ function Component() {
 ## Mutation Parameters
 
 ```ts
-import type { WrapNameParameters } from "@ensforge/react";
+import type { WrapNameParameters } from "@ensforge/sdk/wrapping";
 ```
 
 ## Return Type

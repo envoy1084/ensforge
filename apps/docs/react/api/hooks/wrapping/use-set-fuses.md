@@ -48,7 +48,7 @@ function Component() {
 ## Mutation Parameters
 
 ```ts
-import type { SetFusesParameters } from "@ensforge/react";
+import type { SetFusesParameters } from "@ensforge/sdk/wrapping";
 ```
 
 ## Return Type

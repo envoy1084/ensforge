@@ -32,7 +32,7 @@ const result = await sdk.name.getManager({
 ## Parameters
 
 ```ts
-import type { GetNameStateParameters } from "@ensforge/sdk";
+import type { GetNameStateParameters } from "@ensforge/sdk/name";
 ```
 
 ### name
@@ -113,7 +113,7 @@ const request = sdk.name.getManager.request(parameters);
 ## Error
 
 ```ts
-import type { GetManagerError } from "@ensforge/sdk";
+import type { GetManagerError } from "@ensforge/sdk/name";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

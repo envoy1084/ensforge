@@ -33,7 +33,7 @@ const result = await sdk.subnames.setSubnameResolver({
 ## Parameters
 
 ```ts
-import type { SetSubnameResolverParameters } from "@ensforge/sdk";
+import type { SetSubnameResolverParameters } from "@ensforge/sdk/subnames";
 ```
 
 ### resolver
@@ -89,7 +89,7 @@ const call = sdk.subnames.setSubnameResolver.call(parameters);
 ## Error
 
 ```ts
-import type { SetSubnameResolverError } from "@ensforge/sdk";
+import type { SetSubnameResolverError } from "@ensforge/sdk/subnames";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

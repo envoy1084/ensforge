@@ -33,7 +33,7 @@ const result = await sdk.records.setAddress({
 ## Parameters
 
 ```ts
-import type { SetAddressParameters } from "@ensforge/sdk";
+import type { SetAddressParameters } from "@ensforge/sdk/records";
 ```
 
 ### name
@@ -95,7 +95,7 @@ const call = sdk.records.setAddress.call(parameters);
 ## Error
 
 ```ts
-import type { SetAddressError } from "@ensforge/sdk";
+import type { SetAddressError } from "@ensforge/sdk/records";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

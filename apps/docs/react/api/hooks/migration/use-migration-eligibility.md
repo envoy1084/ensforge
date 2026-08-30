@@ -37,7 +37,8 @@ function Component() {
 ## Parameters
 
 ```ts
-import type { GetMigrationEligibilityParameters, UseEnsAtomParameters } from "@ensforge/react";
+import type { UseEnsAtomParameters } from "@ensforge/react";
+import type { GetMigrationEligibilityParameters } from "@ensforge/sdk/migration";
 ```
 
 ### name

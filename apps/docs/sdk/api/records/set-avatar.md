@@ -33,7 +33,7 @@ const result = await sdk.records.setAvatar({
 ## Parameters
 
 ```ts
-import type { SetAvatarParameters } from "@ensforge/sdk";
+import type { SetAvatarParameters } from "@ensforge/sdk/records";
 ```
 
 ### name
@@ -89,7 +89,7 @@ const call = sdk.records.setAvatar.call(parameters);
 ## Error
 
 ```ts
-import type { SetAvatarError } from "@ensforge/sdk";
+import type { SetAvatarError } from "@ensforge/sdk/records";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

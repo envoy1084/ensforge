@@ -35,7 +35,7 @@ const result = await sdk.registration.getRegistrationPlan({
 ## Parameters
 
 ```ts
-import type { GetRegistrationPlanParameters } from "@ensforge/sdk";
+import type { GetRegistrationPlanParameters } from "@ensforge/sdk/registration";
 ```
 
 ### name
@@ -153,7 +153,7 @@ const request = sdk.registration.getRegistrationPlan.request(parameters);
 ## Error
 
 ```ts
-import type { GetRegistrationPlanError } from "@ensforge/sdk";
+import type { GetRegistrationPlanError } from "@ensforge/sdk/registration";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

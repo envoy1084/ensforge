@@ -33,7 +33,7 @@ const result = await sdk.subnames.setSubnameExpiry({
 ## Parameters
 
 ```ts
-import type { SetSubnameExpiryParameters } from "@ensforge/sdk";
+import type { SetSubnameExpiryParameters } from "@ensforge/sdk/subnames";
 ```
 
 ### expiry
@@ -89,7 +89,7 @@ const call = sdk.subnames.setSubnameExpiry.call(parameters);
 ## Error
 
 ```ts
-import type { SetSubnameExpiryError } from "@ensforge/sdk";
+import type { SetSubnameExpiryError } from "@ensforge/sdk/subnames";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

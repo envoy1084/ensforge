@@ -32,7 +32,7 @@ const result = await sdk.resolution.createResolver({
 ## Parameters
 
 ```ts
-import type { CreateResolverParameters } from "@ensforge/sdk";
+import type { CreateResolverParameters } from "@ensforge/sdk/resolution";
 ```
 
 ### salt
@@ -80,7 +80,7 @@ Controls whether the action returns after submission or waits for one or more co
 ## Return Type
 
 ```ts
-import type { CreateResolverResult } from "@ensforge/sdk";
+import type { CreateResolverResult } from "@ensforge/sdk/resolution";
 ```
 
 | Property         | Type                    | Description                                            |
@@ -118,7 +118,7 @@ const call = sdk.resolution.createResolver.call(parameters);
 ## Error
 
 ```ts
-import type { CreateResolverError } from "@ensforge/sdk";
+import type { CreateResolverError } from "@ensforge/sdk/resolution";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

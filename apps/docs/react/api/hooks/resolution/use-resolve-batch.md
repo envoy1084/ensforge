@@ -36,7 +36,8 @@ function Component() {
 ## Parameters
 
 ```ts
-import type { ResolveBatchParameters, UseEnsAtomParameters } from "@ensforge/react";
+import type { UseEnsAtomParameters } from "@ensforge/react";
+import type { ResolveBatchParameters } from "@ensforge/sdk/resolution";
 ```
 
 ### calls

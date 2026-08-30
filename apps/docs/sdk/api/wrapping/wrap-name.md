@@ -33,7 +33,7 @@ const result = await sdk.wrapping.wrapName({
 ## Parameters
 
 ```ts
-import type { WrapNameParameters } from "@ensforge/sdk";
+import type { WrapNameParameters } from "@ensforge/sdk/wrapping";
 ```
 
 ### name
@@ -93,7 +93,7 @@ Account used to authorize this operation. Defaults to the account exposed by the
 ## Return Type
 
 ```ts
-import type { WrapNameResult } from "@ensforge/sdk";
+import type { WrapNameResult } from "@ensforge/sdk/wrapping";
 ```
 
 | Property     | Type                                                                                                                                                                                                                                                                                                        | Description                                                      |
@@ -125,7 +125,7 @@ const result = await Effect.runPromise(program);
 ## Error
 
 ```ts
-import type { WrapNameError } from "@ensforge/sdk";
+import type { WrapNameError } from "@ensforge/sdk/wrapping";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

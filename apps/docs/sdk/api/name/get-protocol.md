@@ -32,7 +32,7 @@ const result = await sdk.name.getProtocol({
 ## Parameters
 
 ```ts
-import type { GetNameStateParameters } from "@ensforge/sdk";
+import type { GetNameStateParameters } from "@ensforge/sdk/name";
 ```
 
 ### name
@@ -113,7 +113,7 @@ const request = sdk.name.getProtocol.request(parameters);
 ## Error
 
 ```ts
-import type { GetProtocolError } from "@ensforge/sdk";
+import type { GetProtocolError } from "@ensforge/sdk/name";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

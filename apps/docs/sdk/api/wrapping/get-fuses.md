@@ -32,7 +32,7 @@ const result = await sdk.wrapping.getFuses({
 ## Parameters
 
 ```ts
-import type { WrapperReadParameters } from "@ensforge/sdk";
+import type { WrapperReadParameters } from "@ensforge/sdk/wrapping";
 ```
 
 ### name
@@ -56,7 +56,7 @@ Named block state to read from. Cannot be combined with `blockNumber`.
 ## Return Type
 
 ```ts
-import type { GetFusesResult } from "@ensforge/sdk";
+import type { GetFusesResult } from "@ensforge/sdk/wrapping";
 ```
 
 | Property           | Type                                                                                                                                                                                                                                   | Description                                            |
@@ -97,7 +97,7 @@ const request = sdk.wrapping.getFuses.request(parameters);
 ## Error
 
 ```ts
-import type { GetFusesError } from "@ensforge/sdk";
+import type { GetFusesError } from "@ensforge/sdk/wrapping";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

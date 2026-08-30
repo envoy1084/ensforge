@@ -47,7 +47,7 @@ function Component() {
 ## Mutation Parameters
 
 ```ts
-import type { MigrateNamesParameters } from "@ensforge/react";
+import type { MigrateNamesParameters } from "@ensforge/sdk/migration";
 ```
 
 ## Return Type

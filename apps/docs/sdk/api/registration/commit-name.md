@@ -32,7 +32,7 @@ const result = await sdk.registration.commitName({
 ## Parameters
 
 ```ts
-import type { CommitNameParameters } from "@ensforge/sdk";
+import type { CommitNameParameters } from "@ensforge/sdk/registration";
 ```
 
 ### commitment

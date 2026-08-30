@@ -33,7 +33,7 @@ const result = await sdk.ownership.reclaimName({
 ## Parameters
 
 ```ts
-import type { ReclaimNameParameters } from "@ensforge/sdk";
+import type { ReclaimNameParameters } from "@ensforge/sdk/ownership";
 ```
 
 ### name
@@ -89,7 +89,7 @@ const call = sdk.ownership.reclaimName.call(parameters);
 ## Error
 
 ```ts
-import type { ReclaimNameError } from "@ensforge/sdk";
+import type { ReclaimNameError } from "@ensforge/sdk/ownership";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

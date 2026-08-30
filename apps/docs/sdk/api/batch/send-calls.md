@@ -32,7 +32,7 @@ const result = await sdk.batch.sendCalls({
 ## Parameters
 
 ```ts
-import type { SendCallsParameters } from "@ensforge/sdk";
+import type { SendCallsParameters } from "@ensforge/sdk/batch";
 ```
 
 ### mode
@@ -86,7 +86,7 @@ Account used to authorize this operation. Defaults to the account exposed by the
 ## Return Type
 
 ```ts
-import type { SendCallsResult } from "@ensforge/sdk";
+import type { SendCallsResult } from "@ensforge/sdk/batch";
 ```
 
 | Property       | Type                                                     | Description                                                 |

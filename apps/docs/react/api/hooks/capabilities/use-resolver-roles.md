@@ -37,7 +37,8 @@ function Component() {
 ## Parameters
 
 ```ts
-import type { GetResolverRolesParameters, UseEnsAtomParameters } from "@ensforge/react";
+import type { UseEnsAtomParameters } from "@ensforge/react";
+import type { GetResolverRolesParameters } from "@ensforge/sdk/capabilities";
 ```
 
 ### name

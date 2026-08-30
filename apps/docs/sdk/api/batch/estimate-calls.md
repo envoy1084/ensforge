@@ -32,7 +32,7 @@ const result = await sdk.batch.estimateCalls({
 ## Parameters
 
 ```ts
-import type { EstimateCallsParameters } from "@ensforge/sdk";
+import type { EstimateCallsParameters } from "@ensforge/sdk/batch";
 ```
 
 ### calls
@@ -56,7 +56,7 @@ Account used to authorize this operation. Defaults to the account exposed by the
 ## Return Type
 
 ```ts
-import type { EstimateCallsResult } from "@ensforge/sdk";
+import type { EstimateCallsResult } from "@ensforge/sdk/batch";
 ```
 
 | Property      | Type                                                                                                    | Description                                             |

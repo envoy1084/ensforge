@@ -35,7 +35,7 @@ const result = await sdk.registration.approveRenewalPayment({
 ## Parameters
 
 ```ts
-import type { ApproveRenewalPaymentParameters } from "@ensforge/sdk";
+import type { ApproveRenewalPaymentParameters } from "@ensforge/sdk/registration";
 ```
 
 ### name

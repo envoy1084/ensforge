@@ -33,7 +33,7 @@ const result = await sdk.migration.getMigrationEligibility({
 ## Parameters
 
 ```ts
-import type { GetMigrationEligibilityParameters } from "@ensforge/sdk";
+import type { GetMigrationEligibilityParameters } from "@ensforge/sdk/migration";
 ```
 
 ### name
@@ -104,7 +104,7 @@ const request = sdk.migration.getMigrationEligibility.request(parameters);
 ## Error
 
 ```ts
-import type { GetMigrationEligibilityError } from "@ensforge/sdk";
+import type { GetMigrationEligibilityError } from "@ensforge/sdk/migration";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

@@ -34,7 +34,7 @@ const result = await sdk.records.setContentHash({
 ## Parameters
 
 ```ts
-import type { SetContentHashParameters } from "@ensforge/sdk";
+import type { SetContentHashParameters } from "@ensforge/sdk/records";
 ```
 
 ### name
@@ -96,7 +96,7 @@ const call = sdk.records.setContentHash.call(parameters);
 ## Error
 
 ```ts
-import type { SetContentHashError } from "@ensforge/sdk";
+import type { SetContentHashError } from "@ensforge/sdk/records";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

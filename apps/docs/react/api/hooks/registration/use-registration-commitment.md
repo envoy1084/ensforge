@@ -39,7 +39,8 @@ function Component() {
 ## Parameters
 
 ```ts
-import type { MakeRegistrationCommitmentParameters, UseEnsAtomParameters } from "@ensforge/react";
+import type { UseEnsAtomParameters } from "@ensforge/react";
+import type { MakeRegistrationCommitmentParameters } from "@ensforge/sdk/registration";
 ```
 
 ### name

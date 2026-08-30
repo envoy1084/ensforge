@@ -50,7 +50,7 @@ function Component() {
 ## Mutation Parameters
 
 ```ts
-import type { SetRecordPermissionsParameters } from "@ensforge/react";
+import type { SetRecordPermissionsParameters } from "@ensforge/sdk/permissions";
 ```
 
 ## Return Type

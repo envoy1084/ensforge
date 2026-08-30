@@ -50,7 +50,7 @@ function Component() {
 ## Mutation Parameters
 
 ```ts
-import type { RegisterNameParameters } from "@ensforge/react";
+import type { RegisterNameParameters } from "@ensforge/sdk/registration";
 ```
 
 ## Return Type

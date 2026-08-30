@@ -32,7 +32,7 @@ const result = await sdk.records.getName({
 ## Parameters
 
 ```ts
-import type { GetNameParameters } from "@ensforge/sdk";
+import type { GetNameParameters } from "@ensforge/sdk/records";
 ```
 
 ### name
@@ -90,7 +90,7 @@ const request = sdk.records.getName.request(parameters);
 ## Error
 
 ```ts
-import type { GetNameError } from "@ensforge/sdk";
+import type { GetNameError } from "@ensforge/sdk/records";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

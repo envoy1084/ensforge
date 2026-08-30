@@ -32,7 +32,7 @@ const result = await sdk.permissions.clearNameApproval({
 ## Parameters
 
 ```ts
-import type { ClearNameApprovalParameters } from "@ensforge/sdk";
+import type { ClearNameApprovalParameters } from "@ensforge/sdk/permissions";
 ```
 
 ### name
@@ -82,7 +82,7 @@ const call = sdk.permissions.clearNameApproval.call(parameters);
 ## Error
 
 ```ts
-import type { ClearNameApprovalError } from "@ensforge/sdk";
+import type { ClearNameApprovalError } from "@ensforge/sdk/permissions";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

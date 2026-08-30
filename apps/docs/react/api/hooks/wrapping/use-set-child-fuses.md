@@ -49,7 +49,7 @@ function Component() {
 ## Mutation Parameters
 
 ```ts
-import type { SetChildFusesParameters } from "@ensforge/react";
+import type { SetChildFusesParameters } from "@ensforge/sdk/wrapping";
 ```
 
 ## Return Type

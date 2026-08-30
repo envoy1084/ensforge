@@ -49,7 +49,7 @@ function Component() {
 ## Mutation Parameters
 
 ```ts
-import type { SetInterfaceParameters } from "@ensforge/react";
+import type { SetInterfaceParameters } from "@ensforge/sdk/records";
 ```
 
 ## Return Type

@@ -32,7 +32,7 @@ const result = await sdk.dns.getZoneHash({
 ## Parameters
 
 ```ts
-import type { GetZoneHashParameters } from "@ensforge/sdk";
+import type { GetZoneHashParameters } from "@ensforge/sdk/dns";
 ```
 
 ### name
@@ -92,7 +92,7 @@ const request = sdk.dns.getZoneHash.request(parameters);
 ## Error
 
 ```ts
-import type { GetZoneHashError } from "@ensforge/sdk";
+import type { GetZoneHashError } from "@ensforge/sdk/dns";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

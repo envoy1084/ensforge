@@ -112,7 +112,7 @@ const request = sdk.registration.getRenewalPrice.request(parameters);
 ## Error
 
 ```ts
-import type { GetRenewalPriceError } from "@ensforge/sdk";
+import type { GetRenewalPriceError } from "@ensforge/sdk/registration";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

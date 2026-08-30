@@ -32,7 +32,7 @@ const result = await sdk.resolution.getAlias({
 ## Parameters
 
 ```ts
-import type { GetAliasParameters } from "@ensforge/sdk";
+import type { GetAliasParameters } from "@ensforge/sdk/resolution";
 ```
 
 ### name
@@ -95,7 +95,7 @@ const request = sdk.resolution.getAlias.request(parameters);
 ## Error
 
 ```ts
-import type { GetAliasError } from "@ensforge/sdk";
+import type { GetAliasError } from "@ensforge/sdk/resolution";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

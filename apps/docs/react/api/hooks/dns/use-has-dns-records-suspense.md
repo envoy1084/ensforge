@@ -37,7 +37,8 @@ function Component() {
 ## Parameters
 
 ```ts
-import type { HasDnsRecordsParameters, UseEnsSuspenseAtomParameters } from "@ensforge/react";
+import type { UseEnsSuspenseAtomParameters } from "@ensforge/react";
+import type { HasDnsRecordsParameters } from "@ensforge/sdk/dns";
 ```
 
 ### name

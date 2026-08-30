@@ -32,7 +32,7 @@ const result = await sdk.name.getNameState({
 ## Parameters
 
 ```ts
-import type { GetNameStateParameters } from "@ensforge/sdk";
+import type { GetNameStateParameters } from "@ensforge/sdk/name";
 ```
 
 ### name
@@ -106,7 +106,7 @@ const request = sdk.name.getNameState.request(parameters);
 ## Error
 
 ```ts
-import type { GetNameStateError } from "@ensforge/sdk";
+import type { GetNameStateError } from "@ensforge/sdk/name";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

@@ -33,7 +33,7 @@ const result = await sdk.subnames.transferSubname({
 ## Parameters
 
 ```ts
-import type { TransferSubnameParameters } from "@ensforge/sdk";
+import type { TransferSubnameParameters } from "@ensforge/sdk/subnames";
 ```
 
 ### to
@@ -75,7 +75,7 @@ ENS name to operate on. ensforge normalizes it before hashing or contract intera
 ## Return Type
 
 ```ts
-import type { TransferNameProgress } from "@ensforge/sdk";
+import type { TransferNameProgress } from "@ensforge/sdk/subnames";
 ```
 
 | Property     | Type                                                                                                                                                                                                                                                                                                        | Description                                                      |
@@ -107,7 +107,7 @@ const result = await Effect.runPromise(program);
 ## Error
 
 ```ts
-import type { TransferSubnameError } from "@ensforge/sdk";
+import type { TransferSubnameError } from "@ensforge/sdk/subnames";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

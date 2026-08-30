@@ -32,7 +32,7 @@ const result = await sdk.dns.getDnsClaimStatus({
 ## Parameters
 
 ```ts
-import type { GetDnsClaimStatusParameters } from "@ensforge/sdk";
+import type { GetDnsClaimStatusParameters } from "@ensforge/sdk/dns";
 ```
 
 ### name
@@ -95,7 +95,7 @@ const request = sdk.dns.getDnsClaimStatus.request(parameters);
 ## Error
 
 ```ts
-import type { GetDnsClaimStatusError } from "@ensforge/sdk";
+import type { GetDnsClaimStatusError } from "@ensforge/sdk/dns";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

@@ -32,7 +32,7 @@ const result = await sdk.events.getEnsEvents({
 ## Parameters
 
 ```ts
-import type { GetEnsEventsParameters } from "@ensforge/sdk";
+import type { GetEnsEventsParameters } from "@ensforge/sdk/events";
 ```
 
 ### fromBlock
@@ -98,7 +98,7 @@ const result = await Effect.runPromise(program);
 ## Error
 
 ```ts
-import type { GetEnsEventsError } from "@ensforge/sdk";
+import type { GetEnsEventsError } from "@ensforge/sdk/events";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

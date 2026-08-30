@@ -48,7 +48,7 @@ function Component() {
 ## Mutation Parameters
 
 ```ts
-import type { SetAvatarParameters } from "@ensforge/react";
+import type { SetAvatarParameters } from "@ensforge/sdk/records";
 ```
 
 ## Return Type

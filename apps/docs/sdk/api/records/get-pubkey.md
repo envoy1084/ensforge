@@ -32,7 +32,7 @@ const result = await sdk.records.getPubkey({
 ## Parameters
 
 ```ts
-import type { GetPubkeyParameters } from "@ensforge/sdk";
+import type { GetPubkeyParameters } from "@ensforge/sdk/records";
 ```
 
 ### name
@@ -91,7 +91,7 @@ const request = sdk.records.getPubkey.request(parameters);
 ## Error
 
 ```ts
-import type { GetPubkeyError } from "@ensforge/sdk";
+import type { GetPubkeyError } from "@ensforge/sdk/records";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

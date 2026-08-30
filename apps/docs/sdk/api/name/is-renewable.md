@@ -32,7 +32,7 @@ const result = await sdk.name.isRenewable({
 ## Parameters
 
 ```ts
-import type { GetNameStateParameters } from "@ensforge/sdk";
+import type { GetNameStateParameters } from "@ensforge/sdk/name";
 ```
 
 ### name
@@ -90,7 +90,7 @@ const request = sdk.name.isRenewable.request(parameters);
 ## Error
 
 ```ts
-import type { IsRenewableError } from "@ensforge/sdk";
+import type { IsRenewableError } from "@ensforge/sdk/name";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

@@ -33,7 +33,7 @@ const result = await sdk.capabilities.getNameCapabilities({
 ## Parameters
 
 ```ts
-import type { GetNameCapabilitiesParameters } from "@ensforge/sdk";
+import type { GetNameCapabilitiesParameters } from "@ensforge/sdk/capabilities";
 ```
 
 ### name
@@ -108,7 +108,7 @@ const request = sdk.capabilities.getNameCapabilities.request(parameters);
 ## Error
 
 ```ts
-import type { GetNameCapabilitiesError } from "@ensforge/sdk";
+import type { GetNameCapabilitiesError } from "@ensforge/sdk/capabilities";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

@@ -82,7 +82,7 @@ const call = sdk.subnames.deleteSubname.call(parameters);
 ## Error
 
 ```ts
-import type { DeleteSubnameError } from "@ensforge/sdk";
+import type { DeleteSubnameError } from "@ensforge/sdk/subnames";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

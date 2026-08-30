@@ -33,7 +33,7 @@ const result = await sdk.wrapping.setFuses({
 ## Parameters
 
 ```ts
-import type { SetFusesParameters } from "@ensforge/sdk";
+import type { SetFusesParameters } from "@ensforge/sdk/wrapping";
 ```
 
 ### name
@@ -89,7 +89,7 @@ const call = sdk.wrapping.setFuses.call(parameters);
 ## Error
 
 ```ts
-import type { SetFusesError } from "@ensforge/sdk";
+import type { SetFusesError } from "@ensforge/sdk/wrapping";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

@@ -33,7 +33,7 @@ const result = await sdk.subnames.setSubnameRecord({
 ## Parameters
 
 ```ts
-import type { SetSubnameRecordParameters } from "@ensforge/sdk";
+import type { SetSubnameRecordParameters } from "@ensforge/sdk/subnames";
 ```
 
 ### records
@@ -123,7 +123,7 @@ ENS name to operate on. ensforge normalizes it before hashing or contract intera
 ## Return Type
 
 ```ts
-import type { SetSubnameRecordResult } from "@ensforge/sdk";
+import type { SetSubnameRecordResult } from "@ensforge/sdk/subnames";
 ```
 
 | Property        | Type                                                                                                                                                                                                                                                                                                            | Description                                                      |
@@ -157,7 +157,7 @@ const result = await Effect.runPromise(program);
 ## Error
 
 ```ts
-import type { SetSubnameRecordError } from "@ensforge/sdk";
+import type { SetSubnameRecordError } from "@ensforge/sdk/subnames";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

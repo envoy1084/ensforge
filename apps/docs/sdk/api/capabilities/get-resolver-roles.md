@@ -33,7 +33,7 @@ const result = await sdk.capabilities.getResolverRoles({
 ## Parameters
 
 ```ts
-import type { GetResolverRolesParameters } from "@ensforge/sdk";
+import type { GetResolverRolesParameters } from "@ensforge/sdk/capabilities";
 ```
 
 ### name
@@ -109,7 +109,7 @@ const request = sdk.capabilities.getResolverRoles.request(parameters);
 ## Error
 
 ```ts
-import type { GetResolverRolesError } from "@ensforge/sdk";
+import type { GetResolverRolesError } from "@ensforge/sdk/capabilities";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

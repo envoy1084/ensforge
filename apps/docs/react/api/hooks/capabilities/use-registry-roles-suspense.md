@@ -37,7 +37,8 @@ function Component() {
 ## Parameters
 
 ```ts
-import type { AccountCapabilityParameters, UseEnsSuspenseAtomParameters } from "@ensforge/react";
+import type { UseEnsSuspenseAtomParameters } from "@ensforge/react";
+import type { AccountCapabilityParameters } from "@ensforge/sdk/capabilities";
 ```
 
 ### name

@@ -35,7 +35,7 @@ const result = await sdk.permissions.setOperatorApproval({
 ## Parameters
 
 ```ts
-import type { SetOperatorApprovalParameters } from "@ensforge/sdk";
+import type { SetOperatorApprovalParameters } from "@ensforge/sdk/permissions";
 ```
 
 ### name
@@ -103,7 +103,7 @@ const call = sdk.permissions.setOperatorApproval.call(parameters);
 ## Error
 
 ```ts
-import type { SetOperatorApprovalError } from "@ensforge/sdk";
+import type { SetOperatorApprovalError } from "@ensforge/sdk/permissions";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

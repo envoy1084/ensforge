@@ -36,7 +36,8 @@ function Component() {
 ## Parameters
 
 ```ts
-import type { EstimateCallsParameters, UseEnsSuspenseAtomParameters } from "@ensforge/react";
+import type { UseEnsSuspenseAtomParameters } from "@ensforge/react";
+import type { EstimateCallsParameters } from "@ensforge/sdk/batch";
 ```
 
 ### calls

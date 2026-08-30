@@ -32,7 +32,7 @@ const result = await sdk.batch.executeWritePlan({
 ## Parameters
 
 ```ts
-import type { ExecuteWritePlanParameters } from "@ensforge/sdk";
+import type { ExecuteWritePlanParameters } from "@ensforge/sdk/batch";
 ```
 
 ### plan
@@ -62,7 +62,7 @@ Account used to authorize this operation. Defaults to the account exposed by the
 ## Return Type
 
 ```ts
-import type { WritePlanProgress } from "@ensforge/sdk";
+import type { WritePlanProgress } from "@ensforge/sdk/batch";
 ```
 
 | Property          | Type                                                   | Description                                            |

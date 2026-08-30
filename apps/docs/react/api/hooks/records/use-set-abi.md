@@ -49,7 +49,7 @@ function Component() {
 ## Mutation Parameters
 
 ```ts
-import type { SetAbiParameters } from "@ensforge/react";
+import type { SetAbiParameters } from "@ensforge/sdk/records";
 ```
 
 ## Return Type

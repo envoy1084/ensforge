@@ -32,7 +32,7 @@ const result = await sdk.records.getContentHash({
 ## Parameters
 
 ```ts
-import type { GetContentHashParameters } from "@ensforge/sdk";
+import type { GetContentHashParameters } from "@ensforge/sdk/records";
 ```
 
 ### name
@@ -92,7 +92,7 @@ const request = sdk.records.getContentHash.request(parameters);
 ## Error
 
 ```ts
-import type { GetContentHashError } from "@ensforge/sdk";
+import type { GetContentHashError } from "@ensforge/sdk/records";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

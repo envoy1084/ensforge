@@ -30,7 +30,7 @@ const result = await sdk.batch.getWalletCapabilities({});
 ## Parameters
 
 ```ts
-import type { GetWalletCapabilitiesParameters } from "@ensforge/sdk";
+import type { GetWalletCapabilitiesParameters } from "@ensforge/sdk/batch";
 ```
 
 ### walletClient
@@ -48,7 +48,7 @@ Account used to authorize this operation. Defaults to the account exposed by the
 ## Return Type
 
 ```ts
-import type { WalletCapabilitiesResult } from "@ensforge/sdk";
+import type { WalletCapabilitiesResult } from "@ensforge/sdk/batch";
 ```
 
 | Property           | Type                                                       | Description                                               |

@@ -34,7 +34,7 @@ const result = await sdk.dns.getDnsRecord({
 ## Parameters
 
 ```ts
-import type { GetDnsRecordParameters } from "@ensforge/sdk";
+import type { GetDnsRecordParameters } from "@ensforge/sdk/dns";
 ```
 
 ### name
@@ -108,7 +108,7 @@ const request = sdk.dns.getDnsRecord.request(parameters);
 ## Error
 
 ```ts
-import type { GetDnsRecordError } from "@ensforge/sdk";
+import type { GetDnsRecordError } from "@ensforge/sdk/dns";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

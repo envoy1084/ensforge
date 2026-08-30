@@ -33,7 +33,7 @@ const result = await sdk.dns.importDnsName({
 ## Parameters
 
 ```ts
-import type { ImportDnsNameParameters } from "@ensforge/sdk";
+import type { ImportDnsNameParameters } from "@ensforge/sdk/dns";
 ```
 
 ### name
@@ -93,7 +93,7 @@ Previously returned progress used to continue the workflow.
 ## Return Type
 
 ```ts
-import type { ImportDnsNameResult } from "@ensforge/sdk";
+import type { ImportDnsNameResult } from "@ensforge/sdk/dns";
 ```
 
 | Property   | Type                                             | Description                                                  |
@@ -123,7 +123,7 @@ const result = await Effect.runPromise(program);
 ## Error
 
 ```ts
-import type { ImportDnsNameError } from "@ensforge/sdk";
+import type { ImportDnsNameError } from "@ensforge/sdk/dns";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

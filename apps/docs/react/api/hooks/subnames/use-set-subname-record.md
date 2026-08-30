@@ -48,7 +48,7 @@ function Component() {
 ## Mutation Parameters
 
 ```ts
-import type { SetSubnameRecordParameters } from "@ensforge/react";
+import type { SetSubnameRecordParameters } from "@ensforge/sdk/subnames";
 ```
 
 ## Return Type

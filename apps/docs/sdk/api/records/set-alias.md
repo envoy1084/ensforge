@@ -33,7 +33,7 @@ const result = await sdk.records.setAlias({
 ## Parameters
 
 ```ts
-import type { SetAliasParameters } from "@ensforge/sdk";
+import type { SetAliasParameters } from "@ensforge/sdk/records";
 ```
 
 ### name
@@ -89,7 +89,7 @@ const call = sdk.records.setAlias.call(parameters);
 ## Error
 
 ```ts
-import type { SetAliasError } from "@ensforge/sdk";
+import type { SetAliasError } from "@ensforge/sdk/records";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

@@ -34,7 +34,7 @@ const result = await sdk.records.setInterface({
 ## Parameters
 
 ```ts
-import type { SetInterfaceParameters } from "@ensforge/sdk";
+import type { SetInterfaceParameters } from "@ensforge/sdk/records";
 ```
 
 ### name
@@ -96,7 +96,7 @@ const call = sdk.records.setInterface.call(parameters);
 ## Error
 
 ```ts
-import type { SetInterfaceError } from "@ensforge/sdk";
+import type { SetInterfaceError } from "@ensforge/sdk/records";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

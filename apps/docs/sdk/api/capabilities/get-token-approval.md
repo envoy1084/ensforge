@@ -32,7 +32,7 @@ const result = await sdk.capabilities.getTokenApproval({
 ## Parameters
 
 ```ts
-import type { NameCapabilityParameters } from "@ensforge/sdk";
+import type { NameCapabilityParameters } from "@ensforge/sdk/capabilities";
 ```
 
 ### name
@@ -96,7 +96,7 @@ const request = sdk.capabilities.getTokenApproval.request(parameters);
 ## Error
 
 ```ts
-import type { GetTokenApprovalError } from "@ensforge/sdk";
+import type { GetTokenApprovalError } from "@ensforge/sdk/capabilities";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

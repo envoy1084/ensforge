@@ -48,7 +48,7 @@ function Component() {
 ## Mutation Parameters
 
 ```ts
-import type { RenewNameParameters } from "@ensforge/react";
+import type { RenewNameParameters } from "@ensforge/sdk/registration";
 ```
 
 ## Return Type

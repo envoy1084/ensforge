@@ -34,7 +34,8 @@ function Component() {
 ## Parameters
 
 ```ts
-import type { BlockParameters, UseEnsAtomParameters } from "@ensforge/react";
+import type { UseEnsAtomParameters } from "@ensforge/react";
+import type { BlockParameters } from "@ensforge/sdk";
 ```
 
 ### blockNumber

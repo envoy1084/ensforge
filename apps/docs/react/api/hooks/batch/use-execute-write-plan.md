@@ -47,7 +47,7 @@ function Component() {
 ## Mutation Parameters
 
 ```ts
-import type { ExecuteWritePlanParameters } from "@ensforge/react";
+import type { ExecuteWritePlanParameters } from "@ensforge/sdk/batch";
 ```
 
 ## Return Type

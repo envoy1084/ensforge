@@ -48,7 +48,7 @@ function Component() {
 ## Mutation Parameters
 
 ```ts
-import type { TransferRegistrantParameters } from "@ensforge/react";
+import type { TransferRegistrantParameters } from "@ensforge/sdk/ownership";
 ```
 
 ## Return Type

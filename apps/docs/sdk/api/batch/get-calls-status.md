@@ -32,7 +32,7 @@ const result = await sdk.batch.getCallsStatus({
 ## Parameters
 
 ```ts
-import type { GetCallsStatusParameters } from "@ensforge/sdk";
+import type { GetCallsStatusParameters } from "@ensforge/sdk/batch";
 ```
 
 ### id
@@ -56,7 +56,7 @@ Account used to authorize this operation. Defaults to the account exposed by the
 ## Return Type
 
 ```ts
-import type { CallsStatusResult } from "@ensforge/sdk";
+import type { CallsStatusResult } from "@ensforge/sdk/batch";
 ```
 
 | Property     | Type                                               | Description                                                 |

@@ -32,7 +32,7 @@ const result = await sdk.migration.getMigrationTarget({
 ## Parameters
 
 ```ts
-import type { MigrationNameParameters } from "@ensforge/sdk";
+import type { MigrationNameParameters } from "@ensforge/sdk/migration";
 ```
 
 ### name
@@ -97,7 +97,7 @@ const request = sdk.migration.getMigrationTarget.request(parameters);
 ## Error
 
 ```ts
-import type { GetMigrationTargetError } from "@ensforge/sdk";
+import type { GetMigrationTargetError } from "@ensforge/sdk/migration";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

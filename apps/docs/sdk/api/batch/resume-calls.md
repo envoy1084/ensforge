@@ -32,7 +32,7 @@ const result = await sdk.batch.resumeCalls({
 ## Parameters
 
 ```ts
-import type { ResumeCallsParameters } from "@ensforge/sdk";
+import type { ResumeCallsParameters } from "@ensforge/sdk/batch";
 ```
 
 ### batch
@@ -62,7 +62,7 @@ Account used to authorize this operation. Defaults to the account exposed by the
 ## Return Type
 
 ```ts
-import type { NativeBatchResult } from "@ensforge/sdk";
+import type { NativeBatchResult } from "@ensforge/sdk/batch";
 ```
 
 | Property       | Type                             | Description                                                 |

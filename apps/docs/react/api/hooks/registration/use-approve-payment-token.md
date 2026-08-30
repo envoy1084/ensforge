@@ -48,7 +48,7 @@ function Component() {
 ## Mutation Parameters
 
 ```ts
-import type { ApprovePaymentTokenParameters } from "@ensforge/react";
+import type { ApprovePaymentTokenParameters } from "@ensforge/sdk/registration";
 ```
 
 ## Return Type

@@ -34,7 +34,7 @@ const result = await sdk.capabilities.getOperatorApproval({
 ## Parameters
 
 ```ts
-import type { GetOperatorApprovalParameters } from "@ensforge/sdk";
+import type { GetOperatorApprovalParameters } from "@ensforge/sdk/capabilities";
 ```
 
 ### name
@@ -106,7 +106,7 @@ const request = sdk.capabilities.getOperatorApproval.request(parameters);
 ## Error
 
 ```ts
-import type { GetOperatorApprovalError } from "@ensforge/sdk";
+import type { GetOperatorApprovalError } from "@ensforge/sdk/capabilities";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

@@ -34,7 +34,7 @@ const unwatch = await sdk.events.watchEnsEvents(
 ## Parameters
 
 ```ts
-import type { WatchEnsEventsParameters } from "@ensforge/sdk";
+import type { WatchEnsEventsParameters } from "@ensforge/sdk/events";
 ```
 
 ### account
@@ -92,7 +92,7 @@ const stream = sdk.events.watchEnsEvents.stream(parameters);
 ## Error
 
 ```ts
-import type { WatchEnsEventsError } from "@ensforge/sdk";
+import type { WatchEnsEventsError } from "@ensforge/sdk/events";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

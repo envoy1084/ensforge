@@ -33,7 +33,7 @@ const result = await sdk.ownership.transferRegistrant({
 ## Parameters
 
 ```ts
-import type { TransferRegistrantParameters } from "@ensforge/sdk";
+import type { TransferRegistrantParameters } from "@ensforge/sdk/ownership";
 ```
 
 ### name
@@ -89,7 +89,7 @@ const call = sdk.ownership.transferRegistrant.call(parameters);
 ## Error
 
 ```ts
-import type { TransferRegistrantError } from "@ensforge/sdk";
+import type { TransferRegistrantError } from "@ensforge/sdk/ownership";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

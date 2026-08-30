@@ -32,7 +32,7 @@ const result = await sdk.registration.isPaymentTokenSupported({
 ## Parameters
 
 ```ts
-import type { IsPaymentTokenSupportedParameters } from "@ensforge/sdk";
+import type { IsPaymentTokenSupportedParameters } from "@ensforge/sdk/registration";
 ```
 
 ### paymentToken
@@ -95,7 +95,7 @@ const request = sdk.registration.isPaymentTokenSupported.request(parameters);
 ## Error
 
 ```ts
-import type { IsPaymentTokenSupportedError } from "@ensforge/sdk";
+import type { IsPaymentTokenSupportedError } from "@ensforge/sdk/registration";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

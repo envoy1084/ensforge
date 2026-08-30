@@ -33,7 +33,7 @@ const result = await sdk.reverse.setContractPrimaryName({
 ## Parameters
 
 ```ts
-import type { SetContractPrimaryNameParameters } from "@ensforge/sdk";
+import type { SetContractPrimaryNameParameters } from "@ensforge/sdk/reverse";
 ```
 
 ### contract
@@ -95,7 +95,7 @@ const call = sdk.reverse.setContractPrimaryName.call(parameters);
 ## Error
 
 ```ts
-import type { SetContractPrimaryNameError } from "@ensforge/sdk";
+import type { SetContractPrimaryNameError } from "@ensforge/sdk/reverse";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

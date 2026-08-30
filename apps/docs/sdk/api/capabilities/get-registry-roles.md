@@ -33,7 +33,7 @@ const result = await sdk.capabilities.getRegistryRoles({
 ## Parameters
 
 ```ts
-import type { AccountCapabilityParameters } from "@ensforge/sdk";
+import type { AccountCapabilityParameters } from "@ensforge/sdk/capabilities";
 ```
 
 ### name
@@ -103,7 +103,7 @@ const request = sdk.capabilities.getRegistryRoles.request(parameters);
 ## Error
 
 ```ts
-import type { GetRegistryRolesError } from "@ensforge/sdk";
+import type { GetRegistryRolesError } from "@ensforge/sdk/capabilities";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

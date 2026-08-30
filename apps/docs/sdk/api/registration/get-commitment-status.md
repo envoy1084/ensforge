@@ -32,7 +32,7 @@ const result = await sdk.registration.getCommitmentStatus({
 ## Parameters
 
 ```ts
-import type { GetCommitmentStatusParameters } from "@ensforge/sdk";
+import type { GetCommitmentStatusParameters } from "@ensforge/sdk/registration";
 ```
 
 ### commitment
@@ -95,7 +95,7 @@ const request = sdk.registration.getCommitmentStatus.request(parameters);
 ## Error
 
 ```ts
-import type { GetCommitmentStatusError } from "@ensforge/sdk";
+import type { GetCommitmentStatusError } from "@ensforge/sdk/registration";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

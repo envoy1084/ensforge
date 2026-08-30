@@ -34,7 +34,8 @@ function Component() {
 ## Parameters
 
 ```ts
-import type { GetWalletCapabilitiesParameters, UseEnsAtomParameters } from "@ensforge/react";
+import type { UseEnsAtomParameters } from "@ensforge/react";
+import type { GetWalletCapabilitiesParameters } from "@ensforge/sdk/batch";
 ```
 
 ### walletClient

@@ -48,7 +48,7 @@ function Component() {
 ## Mutation Parameters
 
 ```ts
-import type { SetZoneHashParameters } from "@ensforge/react";
+import type { SetZoneHashParameters } from "@ensforge/sdk/dns";
 ```
 
 ## Return Type

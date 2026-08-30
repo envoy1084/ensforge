@@ -32,7 +32,7 @@ const result = await sdk.resolution.predictResolverAddress({
 ## Parameters
 
 ```ts
-import type { CreateResolverParameters } from "@ensforge/sdk";
+import type { CreateResolverParameters } from "@ensforge/sdk/resolution";
 ```
 
 ### salt

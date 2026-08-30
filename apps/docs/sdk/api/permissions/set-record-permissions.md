@@ -35,7 +35,7 @@ const result = await sdk.permissions.setRecordPermissions({
 ## Parameters
 
 ```ts
-import type { SetRecordPermissionsParameters } from "@ensforge/sdk";
+import type { SetRecordPermissionsParameters } from "@ensforge/sdk/permissions";
 ```
 
 ### name
@@ -107,7 +107,7 @@ Value used for `capabilities` by this method.
 ## Return Type
 
 ```ts
-import type { SetRecordPermissionsResult } from "@ensforge/sdk";
+import type { SetRecordPermissionsResult } from "@ensforge/sdk/permissions";
 ```
 
 | Property      | Type                                                          | Description                                      |
@@ -141,7 +141,7 @@ const result = await Effect.runPromise(program);
 ## Error
 
 ```ts
-import type { SetRecordPermissionsError } from "@ensforge/sdk";
+import type { SetRecordPermissionsError } from "@ensforge/sdk/permissions";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

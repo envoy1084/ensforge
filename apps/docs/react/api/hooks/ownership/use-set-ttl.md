@@ -48,7 +48,7 @@ function Component() {
 ## Mutation Parameters
 
 ```ts
-import type { SetTtlParameters } from "@ensforge/react";
+import type { SetTtlParameters } from "@ensforge/sdk/ownership";
 ```
 
 ## Return Type

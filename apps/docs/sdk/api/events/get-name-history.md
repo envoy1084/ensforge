@@ -33,7 +33,7 @@ const result = await sdk.events.getNameHistory({
 ## Parameters
 
 ```ts
-import type { GetNameHistoryParameters } from "@ensforge/sdk";
+import type { GetNameHistoryParameters } from "@ensforge/sdk/events";
 ```
 
 ### name
@@ -84,7 +84,7 @@ const result = await Effect.runPromise(program);
 ## Error
 
 ```ts
-import type { GetNameHistoryError } from "@ensforge/sdk";
+import type { GetNameHistoryError } from "@ensforge/sdk/events";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

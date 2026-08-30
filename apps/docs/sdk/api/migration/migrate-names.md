@@ -32,7 +32,7 @@ const result = await sdk.migration.migrateNames({
 ## Parameters
 
 ```ts
-import type { MigrateNamesParameters } from "@ensforge/sdk";
+import type { MigrateNamesParameters } from "@ensforge/sdk/migration";
 ```
 
 ### migrations
@@ -74,7 +74,7 @@ Controls whether the action returns after submission or waits for one or more co
 ## Return Type
 
 ```ts
-import type { MigrationBatchProgress } from "@ensforge/sdk";
+import type { MigrationBatchProgress } from "@ensforge/sdk/migration";
 ```
 
 | Property     | Type                                                                                                                      | Description                                            |

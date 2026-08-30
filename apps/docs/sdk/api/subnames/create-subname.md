@@ -33,7 +33,7 @@ const result = await sdk.subnames.createSubname({
 ## Parameters
 
 ```ts
-import type { CreateSubnameParameters } from "@ensforge/sdk";
+import type { CreateSubnameParameters } from "@ensforge/sdk/subnames";
 ```
 
 ### owner
@@ -117,7 +117,7 @@ ENS name to operate on. ensforge normalizes it before hashing or contract intera
 ## Return Type
 
 ```ts
-import type { CreateSubnameResult } from "@ensforge/sdk";
+import type { CreateSubnameResult } from "@ensforge/sdk/subnames";
 ```
 
 | Property          | Type                                                                                                                                                                                                                                                                                                        | Description                                                      |
@@ -149,7 +149,7 @@ const result = await Effect.runPromise(program);
 ## Error
 
 ```ts
-import type { CreateSubnameError } from "@ensforge/sdk";
+import type { CreateSubnameError } from "@ensforge/sdk/subnames";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

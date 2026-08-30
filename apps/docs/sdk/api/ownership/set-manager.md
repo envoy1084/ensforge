@@ -33,7 +33,7 @@ const result = await sdk.ownership.setManager({
 ## Parameters
 
 ```ts
-import type { SetManagerParameters } from "@ensforge/sdk";
+import type { SetManagerParameters } from "@ensforge/sdk/ownership";
 ```
 
 ### name
@@ -89,7 +89,7 @@ const call = sdk.ownership.setManager.call(parameters);
 ## Error
 
 ```ts
-import type { SetManagerError } from "@ensforge/sdk";
+import type { SetManagerError } from "@ensforge/sdk/ownership";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

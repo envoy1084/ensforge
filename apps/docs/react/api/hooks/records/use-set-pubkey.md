@@ -49,7 +49,7 @@ function Component() {
 ## Mutation Parameters
 
 ```ts
-import type { SetPubkeyParameters } from "@ensforge/react";
+import type { SetPubkeyParameters } from "@ensforge/sdk/records";
 ```
 
 ## Return Type

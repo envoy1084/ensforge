@@ -32,7 +32,7 @@ const result = await sdk.name.getRegistry({
 ## Parameters
 
 ```ts
-import type { GetNameStateParameters } from "@ensforge/sdk";
+import type { GetNameStateParameters } from "@ensforge/sdk/name";
 ```
 
 ### name
@@ -113,7 +113,7 @@ const request = sdk.name.getRegistry.request(parameters);
 ## Error
 
 ```ts
-import type { GetRegistryError } from "@ensforge/sdk";
+import type { GetRegistryError } from "@ensforge/sdk/name";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

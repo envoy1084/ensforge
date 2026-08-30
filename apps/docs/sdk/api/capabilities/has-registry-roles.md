@@ -34,7 +34,7 @@ const result = await sdk.capabilities.hasRegistryRoles({
 ## Parameters
 
 ```ts
-import type { HasRegistryRolesParameters } from "@ensforge/sdk";
+import type { HasRegistryRolesParameters } from "@ensforge/sdk/capabilities";
 ```
 
 ### name
@@ -111,7 +111,7 @@ const request = sdk.capabilities.hasRegistryRoles.request(parameters);
 ## Error
 
 ```ts
-import type { HasRegistryRolesError } from "@ensforge/sdk";
+import type { HasRegistryRolesError } from "@ensforge/sdk/capabilities";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

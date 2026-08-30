@@ -37,7 +37,8 @@ function Component() {
 ## Parameters
 
 ```ts
-import type { GetNameCapabilitiesParameters, UseEnsAtomParameters } from "@ensforge/react";
+import type { UseEnsAtomParameters } from "@ensforge/react";
+import type { GetNameCapabilitiesParameters } from "@ensforge/sdk/capabilities";
 ```
 
 ### name

@@ -47,7 +47,7 @@ function Component() {
 ## Mutation Parameters
 
 ```ts
-import type { CreateResolverParameters } from "@ensforge/react";
+import type { CreateResolverParameters } from "@ensforge/sdk/resolution";
 ```
 
 ## Return Type

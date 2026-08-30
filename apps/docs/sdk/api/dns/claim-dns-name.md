@@ -33,7 +33,7 @@ const result = await sdk.dns.claimDnsName({
 ## Parameters
 
 ```ts
-import type { ClaimDnsNameParameters } from "@ensforge/sdk";
+import type { ClaimDnsNameParameters } from "@ensforge/sdk/dns";
 ```
 
 ### name
@@ -101,7 +101,7 @@ const call = sdk.dns.claimDnsName.call(parameters);
 ## Error
 
 ```ts
-import type { ClaimDnsNameError } from "@ensforge/sdk";
+import type { ClaimDnsNameError } from "@ensforge/sdk/dns";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

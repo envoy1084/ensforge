@@ -33,7 +33,7 @@ const result = await sdk.permissions.approveName({
 ## Parameters
 
 ```ts
-import type { ApproveNameParameters } from "@ensforge/sdk";
+import type { ApproveNameParameters } from "@ensforge/sdk/permissions";
 ```
 
 ### name
@@ -89,7 +89,7 @@ const call = sdk.permissions.approveName.call(parameters);
 ## Error
 
 ```ts
-import type { ApproveNameError } from "@ensforge/sdk";
+import type { ApproveNameError } from "@ensforge/sdk/permissions";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

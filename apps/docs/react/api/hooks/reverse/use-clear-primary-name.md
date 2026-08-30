@@ -40,7 +40,7 @@ function Component() {
 ## Mutation Parameters
 
 ```ts
-import type { ClearPrimaryNameParameters } from "@ensforge/react";
+import type { ClearPrimaryNameParameters } from "@ensforge/sdk/reverse";
 ```
 
 ## Return Type

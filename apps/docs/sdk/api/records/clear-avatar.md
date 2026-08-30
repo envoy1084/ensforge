@@ -32,7 +32,7 @@ const result = await sdk.records.clearAvatar({
 ## Parameters
 
 ```ts
-import type { ClearAvatarParameters } from "@ensforge/sdk";
+import type { ClearAvatarParameters } from "@ensforge/sdk/records";
 ```
 
 ### name
@@ -82,7 +82,7 @@ const call = sdk.records.clearAvatar.call(parameters);
 ## Error
 
 ```ts
-import type { ClearAvatarError } from "@ensforge/sdk";
+import type { ClearAvatarError } from "@ensforge/sdk/records";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

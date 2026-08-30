@@ -33,7 +33,7 @@ const result = await sdk.ownership.setTtl({
 ## Parameters
 
 ```ts
-import type { SetTtlParameters } from "@ensforge/sdk";
+import type { SetTtlParameters } from "@ensforge/sdk/ownership";
 ```
 
 ### name
@@ -89,7 +89,7 @@ const call = sdk.ownership.setTtl.call(parameters);
 ## Error
 
 ```ts
-import type { SetTtlError } from "@ensforge/sdk";
+import type { SetTtlError } from "@ensforge/sdk/ownership";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

@@ -34,7 +34,7 @@ const result = await sdk.capabilities.getRecordPermissions({
 ## Parameters
 
 ```ts
-import type { GetRecordPermissionsParameters } from "@ensforge/sdk";
+import type { GetRecordPermissionsParameters } from "@ensforge/sdk/capabilities";
 ```
 
 ### name
@@ -107,7 +107,7 @@ const request = sdk.capabilities.getRecordPermissions.request(parameters);
 ## Error
 
 ```ts
-import type { GetRecordPermissionsError } from "@ensforge/sdk";
+import type { GetRecordPermissionsError } from "@ensforge/sdk/capabilities";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

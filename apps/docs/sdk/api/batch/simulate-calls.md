@@ -32,7 +32,7 @@ const result = await sdk.batch.simulateCalls({
 ## Parameters
 
 ```ts
-import type { SimulateCallsParameters } from "@ensforge/sdk";
+import type { SimulateCallsParameters } from "@ensforge/sdk/batch";
 ```
 
 ### calls

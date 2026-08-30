@@ -48,7 +48,7 @@ function Component() {
 ## Mutation Parameters
 
 ```ts
-import type { SetSubnameResolverParameters } from "@ensforge/react";
+import type { SetSubnameResolverParameters } from "@ensforge/sdk/subnames";
 ```
 
 ## Return Type

@@ -32,7 +32,7 @@ const result = await sdk.resolution.getOrCreateResolver({
 ## Parameters
 
 ```ts
-import type { GetOrCreateResolverParameters } from "@ensforge/sdk";
+import type { GetOrCreateResolverParameters } from "@ensforge/sdk/resolution";
 ```
 
 ### name
@@ -80,7 +80,7 @@ Controls whether the action returns after submission or waits for one or more co
 ## Return Type
 
 ```ts
-import type { GetOrCreateResolverResult } from "@ensforge/sdk";
+import type { GetOrCreateResolverResult } from "@ensforge/sdk/resolution";
 ```
 
 | Property         | Type                                     | Description                                            |
@@ -112,7 +112,7 @@ const result = await Effect.runPromise(program);
 ## Error
 
 ```ts
-import type { GetOrCreateResolverError } from "@ensforge/sdk";
+import type { GetOrCreateResolverError } from "@ensforge/sdk/resolution";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

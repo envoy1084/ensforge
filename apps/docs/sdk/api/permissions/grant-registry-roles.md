@@ -34,7 +34,7 @@ const result = await sdk.permissions.grantRegistryRoles({
 ## Parameters
 
 ```ts
-import type { RegistryRolesMutationParameters } from "@ensforge/sdk";
+import type { RegistryRolesMutationParameters } from "@ensforge/sdk/permissions";
 ```
 
 ### name
@@ -96,7 +96,7 @@ const call = sdk.permissions.grantRegistryRoles.call(parameters);
 ## Error
 
 ```ts
-import type { GrantRegistryRolesError } from "@ensforge/sdk";
+import type { GrantRegistryRolesError } from "@ensforge/sdk/permissions";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

@@ -48,7 +48,7 @@ function Component() {
 ## Mutation Parameters
 
 ```ts
-import type { ClaimDnsNameParameters } from "@ensforge/react";
+import type { ClaimDnsNameParameters } from "@ensforge/sdk/dns";
 ```
 
 ## Return Type

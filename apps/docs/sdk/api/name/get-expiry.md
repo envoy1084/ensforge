@@ -32,7 +32,7 @@ const result = await sdk.name.getExpiry({
 ## Parameters
 
 ```ts
-import type { GetExpiryParameters } from "@ensforge/sdk";
+import type { GetExpiryParameters } from "@ensforge/sdk/name";
 ```
 
 ### name
@@ -95,7 +95,7 @@ const request = sdk.name.getExpiry.request(parameters);
 ## Error
 
 ```ts
-import type { GetExpiryError } from "@ensforge/sdk";
+import type { GetExpiryError } from "@ensforge/sdk/name";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

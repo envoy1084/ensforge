@@ -34,7 +34,7 @@ const result = await sdk.wrapping.setChildFuses({
 ## Parameters
 
 ```ts
-import type { SetChildFusesParameters } from "@ensforge/sdk";
+import type { SetChildFusesParameters } from "@ensforge/sdk/wrapping";
 ```
 
 ### expiry
@@ -96,7 +96,7 @@ const call = sdk.wrapping.setChildFuses.call(parameters);
 ## Error
 
 ```ts
-import type { SetChildFusesError } from "@ensforge/sdk";
+import type { SetChildFusesError } from "@ensforge/sdk/wrapping";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

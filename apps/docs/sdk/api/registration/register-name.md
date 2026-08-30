@@ -35,7 +35,7 @@ const result = await sdk.registration.registerName({
 ## Parameters
 
 ```ts
-import type { RegisterNameParameters } from "@ensforge/sdk";
+import type { RegisterNameParameters } from "@ensforge/sdk/registration";
 ```
 
 ### name
@@ -137,7 +137,7 @@ Previously returned progress used to continue the workflow.
 ## Return Type
 
 ```ts
-import type { RegisterNameResult } from "@ensforge/sdk";
+import type { RegisterNameResult } from "@ensforge/sdk/registration";
 ```
 
 | Property                  | Type                                                                                                                                                                                                                                                                                                          | Description                                                      |

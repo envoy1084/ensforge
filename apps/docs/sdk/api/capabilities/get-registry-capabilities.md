@@ -32,7 +32,7 @@ const result = await sdk.capabilities.getRegistryCapabilities({
 ## Parameters
 
 ```ts
-import type { NameCapabilityParameters } from "@ensforge/sdk";
+import type { NameCapabilityParameters } from "@ensforge/sdk/capabilities";
 ```
 
 ### name
@@ -102,7 +102,7 @@ const request = sdk.capabilities.getRegistryCapabilities.request(parameters);
 ## Error
 
 ```ts
-import type { GetRegistryCapabilitiesError } from "@ensforge/sdk";
+import type { GetRegistryCapabilitiesError } from "@ensforge/sdk/capabilities";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

@@ -32,7 +32,7 @@ const result = await sdk.registration.registerNames({
 ## Parameters
 
 ```ts
-import type { RegisterNamesParameters } from "@ensforge/sdk";
+import type { RegisterNamesParameters } from "@ensforge/sdk/registration";
 ```
 
 ### registrations
@@ -74,7 +74,7 @@ Controls whether the action returns after submission or waits for one or more co
 ## Return Type
 
 ```ts
-import type { RegisterNamesResult } from "@ensforge/sdk";
+import type { RegisterNamesResult } from "@ensforge/sdk/registration";
 ```
 
 | Property        | Type                                                   | Description                                            |

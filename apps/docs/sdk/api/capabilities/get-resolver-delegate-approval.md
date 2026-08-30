@@ -34,7 +34,7 @@ const result = await sdk.capabilities.getResolverDelegateApproval({
 ## Parameters
 
 ```ts
-import type { GetResolverDelegateApprovalParameters } from "@ensforge/sdk";
+import type { GetResolverDelegateApprovalParameters } from "@ensforge/sdk/capabilities";
 ```
 
 ### name
@@ -110,7 +110,7 @@ const request = sdk.capabilities.getResolverDelegateApproval.request(parameters)
 ## Error
 
 ```ts
-import type { GetResolverDelegateApprovalError } from "@ensforge/sdk";
+import type { GetResolverDelegateApprovalError } from "@ensforge/sdk/capabilities";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

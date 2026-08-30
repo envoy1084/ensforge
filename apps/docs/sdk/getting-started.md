@@ -106,6 +106,21 @@ export const sdk = new Ensforge({
 The public client is selected immediately. The wallet client is resolved when a write runs, so
 account and connector changes do not require recreating the SDK.
 
+## Import types
+
+Runtime APIs and shared configuration types are exported from `@ensforge/sdk`. Action-specific
+types use group entrypoints so TypeScript only loads the part of the SDK you ask for.
+
+```ts
+import type { CreateConfigParameters } from "@ensforge/sdk";
+import type { GetOwnerParameters } from "@ensforge/sdk/name";
+import type { SetTextParameters } from "@ensforge/sdk/records";
+```
+
+Each SDK group has a matching type entrypoint, including `batch`, `registration`, `resolution`, and
+`wrapping`. Calling methods through an `Ensforge` instance remains fully inferred without importing
+these types explicitly.
+
 ## Next steps
 
 - Learn the [`Ensforge` constructor](/sdk/api/ensforge).

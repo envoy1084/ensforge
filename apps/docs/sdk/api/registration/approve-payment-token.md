@@ -33,7 +33,7 @@ const result = await sdk.registration.approvePaymentToken({
 ## Parameters
 
 ```ts
-import type { ApprovePaymentTokenParameters } from "@ensforge/sdk";
+import type { ApprovePaymentTokenParameters } from "@ensforge/sdk/registration";
 ```
 
 ### paymentToken

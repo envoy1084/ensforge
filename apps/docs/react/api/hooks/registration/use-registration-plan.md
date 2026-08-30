@@ -39,7 +39,8 @@ function Component() {
 ## Parameters
 
 ```ts
-import type { GetRegistrationPlanParameters, UseEnsAtomParameters } from "@ensforge/react";
+import type { UseEnsAtomParameters } from "@ensforge/react";
+import type { GetRegistrationPlanParameters } from "@ensforge/sdk/registration";
 ```
 
 ### name

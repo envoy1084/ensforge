@@ -103,7 +103,7 @@ const request = sdk.records.getRecords.request(parameters);
 ## Error
 
 ```ts
-import type { GetRecordsError } from "@ensforge/sdk";
+import type { GetRecordsError } from "@ensforge/sdk/records";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

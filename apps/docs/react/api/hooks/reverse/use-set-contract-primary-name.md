@@ -48,7 +48,7 @@ function Component() {
 ## Mutation Parameters
 
 ```ts
-import type { SetContractPrimaryNameParameters } from "@ensforge/react";
+import type { SetContractPrimaryNameParameters } from "@ensforge/sdk/reverse";
 ```
 
 ## Return Type

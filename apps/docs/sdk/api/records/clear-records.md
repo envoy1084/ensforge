@@ -32,7 +32,7 @@ const result = await sdk.records.clearRecords({
 ## Parameters
 
 ```ts
-import type { ClearRecordsParameters } from "@ensforge/sdk";
+import type { ClearRecordsParameters } from "@ensforge/sdk/records";
 ```
 
 ### name
@@ -82,7 +82,7 @@ const call = sdk.records.clearRecords.call(parameters);
 ## Error
 
 ```ts
-import type { ClearRecordsError } from "@ensforge/sdk";
+import type { ClearRecordsError } from "@ensforge/sdk/records";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

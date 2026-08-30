@@ -33,7 +33,7 @@ const result = await sdk.reverse.setPrimaryNameForAddress({
 ## Parameters
 
 ```ts
-import type { SetPrimaryNameForAddressParameters } from "@ensforge/sdk";
+import type { SetPrimaryNameForAddressParameters } from "@ensforge/sdk/reverse";
 ```
 
 ### address
@@ -95,7 +95,7 @@ const call = sdk.reverse.setPrimaryNameForAddress.call(parameters);
 ## Error
 
 ```ts
-import type { SetPrimaryNameForAddressError } from "@ensforge/sdk";
+import type { SetPrimaryNameForAddressError } from "@ensforge/sdk/reverse";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

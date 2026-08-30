@@ -32,7 +32,7 @@ const result = await sdk.ownership.getTtl({
 ## Parameters
 
 ```ts
-import type { GetNameStateParameters } from "@ensforge/sdk";
+import type { GetNameStateParameters } from "@ensforge/sdk/ownership";
 ```
 
 ### name
@@ -93,7 +93,7 @@ const request = sdk.ownership.getTtl.request(parameters);
 ## Error
 
 ```ts
-import type { GetTtlError } from "@ensforge/sdk";
+import type { GetTtlError } from "@ensforge/sdk/ownership";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

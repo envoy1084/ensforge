@@ -49,7 +49,7 @@ function Component() {
 ## Mutation Parameters
 
 ```ts
-import type { SetContentHashParameters } from "@ensforge/react";
+import type { SetContentHashParameters } from "@ensforge/sdk/records";
 ```
 
 ## Return Type

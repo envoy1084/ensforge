@@ -33,7 +33,7 @@ const result = await sdk.records.getText({
 ## Parameters
 
 ```ts
-import type { GetTextParameters } from "@ensforge/sdk";
+import type { GetTextParameters } from "@ensforge/sdk/records";
 ```
 
 ### name
@@ -98,7 +98,7 @@ const request = sdk.records.getText.request(parameters);
 ## Error
 
 ```ts
-import type { GetTextError } from "@ensforge/sdk";
+import type { GetTextError } from "@ensforge/sdk/records";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

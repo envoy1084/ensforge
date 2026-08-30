@@ -89,7 +89,7 @@ const request = sdk.registration.getRegistrationParameters.request(parameters);
 ## Error
 
 ```ts
-import type { GetRegistrationParametersError } from "@ensforge/sdk";
+import type { GetRegistrationParametersError } from "@ensforge/sdk/registration";
 ```
 
 <!--@include: @/shared/sdk/error.md-->

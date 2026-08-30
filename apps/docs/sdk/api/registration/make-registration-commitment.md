@@ -144,7 +144,7 @@ const request = sdk.registration.makeRegistrationCommitment.request(parameters);
 ## Error
 
 ```ts
-import type { MakeRegistrationCommitmentError } from "@ensforge/sdk";
+import type { MakeRegistrationCommitmentError } from "@ensforge/sdk/registration";
 ```
 
 <!--@include: @/shared/sdk/error.md-->
