@@ -31,7 +31,7 @@ const sourceCommit = sepoliaV1Deployment.provenance.commit;
 
 `@ensforge/contracts/deployments`
 
-The values are immutable and can be passed directly to viem contract, log, and encoding utilities.
+<!--@include: @/shared/contracts/entrypoint.md-->
 
 ## When to use
 
@@ -39,7 +39,7 @@ Use the deployment object instead of copying addresses into application code. Ne
 
 ## Type Safety
 
-Exports retain literal TypeScript types, so viem can infer valid function names, arguments, return values, and event fields without a manual cast.
+<!--@include: @/shared/contracts/type-safety.md-->
 
 ```ts
 type Export = typeof sepoliaV1Deployment;

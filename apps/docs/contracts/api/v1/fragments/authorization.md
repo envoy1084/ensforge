@@ -45,15 +45,13 @@ const contract = getContract({
 
 `@ensforge/contracts/v1`
 
-The values are immutable and can be passed directly to viem contract, log, and encoding utilities.
+<!--@include: @/shared/contracts/entrypoint.md-->
 
-## When to use
-
-Use the smallest fragment that contains the function or event you need. Fragments include the custom errors required to decode relevant reverts and can be composed with other fragments when one call site needs several capabilities.
+<!--@include: @/shared/contracts/fragment.md-->
 
 ## Type Safety
 
-Exports retain literal TypeScript types, so viem can infer valid function names, arguments, return values, and event fields without a manual cast.
+<!--@include: @/shared/contracts/type-safety.md-->
 
 ```ts
 type Export = typeof baseRegistrarV1SetApprovalForAllAbi;

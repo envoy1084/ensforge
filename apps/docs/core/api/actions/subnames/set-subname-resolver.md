@@ -65,7 +65,7 @@ import type { CallExecutionResult } from "@ensforge/core";
 
 ## Effect
 
-Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
+<!--@include: @/shared/core/effect.md-->
 
 ```ts
 import { Effect } from "effect";
@@ -80,7 +80,7 @@ const result = await Effect.runPromise(program);
 
 ## Call
 
-Use `.call` to prepare this write for simulation, wallet batching, or a custom execution policy.
+<!--@include: @/shared/core/call.md-->
 
 ```ts
 const call = setSubnameResolver.call(parameters);
@@ -92,10 +92,8 @@ const call = setSubnameResolver.call(parameters);
 import type { SetSubnameResolverError } from "@ensforge/core";
 ```
 
-The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
-
-See [Error Handling](/core/guides/error-handling).
+<!--@include: @/shared/core/error.md-->
 
 ## Related
 
-- [`ens.subnames.setSubnameResolver`](/sdk/api/subnames/set-subname-resolver)
+- [`sdk.subnames.setSubnameResolver`](/sdk/api/subnames/set-subname-resolver)

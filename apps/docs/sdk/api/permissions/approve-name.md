@@ -64,7 +64,7 @@ import type { CallExecutionResult } from "@ensforge/sdk";
 
 ## Effect
 
-Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
+<!--@include: @/shared/sdk/effect.md-->
 
 ```ts
 import { Effect } from "effect";
@@ -80,7 +80,7 @@ const result = await Effect.runPromise(program);
 
 ## Call
 
-Use `.call` to prepare this write for simulation, wallet batching, or a custom execution policy.
+<!--@include: @/shared/sdk/call.md-->
 
 ```ts
 const call = sdk.permissions.approveName.call(parameters);
@@ -92,9 +92,7 @@ const call = sdk.permissions.approveName.call(parameters);
 import type { ApproveNameError } from "@ensforge/sdk";
 ```
 
-The method rejects with the corresponding Core action errors. Use `.effect` to keep those failures in the typed Effect error channel.
-
-See [Error Handling](/sdk/guides/error-handling).
+<!--@include: @/shared/sdk/error.md-->
 
 ## Action
 

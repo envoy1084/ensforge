@@ -35,19 +35,7 @@ function Component() {
 }
 ```
 
-## Parameters
-
-```ts
-type Parameters = Parameters<typeof useSetPrimaryNameForAddress>[0];
-```
-
-## Hook Parameters
-
-```ts
-import type { EnsMutationOptions } from "@ensforge/react";
-```
-
-The hook accepts an Effect `Schedule` through `retry` and a complete Effect `Exit` through `onExit`. See [Mutation Options](/react/api/mutation-options).
+<!--@include: @/shared/react/mutation-options.md-->
 
 ## Mutation Parameters
 

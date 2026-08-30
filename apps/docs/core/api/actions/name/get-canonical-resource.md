@@ -66,7 +66,7 @@ type GetCanonicalResourceResult = Awaited<ReturnType<typeof getCanonicalResource
 
 ## Effect
 
-Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
+<!--@include: @/shared/core/effect.md-->
 
 ```ts
 import { Effect } from "effect";
@@ -81,7 +81,7 @@ const result = await Effect.runPromise(program);
 
 ## Request
 
-Use `.request` to describe the read without executing it, then include it in a typed [read batch](/core/guides/batching).
+<!--@include: @/shared/core/request.md-->
 
 ```ts
 const request = getCanonicalResource.request(parameters);
@@ -93,10 +93,8 @@ const request = getCanonicalResource.request(parameters);
 import type { GetCanonicalResourceError } from "@ensforge/core";
 ```
 
-The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
-
-See [Error Handling](/core/guides/error-handling).
+<!--@include: @/shared/core/error.md-->
 
 ## Related
 
-- [`ens.name.getCanonicalResource`](/sdk/api/name/get-canonical-resource)
+- [`sdk.name.getCanonicalResource`](/sdk/api/name/get-canonical-resource)

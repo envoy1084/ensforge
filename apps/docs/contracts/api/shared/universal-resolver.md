@@ -41,7 +41,7 @@ const contract = getContract({
 
 `@ensforge/contracts/shared`
 
-The values are immutable and can be passed directly to viem contract, log, and encoding utilities.
+<!--@include: @/shared/contracts/entrypoint.md-->
 
 ## When to use
 
@@ -49,7 +49,7 @@ Use this immutable protocol constant directly with viem encoding, decoding, cont
 
 ## Type Safety
 
-Exports retain literal TypeScript types, so viem can infer valid function names, arguments, return values, and event fields without a manual cast.
+<!--@include: @/shared/contracts/type-safety.md-->
 
 ```ts
 type Export = typeof universalResolverFindResolverAbi;

@@ -117,7 +117,7 @@ import type { SetResolverAndRecordsProgress } from "@ensforge/sdk";
 
 ## Effect
 
-Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
+<!--@include: @/shared/sdk/effect.md-->
 
 ```ts
 import { Effect } from "effect";
@@ -137,9 +137,7 @@ const result = await Effect.runPromise(program);
 import type { SetResolverAndRecordsError } from "@ensforge/sdk";
 ```
 
-The method rejects with the corresponding Core action errors. Use `.effect` to keep those failures in the typed Effect error channel.
-
-See [Error Handling](/sdk/guides/error-handling).
+<!--@include: @/shared/sdk/error.md-->
 
 ## Action
 

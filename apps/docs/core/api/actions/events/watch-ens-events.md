@@ -97,10 +97,8 @@ const stream = watchEnsEvents.stream(parameters);
 import type { WatchEnsEventsError } from "@ensforge/core";
 ```
 
-The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
-
-See [Error Handling](/core/guides/error-handling).
+<!--@include: @/shared/core/error.md-->
 
 ## Related
 
-- [`ens.events.watchEnsEvents`](/sdk/api/events/watch-ens-events)
+- [`sdk.events.watchEnsEvents`](/sdk/api/events/watch-ens-events)

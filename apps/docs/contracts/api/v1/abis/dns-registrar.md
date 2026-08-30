@@ -42,15 +42,13 @@ const contract = getContract({
 
 `@ensforge/contracts/v1`
 
-The values are immutable and can be passed directly to viem contract, log, and encoding utilities.
+<!--@include: @/shared/contracts/entrypoint.md-->
 
-## When to use
-
-Use the complete ABI when one integration needs several unrelated functions or event families from this contract. For a single SDK action, prefer the corresponding focused fragment to minimize bundled ABI data.
+<!--@include: @/shared/contracts/complete-abi.md-->
 
 ## Type Safety
 
-Exports retain literal TypeScript types, so viem can infer valid function names, arguments, return values, and event fields without a manual cast.
+<!--@include: @/shared/contracts/type-safety.md-->
 
 ```ts
 type Export = typeof dnsRegistrarV1InterfaceAbi;

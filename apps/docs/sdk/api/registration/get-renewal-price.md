@@ -87,7 +87,7 @@ type GetRenewalPriceResult = Awaited<ReturnType<typeof getRenewalPrice>>;
 
 ## Effect
 
-Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
+<!--@include: @/shared/sdk/effect.md-->
 
 ```ts
 import { Effect } from "effect";
@@ -103,7 +103,7 @@ const result = await Effect.runPromise(program);
 
 ## Request
 
-Use `.request` to describe the read without executing it, then include it in a typed [read batch](/core/guides/batching).
+<!--@include: @/shared/sdk/request.md-->
 
 ```ts
 const request = sdk.registration.getRenewalPrice.request(parameters);
@@ -115,9 +115,7 @@ const request = sdk.registration.getRenewalPrice.request(parameters);
 import type { GetRenewalPriceError } from "@ensforge/sdk";
 ```
 
-The method rejects with the corresponding Core action errors. Use `.effect` to keep those failures in the typed Effect error channel.
-
-See [Error Handling](/sdk/guides/error-handling).
+<!--@include: @/shared/sdk/error.md-->
 
 ## Action
 

@@ -135,7 +135,7 @@ export default withTwoslashInlineCache(
       },
     },
     sitemap: { hostname: siteUrl, lastmodDateOnly: true },
-    srcExclude: ["README.md"],
+    srcExclude: ["README.md", "shared/**"],
     themeConfig: {
       editLink: {
         pattern: "https://github.com/envoy1084/ensforge/edit/main/apps/docs/:path",
@@ -179,7 +179,11 @@ export default withTwoslashInlineCache(
           _render(source, environment, markdown) {
             const html = markdown.render(source, environment);
             if (environment.frontmatter?.search === false) return "";
-            if (environment.relativePath.startsWith("snippets")) return "";
+            if (
+              environment.relativePath.startsWith("shared") ||
+              environment.relativePath.startsWith("snippets")
+            )
+              return "";
             return html;
           },
           miniSearch: {
@@ -219,7 +223,7 @@ export default withTwoslashInlineCache(
       plugins: [
         llmstxt({
           description: "Type-safe TypeScript tools for ENS",
-          ignoreFiles: ["README.md", "snippets/"],
+          ignoreFiles: ["README.md", "shared/", "snippets/"],
         }),
         groupIconVitePlugin(),
         unocss(),

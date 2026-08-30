@@ -95,9 +95,7 @@ const stream = sdk.events.watchEnsEvents.stream(parameters);
 import type { WatchEnsEventsError } from "@ensforge/sdk";
 ```
 
-The method rejects with the corresponding Core action errors. Use `.effect` to keep those failures in the typed Effect error channel.
-
-See [Error Handling](/sdk/guides/error-handling).
+<!--@include: @/shared/sdk/error.md-->
 
 ## Action
 

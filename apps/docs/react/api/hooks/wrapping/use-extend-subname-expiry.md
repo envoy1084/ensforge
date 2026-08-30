@@ -43,27 +43,7 @@ function Component() {
 
 :::
 
-## Parameters
-
-```ts
-import type { EnsMutationOptions } from "@ensforge/react";
-```
-
-The hook accepts an optional `EnsMutationOptions` object.
-
-### retry
-
-`false | Schedule<unknown, Failure> | undefined`
-
-An Effect schedule used to retry typed failures. It defaults to `false`. Only retry writes that are known to be safe and idempotent.
-
-### onExit
-
-`(exit: Exit<Success, Failure>, parameters: Parameters) => void`
-
-Receives the complete Effect `Exit` and the exact mutation parameters after execution. Use `Exit.match` or `Exit.isSuccess` to handle both outcomes without losing typed failures.
-
-See [Mutation Options](/react/api/mutation-options) for schedules, provider defaults, and per-call `onExit` handlers.
+<!--@include: @/shared/react/mutation-options.md-->
 
 ## Mutation Parameters
 
@@ -77,24 +57,7 @@ import type { ExtendSubnameExpiryParameters } from "@ensforge/react";
 type Result = ReturnType<typeof useExtendSubnameExpiry>;
 ```
 
-Returns an [`EnsMutationResult`](/react/api/mutation-result).
-
-| Property       | Description                                                    |
-| -------------- | -------------------------------------------------------------- |
-| `mutate`       | Starts the mutation and optionally reports its `Exit`.         |
-| `mutateAsync`  | Starts the mutation and returns a Promise.                     |
-| `mutateEffect` | Starts the mutation and returns an Effect with typed failures. |
-| `data`         | Latest successful value, or `undefined`.                       |
-| `error`        | Latest typed failure, an unexpected `Error`, or `null`.        |
-| `cause`        | Complete Effect cause for the latest failure.                  |
-| `isInitial`    | The mutation has not executed since creation or reset.         |
-| `isWaiting`    | The mutation Effect is currently running.                      |
-| `isSuccess`    | The latest execution succeeded.                                |
-| `isFailure`    | The latest execution failed.                                   |
-| `parameters`   | Parameters used by the latest execution.                       |
-| `interrupt`    | Interrupts the active Effect.                                  |
-| `reset`        | Restores the mutation to its initial state.                    |
-| `result`       | Underlying Effect `AsyncResult`.                               |
+<!--@include: @/shared/react/mutation-result.md-->
 
 ## Effect Atom
 

@@ -97,7 +97,7 @@ import type { TransferNameProgress } from "@ensforge/core";
 
 ## Effect
 
-Use `.effect` when composing the method in an Effect program. The success and error channels remain fully typed.
+<!--@include: @/shared/core/effect.md-->
 
 ```ts
 import { Effect } from "effect";
@@ -116,10 +116,8 @@ const result = await Effect.runPromise(program);
 import type { TransferNameError } from "@ensforge/core";
 ```
 
-The Promise API rejects with the same typed failures exposed by the Effect error channel. Errors have a stable `_tag`, `code`, and `message`; boundary errors retain their original `cause`.
-
-See [Error Handling](/core/guides/error-handling).
+<!--@include: @/shared/core/error.md-->
 
 ## Related
 
-- [`ens.ownership.transferName`](/sdk/api/ownership/transfer-name)
+- [`sdk.ownership.transferName`](/sdk/api/ownership/transfer-name)
