@@ -17,10 +17,13 @@ export const readResolverPermissionTarget = Effect.fn("readResolverPermissionTar
   if (discovery === null) {
     return { supported: false, protocol, reason: "RESOLVER_NOT_FOUND" } as const;
   }
-  const supported = yield* supportsInterface(
-    discovery.address,
-    resolverInterfaceIds.permissionedResolver,
-  );
+  const supported = yield* Effect.all(
+    [
+      supportsInterface(discovery.address, resolverInterfaceIds.permissionedResolver),
+      supportsInterface(discovery.address, resolverInterfaceIds.permissionedResolverSepolia),
+    ] as const,
+    { concurrency: "unbounded" },
+  ).pipe(Effect.map((results) => results.some(Boolean)));
   if (!supported) {
     return {
       supported: false,

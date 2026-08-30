@@ -4,7 +4,10 @@ import {
   publicResolverV1IsApprovedForAbi,
   publicResolverV1IsApprovedForAllAbi,
 } from "@ensforge/contracts/v1";
-import { permissionedResolverV2InterfaceHasRolesAbi } from "@ensforge/contracts/v2";
+import {
+  permissionedResolverV2InterfaceHasRolesAbi,
+  publicResolverV2CanModifyNameAbi,
+} from "@ensforge/contracts/v2";
 
 import { defineReadAction } from "../../../action/read-request.js";
 import type { EnsforgeConfig } from "../../../config/config.js";
@@ -124,6 +127,21 @@ const getRecordPermissionsEffect = Effect.fn("ensforge.getRecordPermissions")(fu
           ] as const,
           { concurrency: "unbounded" },
         );
+        const profile = config.deployments;
+        if (
+          profile.protocol === "v2" &&
+          resolverAddress.toLowerCase() === profile.v2.contracts.publicResolver.toLowerCase()
+        ) {
+          const canModify = yield* ethereum.readContract({
+            address: resolverAddress,
+            abi: publicResolverV2CanModifyNameAbi,
+            functionName: "canModifyName",
+            args: [namehash(name), parameters.account],
+          });
+          ownerAuthorized &&= canModify;
+          operatorAuthorized &&= canModify;
+          delegateAuthorized &&= canModify;
+        }
       }
 
       const records = yield* Effect.forEach(

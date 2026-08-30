@@ -1,6 +1,7 @@
 import {
   AtomicityNotSupportedError,
   BaseError,
+  InvalidRequestRpcError,
   MethodNotFoundRpcError,
   MethodNotSupportedRpcError,
   UnauthorizedProviderError,
@@ -16,9 +17,19 @@ import { findViemErrorCause, viemErrorToEffectError, type ViemError } from "./vi
 const messageFromCause = (cause: unknown): string =>
   cause instanceof BaseError ? cause.shortMessage : "The wallet request failed";
 
-export const isWalletCallBundleUnsupported = (cause: unknown): boolean =>
-  findViemErrorCause(cause, MethodNotFoundRpcError) !== undefined ||
-  findViemErrorCause(cause, MethodNotSupportedRpcError) !== undefined;
+export const isWalletCallBundleUnsupported = (cause: unknown): boolean => {
+  if (
+    findViemErrorCause(cause, MethodNotFoundRpcError) !== undefined ||
+    findViemErrorCause(cause, MethodNotSupportedRpcError) !== undefined
+  ) {
+    return true;
+  }
+  const invalidRequest = findViemErrorCause(cause, InvalidRequestRpcError);
+  return (
+    invalidRequest !== undefined &&
+    /unsupported method.*wallet_(?:getCapabilities|sendCalls)/i.test(invalidRequest.details)
+  );
+};
 
 export function walletRequestError(
   cause: unknown,

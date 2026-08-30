@@ -3,6 +3,7 @@ import { Effect, Schema } from "effect";
 import {
   enhancedAccessControlRoles,
   permissionedResolverInitializableV2InterfaceInitializeAbi,
+  permissionedResolverV2SepoliaInitializeAbi,
   verifiableFactoryV2DeployProxyAbi,
 } from "@ensforge/contracts/v2";
 import { encodeFunctionData } from "viem";
@@ -44,19 +45,27 @@ export const prepareCreateResolver: EnsWriteIntentPreparer<CreateResolverParamet
     }
     const data = yield* Effect.try({
       try: () => {
-        const initialization = encodeFunctionData({
-          abi: permissionedResolverInitializableV2InterfaceInitializeAbi,
-          functionName: "initialize",
-          args: [
-            [
-              {
-                account: admin,
-                roleBitmap: parameters.roles ?? enhancedAccessControlRoles.allRoles,
-              },
-            ],
-            setters,
-          ],
-        });
+        const roles = parameters.roles ?? enhancedAccessControlRoles.allRoles;
+        const initialization =
+          profile.v2.id === "sepolia-v2"
+            ? encodeFunctionData({
+                abi: permissionedResolverV2SepoliaInitializeAbi,
+                functionName: "initialize",
+                args: [admin, roles, setters],
+              })
+            : encodeFunctionData({
+                abi: permissionedResolverInitializableV2InterfaceInitializeAbi,
+                functionName: "initialize",
+                args: [
+                  [
+                    {
+                      account: admin,
+                      roleBitmap: roles,
+                    },
+                  ],
+                  setters,
+                ],
+              });
         return encodeFunctionData({
           abi: verifiableFactoryV2DeployProxyAbi,
           functionName: "deployProxy",

@@ -8,6 +8,7 @@ export * from "./expiry.js";
 export * from "./migration-helper.js";
 export * from "./permissioned-registry.js";
 export * from "./permissioned-resolver.js";
+export * from "./public-resolver.js";
 export * from "./registration.js";
 export * from "./rent-price-oracle.js";
 export * from "./renewal.js";

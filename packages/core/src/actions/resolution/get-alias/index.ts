@@ -34,9 +34,14 @@ const getAliasEffect = Effect.fn("ensforge.getAlias")(function* (
           reason: "RESOLVER_NOT_FOUND",
         } as const satisfies AliasResult;
       }
-      if (
-        !(yield* supportsInterface(discovery.address, resolverInterfaceIds.permissionedResolver))
-      ) {
+      const permissioned = yield* Effect.all(
+        [
+          supportsInterface(discovery.address, resolverInterfaceIds.permissionedResolver),
+          supportsInterface(discovery.address, resolverInterfaceIds.permissionedResolverSepolia),
+        ] as const,
+        { concurrency: "unbounded" },
+      ).pipe(Effect.map((results) => results.some(Boolean)));
+      if (!permissioned) {
         return {
           supported: false,
           name,

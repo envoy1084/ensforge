@@ -66,6 +66,10 @@ describe("resolver lifecycle integration", () => {
       const parameters = { salt: 12_001n } as const;
       const predicted = yield* predictResolverAddress.effect(devnet.configs.v2, parameters);
       const created = yield* createResolver.effect(devnet.configs.v2, parameters);
+      const predictedAfterDeployment = yield* predictResolverAddress.effect(
+        devnet.configs.v2,
+        parameters,
+      );
 
       yield* setResolver.effect(devnet.configs.v2, { name, resolver: created.resolver });
       const capabilities = yield* getResolverCapabilities.effect(devnet.configs.v2, { name });
@@ -73,6 +77,7 @@ describe("resolver lifecycle integration", () => {
 
       assert.strictEqual(created.status, "deployed");
       assert.strictEqual(created.resolver, predicted);
+      assert.strictEqual(predictedAfterDeployment, predicted);
       assert.strictEqual(
         created.implementation,
         devnet.deployments.v2.implementations.permissionedResolver,

@@ -69,3 +69,13 @@ export const verifiableFactoryV2VerifyContractAbi = [
     type: "function",
   },
 ] as const satisfies Abi;
+
+export const verifiableFactoryV2ProxyLogicAbi = [
+  {
+    inputs: [],
+    name: "proxyLogic",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+] as const satisfies Abi;

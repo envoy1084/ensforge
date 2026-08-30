@@ -1,5 +1,39 @@
 import type { Abi } from "viem";
 
+export const userRegistryV2InitializeAbi = [
+  {
+    inputs: [
+      {
+        components: [
+          { internalType: "address", name: "account", type: "address" },
+          { internalType: "uint256", name: "roleBitmap", type: "uint256" },
+        ],
+        internalType: "struct Grant[]",
+        name: "grants",
+        type: "tuple[]",
+      },
+    ],
+    name: "initialize",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+] as const satisfies Abi;
+
+/** Initializer used by the public `sepolia-v2` deployment. */
+export const userRegistryV2SepoliaInitializeAbi = [
+  {
+    inputs: [
+      { internalType: "address", name: "rootAccount", type: "address" },
+      { internalType: "uint256", name: "roleBitmap", type: "uint256" },
+    ],
+    name: "initialize",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+] as const satisfies Abi;
+
 const userRegistryV2Errors = [
   {
     inputs: [

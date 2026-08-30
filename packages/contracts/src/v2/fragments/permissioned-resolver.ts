@@ -33,6 +33,33 @@ export const permissionedResolverInitializableV2InterfaceInitializeAbi = [
   },
 ] as const satisfies Abi;
 
+/** Initializer used by the public `sepolia-v2` deployment. */
+export const permissionedResolverV2SepoliaInitializeAbi = [
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "admin",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "roleBitmap",
+        type: "uint256",
+      },
+      {
+        internalType: "bytes[]",
+        name: "setters",
+        type: "bytes[]",
+      },
+    ],
+    name: "initialize",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+] as const satisfies Abi;
+
 const permissionedResolverV2Errors = [
   {
     inputs: [

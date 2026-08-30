@@ -3,6 +3,7 @@ import { Effect } from "effect";
 
 import { mainnetV1Deployment, type EnsV1Deployment } from "@ensforge/contracts/deployments";
 import {
+  InvalidRequestRpcError,
   MethodNotFoundRpcError,
   TimeoutError,
   UserRejectedRequestError,
@@ -505,6 +506,22 @@ describe("write execution", () => {
         new MethodNotFoundRpcError(new Error("unsupported"), {
           method: "wallet_getCapabilities",
         }),
+      );
+      const result = yield* sendCalls.effect(harness.config, {
+        calls: [testWrite.call({ to: target })],
+        mode: "auto",
+      });
+
+      assert.strictEqual(result.mode, "sequential");
+      expect(harness.walletClient.sendCalls).not.toHaveBeenCalled();
+    }),
+  );
+
+  it.effect("falls back when an RPC reports wallet capabilities as an invalid request", () =>
+    Effect.gen(function* () {
+      const harness = makeHarness();
+      vi.mocked(harness.walletClient.getCapabilities).mockRejectedValue(
+        new InvalidRequestRpcError(new Error("Unsupported method: wallet_getCapabilities on eth")),
       );
       const result = yield* sendCalls.effect(harness.config, {
         calls: [testWrite.call({ to: target })],

@@ -23,10 +23,13 @@ export const readRegistryPermissionTarget = Effect.fn("readRegistryPermissionTar
     } as const;
   }
 
-  const supported = yield* supportsInterface(
-    route.parentRegistry,
-    registryInterfaceIds.permissionedRegistry,
-  );
+  const supported = yield* Effect.all(
+    [
+      supportsInterface(route.parentRegistry, registryInterfaceIds.permissionedRegistry),
+      supportsInterface(route.parentRegistry, registryInterfaceIds.permissionedRegistrySepolia),
+    ] as const,
+    { concurrency: "unbounded" },
+  ).pipe(Effect.map((results) => results.some(Boolean)));
   if (!supported) {
     return {
       supported: false,

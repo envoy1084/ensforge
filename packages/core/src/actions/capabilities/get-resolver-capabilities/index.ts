@@ -39,6 +39,7 @@ const resolverInterfaces = {
   dnsZone: dnsZoneResolverInterfaceId,
   extended: extendedResolverInterfaceId,
   permissioned: resolverInterfaceIds.permissionedResolver,
+  permissionedSepolia: resolverInterfaceIds.permissionedResolverSepolia,
 } as const;
 
 const emptyProfiles = {
@@ -77,7 +78,13 @@ const getResolverCapabilitiesEffect = Effect.fn("ensforge.getResolverCapabilitie
       }
       const support = yield* supportsInterfaces(discovery.address, resolverInterfaces);
       const deployment = yield* DeploymentService;
-      const { extended, permissioned, ...profiles } = support;
+      const {
+        extended,
+        permissioned: currentPermissioned,
+        permissionedSepolia,
+        ...profiles
+      } = support;
+      const permissioned = currentPermissioned || permissionedSepolia;
       return {
         address: discovery.address,
         node: discovery.node,
