@@ -112,7 +112,13 @@ export const makeCcipRequest =
         return result satisfies Hex;
       } catch (cause) {
         if (requestOptions?.signal?.aborted === true) throw cause;
-        lastError = cause;
+        lastError = timeout.aborted
+          ? new GatewayError({
+              code: "GATEWAY_TIMEOUT",
+              message: `Gateway request exceeded the configured ${policy.timeout}ms timeout`,
+              cause,
+            })
+          : cause;
       }
     }
     throw lastError;
