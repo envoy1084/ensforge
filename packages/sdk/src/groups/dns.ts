@@ -12,9 +12,22 @@ import {
   type EnsforgeConfig,
 } from "@ensforge/core";
 
-import { bindAction } from "../internal/bind-action.js";
+import { bindAction, type BoundAction } from "../internal/bind-action.js";
 
-export const makeDnsActions = (config: EnsforgeConfig) =>
+export interface DnsActions {
+  readonly claimDnsName: BoundAction<typeof claimDnsName>;
+  readonly getDnsClaimStatus: BoundAction<typeof getDnsClaimStatus>;
+  readonly getDnsImportPlan: BoundAction<typeof getDnsImportPlan>;
+  readonly getDnsRecord: BoundAction<typeof getDnsRecord>;
+  readonly getDnsRecords: BoundAction<typeof getDnsRecords>;
+  readonly getZoneHash: BoundAction<typeof getZoneHash>;
+  readonly hasDnsRecords: BoundAction<typeof hasDnsRecords>;
+  readonly importDnsName: BoundAction<typeof importDnsName>;
+  readonly setDnsRecords: BoundAction<typeof setDnsRecords>;
+  readonly setZoneHash: BoundAction<typeof setZoneHash>;
+}
+
+export const makeDnsActions = (config: EnsforgeConfig): DnsActions =>
   Object.freeze({
     claimDnsName: bindAction(config, claimDnsName),
     getDnsClaimStatus: bindAction(config, getDnsClaimStatus),
@@ -27,5 +40,3 @@ export const makeDnsActions = (config: EnsforgeConfig) =>
     setDnsRecords: bindAction(config, setDnsRecords),
     setZoneHash: bindAction(config, setZoneHash),
   });
-
-export type DnsActions = ReturnType<typeof makeDnsActions>;

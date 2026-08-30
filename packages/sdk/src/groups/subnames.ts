@@ -9,9 +9,19 @@ import {
   type EnsforgeConfig,
 } from "@ensforge/core";
 
-import { bindAction } from "../internal/bind-action.js";
+import { bindAction, type BoundAction } from "../internal/bind-action.js";
 
-export const makeSubnameActions = (config: EnsforgeConfig) =>
+export interface SubnameActions {
+  readonly createSubname: BoundAction<typeof createSubname>;
+  readonly deleteSubname: BoundAction<typeof deleteSubname>;
+  readonly setSubnameExpiry: BoundAction<typeof setSubnameExpiry>;
+  readonly setSubnameManager: BoundAction<typeof setSubnameManager>;
+  readonly setSubnameRecord: BoundAction<typeof setSubnameRecord>;
+  readonly setSubnameResolver: BoundAction<typeof setSubnameResolver>;
+  readonly transferSubname: BoundAction<typeof transferSubname>;
+}
+
+export const makeSubnameActions = (config: EnsforgeConfig): SubnameActions =>
   Object.freeze({
     createSubname: bindAction(config, createSubname),
     deleteSubname: bindAction(config, deleteSubname),
@@ -21,5 +31,3 @@ export const makeSubnameActions = (config: EnsforgeConfig) =>
     setSubnameResolver: bindAction(config, setSubnameResolver),
     transferSubname: bindAction(config, transferSubname),
   });
-
-export type SubnameActions = ReturnType<typeof makeSubnameActions>;

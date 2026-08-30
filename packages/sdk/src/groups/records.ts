@@ -29,9 +29,43 @@ import {
   type EnsforgeConfig,
 } from "@ensforge/core";
 
-import { bindAction } from "../internal/bind-action.js";
+import {
+  bindAction,
+  type BoundAction,
+  type BoundGetRecordsAction,
+} from "../internal/bind-action.js";
 
-export const makeRecordsActions = (config: EnsforgeConfig) =>
+export interface RecordsActions {
+  readonly clearAvatar: BoundAction<typeof clearAvatar>;
+  readonly clearRecords: BoundAction<typeof clearRecords>;
+  readonly getAbi: BoundAction<typeof getAbi>;
+  readonly getAddress: BoundAction<typeof getAddress>;
+  readonly getAddresses: BoundAction<typeof getAddresses>;
+  readonly getAvatar: BoundAction<typeof getAvatar>;
+  readonly getContentHash: BoundAction<typeof getContentHash>;
+  readonly getData: BoundAction<typeof getData>;
+  readonly getInterface: BoundAction<typeof getInterface>;
+  readonly getName: BoundAction<typeof getName>;
+  readonly getPubkey: BoundAction<typeof getPubkey>;
+  readonly getRecords: BoundGetRecordsAction;
+  readonly getText: BoundAction<typeof getText>;
+  readonly getTexts: BoundAction<typeof getTexts>;
+  readonly setAbi: BoundAction<typeof setAbi>;
+  readonly setAddress: BoundAction<typeof setAddress>;
+  readonly setAddresses: BoundAction<typeof setAddresses>;
+  readonly setAlias: BoundAction<typeof setAlias>;
+  readonly setAvatar: BoundAction<typeof setAvatar>;
+  readonly setContentHash: BoundAction<typeof setContentHash>;
+  readonly setData: BoundAction<typeof setData>;
+  readonly setInterface: BoundAction<typeof setInterface>;
+  readonly setName: BoundAction<typeof setName>;
+  readonly setPubkey: BoundAction<typeof setPubkey>;
+  readonly setRecords: BoundAction<typeof setRecords>;
+  readonly setText: BoundAction<typeof setText>;
+  readonly setTexts: BoundAction<typeof setTexts>;
+}
+
+export const makeRecordsActions = (config: EnsforgeConfig): RecordsActions =>
   Object.freeze({
     clearAvatar: bindAction(config, clearAvatar),
     clearRecords: bindAction(config, clearRecords),
@@ -61,5 +95,3 @@ export const makeRecordsActions = (config: EnsforgeConfig) =>
     setText: bindAction(config, setText),
     setTexts: bindAction(config, setTexts),
   });
-
-export type RecordsActions = ReturnType<typeof makeRecordsActions>;

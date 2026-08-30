@@ -7,9 +7,17 @@ import {
   type EnsforgeConfig,
 } from "@ensforge/core";
 
-import { bindAction } from "../internal/bind-action.js";
+import { bindAction, type BoundAction } from "../internal/bind-action.js";
 
-export const makeReverseActions = (config: EnsforgeConfig) =>
+export interface ReverseActions {
+  readonly clearPrimaryName: BoundAction<typeof clearPrimaryName>;
+  readonly getPrimaryName: BoundAction<typeof getPrimaryName>;
+  readonly setContractPrimaryName: BoundAction<typeof setContractPrimaryName>;
+  readonly setPrimaryName: BoundAction<typeof setPrimaryName>;
+  readonly setPrimaryNameForAddress: BoundAction<typeof setPrimaryNameForAddress>;
+}
+
+export const makeReverseActions = (config: EnsforgeConfig): ReverseActions =>
   Object.freeze({
     clearPrimaryName: bindAction(config, clearPrimaryName),
     getPrimaryName: bindAction(config, getPrimaryName),
@@ -17,5 +25,3 @@ export const makeReverseActions = (config: EnsforgeConfig) =>
     setPrimaryName: bindAction(config, setPrimaryName),
     setPrimaryNameForAddress: bindAction(config, setPrimaryNameForAddress),
   });
-
-export type ReverseActions = ReturnType<typeof makeReverseActions>;

@@ -16,9 +16,26 @@ import {
   type EnsforgeConfig,
 } from "@ensforge/core";
 
-import { bindAction } from "../internal/bind-action.js";
+import { bindAction, type BoundAction } from "../internal/bind-action.js";
 
-export const makeCapabilitiesActions = (config: EnsforgeConfig) =>
+export interface CapabilitiesActions {
+  readonly getNameCapabilities: BoundAction<typeof getNameCapabilities>;
+  readonly getOperatorApproval: BoundAction<typeof getOperatorApproval>;
+  readonly getRecordPermissions: BoundAction<typeof getRecordPermissions>;
+  readonly getRegistryCapabilities: BoundAction<typeof getRegistryCapabilities>;
+  readonly getRegistryRoles: BoundAction<typeof getRegistryRoles>;
+  readonly getRequiredAuthorization: BoundAction<typeof getRequiredAuthorization>;
+  readonly getResolverCapabilities: BoundAction<typeof getResolverCapabilities>;
+  readonly getResolverDelegateApproval: BoundAction<typeof getResolverDelegateApproval>;
+  readonly getResolverRoles: BoundAction<typeof getResolverRoles>;
+  readonly getTokenApproval: BoundAction<typeof getTokenApproval>;
+  readonly getWrapperPermissions: BoundAction<typeof getWrapperPermissions>;
+  readonly getWriteTarget: BoundAction<typeof getWriteTarget>;
+  readonly hasRegistryRoles: BoundAction<typeof hasRegistryRoles>;
+  readonly hasResolverRoles: BoundAction<typeof hasResolverRoles>;
+}
+
+export const makeCapabilitiesActions = (config: EnsforgeConfig): CapabilitiesActions =>
   Object.freeze({
     getNameCapabilities: bindAction(config, getNameCapabilities),
     getOperatorApproval: bindAction(config, getOperatorApproval),
@@ -35,5 +52,3 @@ export const makeCapabilitiesActions = (config: EnsforgeConfig) =>
     hasRegistryRoles: bindAction(config, hasRegistryRoles),
     hasResolverRoles: bindAction(config, hasResolverRoles),
   });
-
-export type CapabilitiesActions = ReturnType<typeof makeCapabilitiesActions>;

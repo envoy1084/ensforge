@@ -14,9 +14,24 @@ import {
   type EnsforgeConfig,
 } from "@ensforge/core";
 
-import { bindAction } from "../internal/bind-action.js";
+import { bindAction, type BoundAction } from "../internal/bind-action.js";
 
-export const makeResolutionActions = (config: EnsforgeConfig) =>
+export interface ResolutionActions {
+  readonly createResolver: BoundAction<typeof createResolver>;
+  readonly getAlias: BoundAction<typeof getAlias>;
+  readonly getOrCreateResolver: BoundAction<typeof getOrCreateResolver>;
+  readonly getResolver: BoundAction<typeof getResolver>;
+  readonly getResolverVersion: BoundAction<typeof getResolverVersion>;
+  readonly predictResolverAddress: BoundAction<typeof predictResolverAddress>;
+  readonly resolve: BoundAction<typeof resolve>;
+  readonly resolveBatch: BoundAction<typeof resolveBatch>;
+  readonly resolveWithResolver: BoundAction<typeof resolveWithResolver>;
+  readonly setResolver: BoundAction<typeof setResolver>;
+  readonly setResolverAndRecords: BoundAction<typeof setResolverAndRecords>;
+  readonly upgradeResolver: BoundAction<typeof upgradeResolver>;
+}
+
+export const makeResolutionActions = (config: EnsforgeConfig): ResolutionActions =>
   Object.freeze({
     createResolver: bindAction(config, createResolver),
     getAlias: bindAction(config, getAlias),
@@ -31,5 +46,3 @@ export const makeResolutionActions = (config: EnsforgeConfig) =>
     setResolverAndRecords: bindAction(config, setResolverAndRecords),
     upgradeResolver: bindAction(config, upgradeResolver),
   });
-
-export type ResolutionActions = ReturnType<typeof makeResolutionActions>;

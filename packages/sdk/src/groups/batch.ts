@@ -12,9 +12,27 @@ import {
   type EnsforgeConfig,
 } from "@ensforge/core";
 
-import { bindAction } from "../internal/bind-action.js";
+import {
+  bindAction,
+  type BoundAction,
+  type BoundReadBatch,
+  type BoundReadBatchSettled,
+} from "../internal/bind-action.js";
 
-export const makeBatchActions = (config: EnsforgeConfig) =>
+export interface BatchActions {
+  readonly estimateCalls: BoundAction<typeof estimateCalls>;
+  readonly executeWritePlan: BoundAction<typeof executeWritePlan>;
+  readonly getCallsStatus: BoundAction<typeof getCallsStatus>;
+  readonly getWalletCapabilities: BoundAction<typeof getWalletCapabilities>;
+  readonly prepareCalls: BoundAction<typeof prepareCalls>;
+  readonly readBatch: BoundReadBatch;
+  readonly readBatchSettled: BoundReadBatchSettled;
+  readonly resumeCalls: BoundAction<typeof resumeCalls>;
+  readonly sendCalls: BoundAction<typeof sendCalls>;
+  readonly simulateCalls: BoundAction<typeof simulateCalls>;
+}
+
+export const makeBatchActions = (config: EnsforgeConfig): BatchActions =>
   Object.freeze({
     estimateCalls: bindAction(config, estimateCalls),
     executeWritePlan: bindAction(config, executeWritePlan),
@@ -27,5 +45,3 @@ export const makeBatchActions = (config: EnsforgeConfig) =>
     sendCalls: bindAction(config, sendCalls),
     simulateCalls: bindAction(config, simulateCalls),
   });
-
-export type BatchActions = ReturnType<typeof makeBatchActions>;

@@ -8,9 +8,18 @@ import {
   type EnsforgeConfig,
 } from "@ensforge/core";
 
-import { bindAction } from "../internal/bind-action.js";
+import { bindAction, type BoundAction } from "../internal/bind-action.js";
 
-export const makeOwnershipActions = (config: EnsforgeConfig) =>
+export interface OwnershipActions {
+  readonly getTtl: BoundAction<typeof getTtl>;
+  readonly reclaimName: BoundAction<typeof reclaimName>;
+  readonly setManager: BoundAction<typeof setManager>;
+  readonly setTtl: BoundAction<typeof setTtl>;
+  readonly transferName: BoundAction<typeof transferName>;
+  readonly transferRegistrant: BoundAction<typeof transferRegistrant>;
+}
+
+export const makeOwnershipActions = (config: EnsforgeConfig): OwnershipActions =>
   Object.freeze({
     getTtl: bindAction(config, getTtl),
     reclaimName: bindAction(config, reclaimName),
@@ -19,5 +28,3 @@ export const makeOwnershipActions = (config: EnsforgeConfig) =>
     transferName: bindAction(config, transferName),
     transferRegistrant: bindAction(config, transferRegistrant),
   });
-
-export type OwnershipActions = ReturnType<typeof makeOwnershipActions>;

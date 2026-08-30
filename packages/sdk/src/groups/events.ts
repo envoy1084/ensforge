@@ -1,12 +1,16 @@
 import { getEnsEvents, getNameHistory, watchEnsEvents, type EnsforgeConfig } from "@ensforge/core";
 
-import { bindAction } from "../internal/bind-action.js";
+import { bindAction, type BoundAction, type BoundWatchEnsEvents } from "../internal/bind-action.js";
 
-export const makeEventsActions = (config: EnsforgeConfig) =>
+export interface EventsActions {
+  readonly getEnsEvents: BoundAction<typeof getEnsEvents>;
+  readonly getNameHistory: BoundAction<typeof getNameHistory>;
+  readonly watchEnsEvents: BoundWatchEnsEvents;
+}
+
+export const makeEventsActions = (config: EnsforgeConfig): EventsActions =>
   Object.freeze({
     getEnsEvents: bindAction(config, getEnsEvents),
     getNameHistory: bindAction(config, getNameHistory),
     watchEnsEvents: bindAction(config, watchEnsEvents),
   });
-
-export type EventsActions = ReturnType<typeof makeEventsActions>;

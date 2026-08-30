@@ -17,9 +17,27 @@ import {
   type EnsforgeConfig,
 } from "@ensforge/core";
 
-import { bindAction } from "../internal/bind-action.js";
+import { bindAction, type BoundAction } from "../internal/bind-action.js";
 
-export const makeRegistrationActions = (config: EnsforgeConfig) =>
+export interface RegistrationActions {
+  readonly approvePaymentToken: BoundAction<typeof approvePaymentToken>;
+  readonly approveRenewalPayment: BoundAction<typeof approveRenewalPayment>;
+  readonly commitName: BoundAction<typeof commitName>;
+  readonly completeRegistration: BoundAction<typeof completeRegistration>;
+  readonly getCommitmentStatus: BoundAction<typeof getCommitmentStatus>;
+  readonly getRegistrationParameters: BoundAction<typeof getRegistrationParameters>;
+  readonly getRegistrationPlan: BoundAction<typeof getRegistrationPlan>;
+  readonly getRegistrationPrice: BoundAction<typeof getRegistrationPrice>;
+  readonly getRenewalPrice: BoundAction<typeof getRenewalPrice>;
+  readonly isPaymentTokenSupported: BoundAction<typeof isPaymentTokenSupported>;
+  readonly makeRegistrationCommitment: BoundAction<typeof makeRegistrationCommitment>;
+  readonly registerName: BoundAction<typeof registerName>;
+  readonly registerNames: BoundAction<typeof registerNames>;
+  readonly renewName: BoundAction<typeof renewName>;
+  readonly renewNames: BoundAction<typeof renewNames>;
+}
+
+export const makeRegistrationActions = (config: EnsforgeConfig): RegistrationActions =>
   Object.freeze({
     approvePaymentToken: bindAction(config, approvePaymentToken),
     approveRenewalPayment: bindAction(config, approveRenewalPayment),
@@ -37,5 +55,3 @@ export const makeRegistrationActions = (config: EnsforgeConfig) =>
     renewName: bindAction(config, renewName),
     renewNames: bindAction(config, renewNames),
   });
-
-export type RegistrationActions = ReturnType<typeof makeRegistrationActions>;

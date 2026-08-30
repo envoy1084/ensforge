@@ -17,9 +17,27 @@ import {
   type EnsforgeConfig,
 } from "@ensforge/core";
 
-import { bindAction } from "../internal/bind-action.js";
+import { bindAction, type BoundAction } from "../internal/bind-action.js";
 
-export const makeNameActions = (config: EnsforgeConfig) =>
+export interface NameActions {
+  readonly getCanonicalResource: BoundAction<typeof getCanonicalResource>;
+  readonly getExpiry: BoundAction<typeof getExpiry>;
+  readonly getManager: BoundAction<typeof getManager>;
+  readonly getNameState: BoundAction<typeof getNameState>;
+  readonly getNameStatus: BoundAction<typeof getNameStatus>;
+  readonly getOwner: BoundAction<typeof getOwner>;
+  readonly getProtocol: BoundAction<typeof getProtocol>;
+  readonly getRegistrant: BoundAction<typeof getRegistrant>;
+  readonly getRegistry: BoundAction<typeof getRegistry>;
+  readonly getTokenId: BoundAction<typeof getTokenId>;
+  readonly isAvailable: BoundAction<typeof isAvailable>;
+  readonly isMigrated: BoundAction<typeof isMigrated>;
+  readonly isRenewable: BoundAction<typeof isRenewable>;
+  readonly isReserved: BoundAction<typeof isReserved>;
+  readonly isWrapped: BoundAction<typeof isWrapped>;
+}
+
+export const makeNameActions = (config: EnsforgeConfig): NameActions =>
   Object.freeze({
     getCanonicalResource: bindAction(config, getCanonicalResource),
     getExpiry: bindAction(config, getExpiry),
@@ -37,5 +55,3 @@ export const makeNameActions = (config: EnsforgeConfig) =>
     isReserved: bindAction(config, isReserved),
     isWrapped: bindAction(config, isWrapped),
   });
-
-export type NameActions = ReturnType<typeof makeNameActions>;
