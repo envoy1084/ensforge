@@ -149,7 +149,10 @@ const persistState = async () => {
 const sleep = (milliseconds) =>
   new Promise((resolveSleep) => setTimeout(resolveSleep, milliseconds));
 const retryable = (error) =>
-  /429|rate.?limit|timeout|timed out|network|socket|fetch failed|connection|rpc/i.test(
+  !/execution reverted|contract function reverted/i.test(
+    error instanceof Error ? error.message : String(error),
+  ) &&
+  /429|rate.?limit|timeout|timed out|network|socket|fetch failed|connection/i.test(
     error instanceof Error ? `${error.name} ${error.message}` : String(error),
   );
 
@@ -180,7 +183,7 @@ const step = async (id, operation) => {
 const waitForTransaction = async (hash) =>
   publicClient.waitForTransactionReceipt({ hash, confirmations, timeout: 180_000 });
 
-const ownerOf = async (name) => (await sdk.name.getOwner({ name })).owner;
+const ownerOf = async (name) => (await sdk.name.getOwner({ name }))?.owner ?? null;
 
 const requireOwned = async (name, expectedOwner = account.address) => {
   const owner = await ownerOf(name);
@@ -278,9 +281,11 @@ const register = async ({ name, resolver, secret }) => {
 };
 
 const ensureSubname = async ({ name, owner = account.address, resolver, expiry }) => {
-  const current = await sdk.name.getNameState({ name });
-  if (!current.available) {
-    await requireOwned(name, owner);
+  const currentOwner = await ownerOf(name);
+  if (currentOwner !== null) {
+    if (!isAddressEqual(currentOwner, owner)) {
+      throw new Error(`${name} is owned by ${currentOwner}, expected ${owner}`);
+    }
     return;
   }
   await sdk.subnames.createSubname({
@@ -339,6 +344,12 @@ await step("register-root", () =>
 await step("register-bare-root", () =>
   register({ name: bareRoot, secret: state.secrets.bareRoot }),
 );
+await step("clear-bare-root-resolver", async () => {
+  const resolver = await sdk.resolution.getResolver({ name: bareRoot });
+  if (resolver !== null) {
+    await sdk.resolution.setResolver({ name: bareRoot, resolver: zeroAddress });
+  }
+});
 
 await step("create-primary-subnames", async () => {
   const { timestamp } = await publicClient.getBlock({ blockTag: "latest" });
@@ -382,15 +393,16 @@ await step("set-inherited-resolver-record", () =>
 await step("set-alias", () =>
   sdk.records.setAlias({ name: fixtures.names.alias, target: fixtures.names.profile }),
 );
-await step("set-dns-zone-hash", () =>
-  sdk.dns.setZoneHash({ name: fixtures.names.dns, value: fixtures.records.dns.zoneHash }),
-);
-await step("set-dns-record", () =>
-  sdk.dns.setDnsRecords({
+await step("verify-dns-write-unavailable", async () => {
+  const permissions = await sdk.capabilities.getRecordPermissions({
     name: fixtures.names.dns,
-    data: fixtures.records.dns.wire,
-  }),
-);
+    account: account.address,
+    records: [{ type: "dnsZone" }, { type: "dnsRecord" }],
+  });
+  if (permissions.records.some(({ authorization }) => authorization.status === "authorized")) {
+    throw new Error("The V2-only DNS fixture unexpectedly reports writable PublicResolver records");
+  }
+});
 
 await step("grant-permission-fixtures", async () => {
   await sdk.permissions.setOperatorApproval({
@@ -426,15 +438,19 @@ await step("set-primary-name", () =>
 );
 
 await step("transfer-different-owner", async () => {
-  const stateBefore = await sdk.name.getNameState({ name: fixtures.names.differentOwner });
-  if (stateBefore.available) {
+  const ownerBefore = await ownerOf(fixtures.names.differentOwner);
+  if (ownerBefore === null) {
     await ensureSubname({ name: fixtures.names.differentOwner });
-  } else if (isAddressEqual(stateBefore.owner ?? zeroAddress, secondary)) {
+  } else if (isAddressEqual(ownerBefore, secondary)) {
     return;
-  } else if (!isAddressEqual(stateBefore.owner ?? zeroAddress, account.address)) {
+  } else if (!isAddressEqual(ownerBefore, account.address)) {
     throw new Error(`${fixtures.names.differentOwner} is not controlled by the fixture signer`);
   }
-  await sdk.subnames.transferSubname({ name: fixtures.names.differentOwner, to: secondary });
+  await sdk.subnames.transferSubname({
+    name: fixtures.names.differentOwner,
+    to: secondary,
+    mode: "sequential",
+  });
 });
 
 const profile = await sdk.records.getRecords({
@@ -552,8 +568,8 @@ if (inheritedResolver === null || profile.addresses.some(({ address }) => addres
 if (primaryName === null || primaryName.name !== fixtures.names.profile || !primaryName.match) {
   throw new Error("Primary-name fixture did not pass forward verification");
 }
-if (dnsRecord.value === null || zoneHash.value !== fixtures.records.dns.zoneHash) {
-  throw new Error("DNS resolver fixtures did not round-trip");
+if (dnsRecord.value !== null || zoneHash.value !== null) {
+  throw new Error("V2-only DNS fixture unexpectedly returned populated PublicResolver records");
 }
 if (!registryRoles.supported || (registryRoles.roles & (1n << 24n)) === 0n) {
   throw new Error("Registry-role fixture did not verify");

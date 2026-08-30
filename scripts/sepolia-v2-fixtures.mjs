@@ -89,6 +89,9 @@ export const makeSepoliaV2Fixtures = ({ account, bareRoot, operator, root, secon
         text: { key: "description", value: "Resolver inherited from the fixture root" },
       },
       dns: {
+        writable: false,
+        reason:
+          "The Sepolia PublicResolverV2 authorizes names through the V1 NameWrapper and cannot modify V2-only names",
         zoneHash: `0x${"33".repeat(32)}`,
         recordName: `profile.${names.dns}`,
         resource: 16,
