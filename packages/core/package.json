@@ -12,7 +12,7 @@
     "wagmi",
     "web3"
   ],
-  "homepage": "https://github.com/envoy1084/ensforge#readme",
+  "homepage": "https://ensforge.envoy1084.xyz/core/",
   "bugs": "https://github.com/envoy1084/ensforge/issues",
   "license": "Apache-2.0",
   "repository": {

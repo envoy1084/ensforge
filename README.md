@@ -108,6 +108,9 @@ Package boundaries resolve through generated declarations during editor and type
 Run `pnpm build` after cloning, or keep `pnpm dev` running while changing multiple packages, so
 downstream packages see current declarations without loading every dependency's source graph.
 
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for the complete development, testing, documentation, and
+changeset workflow.
+
 ## License
 
 Apache-2.0

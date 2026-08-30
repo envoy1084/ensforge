@@ -1,0 +1,121 @@
+# Contributing to ensforge
+
+Thanks for helping improve ensforge. Contributions to actions, contracts, integrations, tests, and
+documentation are welcome.
+
+## Prerequisites
+
+- Node.js 24.18.0 or newer in the Node.js 24 release line
+- pnpm 11.10.0
+- Docker for contract integration tests
+
+The repository pins its Node.js version in `.node-version` and its package manager in
+`package.json`.
+
+## Setup
+
+Fork and clone the repository, then install dependencies and build the workspace:
+
+```sh
+pnpm install
+pnpm build
+```
+
+Run `pnpm dev` while changing multiple packages so dependent packages continuously receive current
+declaration files.
+
+## Repository structure
+
+```text
+apps/docs/          VitePress documentation
+packages/contracts/ ENS ABIs, fragments, interfaces, and deployments
+packages/core/      Standalone ENS actions and Effect APIs
+packages/sdk/       Config-bound, grouped SDK
+packages/react/     Providers, hooks, atoms, and cache APIs
+packages/test-env/  Private deterministic ENS integration environment
+packages/template/  Starter for new packages
+```
+
+Keep changes within the package that owns the behavior. Shared public types belong with their domain
+in Core, while implementation details should remain internal.
+
+## Development checks
+
+Run the complete local check before opening a pull request:
+
+```sh
+pnpm check
+pnpm pack:check
+pnpm test:packages
+```
+
+These commands cover formatting, linting, type checking, unit tests, builds, public type performance,
+package metadata, exports, and clean consumer installations.
+
+During development, run a focused package command when it provides a faster feedback loop:
+
+```sh
+pnpm --filter @ensforge/core test
+pnpm --filter @ensforge/core typecheck
+pnpm --filter @ensforge/react test:watch
+pnpm --filter @ensforge/docs dev
+```
+
+## Contract integration tests
+
+Integration tests run against a pinned Docker image containing deterministic ENSv1 and ENSv2 Anvil
+deployments. Docker must be running locally.
+
+```sh
+pnpm test:integration
+```
+
+The test environment starts once for the suite, seeds its fixtures, and resets chain state between
+tests. Normal runs pull the published image and do not build ENS contracts locally.
+
+When adding an action, cover domain logic with focused unit tests and contract behavior with an
+integration test when the behavior depends on deployed bytecode or chain state. Use `@effect/vitest`
+for Effect-based tests and preserve the existing test folder conventions.
+
+## Documentation
+
+Update documentation when changing a public API, configuration option, return type, error, deployment,
+or package entrypoint. Preview the site at `http://localhost:3000`:
+
+```sh
+pnpm --filter @ensforge/docs dev
+```
+
+Keep examples runnable against public exports. Detailed API documentation belongs in `apps/docs`;
+package READMEs should remain useful introductions.
+
+## Commits and pull requests
+
+Use small [Conventional Commits](https://www.conventionalcommits.org/) with clear scopes when useful:
+
+```text
+feat(core): add resolver action
+fix(react): preserve mutation failure state
+docs(sdk): explain Wagmi configuration
+```
+
+A pull request should explain the behavior being changed, include appropriate tests, and pass CI.
+Avoid unrelated refactors in the same change.
+
+## Changesets
+
+Add a changeset for every user-visible change to a published package:
+
+```sh
+pnpm changeset
+```
+
+Choose the affected packages and describe the change from a package user's perspective. The public
+packages use a fixed version group, so Changesets releases `@ensforge/contracts`, `@ensforge/core`,
+`@ensforge/sdk`, and `@ensforge/react` together. Tests, documentation-only changes, and private
+workspace packages generally do not require a changeset.
+
+## License
+
+By contributing, you agree that your contributions are licensed under the
+[Apache License 2.0](./LICENSE).
