@@ -134,6 +134,7 @@
     "prepack": "pnpm build",
     "test": "vitest run --passWithNoTests",
     "test:integration": "vitest run --config vitest.integration.config.ts",
+    "test:live:mainnet": "vitest run --config vitest.live-mainnet.config.ts",
     "test:watch": "vitest --passWithNoTests",
     "typecheck": "tsc --noEmit"
   },

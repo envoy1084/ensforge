@@ -18,6 +18,7 @@
     "release": "changeset publish",
     "test": "turbo run test",
     "test:integration": "pnpm --filter @ensforge/core test:integration",
+    "test:live:mainnet": "pnpm --filter @ensforge/core test:live:mainnet",
     "test:packages": "node scripts/test-packages.mjs",
     "test:watch": "turbo run test:watch",
     "typecheck": "turbo run typecheck",
