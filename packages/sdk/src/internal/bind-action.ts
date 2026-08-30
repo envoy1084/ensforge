@@ -1,9 +1,13 @@
 import type { Effect, Stream } from "effect";
 
 import type {
+  EnsAction,
   EnsEvent,
+  EnsReadAction,
   EnsReadRequest,
   EnsforgeConfig,
+  EnsWriteAction,
+  EnsWriteIntent,
   GetRecordsAction,
   GetRecordsError,
   GetRecordsParameters,
@@ -23,21 +27,36 @@ import type {
 
 type Callable = (...arguments_: never[]) => unknown;
 
-type BindConfigFunction<Function_> = Function_ extends (
-  config: EnsforgeConfig,
-  ...arguments_: infer Arguments
-) => infer Result
-  ? (...arguments_: Arguments) => Result
-  : Function_;
+export interface BoundBaseAction<Parameters, Success, Failure> {
+  (parameters: Parameters, options?: Effect.RunOptions): Promise<Success>;
 
-type BoundProperties<Action> = {
-  readonly [Key in keyof Action]: Key extends "effect" | "stream"
-    ? BindConfigFunction<Action[Key]>
-    : Action[Key];
-};
+  readonly effect: (parameters: Parameters) => Effect.Effect<Success, Failure>;
+}
 
-export type BoundAction<Action extends Callable> = BindConfigFunction<Action> &
-  BoundProperties<Action>;
+export interface BoundReadAction<Parameters, Success, Failure> extends BoundBaseAction<
+  Parameters,
+  Success,
+  Failure
+> {
+  readonly request: (parameters: Parameters) => EnsReadRequest<Success, Failure>;
+}
+
+export interface BoundWriteAction<Parameters, Success, Failure> extends BoundBaseAction<
+  Parameters,
+  Success,
+  Failure
+> {
+  readonly call: (parameters: Parameters) => EnsWriteIntent<Success, Failure>;
+}
+
+export type BoundAction<Action extends Callable> =
+  Action extends EnsReadAction<infer Parameters, infer Success, infer Failure>
+    ? BoundReadAction<Parameters, Success, Failure>
+    : Action extends EnsWriteAction<infer Parameters, infer Success, infer Failure>
+      ? BoundWriteAction<Parameters, Success, Failure>
+      : Action extends EnsAction<infer Parameters, infer Success, infer Failure>
+        ? BoundBaseAction<Parameters, Success, Failure>
+        : never;
 
 export interface BoundGetRecordsAction {
   <const Selection extends GetRecordsSelection>(
