@@ -1,151 +1,151 @@
-/** Complete IL2ReverseRegistrar ABI from ENSv2. */
+/** IL2ReverseRegistrar ABI from the deployed ENSv2 Sepolia contract snapshot. */
 export const l2ReverseRegistrarV2InterfaceAbi = [
   {
+    type: "function",
+    name: "inceptionOf",
     inputs: [
       {
-        internalType: "address",
         name: "addr",
         type: "address",
+        internalType: "address",
       },
     ],
-    name: "inceptionOf",
     outputs: [
       {
-        internalType: "uint256",
         name: "",
         type: "uint256",
+        internalType: "uint256",
       },
     ],
     stateMutability: "view",
-    type: "function",
   },
   {
+    type: "function",
+    name: "setName",
     inputs: [
       {
-        internalType: "string",
         name: "name",
         type: "string",
+        internalType: "string",
       },
     ],
-    name: "setName",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function",
   },
   {
+    type: "function",
+    name: "setNameForAddr",
     inputs: [
       {
-        internalType: "address",
         name: "addr",
         type: "address",
+        internalType: "address",
       },
       {
-        internalType: "string",
         name: "name",
         type: "string",
+        internalType: "string",
       },
     ],
-    name: "setNameForAddr",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function",
   },
   {
+    type: "function",
+    name: "setNameForAddrWithSignature",
     inputs: [
       {
-        components: [
-          {
-            internalType: "string",
-            name: "name",
-            type: "string",
-          },
-          {
-            internalType: "address",
-            name: "addr",
-            type: "address",
-          },
-          {
-            internalType: "uint256[]",
-            name: "chainIds",
-            type: "uint256[]",
-          },
-          {
-            internalType: "uint256",
-            name: "signedAt",
-            type: "uint256",
-          },
-        ],
-        internalType: "struct IL2ReverseRegistrar.NameClaim",
         name: "claim",
         type: "tuple",
+        internalType: "struct IL2ReverseRegistrar.NameClaim",
+        components: [
+          {
+            name: "name",
+            type: "string",
+            internalType: "string",
+          },
+          {
+            name: "addr",
+            type: "address",
+            internalType: "address",
+          },
+          {
+            name: "chainIds",
+            type: "uint256[]",
+            internalType: "uint256[]",
+          },
+          {
+            name: "signedAt",
+            type: "uint256",
+            internalType: "uint256",
+          },
+        ],
       },
       {
-        internalType: "bytes",
         name: "signature",
         type: "bytes",
+        internalType: "bytes",
       },
     ],
-    name: "setNameForAddrWithSignature",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function",
   },
   {
+    type: "function",
+    name: "setNameForContractWithSignature",
     inputs: [
       {
-        components: [
-          {
-            internalType: "string",
-            name: "name",
-            type: "string",
-          },
-          {
-            internalType: "address",
-            name: "addr",
-            type: "address",
-          },
-          {
-            internalType: "uint256[]",
-            name: "chainIds",
-            type: "uint256[]",
-          },
-          {
-            internalType: "uint256",
-            name: "signedAt",
-            type: "uint256",
-          },
-        ],
-        internalType: "struct IL2ReverseRegistrar.NameClaim",
         name: "claim",
         type: "tuple",
+        internalType: "struct IL2ReverseRegistrar.NameClaim",
+        components: [
+          {
+            name: "name",
+            type: "string",
+            internalType: "string",
+          },
+          {
+            name: "addr",
+            type: "address",
+            internalType: "address",
+          },
+          {
+            name: "chainIds",
+            type: "uint256[]",
+            internalType: "uint256[]",
+          },
+          {
+            name: "signedAt",
+            type: "uint256",
+            internalType: "uint256",
+          },
+        ],
       },
       {
-        internalType: "address",
         name: "namer",
         type: "address",
+        internalType: "address",
       },
       {
-        internalType: "bytes",
         name: "signature",
         type: "bytes",
+        internalType: "bytes",
       },
     ],
-    name: "setNameForContractWithSignature",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function",
   },
   {
+    type: "function",
+    name: "syncName",
     inputs: [
       {
-        internalType: "address",
         name: "addr",
         type: "address",
+        internalType: "address",
       },
     ],
-    name: "syncName",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function",
   },
 ] as const;

@@ -1,54 +1,54 @@
-/** Complete ILabelStore ABI from ENSv2. */
+/** ILabelStore ABI from the deployed ENSv2 Sepolia contract snapshot. */
 export const labelStoreV2InterfaceAbi = [
   {
-    anonymous: false,
+    type: "function",
+    name: "getLabel",
     inputs: [
       {
-        indexed: true,
-        internalType: "bytes32",
-        name: "labelHash",
-        type: "bytes32",
-      },
-      {
-        indexed: false,
-        internalType: "string",
-        name: "label",
-        type: "string",
-      },
-    ],
-    name: "Label",
-    type: "event",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
         name: "anyId",
         type: "uint256",
+        internalType: "uint256",
       },
     ],
-    name: "getLabel",
     outputs: [
       {
-        internalType: "string",
         name: "",
         type: "string",
+        internalType: "string",
       },
     ],
     stateMutability: "view",
-    type: "function",
   },
   {
+    type: "function",
+    name: "setLabel",
     inputs: [
       {
-        internalType: "string",
         name: "label",
         type: "string",
+        internalType: "string",
       },
     ],
-    name: "setLabel",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function",
+  },
+  {
+    type: "event",
+    name: "Label",
+    inputs: [
+      {
+        name: "labelHash",
+        type: "bytes32",
+        indexed: true,
+        internalType: "bytes32",
+      },
+      {
+        name: "label",
+        type: "string",
+        indexed: false,
+        internalType: "string",
+      },
+    ],
+    anonymous: false,
   },
 ] as const;

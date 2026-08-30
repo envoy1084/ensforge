@@ -44,11 +44,10 @@ export const sepoliaV2Deployment = {
   },
   experimental: {
     hca: {
-      defaultReverseRegistrarAdapter: "0x5E2D105f1E6BE8444c4Ed96C06806093B829644e",
-      ownerAndSessionValidator: "0x5f249FCa8bB4949105651146858c347E8BFb0F7E",
+      ownerAndSessionValidator: "0x976d90c51afb2c11660eaee94bd42a7e84751d08",
       upgradeGate: "0x3A121Fc283E53d2F45564edf97dC8685Ede35005",
       standaloneFactory: "0x900FF7cF617Ef9D802178B4ef480491e3A782672",
-      standaloneImplementation: "0xAA761541620fC1a42bb701a26a9f107A9DF1E904",
+      standaloneImplementation: "0xd213de41421fed3a5e475943f9d634a0cf64a385",
       trustedSet: "0xb3240a0E6c80984C14def037f4F540eDc3502B48",
     },
   },
@@ -58,8 +57,8 @@ export const sepoliaV2Deployment = {
   },
   provenance: {
     repository: "https://github.com/ensdomains/contracts-v2",
-    ref: "deploy/sepolia-migration-20260731",
-    commit: "892311a7268bf6051d5fe65740f1eebfaf8db431",
+    ref: "deploy/sepolia-build-info",
+    commit: "09bf3ac64a6fb1b215573c019b17e8c501bb3ca0",
     documentation: "https://docs.ens.domains/learn/deployments/",
   },
 } as const satisfies EnsV2Deployment;

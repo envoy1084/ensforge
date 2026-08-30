@@ -3,50 +3,8 @@ import type { Abi } from "viem";
 export const permissionedResolverInitializableV2InterfaceInitializeAbi = [
   {
     inputs: [
-      {
-        components: [
-          {
-            internalType: "address",
-            name: "account",
-            type: "address",
-          },
-          {
-            internalType: "uint256",
-            name: "roleBitmap",
-            type: "uint256",
-          },
-        ],
-        internalType: "struct Grant[]",
-        name: "grants",
-        type: "tuple[]",
-      },
-      {
-        internalType: "bytes[]",
-        name: "calls",
-        type: "bytes[]",
-      },
-    ],
-    name: "initialize",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-] as const satisfies Abi;
-
-/** Initializer used by the public `sepolia-v2` deployment. */
-export const permissionedResolverV2SepoliaInitializeAbi = [
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "admin",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "roleBitmap",
-        type: "uint256",
-      },
+      { internalType: "address", name: "admin", type: "address" },
+      { internalType: "uint256", name: "roleBitmap", type: "uint256" },
       {
         internalType: "bytes[]",
         name: "setters",

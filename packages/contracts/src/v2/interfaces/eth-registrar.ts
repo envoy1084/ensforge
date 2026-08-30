@@ -1,561 +1,519 @@
-/** Complete IETHRegistrar ABI from ENSv2. */
+/** IETHRegistrar ABI from the deployed ENSv2 Sepolia contract snapshot. */
 export const ethRegistrarV2InterfaceAbi = [
   {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "commitment",
-        type: "bytes32",
-      },
-      {
-        internalType: "uint64",
-        name: "validFrom",
-        type: "uint64",
-      },
-      {
-        internalType: "uint64",
-        name: "blockTimestamp",
-        type: "uint64",
-      },
-    ],
-    name: "CommitmentTooNew",
-    type: "error",
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "commitment",
-        type: "bytes32",
-      },
-      {
-        internalType: "uint64",
-        name: "validTo",
-        type: "uint64",
-      },
-      {
-        internalType: "uint64",
-        name: "blockTimestamp",
-        type: "uint64",
-      },
-    ],
-    name: "CommitmentTooOld",
-    type: "error",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint64",
-        name: "duration",
-        type: "uint64",
-      },
-      {
-        internalType: "uint64",
-        name: "minDuration",
-        type: "uint64",
-      },
-    ],
-    name: "DurationTooShort",
-    type: "error",
-  },
-  {
-    inputs: [
-      {
-        internalType: "string",
-        name: "label",
-        type: "string",
-      },
-    ],
-    name: "NameNotAvailable",
-    type: "error",
-  },
-  {
-    inputs: [
-      {
-        internalType: "string",
-        name: "label",
-        type: "string",
-      },
-    ],
-    name: "NameNotRenewable",
-    type: "error",
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "commitment",
-        type: "bytes32",
-      },
-    ],
-    name: "UnexpiredCommitmentExists",
-    type: "error",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "bytes32",
-        name: "commitment",
-        type: "bytes32",
-      },
-    ],
-    name: "CommitmentMade",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "tokenId",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "string",
-        name: "label",
-        type: "string",
-      },
-      {
-        indexed: false,
-        internalType: "address",
-        name: "owner",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "contract IRegistry",
-        name: "subregistry",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "address",
-        name: "resolver",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint64",
-        name: "duration",
-        type: "uint64",
-      },
-      {
-        indexed: false,
-        internalType: "contract IERC20",
-        name: "paymentToken",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "bytes32",
-        name: "referrer",
-        type: "bytes32",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "base",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "premium",
-        type: "uint256",
-      },
-    ],
-    name: "NameRegistered",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "tokenId",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "string",
-        name: "label",
-        type: "string",
-      },
-      {
-        indexed: false,
-        internalType: "uint64",
-        name: "duration",
-        type: "uint64",
-      },
-      {
-        indexed: false,
-        internalType: "uint64",
-        name: "newExpiry",
-        type: "uint64",
-      },
-      {
-        indexed: false,
-        internalType: "contract IERC20",
-        name: "paymentToken",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "bytes32",
-        name: "referrer",
-        type: "bytes32",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-    ],
-    name: "NameRenewed",
-    type: "event",
-  },
-  {
-    inputs: [],
+    type: "function",
     name: "GRACE_PERIOD",
+    inputs: [],
     outputs: [
       {
-        internalType: "uint64",
         name: "",
         type: "uint64",
+        internalType: "uint64",
       },
     ],
     stateMutability: "view",
-    type: "function",
   },
   {
+    type: "function",
+    name: "commit",
     inputs: [
       {
-        internalType: "bytes32",
         name: "commitment",
         type: "bytes32",
+        internalType: "bytes32",
       },
     ],
-    name: "commit",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function",
   },
   {
+    type: "function",
+    name: "commitmentAt",
     inputs: [
       {
-        internalType: "bytes32",
         name: "commitment",
         type: "bytes32",
+        internalType: "bytes32",
       },
     ],
-    name: "commitmentAt",
     outputs: [
       {
-        internalType: "uint64",
         name: "",
         type: "uint64",
+        internalType: "uint64",
       },
     ],
     stateMutability: "view",
-    type: "function",
   },
   {
+    type: "function",
+    name: "getRegisterPrice",
     inputs: [
       {
-        internalType: "string",
         name: "label",
         type: "string",
+        internalType: "string",
       },
       {
-        internalType: "uint64",
         name: "duration",
         type: "uint64",
+        internalType: "uint64",
       },
       {
-        internalType: "contract IERC20",
         name: "paymentToken",
         type: "address",
+        internalType: "contract IERC20",
       },
     ],
-    name: "getRegisterPrice",
     outputs: [
       {
-        internalType: "uint256",
         name: "base",
         type: "uint256",
+        internalType: "uint256",
       },
       {
-        internalType: "uint256",
         name: "premium",
         type: "uint256",
+        internalType: "uint256",
       },
     ],
     stateMutability: "view",
-    type: "function",
   },
   {
+    type: "function",
+    name: "getRemainingGracePeriod",
     inputs: [
       {
-        internalType: "string",
         name: "label",
         type: "string",
+        internalType: "string",
       },
     ],
-    name: "getRemainingGracePeriod",
     outputs: [
       {
-        internalType: "uint64",
         name: "",
         type: "uint64",
+        internalType: "uint64",
       },
     ],
     stateMutability: "view",
-    type: "function",
   },
   {
+    type: "function",
+    name: "getRenewPrice",
     inputs: [
       {
-        internalType: "string",
         name: "label",
         type: "string",
+        internalType: "string",
       },
       {
-        internalType: "uint64",
         name: "duration",
         type: "uint64",
+        internalType: "uint64",
       },
       {
-        internalType: "contract IERC20",
         name: "paymentToken",
         type: "address",
+        internalType: "contract IERC20",
       },
     ],
-    name: "getRenewPrice",
     outputs: [
       {
-        internalType: "uint256",
         name: "",
         type: "uint256",
+        internalType: "uint256",
       },
     ],
     stateMutability: "view",
-    type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "string",
-        name: "label",
-        type: "string",
-      },
-    ],
+    type: "function",
     name: "isAvailable",
+    inputs: [
+      {
+        name: "label",
+        type: "string",
+        internalType: "string",
+      },
+    ],
     outputs: [
       {
-        internalType: "bool",
         name: "",
         type: "bool",
+        internalType: "bool",
       },
     ],
     stateMutability: "view",
-    type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "string",
-        name: "label",
-        type: "string",
-      },
-    ],
+    type: "function",
     name: "isRenewable",
+    inputs: [
+      {
+        name: "label",
+        type: "string",
+        internalType: "string",
+      },
+    ],
     outputs: [
       {
-        internalType: "bool",
         name: "",
         type: "bool",
+        internalType: "bool",
       },
     ],
     stateMutability: "view",
-    type: "function",
   },
   {
+    type: "function",
+    name: "makeCommitment",
     inputs: [
       {
-        internalType: "string",
         name: "label",
         type: "string",
+        internalType: "string",
       },
       {
-        internalType: "address",
         name: "owner",
         type: "address",
+        internalType: "address",
       },
       {
-        internalType: "bytes32",
         name: "secret",
         type: "bytes32",
+        internalType: "bytes32",
       },
       {
-        internalType: "contract IRegistry",
         name: "subregistry",
         type: "address",
+        internalType: "contract IRegistry",
       },
       {
-        internalType: "address",
         name: "resolver",
         type: "address",
+        internalType: "address",
       },
       {
-        internalType: "uint64",
         name: "duration",
         type: "uint64",
+        internalType: "uint64",
       },
       {
-        internalType: "bytes32",
         name: "referrer",
         type: "bytes32",
+        internalType: "bytes32",
       },
     ],
-    name: "makeCommitment",
     outputs: [
       {
-        internalType: "bytes32",
         name: "",
         type: "bytes32",
+        internalType: "bytes32",
       },
     ],
     stateMutability: "pure",
-    type: "function",
   },
   {
+    type: "function",
+    name: "register",
     inputs: [
       {
-        internalType: "string",
         name: "label",
         type: "string",
+        internalType: "string",
       },
       {
-        internalType: "address",
         name: "owner",
         type: "address",
+        internalType: "address",
       },
       {
-        internalType: "bytes32",
         name: "secret",
         type: "bytes32",
+        internalType: "bytes32",
       },
       {
-        internalType: "contract IRegistry",
         name: "subregistry",
         type: "address",
+        internalType: "contract IRegistry",
       },
       {
-        internalType: "address",
         name: "resolver",
         type: "address",
+        internalType: "address",
       },
       {
-        internalType: "uint64",
         name: "duration",
         type: "uint64",
+        internalType: "uint64",
       },
       {
-        internalType: "contract IERC20",
         name: "paymentToken",
         type: "address",
+        internalType: "contract IERC20",
       },
       {
-        internalType: "bytes32",
         name: "referrer",
         type: "bytes32",
+        internalType: "bytes32",
       },
     ],
-    name: "register",
     outputs: [
       {
-        internalType: "uint256",
         name: "",
         type: "uint256",
+        internalType: "uint256",
       },
     ],
     stateMutability: "nonpayable",
-    type: "function",
   },
   {
-    inputs: [
-      {
-        components: [
-          {
-            internalType: "string",
-            name: "label",
-            type: "string",
-          },
-          {
-            internalType: "uint64",
-            name: "duration",
-            type: "uint64",
-          },
-          {
-            internalType: "bytes32",
-            name: "referrer",
-            type: "bytes32",
-          },
-        ],
-        internalType: "struct RenewData",
-        name: "rd",
-        type: "tuple",
-      },
-      {
-        internalType: "contract IERC20",
-        name: "paymentToken",
-        type: "address",
-      },
-    ],
+    type: "function",
     name: "renew",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
     inputs: [
       {
-        components: [
-          {
-            internalType: "string",
-            name: "label",
-            type: "string",
-          },
-          {
-            internalType: "uint64",
-            name: "duration",
-            type: "uint64",
-          },
-          {
-            internalType: "bytes32",
-            name: "referrer",
-            type: "bytes32",
-          },
-        ],
-        internalType: "struct RenewData[]",
-        name: "rds",
-        type: "tuple[]",
+        name: "label",
+        type: "string",
+        internalType: "string",
       },
       {
-        internalType: "contract IERC20",
+        name: "duration",
+        type: "uint64",
+        internalType: "uint64",
+      },
+      {
         name: "paymentToken",
         type: "address",
+        internalType: "contract IERC20",
+      },
+      {
+        name: "referrer",
+        type: "bytes32",
+        internalType: "bytes32",
       },
     ],
-    name: "renewBatch",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function",
+  },
+  {
+    type: "event",
+    name: "CommitmentMade",
+    inputs: [
+      {
+        name: "commitment",
+        type: "bytes32",
+        indexed: false,
+        internalType: "bytes32",
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: "event",
+    name: "NameRegistered",
+    inputs: [
+      {
+        name: "tokenId",
+        type: "uint256",
+        indexed: true,
+        internalType: "uint256",
+      },
+      {
+        name: "label",
+        type: "string",
+        indexed: false,
+        internalType: "string",
+      },
+      {
+        name: "owner",
+        type: "address",
+        indexed: false,
+        internalType: "address",
+      },
+      {
+        name: "subregistry",
+        type: "address",
+        indexed: false,
+        internalType: "contract IRegistry",
+      },
+      {
+        name: "resolver",
+        type: "address",
+        indexed: false,
+        internalType: "address",
+      },
+      {
+        name: "duration",
+        type: "uint64",
+        indexed: false,
+        internalType: "uint64",
+      },
+      {
+        name: "paymentToken",
+        type: "address",
+        indexed: false,
+        internalType: "contract IERC20",
+      },
+      {
+        name: "referrer",
+        type: "bytes32",
+        indexed: true,
+        internalType: "bytes32",
+      },
+      {
+        name: "base",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256",
+      },
+      {
+        name: "premium",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256",
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: "event",
+    name: "NameRenewed",
+    inputs: [
+      {
+        name: "tokenId",
+        type: "uint256",
+        indexed: true,
+        internalType: "uint256",
+      },
+      {
+        name: "label",
+        type: "string",
+        indexed: false,
+        internalType: "string",
+      },
+      {
+        name: "duration",
+        type: "uint64",
+        indexed: false,
+        internalType: "uint64",
+      },
+      {
+        name: "newExpiry",
+        type: "uint64",
+        indexed: false,
+        internalType: "uint64",
+      },
+      {
+        name: "paymentToken",
+        type: "address",
+        indexed: false,
+        internalType: "contract IERC20",
+      },
+      {
+        name: "referrer",
+        type: "bytes32",
+        indexed: true,
+        internalType: "bytes32",
+      },
+      {
+        name: "amount",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256",
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: "error",
+    name: "CommitmentTooNew",
+    inputs: [
+      {
+        name: "commitment",
+        type: "bytes32",
+        internalType: "bytes32",
+      },
+      {
+        name: "validFrom",
+        type: "uint64",
+        internalType: "uint64",
+      },
+      {
+        name: "blockTimestamp",
+        type: "uint64",
+        internalType: "uint64",
+      },
+    ],
+  },
+  {
+    type: "error",
+    name: "CommitmentTooOld",
+    inputs: [
+      {
+        name: "commitment",
+        type: "bytes32",
+        internalType: "bytes32",
+      },
+      {
+        name: "validTo",
+        type: "uint64",
+        internalType: "uint64",
+      },
+      {
+        name: "blockTimestamp",
+        type: "uint64",
+        internalType: "uint64",
+      },
+    ],
+  },
+  {
+    type: "error",
+    name: "DurationTooShort",
+    inputs: [
+      {
+        name: "duration",
+        type: "uint64",
+        internalType: "uint64",
+      },
+      {
+        name: "minDuration",
+        type: "uint64",
+        internalType: "uint64",
+      },
+    ],
+  },
+  {
+    type: "error",
+    name: "NameNotAvailable",
+    inputs: [
+      {
+        name: "label",
+        type: "string",
+        internalType: "string",
+      },
+    ],
+  },
+  {
+    type: "error",
+    name: "NameNotRenewable",
+    inputs: [
+      {
+        name: "label",
+        type: "string",
+        internalType: "string",
+      },
+    ],
+  },
+  {
+    type: "error",
+    name: "UnexpiredCommitmentExists",
+    inputs: [
+      {
+        name: "commitment",
+        type: "bytes32",
+        internalType: "bytes32",
+      },
+    ],
   },
 ] as const;

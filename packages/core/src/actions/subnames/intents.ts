@@ -8,7 +8,6 @@ import {
   permissionedRegistryV2InterfaceRegisterAbi,
   permissionedRegistryV2InterfaceSetSubregistryAbi,
   userRegistryV2InitializeAbi,
-  userRegistryV2SepoliaInitializeAbi,
   userRegistryV2SetParentAbi,
   verifiableFactoryV2DeployProxyAbi,
 } from "@ensforge/contracts/v2";
@@ -113,21 +112,13 @@ export const deployUserRegistryIntent = Effect.fn("ensforge.deployUserRegistryIn
     readonly owner: EthereumAddress;
     readonly roles: bigint;
     readonly salt: bigint;
-    readonly deploymentId: string;
   }) {
     const data = yield* encode("the ENSv2 User Registry deployment", () => {
-      const initialization =
-        parameters.deploymentId === "sepolia-v2"
-          ? encodeFunctionData({
-              abi: userRegistryV2SepoliaInitializeAbi,
-              functionName: "initialize",
-              args: [parameters.owner, parameters.roles],
-            })
-          : encodeFunctionData({
-              abi: userRegistryV2InitializeAbi,
-              functionName: "initialize",
-              args: [[{ account: parameters.owner, roleBitmap: parameters.roles }]],
-            });
+      const initialization = encodeFunctionData({
+        abi: userRegistryV2InitializeAbi,
+        functionName: "initialize",
+        args: [parameters.owner, parameters.roles],
+      });
       return encodeFunctionData({
         abi: verifiableFactoryV2DeployProxyAbi,
         functionName: "deployProxy",

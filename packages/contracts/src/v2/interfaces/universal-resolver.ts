@@ -1,117 +1,117 @@
-/** Complete IUniversalResolverV2 ABI from ENSv2. */
+/** IUniversalResolverV2 ABI from the deployed ENSv2 Sepolia contract snapshot. */
 export const universalResolverV2InterfaceAbi = [
   {
+    type: "function",
+    name: "findCanonicalName",
     inputs: [
       {
-        internalType: "contract IRegistry",
         name: "registry",
         type: "address",
+        internalType: "contract IRegistry",
       },
     ],
-    name: "findCanonicalName",
     outputs: [
       {
-        internalType: "bytes",
         name: "",
         type: "bytes",
+        internalType: "bytes",
       },
     ],
     stateMutability: "view",
-    type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "bytes",
-        name: "name",
-        type: "bytes",
-      },
-    ],
+    type: "function",
     name: "findCanonicalRegistry",
+    inputs: [
+      {
+        name: "name",
+        type: "bytes",
+        internalType: "bytes",
+      },
+    ],
     outputs: [
       {
-        internalType: "contract IRegistry",
         name: "",
         type: "address",
+        internalType: "contract IRegistry",
       },
     ],
     stateMutability: "view",
-    type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "bytes",
-        name: "name",
-        type: "bytes",
-      },
-    ],
+    type: "function",
     name: "findExactRegistry",
+    inputs: [
+      {
+        name: "name",
+        type: "bytes",
+        internalType: "bytes",
+      },
+    ],
     outputs: [
       {
-        internalType: "contract IRegistry",
         name: "",
         type: "address",
+        internalType: "contract IRegistry",
       },
     ],
     stateMutability: "view",
-    type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "bytes",
-        name: "name",
-        type: "bytes",
-      },
-    ],
+    type: "function",
     name: "findOwner",
+    inputs: [
+      {
+        name: "name",
+        type: "bytes",
+        internalType: "bytes",
+      },
+    ],
     outputs: [
       {
+        name: "",
+        type: "address",
         internalType: "address",
-        name: "",
-        type: "address",
       },
     ],
     stateMutability: "view",
-    type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "bytes",
-        name: "name",
-        type: "bytes",
-      },
-    ],
+    type: "function",
     name: "findParentRegistry",
+    inputs: [
+      {
+        name: "name",
+        type: "bytes",
+        internalType: "bytes",
+      },
+    ],
     outputs: [
       {
-        internalType: "contract IRegistry",
         name: "",
         type: "address",
+        internalType: "contract IRegistry",
       },
     ],
     stateMutability: "view",
-    type: "function",
   },
   {
+    type: "function",
+    name: "findRegistries",
     inputs: [
       {
-        internalType: "bytes",
         name: "name",
         type: "bytes",
+        internalType: "bytes",
       },
     ],
-    name: "findRegistries",
     outputs: [
       {
-        internalType: "contract IRegistry[]",
         name: "",
         type: "address[]",
+        internalType: "contract IRegistry[]",
       },
     ],
     stateMutability: "view",
-    type: "function",
   },
 ] as const;

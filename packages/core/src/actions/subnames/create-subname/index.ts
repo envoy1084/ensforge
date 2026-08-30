@@ -103,7 +103,6 @@ const createSubnameEffect = Effect.fn("ensforge.createSubname")(function* (
         owner: account,
         roles: enhancedAccessControlRoles.allRoles,
         salt: parameters.salt ?? BigInt(namehash(route.parent)),
-        deploymentId: route.deployment.id,
       });
       const simulation = yield* simulateCalls.effect(config, {
         calls: [deploymentIntent],
@@ -148,7 +147,6 @@ const createSubnameEffect = Effect.fn("ensforge.createSubname")(function* (
               owner: account,
               roles: enhancedAccessControlRoles.allRoles,
               salt: parameters.salt ?? BigInt(namehash(route.parent)),
-              deploymentId: route.deployment.id,
             }),
           ],
           mode: "sequential",

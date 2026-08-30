@@ -1,117 +1,98 @@
-/** Complete IRentPriceOracle ABI from ENSv2. */
+/** IRentPriceOracle ABI from the deployed ENSv2 Sepolia contract snapshot. */
 export const rentPriceOracleV2InterfaceAbi = [
   {
+    type: "function",
+    name: "getRegisterPrice",
     inputs: [
       {
-        internalType: "string",
         name: "label",
         type: "string",
-      },
-    ],
-    name: "NotValid",
-    type: "error",
-  },
-  {
-    inputs: [
-      {
-        internalType: "contract IERC20",
-        name: "paymentToken",
-        type: "address",
-      },
-    ],
-    name: "PaymentTokenNotSupported",
-    type: "error",
-  },
-  {
-    inputs: [
-      {
         internalType: "string",
-        name: "label",
-        type: "string",
       },
       {
-        internalType: "uint64",
         name: "available",
         type: "uint64",
+        internalType: "uint64",
       },
       {
-        internalType: "uint64",
         name: "duration",
         type: "uint64",
+        internalType: "uint64",
       },
       {
-        internalType: "contract IERC20",
         name: "paymentToken",
         type: "address",
+        internalType: "contract IERC20",
       },
     ],
-    name: "getRegisterPrice",
     outputs: [
       {
-        internalType: "uint256",
         name: "base",
         type: "uint256",
+        internalType: "uint256",
       },
       {
-        internalType: "uint256",
         name: "premium",
         type: "uint256",
+        internalType: "uint256",
       },
     ],
     stateMutability: "view",
-    type: "function",
   },
   {
+    type: "function",
+    name: "getRenewPrice",
     inputs: [
       {
-        internalType: "string",
         name: "label",
         type: "string",
+        internalType: "string",
       },
       {
-        internalType: "uint64",
         name: "expiry",
         type: "uint64",
+        internalType: "uint64",
       },
       {
-        internalType: "uint64",
         name: "duration",
         type: "uint64",
+        internalType: "uint64",
       },
       {
-        internalType: "contract IERC20",
         name: "paymentToken",
         type: "address",
+        internalType: "contract IERC20",
       },
     ],
-    name: "getRenewPrice",
     outputs: [
       {
-        internalType: "uint256",
         name: "",
         type: "uint256",
+        internalType: "uint256",
       },
     ],
     stateMutability: "view",
-    type: "function",
   },
   {
+    type: "error",
+    name: "NotValid",
     inputs: [
       {
-        internalType: "contract IERC20",
+        name: "label",
+        type: "string",
+        internalType: "string",
+      },
+    ],
+  },
+  {
+    type: "error",
+    name: "PaymentTokenNotSupported",
+    inputs: [
+      {
         name: "paymentToken",
         type: "address",
+        internalType: "contract IERC20",
       },
     ],
-    name: "isPaymentToken",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
   },
 ] as const;

@@ -4,7 +4,7 @@ import { baseRegistrarV1Abi, nameWrapperV1Abi, publicResolverV1Abi } from "@ensf
 import {
   enhancedAccessControlRoles,
   ethRegistryV2Abi,
-  permissionedResolverInitializableV2InterfaceAbi,
+  permissionedResolverInitializableV2InterfaceInitializeAbi,
   permissionedResolverV2Abi,
   publicResolverV2Abi,
   registryRoles,
@@ -59,17 +59,9 @@ export const seedPermissionFixtures = Effect.fn("seedPermissionFixtures")(functi
   );
 
   const initialization = encodeFunctionData({
-    abi: permissionedResolverInitializableV2InterfaceAbi,
+    abi: permissionedResolverInitializableV2InterfaceInitializeAbi,
     functionName: "initialize",
-    args: [
-      [
-        {
-          account: environment.accounts.owner,
-          roleBitmap: enhancedAccessControlRoles.allRoles,
-        },
-      ],
-      [],
-    ],
+    args: [environment.accounts.owner, enhancedAccessControlRoles.allRoles, []],
   });
   const permissionedResolver = yield* seedRead(
     () =>

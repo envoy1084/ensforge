@@ -1,22 +1,22 @@
-/** Complete IAddressSet ABI from ENSv2. */
+/** IAddressSet ABI from the deployed ENSv2 Sepolia contract snapshot. */
 export const addressSetV2InterfaceAbi = [
   {
+    type: "function",
+    name: "includes",
     inputs: [
       {
-        internalType: "address",
         name: "addr",
         type: "address",
+        internalType: "address",
       },
     ],
-    name: "includes",
     outputs: [
       {
-        internalType: "bool",
         name: "",
         type: "bool",
+        internalType: "bool",
       },
     ],
     stateMutability: "view",
-    type: "function",
   },
 ] as const;

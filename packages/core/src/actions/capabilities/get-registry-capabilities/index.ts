@@ -50,17 +50,15 @@ const getRegistryCapabilitiesEffect = Effect.fn("ensforge.getRegistryCapabilitie
       }
 
       const support = yield* supportsInterfaces(route.parentRegistry, registryInterfaceIds);
-      const permissioned = support.permissionedRegistry || support.permissionedRegistrySepolia;
-      const wrapped = support.wrapperRegistry || support.wrapperRegistrySepolia;
       return {
         address: route.parentRegistry,
         protocol: "v2",
-        kind: wrapped ? "wrapper-registry" : "permissioned-registry",
+        kind: support.wrapperRegistry ? "wrapper-registry" : "permissioned-registry",
         owned: support.ownedRegistry,
-        permissioned,
+        permissioned: support.permissionedRegistry,
         temporal: support.temporalRegistry,
         tokenized: support.tokenizedRegistry,
-        wrapped,
+        wrapped: support.wrapperRegistry,
         setOwner: support.ownedRegistry,
         setResolver: support.registry,
         createSubname: support.registry,

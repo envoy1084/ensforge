@@ -99,13 +99,10 @@ const getWriteTargetEffect = Effect.fn("ensforge.getWriteTarget")(function* (
         } as const;
       }
 
-      const wrapped = yield* Effect.all(
-        [
-          supportsInterface(route.parentRegistry, registryInterfaceIds.wrapperRegistry),
-          supportsInterface(route.parentRegistry, registryInterfaceIds.wrapperRegistrySepolia),
-        ] as const,
-        { concurrency: "unbounded" },
-      ).pipe(Effect.map((results) => results.some(Boolean)));
+      const wrapped = yield* supportsInterface(
+        route.parentRegistry,
+        registryInterfaceIds.wrapperRegistry,
+      );
       return {
         available: true,
         protocol: "v2",

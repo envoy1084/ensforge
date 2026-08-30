@@ -1,27 +1,27 @@
-/** Complete IRegistryURIRenderer ABI from ENSv2. */
+/** IRegistryURIRenderer ABI from the deployed ENSv2 Sepolia contract snapshot. */
 export const registryUriRendererV2InterfaceAbi = [
   {
+    type: "function",
+    name: "renderURI",
     inputs: [
       {
-        internalType: "contract IRegistry",
         name: "registry",
         type: "address",
+        internalType: "contract IRegistry",
       },
       {
-        internalType: "uint256",
         name: "tokenId",
         type: "uint256",
+        internalType: "uint256",
       },
     ],
-    name: "renderURI",
     outputs: [
       {
-        internalType: "string",
         name: "",
         type: "string",
+        internalType: "string",
       },
     ],
     stateMutability: "view",
-    type: "function",
   },
 ] as const;

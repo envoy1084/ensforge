@@ -10,7 +10,7 @@ Focused, tree-shakable ABI fragments for User Registry.
 ## Import
 
 ```ts
-import { userRegistryV2SetParentAbi } from "@ensforge/contracts/v2";
+import { userRegistryV2InitializeAbi, userRegistryV2SetParentAbi } from "@ensforge/contracts/v2";
 ```
 
 ## Usage
@@ -33,9 +33,10 @@ const contract = getContract({
 
 ## Exports
 
-| Export                       | Description                                             |
-| ---------------------------- | ------------------------------------------------------- |
-| `userRegistryV2SetParentAbi` | Immutable ABI value with viem-compatible literal types. |
+| Export                        | Description                                             |
+| ----------------------------- | ------------------------------------------------------- |
+| `userRegistryV2InitializeAbi` | Immutable ABI value with viem-compatible literal types. |
+| `userRegistryV2SetParentAbi`  | Immutable ABI value with viem-compatible literal types. |
 
 ## Entrypoint
 
@@ -50,7 +51,7 @@ const contract = getContract({
 <!--@include: @/shared/contracts/type-safety.md-->
 
 ```ts
-type Export = typeof userRegistryV2SetParentAbi;
+type Export = typeof userRegistryV2InitializeAbi;
 ```
 
 ## Compose fragments

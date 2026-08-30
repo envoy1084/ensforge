@@ -7,4 +7,3 @@ export * from "./hca-upgrade-gate.js";
 export * from "./standalone-hca-factory.js";
 export * from "./standalone-single-owner-hca.js";
 export * from "./trusted-hca-set.js";
-export * from "./default-reverse-registrar-hca-adapter.js";

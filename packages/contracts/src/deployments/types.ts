@@ -76,7 +76,6 @@ export interface EnsV2InfrastructureContractAddresses {
 }
 
 export interface EnsV2ExperimentalHcaContractAddresses {
-  readonly defaultReverseRegistrarAdapter: Address;
   readonly ownerAndSessionValidator: Address;
   readonly upgradeGate: Address;
   readonly standaloneFactory: Address;
