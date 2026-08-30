@@ -151,7 +151,8 @@ void mainnetV1Deployment.contracts.registry;
 void getOwner.request(ownerParameters);
 void config.network;
 void sdk.name.getOwner;
-void sdk.records.setText.request(setTextParameters);
+void setTextParameters;
+void sdk.records.setText.call;
 `,
   );
   write(
