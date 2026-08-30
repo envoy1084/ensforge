@@ -12,7 +12,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  CONTRACTS_COMMIT: 892311a7268bf6051d5fe65740f1eebfaf8db431
+  CONTRACTS_COMMIT: 09bf3ac64a6fb1b215573c019b17e8c501bb3ca0
 
 jobs:
   publish:
