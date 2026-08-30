@@ -6,7 +6,8 @@
   "scripts": {
     "build": "turbo run build",
     "changeset": "changeset",
-    "check": "pnpm format:check && pnpm lint && turbo run typecheck test build",
+    "check": "pnpm format:check && pnpm lint && turbo run typecheck test build && pnpm check:sdk-types",
+    "check:sdk-types": "pnpm --filter @ensforge/sdk... build && node scripts/check-sdk-types.mjs",
     "dev": "turbo run dev",
     "format": "oxfmt --write .",
     "format:check": "oxfmt --check .",

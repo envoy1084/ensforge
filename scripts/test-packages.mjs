@@ -132,17 +132,26 @@ try {
     `import { mainnetV1Deployment } from "@ensforge/contracts/deployments";
 import { createConfig, getOwner } from "@ensforge/core";
 import { Ensforge } from "@ensforge/sdk";
+import type { GetOwnerParameters } from "@ensforge/sdk/name";
+import type { SetTextParameters } from "@ensforge/sdk/records";
 import { createPublicClient, http } from "viem";
 import { mainnet } from "viem/chains";
 
 const publicClient = createPublicClient({ chain: mainnet, transport: http() });
 const config = createConfig({ network: "mainnet", publicClient });
 const sdk = new Ensforge({ network: "mainnet", publicClient });
+const ownerParameters = { name: "ens.eth" } satisfies GetOwnerParameters;
+const setTextParameters = {
+  name: "ens.eth",
+  key: "url",
+  value: "https://ens.domains",
+} satisfies SetTextParameters;
 
 void mainnetV1Deployment.contracts.registry;
-void getOwner.request({ name: "ens.eth" });
+void getOwner.request(ownerParameters);
 void config.network;
 void sdk.name.getOwner;
+void sdk.records.setText.request(setTextParameters);
 `,
   );
   write(

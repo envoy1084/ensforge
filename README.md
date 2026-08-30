@@ -101,6 +101,9 @@ pnpm build
 pnpm check
 ```
 
+`pnpm check:sdk-types` compiles a representative SDK consumer and enforces declaration,
+instantiation, and memory budgets for the public type surface.
+
 Package boundaries resolve through generated declarations during editor and type-checking sessions.
 Run `pnpm build` after cloning, or keep `pnpm dev` running while changing multiple packages, so
 downstream packages see current declarations without loading every dependency's source graph.
