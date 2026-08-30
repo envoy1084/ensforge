@@ -50,9 +50,10 @@ jobs:
 
       - name: Create release pull request or publish to npm
         if: steps.tested-commit.outputs.current == 'true'
-        uses: changesets/action@v1
+        uses: changesets/action@v2
         with:
-          publish: pnpm release
-          commit: "chore: release"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          publish-script: pnpm release
+          commit-message: "chore: release"
+          create-github-releases: true
+          push-git-tags: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
