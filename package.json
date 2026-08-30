@@ -16,6 +16,7 @@
     "pack:check": "turbo run pack:check",
     "prepare": "lefthook install",
     "release": "changeset publish",
+    "setup:sepolia-v2": "pnpm --filter @ensforge/sdk... build && node scripts/setup-sepolia-v2.mjs",
     "test": "turbo run test",
     "test:integration": "pnpm --filter @ensforge/core test:integration",
     "test:live:mainnet": "pnpm --filter @ensforge/core test:live:mainnet",
