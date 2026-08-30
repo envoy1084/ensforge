@@ -71,3 +71,5 @@ In `auto` mode, ensforge uses wallet call batching when supported and falls back
 transactions. Set an explicit atomicity requirement when the operation must not be partially applied.
 
 Complex operations such as registration use staged write plans. See [Writes](/core/guides/writes).
+Persist returned write-plan progress. If confirmation times out after a sequential submission,
+`executeWritePlan` retains the transaction hash and confirms it on resume instead of resubmitting.

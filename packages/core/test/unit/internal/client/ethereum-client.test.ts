@@ -1,7 +1,8 @@
-import { Effect } from "effect";
+import { assert, it } from "@effect/vitest";
+import { Deferred, Effect, Fiber, Semaphore } from "effect";
 
 import type { PublicClient } from "viem";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, vi } from "vitest";
 
 import { ContractError } from "../../../../src/index.js";
 import { makeEthereumClient } from "../../../../src/internal/client/ethereum-client.js";
@@ -140,4 +141,38 @@ describe("EthereumClient", () => {
 
     expect(result).toEqual([{ status: "failure", error: failure }]);
   });
+
+  it.effect("removes interrupted reads while they are queued for an RPC permit", () =>
+    Effect.gen(function* () {
+      const started = yield* Deferred.make<void>();
+      let release: (() => void) | undefined;
+      const readContract = vi.fn(
+        () =>
+          new Promise<string>((resolve) => {
+            release = () => resolve(address);
+            Effect.runSync(Deferred.succeed(started, undefined));
+          }),
+      );
+      const client = makeEthereumClient({
+        publicClient: { readContract } as unknown as PublicClient,
+        readSemaphore: Semaphore.makeUnsafe(1),
+      });
+      const first = yield* Effect.forkChild(
+        client.readContractDirect({ address, abi: ownerAbi, functionName: "owner" }),
+      );
+      yield* Deferred.await(started);
+      const queued = yield* Effect.forkChild(
+        client.readContractDirect({ address, abi: ownerAbi, functionName: "owner" }),
+      );
+      yield* Effect.yieldNow;
+
+      yield* Fiber.interrupt(queued);
+      assert.isDefined(release);
+      release();
+      const result = yield* Fiber.join(first);
+
+      assert.strictEqual(result, address);
+      expect(readContract).toHaveBeenCalledOnce();
+    }),
+  );
 });

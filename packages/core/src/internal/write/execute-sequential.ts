@@ -62,33 +62,54 @@ export const executeSequential = Effect.fn("executeSequential")(function* (
         const hash = yield* client.sendTransaction(walletClient, call);
         if (confirmation.type === "submitted") {
           return {
+            call: {
+              id: call.id,
+              operation: call.operation,
+              status: "submitted",
+              hash,
+              receipt: null,
+            } satisfies CallExecutionResult,
+            failure: null,
+          } as const;
+        }
+        const confirmationResult = yield* Effect.result(
+          client
+            .waitForReceipt(hash, {
+              ...(confirmation.confirmations === undefined
+                ? {}
+                : { confirmations: confirmation.confirmations }),
+              ...(confirmation.timeout === undefined ? {} : { timeout: confirmation.timeout }),
+            })
+            .pipe(
+              Effect.retry({
+                times: config.writes.statusRetries,
+                while: (error) => error instanceof RpcError,
+              }),
+            ),
+        );
+        if (Result.isFailure(confirmationResult)) {
+          return {
+            call: {
+              id: call.id,
+              operation: call.operation,
+              status: "submitted",
+              hash,
+              receipt: null,
+            } satisfies CallExecutionResult,
+            failure: confirmationResult.failure,
+          } as const;
+        }
+        const receipt = confirmationResult.success;
+        return {
+          call: {
             id: call.id,
             operation: call.operation,
-            status: "submitted",
-            hash,
-            receipt: null,
-          } satisfies CallExecutionResult;
-        }
-        const receipt = yield* client
-          .waitForReceipt(hash, {
-            ...(confirmation.confirmations === undefined
-              ? {}
-              : { confirmations: confirmation.confirmations }),
-            ...(confirmation.timeout === undefined ? {} : { timeout: confirmation.timeout }),
-          })
-          .pipe(
-            Effect.retry({
-              times: config.writes.statusRetries,
-              while: (error) => error instanceof RpcError,
-            }),
-          );
-        return {
-          id: call.id,
-          operation: call.operation,
-          status: "confirmed",
-          hash,
-          receipt,
-        } satisfies CallExecutionResult;
+            status: "confirmed",
+            hash: receipt.transactionHash,
+            receipt,
+          } satisfies CallExecutionResult,
+          failure: null,
+        } as const;
       }).pipe(Effect.mapError((error) => redactSensitiveWriteError([intent], error))),
     );
 
@@ -108,7 +129,22 @@ export const executeSequential = Effect.fn("executeSequential")(function* (
         failure,
       };
     }
-    completed.push(execution.success);
+    const success = execution.success;
+    completed.push(success.call);
+    if (success.failure !== null) {
+      const remaining = parameters.calls
+        .slice(localIndex + 1)
+        .map((remainingIntent, offset) =>
+          notStarted(`call-${index + offset + 1}`, remainingIntent.operation),
+        );
+      return {
+        mode: "sequential",
+        atomic: false,
+        status: "partial",
+        calls: [...completed, ...remaining],
+        failure: success.failure,
+      };
+    }
   }
 
   return {

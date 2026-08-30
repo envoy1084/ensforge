@@ -47,6 +47,9 @@ Staged write plan.
 
 Previously returned progress used to continue the workflow.
 
+Submitted sequential transactions retain their hashes when confirmation fails. Resuming confirms
+those transactions before moving to the next call without resubmitting them.
+
 ### walletClient
 
 `WalletClient | undefined`

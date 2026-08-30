@@ -7,6 +7,7 @@ import { provideConfig } from "../../internal/config/context.js";
 import { viemErrorToEffectError } from "../../internal/errors/viem-error.js";
 import { PublicClientService } from "../../internal/services/public-client.js";
 import { executeSequential } from "../../internal/write/execute-sequential.js";
+import { resumeSequentialConfirmations } from "../../internal/write/resume-sequential.js";
 import type {
   CallExecutionResult,
   ExecuteWritePlanParameters,
@@ -131,7 +132,28 @@ const executeWritePlanEffect = Effect.fn("ensforge.executeWritePlan")(function* 
       previous?.result.mode === "batch" && previous.result.status === "submitted"
         ? previous.result
         : undefined;
-    const confirmed = partial?.calls.filter((call) => call.status !== "not-started") ?? [];
+    const resumedPartial =
+      partial === undefined
+        ? undefined
+        : yield* resumeSequentialConfirmations(
+            config,
+            partial,
+            stage.confirmation ?? config.writes.confirmation,
+          );
+    if (resumedPartial?.failure !== null && resumedPartial?.failure !== undefined) {
+      const resumedStage = { id: stage.id, result: resumedPartial } satisfies WriteStageResult;
+      if (previousIndex === -1) completed.push(resumedStage);
+      else completed[previousIndex] = resumedStage;
+      return {
+        planId: parameters.plan.id,
+        status: "partial",
+        completedStages: completed,
+        currentStage: stage.id,
+        nextActionAt: null,
+        failure: resumedPartial.failure,
+      };
+    }
+    const confirmed = resumedPartial?.calls.filter((call) => call.status === "confirmed") ?? [];
     const remainingCalls = stage.calls.slice(confirmed.length);
     const execution = yield* Effect.result(
       submittedBatch !== undefined
@@ -143,7 +165,7 @@ const executeWritePlanEffect = Effect.fn("ensforge.executeWritePlan")(function* 
               : { walletClient: parameters.walletClient }),
             ...(parameters.account === undefined ? {} : { account: parameters.account }),
           })
-        : partial === undefined
+        : resumedPartial === undefined
           ? sendCalls.effect(config, stageParameters(stage, parameters))
           : executeSequential(
               config,

@@ -1,11 +1,11 @@
 ---
 title: resumeCalls
-description: Continues a partially completed wallet or sequential call execution.
+description: Continues a submitted native wallet call batch.
 ---
 
 # resumeCalls
 
-Continues a partially completed wallet or sequential call execution.
+Continues a submitted native wallet call batch.
 
 ## Import
 

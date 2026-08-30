@@ -4,6 +4,7 @@ import { Effect } from "effect";
 import { mainnetV1Deployment, type EnsV1Deployment } from "@ensforge/contracts/deployments";
 import {
   MethodNotFoundRpcError,
+  TimeoutError,
   UserRejectedRequestError,
   defineChain,
   type Address,
@@ -24,6 +25,7 @@ import {
   sendCalls,
   simulateCalls,
   resumeCalls,
+  TransactionError,
   WalletError,
   type WriteOptions,
 } from "../../../src/index.js";
@@ -234,12 +236,94 @@ describe("write execution", () => {
       });
 
       assert.strictEqual(result.mode, "sequential");
+      if (result.mode !== "sequential") return;
       assert.strictEqual(result.status, "partial");
       assert.strictEqual(result.calls[0]?.status, "confirmed");
       assert.strictEqual(result.calls[1]?.status, "not-started");
       if (result.mode === "sequential") {
         assert.instanceOf(result.failure, WalletError);
       }
+    }),
+  );
+
+  it.effect("fails without partial progress when the wallet rejects before submission", () =>
+    Effect.gen(function* () {
+      const harness = makeHarness();
+      vi.mocked(harness.walletClient.sendTransaction)
+        .mockReset()
+        .mockRejectedValueOnce(new UserRejectedRequestError(new Error("rejected")));
+
+      const error = yield* sendCalls
+        .effect(harness.config, {
+          calls: [testWrite.call({ to: target })],
+          mode: "sequential",
+        })
+        .pipe(Effect.flip);
+
+      assert.instanceOf(error, WalletError);
+      assert.strictEqual(error.code, "USER_REJECTED");
+      expect(harness.publicClient.waitForTransactionReceipt).not.toHaveBeenCalled();
+    }),
+  );
+
+  it.effect("preserves a submitted transaction across timeout and plan resume", () =>
+    Effect.gen(function* () {
+      const harness = makeHarness();
+      vi.mocked(harness.publicClient.waitForTransactionReceipt).mockRejectedValueOnce(
+        new TimeoutError({ body: {}, url: "http://127.0.0.1:8545" }),
+      );
+      const plan = {
+        id: "confirmation-resume-plan",
+        stages: [
+          {
+            type: "calls",
+            id: "write",
+            mode: "sequential",
+            calls: [testWrite.call({ to: target })],
+          },
+        ],
+      } as const;
+
+      const partial = yield* executeWritePlan.effect(harness.config, { plan });
+      assert.strictEqual(partial.status, "partial");
+      assert.instanceOf(partial.failure, TransactionError);
+      assert.strictEqual(partial.failure.code, "CONFIRMATION_TIMEOUT");
+      assert.strictEqual(partial.completedStages[0]?.result.calls[0]?.status, "submitted");
+      assert.strictEqual(partial.completedStages[0]?.result.calls[0]?.hash, firstHash);
+
+      vi.mocked(harness.publicClient.waitForTransactionReceipt).mockResolvedValueOnce(
+        receipt(secondHash),
+      );
+      const completed = yield* executeWritePlan.effect(harness.config, { plan, resume: partial });
+
+      assert.strictEqual(completed.status, "completed");
+      assert.strictEqual(completed.completedStages[0]?.result.calls[0]?.status, "confirmed");
+      assert.strictEqual(completed.completedStages[0]?.result.calls[0]?.hash, secondHash);
+      expect(harness.walletClient.sendTransaction).toHaveBeenCalledOnce();
+      expect(harness.publicClient.waitForTransactionReceipt).toHaveBeenCalledTimes(2);
+    }),
+  );
+
+  it.effect("preserves submitted progress when its receipt reverted", () =>
+    Effect.gen(function* () {
+      const harness = makeHarness();
+      vi.mocked(harness.publicClient.waitForTransactionReceipt).mockResolvedValueOnce({
+        ...receipt(firstHash),
+        status: "reverted",
+      });
+
+      const result = yield* sendCalls.effect(harness.config, {
+        calls: [testWrite.call({ to: target })],
+        mode: "sequential",
+      });
+
+      assert.strictEqual(result.mode, "sequential");
+      if (result.mode !== "sequential") return;
+      assert.strictEqual(result.status, "partial");
+      assert.strictEqual(result.calls[0]?.status, "submitted");
+      assert.strictEqual(result.calls[0]?.hash, firstHash);
+      assert.instanceOf(result.failure, TransactionError);
+      assert.strictEqual(result.failure.code, "RECEIPT_REVERTED");
     }),
   );
 
@@ -297,6 +381,88 @@ describe("write execution", () => {
       assert.strictEqual(resumed.status, "confirmed");
       assert.strictEqual(resumed.calls[0]?.hash, firstHash);
       expect(harness.walletClient.sendCalls).toHaveBeenCalledOnce();
+    }),
+  );
+
+  it.effect("does not poll an already confirmed native batch again", () =>
+    Effect.gen(function* () {
+      const harness = makeHarness();
+      const confirmed = yield* sendCalls.effect(harness.config, {
+        calls: [testWrite.call({ to: target })],
+        mode: "batch",
+      });
+      assert.strictEqual(confirmed.mode, "batch");
+      if (confirmed.mode !== "batch") return;
+
+      const resumed = yield* resumeCalls.effect(harness.config, { batch: confirmed });
+
+      assert.strictEqual(resumed, confirmed);
+      expect(harness.walletClient.waitForCallsStatus).toHaveBeenCalledOnce();
+    }),
+  );
+
+  it.effect("retries native batch status polling without resubmission", () =>
+    Effect.gen(function* () {
+      const harness = makeHarness({ statusRetries: 1 });
+      vi.mocked(harness.walletClient.waitForCallsStatus)
+        .mockRejectedValueOnce(new Error("temporary status failure"))
+        .mockResolvedValueOnce({
+          atomic: true,
+          chainId: ensTestChainId,
+          id: "batch-1",
+          receipts: [receipt(firstHash)],
+          status: "success",
+          statusCode: 200,
+          version: "2.0.0",
+        });
+
+      const result = yield* sendCalls.effect(harness.config, {
+        calls: [testWrite.call({ to: target })],
+        mode: "batch",
+      });
+
+      assert.strictEqual(result.mode, "batch");
+      assert.strictEqual(result.status, "confirmed");
+      expect(harness.walletClient.sendCalls).toHaveBeenCalledOnce();
+      expect(harness.walletClient.waitForCallsStatus).toHaveBeenCalledTimes(2);
+    }),
+  );
+
+  it.effect("reports failed and cross-chain native batch statuses", () =>
+    Effect.gen(function* () {
+      const harness = makeHarness();
+      vi.mocked(harness.walletClient.waitForCallsStatus).mockResolvedValueOnce({
+        atomic: true,
+        chainId: ensTestChainId,
+        id: "batch-1",
+        receipts: [],
+        status: "failure",
+        statusCode: 500,
+        version: "2.0.0",
+      });
+      const failed = yield* sendCalls
+        .effect(harness.config, {
+          calls: [testWrite.call({ to: target })],
+          mode: "batch",
+        })
+        .pipe(Effect.flip);
+      assert.instanceOf(failed, TransactionError);
+      assert.strictEqual(failed.code, "BATCH_STATUS_FAILED");
+
+      vi.mocked(harness.walletClient.getCallsStatus).mockResolvedValueOnce({
+        atomic: true,
+        chainId: 1,
+        id: "batch-1",
+        receipts: [],
+        status: "success",
+        statusCode: 200,
+        version: "2.0.0",
+      });
+      const crossChain = yield* getCallsStatus
+        .effect(harness.config, { id: "batch-1" })
+        .pipe(Effect.flip);
+      assert.instanceOf(crossChain, TransactionError);
+      assert.strictEqual(crossChain.code, "INVALID_BATCH_STATUS");
     }),
   );
 

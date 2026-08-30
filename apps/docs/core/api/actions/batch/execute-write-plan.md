@@ -48,6 +48,9 @@ Staged write plan to execute.
 
 Previously returned progress used to continue an incomplete workflow.
 
+If a sequential transaction was submitted but confirmation timed out, progress retains its hash.
+Resuming confirms that transaction before continuing and never submits the completed call again.
+
 ### walletClient
 
 `WalletClient | undefined`
