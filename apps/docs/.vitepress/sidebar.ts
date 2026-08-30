@@ -663,6 +663,7 @@ export const sidebar: DefaultTheme.Sidebar = {
     {
       items: [
         { link: "/core/api/create-config", text: "createConfig" },
+        { link: "/core/api/create-wagmi-config", text: "createWagmiConfig" },
         { link: "/core/api/config", text: "Config" },
       ],
       text: "Configuration",
@@ -731,7 +732,13 @@ export const sidebar: DefaultTheme.Sidebar = {
       ],
       text: "Guides",
     },
-    { items: [{ link: "/sdk/api/ensforge", text: "Ensforge" }], text: "Configuration" },
+    {
+      items: [
+        { link: "/sdk/api/ensforge", text: "Ensforge" },
+        { link: "/sdk/api/create-ensforge", text: "createEnsforge" },
+      ],
+      text: "Configuration",
+    },
     apiGroup("/sdk/api/batch", "Batch Methods", actionGroups.batch),
     apiGroup("/sdk/api/capabilities", "Capabilities Methods", actionGroups.capabilities),
     apiGroup("/sdk/api/dns", "Dns Methods", actionGroups.dns),
