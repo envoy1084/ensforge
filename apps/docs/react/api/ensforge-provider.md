@@ -45,7 +45,7 @@ import type { EnsforgeProviderProps } from "@ensforge/react";
 
 ### config
 
-`CreateConfigParameters | undefined`
+`CreateConfigParameters | CreateWagmiConfigParameters | undefined`
 
 Configuration used to create one SDK instance on the provider's first render. Changes to the object
 after mounting do not recreate the SDK.

@@ -64,7 +64,9 @@ const profile = await sdk.batch.readBatch({
 Use an existing Wagmi config instead of supplying viem clients:
 
 ```ts
-const sdk = new Ensforge({
+import { createEnsforge } from "@ensforge/sdk/wagmi";
+
+const sdk = createEnsforge({
   network: "mainnet",
   wagmiConfig,
 });

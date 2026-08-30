@@ -34,11 +34,13 @@ const owner = await getOwner(config, { name: "ens.eth" });
 const address = await getAddress(config, { name: "ens.eth" });
 ```
 
-Every action uses the same config and returns typed results. For applications already using Wagmi,
-pass its config directly:
+Every action uses the same config and returns typed results. Wagmi support is isolated in an
+optional entrypoint, so viem-only applications do not need to install Wagmi:
 
 ```ts
-const config = createConfig({
+import { createWagmiConfig } from "@ensforge/core/wagmi";
+
+const config = createWagmiConfig({
   network: "mainnet",
   wagmiConfig,
 });

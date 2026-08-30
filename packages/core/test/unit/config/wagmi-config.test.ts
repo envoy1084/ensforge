@@ -6,9 +6,10 @@ import { describe, expect } from "vitest";
 import { createConfig as createWagmiConfig, custom, mock } from "wagmi";
 import { connect } from "wagmi/actions";
 
-import { ConfigError, createConfig } from "../../../src/index.js";
+import { ConfigError } from "../../../src/index.js";
 import { getConfigLayer } from "../../../src/internal/config/context.js";
 import { resolveWalletContext } from "../../../src/internal/services/wallet-client.js";
+import { createWagmiConfig as createEnsforgeConfig } from "../../../src/wagmi/index.js";
 import { testAccount } from "../fixtures/client-fixtures.js";
 
 const transport = custom({
@@ -30,7 +31,7 @@ describe("createConfig with Wagmi", () => {
       },
     });
 
-    const config = createConfig({ network: "sepolia", wagmiConfig });
+    const config = createEnsforgeConfig({ network: "sepolia", wagmiConfig });
 
     expect(config.network).toBe("sepolia");
     expect(config.publicClient.chain?.id).toBe(sepolia.id);
@@ -43,7 +44,7 @@ describe("createConfig with Wagmi", () => {
       transports: { [mainnet.id]: transport },
     });
 
-    expect(() => createConfig({ network: "sepolia", wagmiConfig })).toThrow(
+    expect(() => createEnsforgeConfig({ network: "sepolia", wagmiConfig })).toThrow(
       new ConfigError({
         code: "PUBLIC_CLIENT_UNAVAILABLE",
         message: "The Wagmi config does not provide a public client for sepolia (11155111)",
@@ -58,7 +59,7 @@ describe("createConfig with Wagmi", () => {
         connectors: [mock({ accounts: [testAccount] })],
         transports: { [sepolia.id]: transport },
       });
-      const config = createConfig({ network: "sepolia", wagmiConfig });
+      const config = createEnsforgeConfig({ network: "sepolia", wagmiConfig });
       const beforeConnection = yield* Effect.exit(
         Effect.provide(resolveWalletContext(), getConfigLayer(config)),
       );

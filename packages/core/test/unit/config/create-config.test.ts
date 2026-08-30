@@ -238,19 +238,9 @@ describe("createConfig", () => {
     );
   });
 
-  it("requires exactly one client source at the runtime boundary", () => {
+  it("requires a Viem public client at the runtime boundary", () => {
     expectConfigError(
       () => createConfig({ network: "mainnet" } as CreateConfigParameters),
-      "INVALID_CLIENT_CONFIGURATION",
-    );
-
-    expectConfigError(
-      () =>
-        createConfig({
-          network: "mainnet",
-          publicClient: makeMainnetPublicClient(),
-          wagmiConfig: {},
-        } as unknown as CreateConfigParameters),
       "INVALID_CLIENT_CONFIGURATION",
     );
   });

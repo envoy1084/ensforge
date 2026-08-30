@@ -54,8 +54,7 @@ const ens = new Ensforge({ network: "sepolia", publicClient });
 
 `PublicClient`
 
-Viem client used for RPC reads, contract simulation, receipts, and event queries. Required when
-`wagmiConfig` is not provided.
+Viem client used for RPC reads, contract simulation, receipts, and event queries.
 
 ```ts
 const ens = new Ensforge({ network: "mainnet", publicClient });
@@ -71,18 +70,17 @@ Default viem wallet client used by write methods. Omit it for a read-only SDK.
 const ens = new Ensforge({ network: "mainnet", publicClient, walletClient });
 ```
 
-### wagmiConfig
+## Wagmi
 
 `Config | undefined`
 
-Wagmi config used to resolve public and active wallet clients. Provide either `wagmiConfig` or the
-viem client fields, not both.
+Use the optional adapter to construct an SDK from a Wagmi config.
 
 ```ts [client.ts]
-import { Ensforge } from "@ensforge/sdk";
+import { createEnsforge } from "@ensforge/sdk/wagmi";
 import { wagmiConfig } from "./wagmi";
 
-export const ens = new Ensforge({ network: "mainnet", wagmiConfig });
+export const ens = createEnsforge({ network: "mainnet", wagmiConfig });
 ```
 
 <<< @/snippets/wagmi/config.ts

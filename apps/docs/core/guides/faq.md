@@ -22,7 +22,8 @@ typed failure and composition model.
 
 ## Can I use my existing Wagmi config?
 
-Yes. Pass `wagmiConfig` to `createConfig`. Do not also pass `publicClient` or `walletClient`.
+Yes. Import `createWagmiConfig` from `@ensforge/core/wagmi`. Wagmi is an optional peer dependency,
+so viem-only applications do not install it.
 
 ## Does batch reading support CCIP Read?
 

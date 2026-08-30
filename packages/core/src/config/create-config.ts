@@ -1,100 +1,18 @@
-import { Schema } from "effect";
-
 import { ConfigError } from "../errors/config-error.js";
-import { attachConfigContext } from "../internal/config/context.js";
-import { getNetworkProfile } from "../internal/config/network-profile.js";
-import { validateClientChain, validateDeployments } from "../internal/config/validation.js";
-import {
-  getWagmiPublicClient,
-  makeWagmiWalletClientResolver,
-} from "../internal/config/wagmi-clients.js";
-import type { EnsforgeServiceValues } from "../internal/services/context.js";
-import { makeServicesContext } from "../internal/services/context.js";
-import {
-  EnsforgeConfigTypeId,
-  type CreateConfigParameters,
-  type EnsforgeConfig,
-} from "./config.js";
-import { resolveGatewayOptions } from "./gateway-options.js";
-import { ensChainIds, EnsNetworkSchema } from "./network.js";
-import { resolveReadOptions } from "./read-options.js";
-import { resolveWriteOptions } from "./write-options.js";
+import { createConfigFromClients } from "../internal/config/create-config.js";
+import type { CreateConfigParameters, EnsforgeConfig } from "./config.js";
 
 export const createConfig = (parameters: CreateConfigParameters): EnsforgeConfig => {
-  if (!Schema.is(EnsNetworkSchema)(parameters.network)) {
-    throw new ConfigError({
-      code: "UNSUPPORTED_NETWORK",
-      message: `Unsupported ENS network: ${parameters.network}`,
-    });
-  }
-
-  const network = parameters.network;
-  const chainId = ensChainIds[network];
-  const deployments = getNetworkProfile(network);
-  const reads = resolveReadOptions(parameters.reads);
-  const writes = resolveWriteOptions(parameters.writes);
-  const gateways = resolveGatewayOptions(parameters.gateways);
-  const wagmiConfig = parameters.wagmiConfig;
-
-  if (
-    wagmiConfig !== undefined &&
-    (parameters.publicClient !== undefined || parameters.walletClient !== undefined)
-  ) {
+  if (parameters.publicClient === undefined) {
     throw new ConfigError({
       code: "INVALID_CLIENT_CONFIGURATION",
-      message: "Provide either a Wagmi config or Viem clients, not both",
+      message: "Provide a Viem public client",
     });
   }
 
-  if (wagmiConfig === undefined && parameters.publicClient === undefined) {
-    throw new ConfigError({
-      code: "INVALID_CLIENT_CONFIGURATION",
-      message: "Provide either a Wagmi config or a Viem public client",
-    });
-  }
-
-  const publicClient =
-    wagmiConfig === undefined
-      ? parameters.publicClient
-      : getWagmiPublicClient(wagmiConfig, network, chainId);
-  const walletClient = parameters.walletClient;
-  const walletClientResolver =
-    wagmiConfig === undefined
-      ? undefined
-      : makeWagmiWalletClientResolver(wagmiConfig, network, chainId);
-
-  validateClientChain(publicClient, "public", network, chainId);
-
-  if (walletClient !== undefined) {
-    validateClientChain(walletClient, "wallet", network, chainId);
-  }
-
-  validateDeployments(deployments, chainId);
-
-  const serviceValues: EnsforgeServiceValues = {
-    network,
-    chainId,
-    publicClient,
-    reads,
-    gateways,
-    deployments,
-    ...(walletClient === undefined ? {} : { walletClient }),
-    ...(walletClientResolver === undefined ? {} : { walletClientResolver }),
-  };
-  const config = attachConfigContext(
-    {
-      [EnsforgeConfigTypeId]: EnsforgeConfigTypeId,
-      network,
-      chainId,
-      publicClient,
-      reads,
-      writes,
-      gateways,
-      deployments,
-      ...(walletClient === undefined ? {} : { walletClient }),
-    },
-    makeServicesContext(serviceValues),
+  return createConfigFromClients(
+    parameters,
+    parameters.publicClient,
+    parameters.walletClient === undefined ? {} : { walletClient: parameters.walletClient },
   );
-
-  return Object.freeze(config);
 };

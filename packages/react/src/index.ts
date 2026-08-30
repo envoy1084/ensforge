@@ -4,9 +4,9 @@ export {
   Ensforge,
   type CreateConfigParameters,
   type CreateViemConfigParameters,
-  type CreateWagmiConfigParameters,
   type EnsforgeConfig,
 } from "@ensforge/sdk";
+export type { CreateWagmiConfigParameters } from "@ensforge/sdk/wagmi";
 
 export * from "./cache/index.js";
 export * from "./hooks/index.js";

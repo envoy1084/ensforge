@@ -24,10 +24,10 @@ import { createConfig } from "@ensforge/core";
 ::: code-group
 
 ```ts [config.ts]
-import { createConfig as createEnsforgeConfig } from "@ensforge/core";
+import { createWagmiConfig } from "@ensforge/core/wagmi";
 import { wagmiConfig } from "./wagmi";
 
-const config = createEnsforgeConfig({
+const config = createWagmiConfig({
   network: "mainnet",
   wagmiConfig,
 });
@@ -37,7 +37,8 @@ const config = createEnsforgeConfig({
 
 :::
 
-Provide either `wagmiConfig` or viem clients. The two configuration modes cannot be combined.
+The scoped adapter keeps Wagmi out of viem-only dependency graphs. Install `wagmi` only when using
+`@ensforge/core/wagmi`.
 
 ## Parameters
 
@@ -55,8 +56,7 @@ Selects the chain and ENS deployment profile. The supplied client must use the s
 
 `PublicClient | undefined`
 
-Viem client used for reads, simulation, receipts, and event queries. Required in viem mode and not
-allowed in Wagmi mode.
+Viem client used for reads, simulation, receipts, and event queries.
 
 ### walletClient
 
@@ -64,13 +64,6 @@ allowed in Wagmi mode.
 
 Default viem wallet client used by writes. It can be omitted for read-only applications or supplied
 per action where supported.
-
-### wagmiConfig
-
-`Config | undefined`
-
-Existing Wagmi config. ensforge reads the public client for `network` and resolves the active wallet
-client when a write runs.
 
 ### reads
 
@@ -102,5 +95,5 @@ profile, and internal Effect services required by actions.
 
 ## Error
 
-Throws `ConfigError` when the network is unsupported, a client uses the wrong chain, both client
-modes are supplied, a required client is missing, or an option is invalid.
+Throws `ConfigError` when the network is unsupported, a client uses the wrong chain, a required
+client is missing, or an option is invalid.

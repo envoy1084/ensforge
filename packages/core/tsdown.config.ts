@@ -19,6 +19,7 @@ export default defineConfig({
     reverse: "src/actions/reverse/index.ts",
     subnames: "src/actions/subnames/index.ts",
     testing: "src/testing/index.ts",
+    wagmi: "src/wagmi/index.ts",
     wrapping: "src/actions/wrapping/index.ts",
   },
   exports: {

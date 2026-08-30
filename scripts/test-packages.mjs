@@ -98,7 +98,6 @@ try {
           "@ensforge/sdk": fileDependency(nodeProject, tarballs.sdk),
           effect: catalogVersion("effect"),
           viem: catalogVersion("viem"),
-          wagmi: catalogVersion("wagmi"),
         },
         devDependencies: {
           typescript: dependencyVersion("typescript"),

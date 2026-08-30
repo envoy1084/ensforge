@@ -18,8 +18,8 @@ transports or manage accounts for you.
 
 ## Can I use a Wagmi config?
 
-Yes. Pass `wagmiConfig` instead of viem clients. Reads use Wagmi's public client and writes resolve
-the connected wallet when they execute.
+Yes. Import `createEnsforge` from `@ensforge/sdk/wagmi`. Reads use Wagmi's public client and writes
+resolve the connected wallet when they execute. Wagmi remains optional for viem-only SDK users.
 
 ## Can I use Effect without using React?
 

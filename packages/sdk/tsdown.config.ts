@@ -18,6 +18,7 @@ export default defineConfig({
     resolution: "src/entrypoints/resolution.ts",
     reverse: "src/entrypoints/reverse.ts",
     subnames: "src/entrypoints/subnames.ts",
+    wagmi: "src/wagmi.ts",
     wrapping: "src/entrypoints/wrapping.ts",
   },
   exports: { devExports: "workspace-source" },

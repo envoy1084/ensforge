@@ -5,6 +5,7 @@ import { describe, expect, it } from "vitest";
 import { createConfig as createWagmiConfig } from "wagmi";
 
 import { Ensforge } from "../../../src/index.js";
+import { createEnsforge } from "../../../src/wagmi.js";
 import { makeMainnetPublicClient, testTransport } from "../fixtures/clients.js";
 
 const actionNames = {
@@ -211,7 +212,7 @@ describe("Ensforge", () => {
       chains: [mainnet],
       transports: { [mainnet.id]: testTransport },
     });
-    const sdk = new Ensforge({ network: "mainnet", wagmiConfig });
+    const sdk = createEnsforge({ network: "mainnet", wagmiConfig });
 
     expect(sdk.config.publicClient.chain?.id).toBe(mainnet.id);
   });

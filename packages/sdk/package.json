@@ -85,6 +85,10 @@
       "workspace-source": "./src/entrypoints/subnames.ts",
       "default": "./dist/subnames.js"
     },
+    "./wagmi": {
+      "workspace-source": "./src/wagmi.ts",
+      "default": "./dist/wagmi.js"
+    },
     "./wrapping": {
       "workspace-source": "./src/entrypoints/wrapping.ts",
       "default": "./dist/wrapping.js"
@@ -110,6 +114,7 @@
       "./resolution": "./dist/resolution.js",
       "./reverse": "./dist/reverse.js",
       "./subnames": "./dist/subnames.js",
+      "./wagmi": "./dist/wagmi.js",
       "./wrapping": "./dist/wrapping.js",
       "./package.json": "./package.json"
     },
@@ -133,5 +138,10 @@
     "effect": "^4.0.0-rc.112",
     "viem": "^2.56.0",
     "wagmi": "^3.0.0"
+  },
+  "peerDependenciesMeta": {
+    "wagmi": {
+      "optional": true
+    }
   }
 }

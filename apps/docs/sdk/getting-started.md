@@ -90,10 +90,10 @@ If the application already uses Wagmi, provide its config instead of creating vi
 ::: code-group
 
 ```ts [client.ts]
-import { Ensforge } from "@ensforge/sdk";
+import { createEnsforge } from "@ensforge/sdk/wagmi";
 import { wagmiConfig } from "./wagmi";
 
-export const sdk = new Ensforge({
+export const sdk = createEnsforge({
   network: "mainnet",
   wagmiConfig,
 });

@@ -1,11 +1,12 @@
 export type {
   CreateConfigParameters,
   CreateViemConfigParameters,
-  CreateWagmiConfigParameters,
   EnsDeployment,
   EnsDeploymentProfile,
   EnsforgeConfig,
+  SharedCreateConfigParameters,
 } from "./config.js";
+export { EnsforgeConfigTypeId } from "./config.js";
 export { createConfig } from "./create-config.js";
 export { ensNetworks } from "./network.js";
 export type { EnsChainId, EnsNetwork } from "./network.js";

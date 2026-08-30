@@ -19,12 +19,14 @@ connected to a different chain instead of silently reading the wrong deployment.
 
 ## Clients
 
-Choose one client mode.
+Use viem clients through the root entrypoint or the optional Wagmi adapter.
 
 ### viem clients
 
 ```ts
-createConfig({
+import { createWagmiConfig } from "@ensforge/core/wagmi";
+
+createWagmiConfig({
   network: "mainnet",
   publicClient,
   walletClient,

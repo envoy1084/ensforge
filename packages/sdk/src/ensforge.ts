@@ -1,4 +1,9 @@
-import { createConfig, type CreateConfigParameters, type EnsforgeConfig } from "@ensforge/core";
+import {
+  createConfig,
+  EnsforgeConfigTypeId,
+  type CreateConfigParameters,
+  type EnsforgeConfig,
+} from "@ensforge/core";
 
 import {
   makeBatchActions,
@@ -48,8 +53,8 @@ export class Ensforge {
   readonly subnames: SubnameActions;
   readonly wrapping: WrappingActions;
 
-  constructor(parameters: CreateConfigParameters) {
-    const config = createConfig(parameters);
+  constructor(parameters: CreateConfigParameters | EnsforgeConfig) {
+    const config = EnsforgeConfigTypeId in parameters ? parameters : createConfig(parameters);
 
     this.config = config;
     this.batch = makeBatchActions(config);

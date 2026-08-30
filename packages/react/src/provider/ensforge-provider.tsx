@@ -6,6 +6,10 @@ import { RegistryContext, RegistryProvider } from "@effect/atom-react";
 import type { AtomRegistry } from "effect/unstable/reactivity";
 
 import { Ensforge, type CreateConfigParameters } from "@ensforge/sdk";
+import {
+  createEnsforge as createWagmiEnsforge,
+  type CreateWagmiConfigParameters,
+} from "@ensforge/sdk/wagmi";
 
 import {
   EnsforgeReactContext,
@@ -23,7 +27,7 @@ interface SharedEnsforgeProviderProps {
 export type EnsforgeProviderProps = SharedEnsforgeProviderProps &
   (
     | {
-        readonly config: CreateConfigParameters;
+        readonly config: CreateConfigParameters | CreateWagmiConfigParameters;
         readonly sdk?: never;
       }
     | {
@@ -38,7 +42,11 @@ export const EnsforgeProvider = (props: EnsforgeProviderProps) => {
   if (valueRef.current === undefined) {
     valueRef.current = Object.freeze({
       defaults: Object.freeze(props.defaults ?? {}),
-      sdk: props.sdk ?? new Ensforge(props.config),
+      sdk:
+        props.sdk ??
+        ("wagmiConfig" in props.config
+          ? createWagmiEnsforge(props.config)
+          : new Ensforge(props.config)),
     });
   }
 

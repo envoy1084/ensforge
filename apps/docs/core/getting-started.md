@@ -37,15 +37,16 @@ Names are normalized before they are used. Invalid names fail with a typed `Name
 
 ## Use an existing Wagmi config
 
-If your application already uses Wagmi, pass its config instead of creating separate viem clients.
+If your application already uses Wagmi, use the optional Wagmi entrypoint instead of creating
+separate viem clients.
 
 ::: code-group
 
 ```ts [config.ts]
-import { createConfig as createEnsforgeConfig } from "@ensforge/core";
+import { createWagmiConfig } from "@ensforge/core/wagmi";
 import { wagmiConfig } from "./wagmi";
 
-export const config = createEnsforgeConfig({
+export const config = createWagmiConfig({
   network: "mainnet",
   wagmiConfig,
 });
