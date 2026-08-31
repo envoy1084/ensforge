@@ -4,12 +4,8 @@ import { Button } from "@thenamespace/uikit/button";
 import { Input } from "@thenamespace/uikit/input";
 import { Segment } from "@thenamespace/uikit/segment";
 
-import {
-  type DemoNetwork,
-  getDemoSdk,
-  type ReadActionId,
-  readActionDefinitions,
-} from "./definitions";
+import { getSdk, type Network } from "../wallet-connect/sdk";
+import { type ReadActionId, readActionDefinitions } from "./definitions";
 import { ResultCodeBlock } from "./result-code-block";
 
 export interface ReadActionDemoProps {
@@ -30,13 +26,13 @@ const errorMessage = (error: unknown): string => {
 
 export function ReadActionDemo({ action }: ReadActionDemoProps) {
   const definition = readActionDefinitions[action];
-  const [network, setNetwork] = useState<DemoNetwork>("mainnet");
+  const [network, setNetwork] = useState<Network>("mainnet");
   const [values, setValues] = useState<Record<string, string>>({ ...definition.initialValues });
   const [result, setResult] = useState<string>();
   const [error, setError] = useState<string>();
   const [isRunning, setIsRunning] = useState(false);
 
-  const selectNetwork = (nextNetwork: DemoNetwork) => {
+  const selectNetwork = (nextNetwork: Network) => {
     setNetwork(nextNetwork);
     setResult(undefined);
     setError(undefined);
@@ -48,7 +44,8 @@ export function ReadActionDemo({ action }: ReadActionDemoProps) {
     setIsRunning(true);
 
     try {
-      const nextResult = await definition.run(getDemoSdk(network), values);
+      const sdk = await getSdk(network);
+      const nextResult = await definition.run(sdk, values);
       setResult(stringifyResult(nextResult));
     } catch (cause) {
       setResult(undefined);
@@ -70,7 +67,7 @@ export function ReadActionDemo({ action }: ReadActionDemoProps) {
           className="shrink-0 rounded-lg"
           selectedKey={network}
           size="sm"
-          onSelectionChange={(key) => selectNetwork(String(key) as DemoNetwork)}
+          onSelectionChange={(key) => selectNetwork(String(key) as Network)}
         >
           <Segment.Item id="mainnet">Mainnet</Segment.Item>
           <Segment.Item id="sepolia">Sepolia</Segment.Item>

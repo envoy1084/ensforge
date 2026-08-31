@@ -6,7 +6,7 @@ import { darkTheme, lightTheme, RainbowKitProvider } from "@rainbow-me/rainbowki
 import { WagmiProvider } from "wagmi";
 import { mainnet } from "wagmi/chains";
 
-import { docsWagmiConfig } from "./config";
+import { wagmiConfig } from "./config";
 
 const queryClient = new QueryClient();
 
@@ -29,7 +29,7 @@ export function WalletProviders({ children }: { readonly children: ReactNode }) 
     : lightTheme({ accentColor: "#4559d8", borderRadius: "medium" });
 
   return (
-    <WagmiProvider config={docsWagmiConfig}>
+    <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider initialChain={mainnet} modalSize="compact" theme={theme}>
           {children}

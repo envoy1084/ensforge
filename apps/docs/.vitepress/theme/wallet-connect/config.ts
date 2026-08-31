@@ -14,7 +14,7 @@ const wallets = walletConnectProjectId
       },
     ];
 
-export const docsWagmiConfig = getDefaultConfig({
+export const wagmiConfig = getDefaultConfig({
   appName: "ensforge",
   appDescription: "ENS tools for TypeScript and React",
   appUrl: "https://ensforge.envoy1084.xyz",

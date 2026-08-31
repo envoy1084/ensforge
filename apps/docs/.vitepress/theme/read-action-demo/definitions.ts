@@ -1,8 +1,4 @@
-import { Ensforge } from "@ensforge/sdk";
-import { createPublicClient, http } from "viem";
-import { mainnet, sepolia } from "viem/chains";
-
-export type DemoNetwork = "mainnet" | "sepolia";
+import type { Ensforge } from "@ensforge/sdk";
 
 export interface ReadActionField {
   readonly key: string;
@@ -19,27 +15,6 @@ export interface ReadActionDefinition {
   readonly label: string;
   readonly run: (sdk: Ensforge, values: Readonly<Record<string, string>>) => Promise<unknown>;
 }
-
-const sdkByNetwork = {
-  mainnet: new Ensforge({
-    network: "mainnet",
-    publicClient: createPublicClient({
-      chain: mainnet,
-      transport: http(import.meta.env.VITE_ENSFORGE_MAINNET_RPC_URL),
-    }),
-  }),
-  sepolia: new Ensforge({
-    network: "sepolia",
-    publicClient: createPublicClient({
-      chain: sepolia,
-      transport: http(import.meta.env.VITE_ENSFORGE_SEPOLIA_RPC_URL),
-    }),
-  }),
-} as const;
-
-export const getDemoSdk = (network: DemoNetwork): Ensforge => {
-  return sdkByNetwork[network];
-};
 
 export const readActionDefinitions = {
   getOwner: {
