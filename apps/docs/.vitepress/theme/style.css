@@ -98,6 +98,40 @@
   width: 16px;
 }
 
+/* VitePress and HeroUI both use generic menu, link, and button class names. */
+.VPNavBarMenu.menu {
+  flex-direction: row;
+  gap: 0;
+  overflow: visible;
+  padding: 0;
+  position: static;
+  width: auto;
+}
+
+.VPNavBarMenuLink.link {
+  border-radius: 0;
+  height: auto;
+  width: auto;
+}
+
+.VPNavBar .VPFlyout > button.button {
+  background: transparent;
+  border-radius: 0;
+  color: var(--vp-c-text-1);
+  height: var(--vp-nav-height);
+  padding: 0 12px;
+  transform: none;
+  width: auto;
+}
+
+.VPNavBar .VPFlyout > .menu {
+  display: block;
+  gap: 0;
+  overflow: visible;
+  padding: 0;
+  width: max-content;
+}
+
 /**
  * Component: Button
  * -------------------------------------------------------------------------- */

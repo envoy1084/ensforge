@@ -1,21 +1,32 @@
-@import "tailwindcss";
-@import "@thenamespace/uikit/styles.css";
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
 
 @source "./*.{ts,tsx,vue}";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+.ensforge-demo :where(.button, .input, .segment__item) {
+  all: revert-layer;
+}
+
 @layer theme {
-  .ensforge-read-demo {
-    --accent: var(--vp-c-brand-3);
-    --accent-foreground: var(--vp-c-white);
-    --accent-hover: var(--vp-c-brand-2);
+  .ensforge-demo {
+    --accent: var(--vp-button-brand-bg);
+    --accent-foreground: var(--vp-button-brand-text);
+    --accent-hover: var(--vp-button-brand-hover-bg);
     --background: var(--vp-c-bg);
     --border: var(--vp-c-divider);
     --default: var(--vp-c-bg-soft);
     --default-foreground: var(--vp-c-text-1);
-    --field-background: var(--vp-c-bg);
+    --default-hover: var(--vp-c-bg-alt);
+    --danger: var(--vp-c-danger-1);
+    --danger-foreground: var(--vp-c-white);
+    --disabled-opacity: 0.5;
+    --field-background: var(--vp-c-bg-soft);
     --field-border: var(--vp-c-divider);
+    --field-border-focus: var(--vp-c-brand-1);
+    --field-border-hover: var(--vp-c-text-3);
+    --field-focus: var(--vp-c-bg);
     --field-foreground: var(--vp-c-text-1);
     --field-placeholder: var(--vp-c-text-3);
     --focus: var(--vp-c-brand-1);
@@ -33,5 +44,9 @@
     --surface-secondary-foreground: var(--vp-c-text-1);
     --surface-tertiary: var(--vp-c-bg-alt);
     --surface-tertiary-foreground: var(--vp-c-text-1);
+    --surface-shadow: var(--vp-shadow-1);
+
+    --radius: 0.25rem;
+    --field-radius: 0.5rem;
   }
 }

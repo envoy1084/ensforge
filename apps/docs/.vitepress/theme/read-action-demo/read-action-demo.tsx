@@ -1,17 +1,16 @@
 import { type FormEvent, useState } from "react";
 
 import { Button } from "@thenamespace/uikit/button";
-import { CodeBlock } from "@thenamespace/uikit/code-block";
 import { Input } from "@thenamespace/uikit/input";
 import { Segment } from "@thenamespace/uikit/segment";
 
-import { CopyJsonButton } from "./copy-json-button";
 import {
   type DemoNetwork,
   getDemoSdk,
   type ReadActionId,
   readActionDefinitions,
 } from "./definitions";
+import { ResultCodeBlock } from "./result-code-block";
 
 export interface ReadActionDemoProps {
   readonly action: ReadActionId;
@@ -37,6 +36,12 @@ export function ReadActionDemo({ action }: ReadActionDemoProps) {
   const [error, setError] = useState<string>();
   const [isRunning, setIsRunning] = useState(false);
 
+  const selectNetwork = (nextNetwork: DemoNetwork) => {
+    setNetwork(nextNetwork);
+    setResult(undefined);
+    setError(undefined);
+  };
+
   const runAction = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(undefined);
@@ -54,7 +59,7 @@ export function ReadActionDemo({ action }: ReadActionDemoProps) {
   };
 
   return (
-    <section className="ensforge-read-demo my-8">
+    <section className="ensforge-demo my-8 rounded-lg border border-[var(--vp-c-divider)] p-4 sm:p-5">
       <div className="mb-4 flex items-center justify-between gap-4">
         <div className="font-mono text-sm font-semibold text-[var(--vp-c-text-1)]">
           {definition.label}
@@ -62,16 +67,13 @@ export function ReadActionDemo({ action }: ReadActionDemoProps) {
 
         <Segment
           aria-label="Network"
-          className="shrink-0 rounded-xl"
+          className="shrink-0 rounded-lg"
           selectedKey={network}
           size="sm"
+          onSelectionChange={(key) => selectNetwork(String(key) as DemoNetwork)}
         >
-          <Segment.Item id="mainnet" onPress={() => setNetwork("mainnet")}>
-            Mainnet
-          </Segment.Item>
-          <Segment.Item id="sepolia" onPress={() => setNetwork("sepolia")}>
-            Sepolia
-          </Segment.Item>
+          <Segment.Item id="mainnet">Mainnet</Segment.Item>
+          <Segment.Item id="sepolia">Sepolia</Segment.Item>
         </Segment>
       </div>
 
@@ -81,7 +83,7 @@ export function ReadActionDemo({ action }: ReadActionDemoProps) {
             <span className="text-sm font-medium text-[var(--vp-c-text-1)]">{field.label}</span>
             <Input
               fullWidth
-              className="rounded-xl"
+              className="rounded-lg"
               id={`action-demo-${field.key}`}
               name={field.key}
               placeholder={field.placeholder}
@@ -97,7 +99,7 @@ export function ReadActionDemo({ action }: ReadActionDemoProps) {
 
         <Button
           fullWidth
-          className="rounded-xl"
+          className="rounded-lg"
           isDisabled={isRunning}
           type="submit"
           variant="primary"
@@ -113,15 +115,7 @@ export function ReadActionDemo({ action }: ReadActionDemoProps) {
               {error}
             </p>
           )}
-          {result && (
-            <CodeBlock>
-              <CodeBlock.Header>
-                <span className="font-mono text-xs">JSON result</span>
-                <CopyJsonButton value={result} />
-              </CodeBlock.Header>
-              <CodeBlock.Code code={result} language="json" />
-            </CodeBlock>
-          )}
+          {result && <ResultCodeBlock code={result} />}
         </div>
       )}
     </section>
