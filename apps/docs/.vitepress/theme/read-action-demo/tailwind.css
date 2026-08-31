@@ -1,0 +1,37 @@
+@import "tailwindcss";
+@import "@thenamespace/uikit/styles.css";
+
+@source "./*.{ts,tsx,vue}";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer theme {
+  .ensforge-read-demo {
+    --accent: var(--vp-c-brand-3);
+    --accent-foreground: var(--vp-c-white);
+    --accent-hover: var(--vp-c-brand-2);
+    --background: var(--vp-c-bg);
+    --border: var(--vp-c-divider);
+    --default: var(--vp-c-bg-soft);
+    --default-foreground: var(--vp-c-text-1);
+    --field-background: var(--vp-c-bg);
+    --field-border: var(--vp-c-divider);
+    --field-foreground: var(--vp-c-text-1);
+    --field-placeholder: var(--vp-c-text-3);
+    --focus: var(--vp-c-brand-1);
+    --foreground: var(--vp-c-text-1);
+    --link: var(--vp-c-brand-1);
+    --muted: var(--vp-c-text-2);
+    --overlay: var(--vp-c-bg-elv);
+    --overlay-foreground: var(--vp-c-text-1);
+    --segment: var(--vp-c-bg);
+    --segment-foreground: var(--vp-c-text-1);
+    --separator: var(--vp-c-divider);
+    --surface: var(--vp-c-bg);
+    --surface-foreground: var(--vp-c-text-1);
+    --surface-secondary: var(--vp-c-bg-soft);
+    --surface-secondary-foreground: var(--vp-c-text-1);
+    --surface-tertiary: var(--vp-c-bg-alt);
+    --surface-tertiary-foreground: var(--vp-c-text-1);
+  }
+}

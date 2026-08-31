@@ -1,4 +1,5 @@
 import { createTwoslashWithInlineCache } from "@shikijs/vitepress-twoslash/cache-inline";
+import tailwindcss from "@tailwindcss/vite";
 import unocss from "unocss/vite";
 import { defineConfig } from "vitepress";
 import { groupIconMdPlugin, groupIconVitePlugin } from "vitepress-plugin-group-icons";
@@ -221,6 +222,7 @@ export default withTwoslashInlineCache(
     },
     vite: {
       plugins: [
+        tailwindcss(),
         llmstxt({
           description: "Type-safe TypeScript tools for ENS",
           ignoreFiles: ["README.md", "shared/", "snippets/"],

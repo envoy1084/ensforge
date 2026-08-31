@@ -1,7 +1,8 @@
 {
   "extends": "klarity/tsconfig/app/vite",
   "compilerOptions": {
+    "jsx": "react-jsx",
     "types": ["node", "vitepress/client"]
   },
-  "include": [".vitepress/**/*.ts", ".vitepress/**/*.vue"]
+  "include": [".vitepress/**/*.ts", ".vitepress/**/*.tsx", ".vitepress/**/*.vue"]
 }

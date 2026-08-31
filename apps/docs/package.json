@@ -9,9 +9,21 @@
     "lint": "oxlint --deny-warnings .vitepress",
     "preview": "vitepress preview --port 3000"
   },
+  "dependencies": {
+    "@ensforge/sdk": "workspace:*",
+    "@thenamespace/uikit": "0.3.0",
+    "effect": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "viem": "catalog:"
+  },
   "devDependencies": {
     "@shikijs/vitepress-twoslash": "3.20.0",
+    "@tailwindcss/vite": "4.3.3",
     "@types/node": "24.13.3",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "tailwindcss": "4.3.3",
     "unocss": "^66.8.1",
     "vite": "6.4.3",
     "vitepress": "1.6.4",

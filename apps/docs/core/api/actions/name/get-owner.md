@@ -7,6 +7,8 @@ description: Get the effective owner of an ENS name.
 
 Get the effective owner of an ENS name.
 
+<ReadActionDemo action="getOwner" />
+
 ## Import
 
 ```ts
