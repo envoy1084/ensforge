@@ -172,6 +172,7 @@ export default withTwoslashInlineCache(
           ],
           text: "More",
         },
+        { component: "WalletConnectButton" },
       ],
       outline: [2, 3],
       search: {

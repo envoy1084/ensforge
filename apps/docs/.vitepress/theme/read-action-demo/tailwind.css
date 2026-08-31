@@ -2,6 +2,7 @@
 @import "tailwindcss/utilities.css" layer(utilities);
 
 @source "./*.{ts,tsx,vue}";
+@source "../wallet-connect/*.{ts,tsx,vue}";
 
 @custom-variant dark (&:where(.dark, .dark *));
 

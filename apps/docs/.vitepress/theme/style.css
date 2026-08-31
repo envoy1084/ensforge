@@ -132,6 +132,20 @@
   width: max-content;
 }
 
+.wallet-connect-nav {
+  align-items: center;
+  display: flex;
+  margin-left: 8px;
+}
+
+.ensforge-wallet-button.button {
+  font-size: 13px;
+  font-weight: 600;
+  height: 32px;
+  min-width: max-content;
+  padding-inline: 12px;
+}
+
 /**
  * Component: Button
  * -------------------------------------------------------------------------- */

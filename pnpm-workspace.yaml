@@ -24,6 +24,7 @@ catalog:
 
 allowBuilds:
   esbuild: true
+  keccak: true
   lefthook: true
   msgpackr-extract: true
 
