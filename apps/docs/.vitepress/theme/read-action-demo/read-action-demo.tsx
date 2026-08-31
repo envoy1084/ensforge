@@ -1,7 +1,6 @@
 import { type FormEvent, useState } from "react";
 
 import { Button } from "@thenamespace/uikit/button";
-import { Card } from "@thenamespace/uikit/card";
 import { CodeBlock } from "@thenamespace/uikit/code-block";
 import { Input } from "@thenamespace/uikit/input";
 import { Segment } from "@thenamespace/uikit/segment";
@@ -54,15 +53,10 @@ export function ReadActionDemo({ action }: ReadActionDemoProps) {
   };
 
   return (
-    <Card className="ensforge-read-demo my-8 gap-0 overflow-hidden rounded-xl border border-[var(--vp-c-divider)] p-0 shadow-none">
-      <Card.Header className="flex-row items-center justify-between gap-4 border-b border-[var(--vp-c-divider)] px-5 py-4 text-left">
-        <div>
-          <Card.Title className="m-0 text-base font-semibold text-[var(--vp-c-text-1)]">
-            Playground
-          </Card.Title>
-          <Card.Description className="m-0 mt-1 font-mono text-xs text-[var(--vp-c-text-2)]">
-            {definition.label}
-          </Card.Description>
+    <section className="ensforge-read-demo my-8">
+      <div className="mb-4 flex items-center justify-between gap-4">
+        <div className="font-mono text-sm font-semibold text-[var(--vp-c-text-1)]">
+          {definition.label}
         </div>
 
         <Segment
@@ -75,54 +69,49 @@ export function ReadActionDemo({ action }: ReadActionDemoProps) {
           <Segment.Item id="mainnet">Mainnet</Segment.Item>
           <Segment.Item id="sepolia">Sepolia</Segment.Item>
         </Segment>
-      </Card.Header>
+      </div>
 
-      <Card.Content className="p-5">
-        <form className="grid gap-5" onSubmit={runAction}>
-          <div className="grid gap-4">
-            {definition.fields.map((field) => (
-              <label key={field.key} className="grid gap-2" htmlFor={`playground-${field.key}`}>
-                <span className="text-sm font-medium text-[var(--vp-c-text-1)]">{field.label}</span>
-                <Input
-                  fullWidth
-                  id={`playground-${field.key}`}
-                  name={field.key}
-                  placeholder={field.placeholder}
-                  required={field.required}
-                  value={values[field.key] ?? ""}
-                  variant="secondary"
-                  onChange={(event) =>
-                    setValues((current) => ({ ...current, [field.key]: event.target.value }))
-                  }
-                />
-              </label>
-            ))}
-          </div>
+      <form className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto]" onSubmit={runAction}>
+        {definition.fields.map((field) => (
+          <Input
+            fullWidth
+            aria-label={field.label}
+            id={`action-demo-${field.key}`}
+            key={field.key}
+            name={field.key}
+            placeholder={field.placeholder}
+            required={field.required}
+            value={values[field.key] ?? ""}
+            variant="secondary"
+            onChange={(event) =>
+              setValues((current) => ({ ...current, [field.key]: event.target.value }))
+            }
+          />
+        ))}
 
-          <Button fullWidth isDisabled={isRunning} type="submit" variant="primary">
-            {isRunning ? "Reading…" : "Run"}
-          </Button>
-        </form>
+        <Button className="w-full sm:w-auto" isDisabled={isRunning} type="submit" variant="primary">
+          {isRunning ? "Reading…" : "Run"}
+        </Button>
+      </form>
 
-        {(error || result) && (
-          <div aria-live="polite" className="mt-5">
-            {error && (
-              <p className="m-0 break-words font-mono text-xs leading-6 text-[var(--vp-c-danger-1)]">
-                {error}
-              </p>
-            )}
-            {result && (
-              <CodeBlock>
-                <CodeBlock.Header>
-                  <span className="font-mono text-xs">JSON result</span>
-                  <CodeBlock.CopyButton code={result} />
-                </CodeBlock.Header>
-                <CodeBlock.Code code={result} language="json" />
-              </CodeBlock>
-            )}
-          </div>
-        )}
-      </Card.Content>
-    </Card>
+      {(error || result) && (
+        <div aria-live="polite" className="mt-4">
+          {error && (
+            <p className="m-0 break-words font-mono text-xs leading-6 text-[var(--vp-c-danger-1)]">
+              {error}
+            </p>
+          )}
+          {result && (
+            <CodeBlock>
+              <CodeBlock.Header>
+                <span className="font-mono text-xs">JSON result</span>
+                <CodeBlock.CopyButton code={result} />
+              </CodeBlock.Header>
+              <CodeBlock.Code code={result} language="json" />
+            </CodeBlock>
+          )}
+        </div>
+      )}
+    </section>
   );
 }

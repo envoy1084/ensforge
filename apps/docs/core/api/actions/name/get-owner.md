@@ -7,8 +7,6 @@ description: Get the effective owner of an ENS name.
 
 Get the effective owner of an ENS name.
 
-<ReadActionDemo action="getOwner" />
-
 ## Import
 
 ```ts
@@ -29,6 +27,8 @@ const result = await getOwner(config, { name: "ens.eth" });
 <<< @/snippets/core/config.ts
 
 :::
+
+<ReadActionDemo action="getOwner" />
 
 ## Parameters
 
