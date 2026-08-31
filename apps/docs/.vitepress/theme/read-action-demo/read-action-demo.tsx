@@ -5,6 +5,7 @@ import { CodeBlock } from "@thenamespace/uikit/code-block";
 import { Input } from "@thenamespace/uikit/input";
 import { Segment } from "@thenamespace/uikit/segment";
 
+import { CopyJsonButton } from "./copy-json-button";
 import {
   type DemoNetwork,
   getDemoSdk,
@@ -61,35 +62,46 @@ export function ReadActionDemo({ action }: ReadActionDemoProps) {
 
         <Segment
           aria-label="Network"
-          className="shrink-0"
+          className="shrink-0 rounded-xl"
           selectedKey={network}
           size="sm"
-          onSelectionChange={(key) => setNetwork(String(key) as DemoNetwork)}
         >
-          <Segment.Item id="mainnet">Mainnet</Segment.Item>
-          <Segment.Item id="sepolia">Sepolia</Segment.Item>
+          <Segment.Item id="mainnet" onPress={() => setNetwork("mainnet")}>
+            Mainnet
+          </Segment.Item>
+          <Segment.Item id="sepolia" onPress={() => setNetwork("sepolia")}>
+            Sepolia
+          </Segment.Item>
         </Segment>
       </div>
 
-      <form className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto]" onSubmit={runAction}>
+      <form className="grid gap-4" onSubmit={runAction}>
         {definition.fields.map((field) => (
-          <Input
-            fullWidth
-            aria-label={field.label}
-            id={`action-demo-${field.key}`}
-            key={field.key}
-            name={field.key}
-            placeholder={field.placeholder}
-            required={field.required}
-            value={values[field.key] ?? ""}
-            variant="secondary"
-            onChange={(event) =>
-              setValues((current) => ({ ...current, [field.key]: event.target.value }))
-            }
-          />
+          <label className="grid gap-2" htmlFor={`action-demo-${field.key}`} key={field.key}>
+            <span className="text-sm font-medium text-[var(--vp-c-text-1)]">{field.label}</span>
+            <Input
+              fullWidth
+              className="rounded-xl"
+              id={`action-demo-${field.key}`}
+              name={field.key}
+              placeholder={field.placeholder}
+              required={field.required}
+              value={values[field.key] ?? ""}
+              variant="secondary"
+              onChange={(event) =>
+                setValues((current) => ({ ...current, [field.key]: event.target.value }))
+              }
+            />
+          </label>
         ))}
 
-        <Button className="w-full sm:w-auto" isDisabled={isRunning} type="submit" variant="primary">
+        <Button
+          fullWidth
+          className="rounded-xl"
+          isDisabled={isRunning}
+          type="submit"
+          variant="primary"
+        >
           {isRunning ? "Reading…" : "Run"}
         </Button>
       </form>
@@ -105,7 +117,7 @@ export function ReadActionDemo({ action }: ReadActionDemoProps) {
             <CodeBlock>
               <CodeBlock.Header>
                 <span className="font-mono text-xs">JSON result</span>
-                <CodeBlock.CopyButton code={result} />
+                <CopyJsonButton value={result} />
               </CodeBlock.Header>
               <CodeBlock.Code code={result} language="json" />
             </CodeBlock>
