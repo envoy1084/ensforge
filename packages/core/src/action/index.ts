@@ -1,5 +1,10 @@
-export { defineAction } from "./action.js";
-export type { EnsAction, EnsActionEffect } from "./action.js";
+export { defineAction, defineNoParametersAction } from "./action.js";
+export type {
+  EnsAction,
+  EnsActionEffect,
+  EnsNoParametersAction,
+  EnsNoParametersActionEffect,
+} from "./action.js";
 export { getBlockReference } from "./block.js";
 export type { BlockParameters } from "./block.js";
 export { defineReadAction } from "./read-request.js";

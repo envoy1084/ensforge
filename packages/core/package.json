@@ -133,16 +133,20 @@
   "scripts": {
     "build": "tsdown",
     "bench": "vitest bench --run bench",
+    "codegen:indexer": "graphql-codegen --config codegen.indexer.ts",
+    "codegen:indexer:check": "pnpm codegen:indexer && git diff --exit-code -- graphql/indexer src/internal/indexer/generated",
+    "codegen:indexer:watch": "graphql-codegen --config codegen.indexer.ts --watch",
     "dev": "tsdown --watch",
     "lint": "oxlint --deny-warnings .",
     "pack:check": "publint && attw --pack . --profile esm-only --exclude-entrypoints ./testing",
     "prepack": "pnpm build",
+    "schema:indexer:refresh": "node scripts/refresh-indexer-schemas.mjs",
     "test": "vitest run --passWithNoTests",
     "test:integration": "vitest run --config vitest.integration.config.ts",
     "test:live:mainnet": "vitest run --config vitest.live-mainnet.config.ts",
     "test:live:sepolia": "vitest run --config vitest.live-sepolia.config.ts",
     "test:watch": "vitest --passWithNoTests",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "pnpm codegen:indexer:check && tsc --noEmit"
   },
   "dependencies": {
     "@ensdomains/address-encoder": "catalog:",
@@ -152,6 +156,13 @@
     "fflate": "catalog:",
     "graphql": "catalog:",
     "graphql-request": "catalog:"
+  },
+  "devDependencies": {
+    "@effect/platform-node": "catalog:",
+    "@graphql-codegen/cli": "catalog:",
+    "@graphql-codegen/typed-document-node": "catalog:",
+    "@graphql-codegen/typescript-operations": "catalog:",
+    "@graphql-typed-document-node/core": "catalog:"
   },
   "peerDependencies": {
     "effect": "^4.0.0-rc.112",

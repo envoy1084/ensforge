@@ -23,6 +23,7 @@ export type {
   IndexerRequestPolicy,
   IndexerRetryPolicy,
   IndexerSourceContext,
+  IndexerSourceState,
   ResolvedIndexerConfig,
   ResolvedIndexerEndpoints,
 } from "./indexer-options.js";

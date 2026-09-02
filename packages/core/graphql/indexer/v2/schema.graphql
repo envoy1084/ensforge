@@ -1,0 +1,1428 @@
+"""An Ethereum account (address)"""
+type Account {
+  """Domains owned by this account"""
+  domains: [Domain!]!
+
+  """
+  Block number of the earliest observation across protocols. Zero if the account row was populated by backfill (no first-observation block was recorded).
+  """
+  firstSeenBlock: Int!
+
+  """
+  Unix timestamp (seconds) of the earliest observation across protocols. Zero if unknown.
+  """
+  firstSeenTimestamp: Int!
+
+  """Ethereum address"""
+  id: String!
+
+  """
+  Reverse-resolved primary name for this address (V1 ReverseRegistrar + NameChanged path). Null if not claimed.
+  """
+  primaryName: String
+
+  """Registrations made by this account"""
+  registrations(first: Int, skip: Int): [Registration!]!
+
+  """
+  True if this address has ever been observed acting under the V1 protocol (owner, registrant, role grantee, transfer recipient, or operator).
+  """
+  seenV1: Boolean!
+
+  """
+  True if this address has ever been observed acting under the V2 protocol.
+  """
+  seenV2: Boolean!
+
+  """V1 NameWrapper wrapped-domain records owned by this account."""
+  wrappedDomains(first: Int, skip: Int): [WrappedDomain!]!
+}
+
+"""
+Nested-relation filter on Account (subgraph parity). Used inside `DomainFilter.owner_`.
+"""
+input AccountFilter {
+  """Match account by exact id (address)."""
+  id: String
+
+  """Match account by id in list."""
+  id_in: [String!]
+}
+
+"""Sort key for the `accounts` query."""
+enum Account_orderBy {
+  """First-observation block (the earlier of V1/V2 observations)."""
+  firstSeenBlock
+
+  """Lexicographic order on the 0x-prefixed address."""
+  id
+}
+
+"""
+Typed payload for `AddressChanged` events (multi-coin AddressChanged signature).
+"""
+type AddressChangedData {
+  """Address value (hex for ETH, bytes hex for other chains)."""
+  address: String
+
+  """ENSIP-9 coin type."""
+  coinType: Int
+
+  """Namehash that the address record applies to."""
+  namehash: String
+
+  """Resolver contract address."""
+  resolver: String
+}
+
+"""A resolver alias mapping (from OwnedResolver)"""
+type Alias {
+  """Source DNS name"""
+  fromName: String!
+
+  """Destination DNS name"""
+  toName: String!
+}
+
+"""A coin address record with coin type (SLIP-44)"""
+type CoinAddress {
+  """Address value for this coin type"""
+  address: String!
+
+  """
+  SLIP-44 coin type (e.g., 60 for ETH, 0 for BTC, 501 for SOL). DEPRECATED: prefer `coinTypeBig` — ENSIP-11 L2 coin types (0x80000000 | chainId) exceed Int32 and will overflow. Kept for back-compat.
+  """
+  coinType: Int!
+
+  """
+  Decimal-string coin type. Use this instead of `coinType` to safely represent ENSIP-11 L2 coin types that exceed Int32.
+  """
+  coinTypeBig: String!
+}
+
+"""An ENS domain name"""
+type Domain {
+  """Canonical token ID (without version bits)"""
+  canonicalId: String
+
+  """Timestamp when domain was created"""
+  createdAt: Int!
+
+  """Events associated with this domain"""
+  events(first: Int, where: EventFilter): [Event!]!
+
+  """Count of events associated with this domain"""
+  eventsCount: Int!
+
+  """
+  Timestamp when domain expires. For V1 .eth 2LDs, includes the 90-day grace period (`BaseRegistrar.expires + 90d`) to match subgraph semantics. The bare on-chain `expires` is still available via the parallel `Registration.expiryDate`.
+  """
+  expiryDate: Int
+
+  """
+  Fuse bitmap from V1 NameWrapper (CANNOT_UNWRAP, PARENT_CANNOT_CONTROL, etc.). Null when not wrapped.
+  """
+  fuses: Int
+
+  """
+  Grace-period end for V1 .eth 2LDs (expiry + 90 days). Now an explicit-name alias for `Domain.expiryDate` (which itself includes the grace period for V1 .eth 2LDs per subgraph parity). Null for non-V1 names, non-.eth 2LDs, or names without expiry.
+  """
+  gracePeriodEnd: Int
+
+  """Domain identifier (name or namehash)"""
+  id: String!
+
+  """
+  V1-only provenance: true when the row's most recent update came from the legacy pre-2020 ENS Registry (0x314159…); false when it's been touched by the canonical post-2020 Registry (0x00…2e1e) or for V2 names.
+  """
+  isLegacy: Boolean!
+
+  """Whether this domain has been migrated to V2"""
+  isMigrated: Boolean!
+
+  """
+  Whether the name passes ENSIP-15 normalization (computed at query time)
+  """
+  isNormalized: Boolean!
+
+  """
+  Whether this domain is reachable via canonical top-down resolution.
+    False when an ancestor label's subregistry pointer has moved away from
+    the subregistry contract that originally minted this domain (orphaned
+    subtree), when the domain has been LabelUnregistered, or when an
+    ancestor expiry has passed. Default GraphQL queries filter
+    `isReachable: true` — pass `where: { includeUnreachable: true }` to
+    include orphans.
+  """
+  isReachable: Boolean!
+
+  """
+  Whether this name is currently wrapped in V1 NameWrapper. When true, the `owner` field returns the wrapped-token owner (EOA), NOT the NameWrapper contract address — this is a deliberate divergence from the ENS subgraph for client convenience. Subgraph clients that need the NameWrapper-as-owner shape should query the on-chain `ownerOf()` directly.
+  """
+  isWrapped: Boolean!
+
+  """Label only (e.g., 'vitalik' for 'vitalik.eth')"""
+  labelName: String
+
+  """
+  Keccak256 hash of the label. Non-null: this indexer only materializes a Domain once its label is known (it never creates tokenId-only rows like the subgraph/ENSNode), so clients need no null guard.
+  """
+  labelhash: String!
+
+  """Full domain name (e.g., 'vitalik.eth')"""
+  name: String
+
+  """ENSIP-15 normalized name (null if normalization fails)"""
+  normalizedName: String
+
+  """Current owner of the domain"""
+  owner: Account!
+
+  """Parent domain"""
+  parent: Domain
+
+  """
+  ENS protocol version this domain belongs to ("v1" = legacy ENS, "v2" = ENSv2).
+  """
+  protocol: String!
+
+  """Original registrant of the domain"""
+  registrant: Account
+
+  """Timestamp when domain was registered"""
+  registrationDate: Int
+
+  """Address this domain resolves to"""
+  resolvedAddress: Account
+
+  """Resolver contract for this domain"""
+  resolver: Resolver
+
+  """
+  Number of distinct accounts holding any label-scoped role on this label,
+    matched by the label's canonical (version-independent) token id and its
+    registry. Excludes the registry-wide root/admin role and empty role bitmaps,
+    so it reflects only roles tied to this individual label.
+  """
+  roleHolderCount: Int!
+
+  """
+  Subgraph-compatible alias for `subdomainsCount`. Returns the same value.
+  """
+  subdomainCount: Int!
+
+  """Subdomains of this domain"""
+  subdomains: [Domain!]!
+
+  """
+  Count of direct subdomains (one level only). Filtered by `isReachable = 1` AND excluding fully-burned names (owner=0 AND resolver=0, mirroring subgraph's GC deletion criteria). DEPRECATED: prefer `subdomainCount` (subgraph-compatible name).
+  """
+  subdomainsCount: Int!
+
+  """
+  The registry contract that manages this domain's subnames — the value of the parent registry's `getSubregistry(label)` pointer, set from `SubregistryUpdated`. Null when no subregistry is set (or for V1 names). This is the registry whose `referencedBy` includes this domain.
+  """
+  subregistry: RegistryInfo
+
+  """ERC-721 token ID for this domain"""
+  tokenId: String
+
+  """Token version number"""
+  tokenVersion: Int
+
+  """
+  ENS V1 Registry TTL (from `NewTTL` event). Null when never set or for V2 domains.
+  """
+  ttl: Int
+
+  """
+  Timestamp when this domain first became unreachable (null while reachable)
+  """
+  unreachableSince: Int
+
+  """
+  V1 NameWrapper wrapped-domain record. Null for V2 or unwrapped domains.
+  """
+  wrappedDomain: WrappedDomain
+
+  """Wrapped owner (V1 NameWrapper EOA). Null when not wrapped."""
+  wrappedOwner: Account
+
+  """Wrapper expiry timestamp from V1 NameWrapper. Null when not wrapped."""
+  wrapperExpiry: Int
+}
+
+"""A connection to a list of Domains"""
+type DomainConnection {
+  """A list of edges"""
+  edges: [DomainEdge!]!
+
+  """Information to aid in pagination"""
+  pageInfo: PageInfo!
+
+  """Total count of items (may be expensive to compute)"""
+  totalCount: Int
+}
+
+"""An edge in a Domain connection"""
+type DomainEdge {
+  """A cursor for use in pagination"""
+  cursor: String!
+
+  """The item at the end of the edge"""
+  node: Domain!
+}
+
+"""Filter criteria for querying domains"""
+input DomainFilter {
+  """Subgraph-compatible alias for `expiry_gt`."""
+  expiryDate_gt: Int
+
+  """Subgraph-compatible alias for `expiry_gte`."""
+  expiryDate_gte: Int
+
+  """Subgraph-compatible alias for `expiry_lt`."""
+  expiryDate_lt: Int
+
+  """Subgraph-compatible alias for `expiry_lte`."""
+  expiryDate_lte: Int
+
+  """Filter by expiry date greater than (Unix timestamp)"""
+  expiry_gt: Int
+
+  """Filter by expiry date greater than or equal (Unix timestamp)"""
+  expiry_gte: Int
+
+  """Filter by expiry date less than (Unix timestamp)"""
+  expiry_lt: Int
+
+  """Filter by expiry date less than or equal (Unix timestamp)"""
+  expiry_lte: Int
+
+  """Filter by whether domain has direct subdomains (one level only)"""
+  hasSubdomains: Boolean
+
+  """
+  Include domains that are unreachable via canonical resolution
+    (orphaned by subregistry repoints, label unregistration, or expired
+    ancestors). Default false — set true for audit / debug queries.
+  """
+  includeUnreachable: Boolean
+
+  """Filter by migration status"""
+  isMigrated: Boolean
+
+  """Exact match on leftmost label (subgraph parity)."""
+  labelName: String
+
+  """Partial label match (contains)."""
+  labelName_contains: String
+
+  """Case-insensitive partial label match."""
+  labelName_contains_nocase: String
+
+  """Label ends with suffix."""
+  labelName_ends_with: String
+
+  """Case-insensitive label-suffix match."""
+  labelName_ends_with_nocase: String
+
+  """Label in list (up to 1000 labels)."""
+  labelName_in: [String!]
+
+  """Negated exact-label match."""
+  labelName_not: String
+
+  """Negated partial label match."""
+  labelName_not_contains: String
+
+  """Negated label-in-list (up to 1000 labels)."""
+  labelName_not_in: [String!]
+
+  """Label starts with prefix."""
+  labelName_starts_with: String
+
+  """Case-insensitive label-prefix match."""
+  labelName_starts_with_nocase: String
+
+  """Exact name match"""
+  name: String
+
+  """Partial name match (contains)"""
+  name_contains: String
+
+  """Case-insensitive partial name match"""
+  name_contains_nocase: String
+
+  """Name ends with suffix"""
+  name_ends_with: String
+
+  """Case-insensitive suffix match (subgraph parity)."""
+  name_ends_with_nocase: String
+
+  """Filter by name in list (up to 1000 names)"""
+  name_in: [String!]
+
+  """Negated exact-name match (subgraph parity)."""
+  name_not: String
+
+  """Negated partial name match (subgraph parity)."""
+  name_not_contains: String
+
+  """Negated name-in-list (subgraph parity, up to 1000 names)."""
+  name_not_in: [String!]
+
+  """Name starts with prefix"""
+  name_starts_with: String
+
+  """Case-insensitive prefix match (subgraph parity)."""
+  name_starts_with_nocase: String
+
+  """Filter by owner address"""
+  owner: String
+
+  """
+  Nested-relation filter on owner Account (subgraph parity). E.g. `{owner_: {id_in: [...]}}`.
+  """
+  owner_: AccountFilter
+
+  """Filter by owner address in list"""
+  owner_in: [String!]
+
+  """Negated owner address match (subgraph parity)."""
+  owner_not: String
+
+  """Negated owner-in-list (subgraph parity)."""
+  owner_not_in: [String!]
+
+  """Filter by resolved address"""
+  resolvedAddress: String
+
+  """Filter by resolver contract address"""
+  resolver: String
+
+  """Filter by direct subdomain count greater than (one level only)"""
+  subdomainCount_gt: Int
+
+  """Filter by direct subdomain count less than (one level only)"""
+  subdomainCount_lt: Int
+}
+
+"""Fields to order Domain results by"""
+enum Domain_orderBy {
+  createdAt
+  expiryDate
+  id
+  name
+  registrationDate
+}
+
+"""EAC (Enhanced Access Control) role assignment"""
+type EACRoleAssignment {
+  """Account that has the role"""
+  account: String!
+
+  """Block number when assigned"""
+  blockNumber: Int!
+
+  """Assignment identifier"""
+  id: String!
+
+  """Domain name this role applies to (null for global roles)"""
+  name: String
+
+  """
+  Human-readable names of the roles encoded in `roleBitmap`, decoded against the
+    emitting contract's role table (resolver vs registry). Admin roles are suffixed
+    with `_ADMIN` (e.g. `["SET_RESOLVER", "SET_RESOLVER_ADMIN"]`). Empty when no
+    roles are set or the bitmap is unrecognized.
+  """
+  permissions: [String!]!
+
+  """Resource (token ID) this role applies to"""
+  resource: String!
+
+  """
+  Role bitmap (hex string). Preserved verbatim for clients that decode it directly.
+  """
+  roleBitmap: String!
+
+  """Timestamp when assigned"""
+  timestamp: Int!
+
+  """Transaction hash"""
+  transactionHash: String!
+}
+
+"""A connection to a list of EACRoleAssignments"""
+type EACRoleAssignmentConnection {
+  """A list of edges"""
+  edges: [EACRoleAssignmentEdge!]!
+
+  """Information to aid in pagination"""
+  pageInfo: PageInfo!
+
+  """Total count of items (may be expensive to compute)"""
+  totalCount: Int
+}
+
+"""An edge in an EACRoleAssignment connection"""
+type EACRoleAssignmentEdge {
+  """A cursor for use in pagination"""
+  cursor: String!
+
+  """The item at the end of the edge"""
+  node: EACRoleAssignment!
+}
+
+"""An event emitted by ENS contracts"""
+type Event {
+  """Typed view of `data` when `type` is `AddressChanged`. Null otherwise."""
+  asAddressChanged: AddressChangedData
+
+  """Typed view of `data` when `type` is `ExpiryUpdated`. Null otherwise."""
+  asExpiryUpdated: ExpiryUpdatedData
+
+  """Typed view of `data` when `type` is `FusesSet`. Null otherwise."""
+  asFusesSet: FusesSetData
+
+  """Typed view of `data` when `type` is `LabelRegistered`. Null otherwise."""
+  asLabelRegistered: LabelRegisteredData
+
+  """Typed view of `data` when `type` is `NameRegistered`. Null otherwise."""
+  asNameRegistered: NameRegisteredData
+
+  """Typed view of `data` when `type` is `NameRenewed`. Null otherwise."""
+  asNameRenewed: NameRenewedData
+
+  """Typed view of `data` when `type` is `NameUnwrapped`. Null otherwise."""
+  asNameUnwrapped: NameUnwrappedData
+
+  """Typed view of `data` when `type` is `NameWrapped`. Null otherwise."""
+  asNameWrapped: NameWrappedData
+
+  """
+  Typed view of `data` when `type` is `RegistryTransfer` (V1 ENS Registry setOwner). Null otherwise.
+  """
+  asRegistryTransfer: RegistryTransferData
+
+  """Typed view of `data` when `type` is `ResolverUpdated`. Null otherwise."""
+  asResolverUpdated: ResolverUpdatedData
+
+  """Typed view of `data` when `type` is `ReverseClaimed`. Null otherwise."""
+  asReverseClaimed: ReverseClaimedData
+
+  """Typed view of `data` when `type` is `TextChanged`. Null otherwise."""
+  asTextChanged: TextChangedData
+
+  """Typed view of `data` when `type` is `Transfer`. Null otherwise."""
+  asTransfer: TransferData
+
+  """Block number where event occurred"""
+  blockNumber: Int!
+
+  """Contract address that emitted the event"""
+  contractAddress: String!
+
+  """
+  Event-specific data as JSON (e.g., key/value for TextChanged, address for AddressChanged)
+  """
+  data: String
+
+  """Domain associated with this event (if applicable)"""
+  domain: Domain
+
+  """Event identifier"""
+  id: String!
+
+  """
+  Text record key, populated when `type == "TextChanged"` (subgraph parity). Null for other event types.
+  """
+  key: String
+
+  """Name affected by this event"""
+  name: String
+
+  """Namehash of the name"""
+  namehash: String
+
+  """Chain where event occurred (v1 or v2)"""
+  protocol: String!
+
+  """Timestamp when event occurred"""
+  timestamp: Int!
+
+  """Transaction hash"""
+  transactionHash: String!
+
+  """Type of event"""
+  type: String!
+
+  """
+  Text record value, populated when `type == "TextChanged"` (subgraph parity). Null for other event types.
+  """
+  value: String
+}
+
+"""A connection to a list of Events"""
+type EventConnection {
+  """A list of edges"""
+  edges: [EventEdge!]!
+
+  """Information to aid in pagination"""
+  pageInfo: PageInfo!
+
+  """Total count of items (may be expensive to compute)"""
+  totalCount: Int
+}
+
+"""An edge in an Event connection"""
+type EventEdge {
+  """A cursor for use in pagination"""
+  cursor: String!
+
+  """The item at the end of the edge"""
+  node: Event!
+}
+
+"""Filter criteria for querying events"""
+input EventFilter {
+  """Filter by block number greater than"""
+  blockNumber_gt: Int
+
+  """Filter by block number greater than or equal"""
+  blockNumber_gte: Int
+
+  """Filter by block number less than"""
+  blockNumber_lt: Int
+
+  """Filter by block number less than or equal"""
+  blockNumber_lte: Int
+
+  """Filter by contract address"""
+  contractAddress: String
+
+  """Filter by domain name"""
+  domain: String
+
+  """Filter by namehash"""
+  namehash: String
+
+  """Filter by protocol (v1 or v2)"""
+  protocol: String
+
+  """Filter by timestamp greater than"""
+  timestamp_gt: Int
+
+  """Filter by timestamp greater than or equal"""
+  timestamp_gte: Int
+
+  """Filter by timestamp less than"""
+  timestamp_lt: Int
+
+  """Filter by timestamp less than or equal"""
+  timestamp_lte: Int
+
+  """
+  Filter by event type (e.g., 'Transfer', 'NameRegistered', 'TextChanged')
+  """
+  type: String
+
+  """Filter by event type in list"""
+  type_in: [String!]
+
+  """Negated event-type match (subgraph parity)."""
+  type_not: String
+
+  """Negated event-type-in-list (subgraph parity)."""
+  type_not_in: [String!]
+}
+
+"""Fields to order Event results by"""
+enum Event_orderBy {
+  blockNumber
+  name
+  timestamp
+}
+
+"""
+Typed payload for `ExpiryUpdated` events (V1 NameWrapper ExpiryExtended + V2 registry expiry updates).
+"""
+type ExpiryUpdatedData {
+  """
+  New expiry timestamp (V1 variant: `expiry`; V2 variant: `newExpiry`). Reported here as a unified value.
+  """
+  expiry: Int
+
+  """Namehash of the affected node (V1 NameWrapper variant)."""
+  node: String
+
+  """Token id (V2 variant; decimal string)."""
+  tokenId: String
+}
+
+"""Typed payload for `FusesSet` events from V1 NameWrapper."""
+type FusesSetData {
+  """New fuse bitmap (CANNOT_UNWRAP, PARENT_CANNOT_CONTROL, etc.)."""
+  fuses: Int
+
+  """Namehash whose fuses changed."""
+  node: String
+}
+
+"""An interface implementation record"""
+type InterfaceRecord {
+  """Implementer contract address"""
+  implementer: String!
+
+  """Interface ID (EIP-165 selector, hex string)"""
+  interfaceId: String!
+}
+
+"""Typed payload for `LabelRegistered` events (V2 registry)."""
+type LabelRegisteredData {
+  """Canonical token id (post truncation; decimal string)."""
+  canonicalId: String
+
+  """Expiry timestamp."""
+  expiry: Int
+
+  """Full ENS name."""
+  name: String
+
+  """Registrant address."""
+  owner: String
+
+  """Registry contract that emitted the event."""
+  registry: String
+
+  """Address that initiated the registration."""
+  sender: String
+
+  """Token id (decimal string)."""
+  tokenId: String
+}
+
+"""
+Typed payload for `NameRegistered` events (V1 BaseRegistrar + ETHController variants).
+"""
+type NameRegisteredData {
+  """Base price paid for the name, in wei (decimal string)."""
+  baseCost: String
+
+  """Total cost = baseCost + premium (decimal string)."""
+  cost: String
+
+  """Absolute expiry timestamp (seconds)."""
+  expires: Int
+
+  """
+  Hex labelhash (controller variant) or token id (BaseRegistrar-only fallback).
+  """
+  label: String
+
+  """Full ENS name registered (e.g., `vitalik.eth`)."""
+  name: String
+
+  """Registrant address."""
+  owner: String
+
+  """Premium component for premium-priced names (decimal string)."""
+  premium: String
+
+  """
+  Referrer bytes32 (from the 7-arg UnwrappedEthRegistrarController variant).
+  """
+  referrer: String
+}
+
+"""Typed payload for `NameRenewed` events."""
+type NameRenewedData {
+  """New absolute expiry timestamp (seconds)."""
+  expires: Int
+
+  """Token id (decimal string)."""
+  id: String
+}
+
+"""
+Typed payload for `NameUnwrapped` events. (See NameWrappedData for the V1 storage caveat.)
+"""
+type NameUnwrappedData {
+  """Namehash of the unwrapped name."""
+  node: String
+
+  """New owner after unwrap."""
+  owner: String
+}
+
+"""
+Typed payload for `NameWrapped` events (V1 NameWrapper). NOTE: V1 currently stores NameWrapper logs as Transfer events; this accessor exists for forward compatibility when a dedicated NameWrapped event type is added.
+"""
+type NameWrappedData {
+  """Wrapper expiry timestamp."""
+  expiry: Int
+
+  """Fuses bitmap (uint32)."""
+  fuses: Int
+
+  """Namehash of the wrapped name."""
+  node: String
+
+  """Wrapped name owner."""
+  owner: String
+}
+
+"""Order direction for sorting"""
+enum OrderDirection {
+  asc
+  desc
+}
+
+"""
+Information about pagination in a connection
+Follows the Relay Cursor Connections Specification
+"""
+type PageInfo {
+  """When paginating forwards, the cursor to continue"""
+  endCursor: String
+
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """When paginating backwards, the cursor to continue"""
+  startCursor: String
+}
+
+"""A public key record (secp256k1 coordinates)"""
+type Pubkey {
+  """X coordinate (hex string)"""
+  x: String!
+
+  """Y coordinate (hex string)"""
+  y: String!
+}
+
+type Query {
+  """Indexer health / sync state (subgraph parity)."""
+  _meta: _Meta_!
+
+  """Get account information by address"""
+  account(id: String!): Account
+
+  """List Account entities with pagination and filtering (subgraph parity)."""
+  accounts(first: Int, orderBy: Account_orderBy, orderDirection: OrderDirection, skip: Int, where: AccountFilter): [Account!]!
+
+  """
+  Subgraph parity: top-level `AddressChanged` events. Inspect via `asAddressChanged { ... }`.
+  """
+  addressChangeds(first: Int, orderBy: Event_orderBy, orderDirection: OrderDirection, skip: Int, where: EventFilter): [Event!]!
+
+  """Get ENSIP-16 resolver approvals/delegations"""
+  approvals(delegate: String, namehash: String): [ResolverApproval!]!
+
+  """Get a single domain by name or namehash"""
+  domain(id: String!): Domain
+
+  """Get multiple domains with cursor-based pagination (recommended)"""
+  domainConnection(after: String, before: String, first: Int, last: Int, orderBy: Domain_orderBy, orderDirection: OrderDirection, where: DomainFilter): DomainConnection!
+
+  """
+  Get multiple domains with pagination and filtering (legacy offset-based)
+  """
+  domains(first: Int, orderBy: Domain_orderBy, orderDirection: OrderDirection, skip: Int, where: DomainFilter): [Domain!]!
+
+  """Get events with cursor-based pagination (recommended)"""
+  eventConnection(after: String, before: String, first: Int, last: Int, orderBy: Event_orderBy, orderDirection: OrderDirection, where: EventFilter): EventConnection!
+
+  """Get events with pagination (legacy offset-based)"""
+  events(first: Int, orderBy: Event_orderBy, orderDirection: OrderDirection, skip: Int, where: EventFilter): [Event!]!
+
+  """
+  Subgraph parity: top-level `ExpiryUpdated` events. Inspect via `asExpiryUpdated { ... }`.
+  """
+  expiryUpdateds(first: Int, orderBy: Event_orderBy, orderDirection: OrderDirection, skip: Int, where: EventFilter): [Event!]!
+
+  """
+  Subgraph parity: top-level `FusesSet` events. Inspect via `asFusesSet { ... }`.
+  """
+  fusesSets(first: Int, orderBy: Event_orderBy, orderDirection: OrderDirection, skip: Int, where: EventFilter): [Event!]!
+
+  """
+  Subgraph parity: top-level `LabelRegistered` events. Inspect via `asLabelRegistered { ... }`.
+  """
+  labelRegistereds(first: Int, orderBy: Event_orderBy, orderDirection: OrderDirection, skip: Int, where: EventFilter): [Event!]!
+
+  """Get ENSIP-16 resolver metadata (offchain GraphQL endpoint)"""
+  metadata(resolver: String!): ResolverMetadata
+
+  """
+  Subgraph parity: top-level `NameRegistered` events. Inspect via `asNameRegistered { ... }`.
+  """
+  nameRegistereds(first: Int, orderBy: Event_orderBy, orderDirection: OrderDirection, skip: Int, where: EventFilter): [Event!]!
+
+  """
+  Subgraph parity: top-level `NameRenewed` events. Inspect via `asNameRenewed { ... }`.
+  """
+  nameReneweds(first: Int, orderBy: Event_orderBy, orderDirection: OrderDirection, skip: Int, where: EventFilter): [Event!]!
+
+  """
+  Subgraph parity: top-level `NameUnwrapped` events. Inspect via `asNameUnwrapped { ... }`.
+  """
+  nameUnwrappeds(first: Int, orderBy: Event_orderBy, orderDirection: OrderDirection, skip: Int, where: EventFilter): [Event!]!
+
+  """
+  Subgraph parity: top-level `NameWrapped` events. Inspect via `asNameWrapped { ... }`.
+  """
+  nameWrappeds(first: Int, orderBy: Event_orderBy, orderDirection: OrderDirection, skip: Int, where: EventFilter): [Event!]!
+
+  """Get domain registrations with cursor-based pagination (recommended)"""
+  registrationConnection(after: String, before: String, first: Int, last: Int, orderBy: Registration_orderBy, orderDirection: OrderDirection, where: RegistrationFilter): RegistrationConnection!
+
+  """Get domain registrations with pagination (legacy offset-based)"""
+  registrations(first: Int, orderBy: Registration_orderBy, orderDirection: OrderDirection, skip: Int, where: RegistrationFilter): [Registration!]!
+
+  """Get registries owned by an account"""
+  registries(owner: String!): [RegistryInfo!]!
+
+  """
+  Look up a single registry contract by its address (Registry view entry point).
+  """
+  registry(address: String!): RegistryInfo
+
+  """
+  Subgraph parity: top-level `RegistryTransfer` events. Inspect via `asRegistryTransfer { ... }`.
+  """
+  registryTransfers(first: Int, orderBy: Event_orderBy, orderDirection: OrderDirection, skip: Int, where: EventFilter): [Event!]!
+
+  """Get resolver information by contract address"""
+  resolver(id: String!): ResolverDetail
+
+  """
+  Subgraph parity: top-level `ResolverUpdated` events. Inspect via `asResolverUpdated { ... }`.
+  """
+  resolverUpdateds(first: Int, orderBy: Event_orderBy, orderDirection: OrderDirection, skip: Int, where: EventFilter): [Event!]!
+
+  """
+  List Resolver entities (subgraph parity). One entity per (protocol, address,
+    namehash) binding. Entity `id` is rendered `{protocol}-{address}-{namehash}`
+    (using `v1`/`v2` as the isolation prefix since both protocols share the chain).
+  """
+  resolvers(first: Int, orderBy: Resolver_orderBy, orderDirection: OrderDirection, skip: Int, where: ResolverFilter): [Resolver!]!
+
+  """
+  List resolver contracts owned by a specific account (admin view).
+    Hard-renamed from the previous `resolvers(account:)` in Phase 4a of the
+    parity migration so the bare `resolvers` field name is reserved for the
+    subgraph-style entity listing.
+  """
+  resolversByOwner(account: String!, protocol: String): [ResolverDetail!]!
+
+  """
+  Subgraph parity: top-level `ReverseClaimed` events. Inspect via `asReverseClaimed { ... }`.
+  """
+  reverseClaimeds(first: Int, orderBy: Event_orderBy, orderDirection: OrderDirection, skip: Int, where: EventFilter): [Event!]!
+
+  """Get EAC role assignments with cursor-based pagination (recommended)"""
+  roleConnection(account: String, after: String, before: String, first: Int, last: Int, resource: String): EACRoleAssignmentConnection!
+
+  """Get EAC role assignments"""
+  roles(account: String, resource: String): [EACRoleAssignment!]!
+
+  """
+  Subgraph parity: top-level `TextChanged` events. Inspect via `asTextChanged { ... }`.
+  """
+  textChangeds(first: Int, orderBy: Event_orderBy, orderDirection: OrderDirection, skip: Int, where: EventFilter): [Event!]!
+
+  """
+  Subgraph parity: top-level `Transfer` events. Equivalent to `events(where:{type:"Transfer"})`. Inspect typed fields via `asTransfer { ... }`.
+  """
+  transfers(first: Int, orderBy: Event_orderBy, orderDirection: OrderDirection, skip: Int, where: EventFilter): [Event!]!
+
+  """
+  Get V1 NameWrapper wrapped-domain records. Returns empty for V2 / unwrapped names. (Subgraph parity.)
+  """
+  wrappedDomains(first: Int, skip: Int, where: WrappedDomainFilter): [WrappedDomain!]!
+}
+
+"""A domain registration record"""
+type Registration {
+  """
+  Base rent cost in wei, decimal-encoded u256 (String for the same Int32 reason as `cost`). Null when the Controller event has not been observed.
+  """
+  baseCost: String
+
+  """
+  Total user-paid registration cost (base + premium) in wei, decimal-encoded. Returned as String because u256 wei values exceed GraphQL Int (Int32). Null when the Controller event has not been observed for this registration.
+  """
+  cost: String
+
+  """The domain that was registered"""
+  domain: Domain!
+
+  """Timestamp when domain expires"""
+  expiryDate: Int!
+
+  """Registration identifier"""
+  id: String!
+
+  """
+  Human-readable label from the Controller event preimage (e.g., 'vitalik'). Null when the Controller event has not been observed or the label preimage was lost.
+  """
+  labelName: String
+
+  """Name of the registered domain"""
+  name: String!
+
+  """
+  Auction premium portion in wei, decimal-encoded u256 (String, see `cost`). \"0\" for legacy 5-arg LegacyEthRegistrarController (no auction-premium semantics) or null when the Controller event has not been observed.
+  """
+  premium: String
+
+  """Chain where registration occurred (v1 or v2)"""
+  protocol: String!
+
+  """
+  Referrer bytes32 hex from the 7-arg UnwrappedEthRegistrarController (V1) or V2 ETHRegistrar.NameRegistered. Null for older Controller variants or when no Controller event has been observed.
+  """
+  referrer: String
+
+  """Account that registered the domain"""
+  registrant: Account!
+
+  """Timestamp when domain was registered"""
+  registrationDate: Int!
+}
+
+"""A connection to a list of Registrations"""
+type RegistrationConnection {
+  """A list of edges"""
+  edges: [RegistrationEdge!]!
+
+  """Information to aid in pagination"""
+  pageInfo: PageInfo!
+
+  """Total count of items (may be expensive to compute)"""
+  totalCount: Int
+}
+
+"""An edge in a Registration connection"""
+type RegistrationEdge {
+  """A cursor for use in pagination"""
+  cursor: String!
+
+  """The item at the end of the edge"""
+  node: Registration!
+}
+
+"""Filter criteria for querying registrations"""
+input RegistrationFilter {
+  """Filter by expiry date greater than"""
+  expiryDate_gt: Int
+
+  """Filter by expiry date greater than or equal"""
+  expiryDate_gte: Int
+
+  """Filter by expiry date less than"""
+  expiryDate_lt: Int
+
+  """Filter by expiry date less than or equal"""
+  expiryDate_lte: Int
+
+  """Filter by protocol (v1 or v2)"""
+  protocol: String
+
+  """Filter by registrant address"""
+  registrant: String
+
+  """Filter by registrant address in list"""
+  registrant_in: [String!]
+}
+
+"""Fields to order Registration results by"""
+enum Registration_orderBy {
+  expiryDate
+  id
+  name
+  registrationDate
+}
+
+"""Registry information"""
+type RegistryInfo {
+  """Registry contract address"""
+  address: String!
+
+  """Timestamp when registry was created"""
+  createdAt: Int!
+
+  """Block when registry was created"""
+  createdBlock: Int!
+
+  """Cursor-based events emitted by this registry contract (recommended)."""
+  eventConnection(after: String, before: String, first: Int, last: Int, orderBy: Event_orderBy, orderDirection: OrderDirection, where: EventFilter): EventConnection!
+
+  """Total event count emitted by this registry contract."""
+  eventCount: Int!
+
+  """Events emitted by this registry contract (legacy offset-based)."""
+  events(first: Int, skip: Int, where: EventFilter): [Event!]!
+
+  """Cursor-based labels for this registry (recommended)."""
+  labelConnection(after: String, before: String, first: Int, last: Int, orderBy: Domain_orderBy, orderDirection: OrderDirection, where: DomainFilter): DomainConnection!
+
+  """Total label count for this registry."""
+  labelCount: Int!
+
+  """
+  Names whose subregistry is this contract (the labels under this registry, legacy offset-based).
+  """
+  labels(first: Int, orderBy: Domain_orderBy, orderDirection: OrderDirection, skip: Int, where: DomainFilter): [Domain!]!
+
+  """Name this registry manages"""
+  name: String!
+
+  """Namehash of the name"""
+  namehash: String!
+
+  """
+  Registry admin (the account holding the full root-role bitmap on this
+    contract, i.e. resource=0x0 / role_bitmap=0x111…111). Returns the most
+    recently granted admin if multiple, or null if no root role has been
+    granted yet.
+  """
+  owner: Account
+
+  """Parent registry address"""
+  parentRegistry: String!
+
+  """
+  Names whose CURRENT subregistry pointer is this contract — i.e. the names that use this registry as their subname registry (the inverse of `Domain.subregistry`; the registry-UI "Referenced by" relation). Legacy offset-based pagination; prefer `referencedByConnection`.
+  """
+  referencedBy(first: Int, orderBy: Domain_orderBy, orderDirection: OrderDirection, skip: Int, where: DomainFilter): [Domain!]!
+
+  """
+  Cursor-based version of `referencedBy`: names whose subregistry pointer is this contract (recommended).
+  """
+  referencedByConnection(after: String, before: String, first: Int, last: Int, orderBy: Domain_orderBy, orderDirection: OrderDirection, where: DomainFilter): DomainConnection!
+
+  """Total count of names whose subregistry pointer is this contract."""
+  referencedByCount: Int!
+
+  """Cursor-based EAC role assignments on this registry (recommended)."""
+  roleConnection(account: String, after: String, before: String, first: Int, last: Int): EACRoleAssignmentConnection!
+
+  """Total role-assignment count on this registry."""
+  roleCount: Int!
+
+  """EAC role assignments on this registry (legacy offset-based)."""
+  roles(account: String, first: Int, skip: Int): [EACRoleAssignment!]!
+}
+
+"""
+Typed payload for `RegistryTransfer` events. Emitted by V1 ENS Registry `setOwner` — distinct from ERC721/ERC1155 token transfers.
+"""
+type RegistryTransferData {
+  """Namehash whose owner changed."""
+  node: String
+
+  """New owner address."""
+  owner: String
+}
+
+"""A resolver contract for an ENS domain"""
+type Resolver {
+  """
+  ABI content types set on this resolver. List of scalar integers (the
+    contentType bitmasks only), not a list of entities — `abis { ... }` with
+    a subselection will fail.
+  """
+  abis: [Int!]
+
+  """Address record for a specific coin type (default: 60 for ETH)"""
+  addr(coinType: Int): String
+
+  """Resolver contract address (same as id)"""
+  address: String!
+
+  """All set addresses across all coin types"""
+  addresses: [CoinAddress!]
+
+  """Aliases set on this resolver (from AliasChanged events)"""
+  aliases: [Alias!]
+
+  """
+  All coin types currently set on this resolver/name as decimal strings (ENSIP-11-safe). Parallel projection of `addresses.coinTypeBig`.
+  """
+  coinTypes: [String!]
+
+  """Content hash (IPFS, Arweave, etc.)"""
+  contentHash: String
+
+  """
+  Canonical Domain associated with this resolver (first by namehash). Null when this resolver isn't bound to any name. Subgraph parity.
+  """
+  domain: Domain
+
+  """Resolver contract address"""
+  id: String!
+
+  """Interface implementations set on this resolver"""
+  interfaces: [InterfaceRecord!]
+
+  """Public key record (secp256k1 x/y coordinates)"""
+  pubkey: Pubkey
+
+  """Reverse name record (from NameChanged events)"""
+  reverseName: String
+
+  """Get a specific text record value by key (returns null if unset)."""
+  text(key: String!): String
+
+  """
+  All text-record keys set on this resolver/name. This is a list of scalar
+    strings (the keys only), NOT a list of {key, value} entities — the ENS
+    subgraph's `texts` field has the same name but a different shape, so a
+    subgraph-style `texts { key value }` selection will fail. To read values,
+    call `text(key: "...")` per key.
+  """
+  texts: [String!]
+
+  """Current version counter (from VersionChanged events)"""
+  version: Int
+}
+
+"""ENSIP-16 resolver approval/delegation"""
+type ResolverApproval {
+  """Whether approved (true) or revoked (false)"""
+  approved: Boolean!
+
+  """Block when approval was set"""
+  blockNumber: Int!
+
+  """Optional context for namespacing (typically owner address)"""
+  context: String
+
+  """Delegate address"""
+  delegate: String!
+
+  """Approval identifier"""
+  id: String!
+
+  """Log index"""
+  logIndex: Int!
+
+  """Namehash being delegated"""
+  namehash: String!
+
+  """Resolver contract address"""
+  resolver: String!
+
+  """Timestamp when approval was set"""
+  timestamp: Int!
+
+  """Transaction hash"""
+  transactionHash: String!
+}
+
+"""Detailed resolver information with statistics"""
+type ResolverDetail {
+  """Resolver contract address"""
+  address: String!
+
+  """Number of aliases defined on this resolver"""
+  aliasCount: Int!
+
+  """Aliases defined on this resolver"""
+  aliases: [Alias!]!
+
+  """Events emitted by this resolver contract"""
+  events(first: Int): [Event!]!
+
+  """Resolver contract address"""
+  id: String!
+
+  """Number of domains using this resolver"""
+  nodeCount: Int!
+
+  """Domains using this resolver (limited)"""
+  nodes(first: Int): [Domain!]!
+
+  """Number of distinct role holders on this resolver"""
+  roleHolderCount: Int!
+
+  """EAC role assignments on this resolver"""
+  roles: [EACRoleAssignment!]!
+}
+
+"""
+Filter input for the `resolvers` (entity-list) query (subgraph parity).
+Fields combine with AND semantics. Use `address`/`address_in` to scope by
+resolver contract, `namehash` to scope by name, and `protocol` (`"v1"` or
+`"v2"`) for protocol isolation.
+"""
+input ResolverFilter {
+  """Exact match on resolver contract address (0x-hex, lowercase)."""
+  address: String
+
+  """Resolver contract address in list (up to 1000)."""
+  address_in: [String!]
+
+  """Exact match on the bound name's namehash."""
+  namehash: String
+
+  """Restrict to a single protocol — `"v1"` or `"v2"`."""
+  protocol: String
+}
+
+"""ENSIP-16 resolver metadata (offchain data endpoint)"""
+type ResolverMetadata {
+  """Block when metadata was set"""
+  blockNumber: Int!
+
+  """GraphQL endpoint URL for offchain data"""
+  graphqlUrl: String!
+
+  """Metadata identifier"""
+  id: String!
+
+  """Resolver contract address"""
+  resolver: String!
+
+  """Timestamp when metadata was set"""
+  timestamp: Int!
+
+  """Transaction hash"""
+  transactionHash: String!
+}
+
+"""Typed payload for `ResolverUpdated` events (V2 registry)."""
+type ResolverUpdatedData {
+  """New resolver contract address."""
+  resolver: String
+
+  """Sender that performed the update."""
+  sender: String
+
+  """Token id (V2 ResolverUpdated; decimal string)."""
+  tokenId: String
+}
+
+"""Sort key for the `resolvers` (entity-list) query."""
+enum Resolver_orderBy {
+  """Lexicographic order on the resolver contract address."""
+  address
+
+  """First-binding block (when this resolver was first bound to this name)."""
+  setBlock
+}
+
+"""Typed payload for `ReverseClaimed` events from V1 ReverseRegistrar."""
+type ReverseClaimedData {
+  """Address that claimed reverse resolution."""
+  address: String
+
+  """Namehash of `<addr>.addr.reverse`."""
+  node: String
+}
+
+"""Typed payload for `TextChanged` events."""
+type TextChangedData {
+  """Text record key."""
+  key: String
+
+  """Namehash that the resolver record applies to."""
+  namehash: String
+
+  """Resolver contract address."""
+  resolver: String
+
+  """Text record value (may be empty when cleared)."""
+  value: String
+}
+
+"""
+Typed payload for `Transfer` events. Spans V1 BaseRegistrar ERC721 (`tokenId` numeric), V1 NameWrapper ERC1155 (`id` is the wrapped namehash, with `operator`/`value`), and V2 registry transfers.
+"""
+type TransferData {
+  """Sender address."""
+  from: String
+
+  """
+  Token id: ERC721 tokenId as a decimal string, or wrapper/V2 token id (namehash for NameWrapper). Stringified to preserve u256 range.
+  """
+  id: String
+
+  """ERC1155 operator address (V1 NameWrapper / V2 only)."""
+  operator: String
+
+  """Recipient address."""
+  to: String
+
+  """ERC1155 transfer amount (always 1 for ENS NameWrapper)."""
+  value: String
+}
+
+"""
+V1 NameWrapper wrapped-domain record. Returns null for unwrapped or V2 domains.
+"""
+type WrappedDomain {
+  """The wrapped Domain itself."""
+  domain: Domain!
+
+  """Wrapper expiry timestamp."""
+  expiryDate: Int
+
+  """Fuse bitmap (CANNOT_UNWRAP, PARENT_CANNOT_CONTROL, etc.)."""
+  fuses: Int
+
+  """Same as the wrapped Domain's namehash."""
+  id: String!
+
+  """Name string."""
+  name: String
+
+  """Wrapped-token owner (EOA)."""
+  owner: Account
+}
+
+"""Filter criteria for querying wrapped domains."""
+input WrappedDomainFilter {
+  """Filter by expiry date greater than (Unix timestamp)."""
+  expiryDate_gt: Int
+
+  """Filter by expiry date less than (Unix timestamp)."""
+  expiryDate_lt: Int
+
+  """Filter by domain name (exact)."""
+  name: String
+
+  """Filter by wrapped-domain owner address."""
+  owner: String
+}
+
+"""Block descriptor returned inside `_Meta_`."""
+type _Block_ {
+  """Block hash (hex), or null when unknown."""
+  hash: String
+
+  """Block number."""
+  number: Int!
+
+  """Block timestamp (seconds), or null when unknown."""
+  timestamp: Int
+}
+
+"""Indexer health / sync state (subgraph parity)."""
+type _Meta_ {
+  """Current head block (highest block synced)."""
+  block: _Block_!
+
+  """Deployment id / version string."""
+  deployment: String
+
+  """Whether the indexer has hit an indexing error and stalled."""
+  hasIndexingErrors: Boolean!
+}

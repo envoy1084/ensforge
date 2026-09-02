@@ -1,5 +1,6 @@
 import type { EnsforgeConfig } from "../../config/config.js";
 import type { IndexerProtocol } from "../../config/indexer-options.js";
+import { getIndexerRuntimeConfig } from "../../config/indexer-options.js";
 import { IndexerConfigError } from "../../errors/indexer-config-error.js";
 import { IndexerUnavailableError } from "../../errors/indexer-unavailable-error.js";
 
@@ -18,6 +19,14 @@ export const resolveIndexerSource = (
     throw new IndexerConfigError({
       code: "INDEXER_DISABLED",
       message: "Indexer actions are disabled for this configuration",
+    });
+  }
+
+  const state = getIndexerRuntimeConfig(config.indexer).sourceStates[protocol];
+  if (state === "disabled") {
+    throw new IndexerConfigError({
+      code: "SOURCE_DISABLED",
+      message: `The ${protocol} indexer is disabled on ${config.network}`,
     });
   }
 

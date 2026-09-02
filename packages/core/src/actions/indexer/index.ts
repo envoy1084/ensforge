@@ -21,6 +21,22 @@ export {
   type IndexerRequestPolicy,
   type IndexerRetryPolicy,
   type IndexerSourceContext,
+  type IndexerSourceState,
   type ResolvedIndexerConfig,
   type ResolvedIndexerEndpoints,
 } from "../../config/indexer-options.js";
+export {
+  DisabledIndexerSourceStatus,
+  FailedIndexerSourceStatus,
+  getIndexerStatus,
+  IndexerBlock,
+  IndexerSourceFailure,
+  IndexerSourceStatus,
+  IndexerStatus,
+  ReadyIndexerSourceStatus,
+  UnavailableIndexerSourceStatus,
+  type IndexerBlockType,
+  type IndexerSourceFailureType,
+  type IndexerSourceStatusType,
+  type IndexerStatusType,
+} from "./get-indexer-status/index.js";

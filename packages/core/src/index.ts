@@ -1,9 +1,12 @@
 export {
   defineAction,
+  defineNoParametersAction,
   defineReadAction,
   defineWriteAction,
   type EnsAction,
   type EnsActionEffect,
+  type EnsNoParametersAction,
+  type EnsNoParametersActionEffect,
   type BlockParameters,
   type EnsReadAction,
   type EnsReadRequest,

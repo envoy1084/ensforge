@@ -1,0 +1,11 @@
+{
+  "protocol": "v2",
+  "retrievedAt": "2026-09-02T19:22:08.206Z",
+  "sha256": "b0f298adb80aa8268d08fcb70f9dbba88c6d857a8756559fbc5f367f194c2c12",
+  "sources": [
+    {
+      "network": "sepolia",
+      "url": "https://graphql.ens.dev/graphql"
+    }
+  ]
+}

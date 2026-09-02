@@ -54,6 +54,8 @@ export interface ResolvedIndexerConfig {
   readonly maximumPageSize: number;
 }
 
+export type IndexerSourceState = "enabled" | "disabled" | "unavailable";
+
 export const defaultIndexerEndpoints = Object.freeze({
   mainnet: Object.freeze({
     v1: "https://api.thegraph.com/subgraphs/name/ensdomains/ens",
@@ -75,6 +77,7 @@ export const defaultIndexerRequestPolicy = Object.freeze({
 interface IndexerRuntimeConfig {
   readonly headers?: IndexerHeaders;
   readonly fetch?: typeof globalThis.fetch;
+  readonly sourceStates: Readonly<Record<IndexerProtocol, IndexerSourceState>>;
 }
 
 const runtimeConfigs = new WeakMap<ResolvedIndexerConfig, IndexerRuntimeConfig>();
@@ -177,7 +180,22 @@ export const resolveIndexerConfig = (
     failureMode,
     maximumPageSize,
   });
+  const sourceStates = Object.freeze({
+    v1:
+      options.enabled === false || options.endpoints?.v1 === null
+        ? ("disabled" as const)
+        : endpoints.v1 === null
+          ? ("unavailable" as const)
+          : ("enabled" as const),
+    v2:
+      options.enabled === false || options.endpoints?.v2 === null
+        ? ("disabled" as const)
+        : endpoints.v2 === null
+          ? ("unavailable" as const)
+          : ("enabled" as const),
+  });
   runtimeConfigs.set(resolved, {
+    sourceStates,
     ...(options.headers === undefined ? {} : { headers: options.headers }),
     ...(options.fetch === undefined ? {} : { fetch: options.fetch }),
   });
@@ -185,4 +203,9 @@ export const resolveIndexerConfig = (
 };
 
 export const getIndexerRuntimeConfig = (config: ResolvedIndexerConfig): IndexerRuntimeConfig =>
-  runtimeConfigs.get(config) ?? {};
+  runtimeConfigs.get(config) ?? {
+    sourceStates: Object.freeze({
+      v1: config.endpoints.v1 === null ? "unavailable" : "enabled",
+      v2: config.endpoints.v2 === null ? "unavailable" : "enabled",
+    }),
+  };

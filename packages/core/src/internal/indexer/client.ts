@@ -1,5 +1,6 @@
 import { Duration, Effect } from "effect";
 
+import { print } from "graphql";
 import {
   GraphQLClient,
   type RawRequestOptions,
@@ -97,6 +98,11 @@ const normalizeErrors = (errors: ReadonlyArray<unknown> | undefined) =>
     ];
   });
 
+const printRequestDocument = (document: RequestDocument): string =>
+  typeof document === "object" && document !== null && "kind" in document
+    ? print(document)
+    : String(document);
+
 const requestOnce = <Result, VariablesType extends Variables>(
   config: EnsforgeConfig,
   source: IndexerSource,
@@ -122,7 +128,7 @@ const requestOnce = <Result, VariablesType extends Variables>(
           }, config.indexer.timeout);
         });
         const pending = client.rawRequest<Result, VariablesType>({
-          query: parameters.document.toString(),
+          query: printRequestDocument(parameters.document),
           ...(parameters.variables === undefined ? {} : { variables: parameters.variables }),
           requestHeaders: headers,
           signal: controller.signal,
