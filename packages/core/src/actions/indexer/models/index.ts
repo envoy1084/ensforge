@@ -1,4 +1,15 @@
 export {
+  defaultEventOrder,
+  EventFilter,
+  EventOrder,
+  IndexedEvent,
+  IndexedEventKind,
+  type EventFilter as EventFilterType,
+  type EventOrder as EventOrderType,
+  type IndexedEvent as IndexedEventType,
+  type IndexedEventKind as IndexedEventKindType,
+} from "./event.js";
+export {
   IndexedName,
   IndexedNameV1,
   IndexedNameV2,
@@ -58,6 +69,17 @@ export {
   type RecordHistoryFilter as RecordHistoryFilterType,
   type RecordHistoryOrder as RecordHistoryOrderType,
 } from "./record.js";
+export {
+  defaultRegistrationOrder,
+  IndexedRegistration,
+  IndexedRegistrationCost,
+  RegistrationFilter,
+  RegistrationOrder,
+  type IndexedRegistration as IndexedRegistrationType,
+  type IndexedRegistrationCost as IndexedRegistrationCostType,
+  type RegistrationFilter as RegistrationFilterType,
+  type RegistrationOrder as RegistrationOrderType,
+} from "./registration.js";
 export {
   CompleteIndexerSourcePageStatus,
   DisabledIndexerSourcePageStatus,

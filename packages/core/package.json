@@ -53,6 +53,10 @@
       "workspace-source": "./src/actions/indexer/index.ts",
       "default": "./dist/indexer.js"
     },
+    "./indexer/history": {
+      "workspace-source": "./src/actions/indexer/history/index.ts",
+      "default": "./dist/indexer/history.js"
+    },
     "./indexer/names": {
       "workspace-source": "./src/actions/indexer/names/index.ts",
       "default": "./dist/indexer/names.js"
@@ -60,6 +64,10 @@
     "./indexer/records": {
       "workspace-source": "./src/actions/indexer/records/index.ts",
       "default": "./dist/indexer/records.js"
+    },
+    "./indexer/registrations": {
+      "workspace-source": "./src/actions/indexer/registrations/index.ts",
+      "default": "./dist/indexer/registrations.js"
     },
     "./migration": {
       "workspace-source": "./src/actions/migration/index.ts",
@@ -122,8 +130,10 @@
       "./dns": "./dist/dns.js",
       "./events": "./dist/events.js",
       "./indexer": "./dist/indexer.js",
+      "./indexer/history": "./dist/indexer/history.js",
       "./indexer/names": "./dist/indexer/names.js",
       "./indexer/records": "./dist/indexer/records.js",
+      "./indexer/registrations": "./dist/indexer/registrations.js",
       "./migration": "./dist/migration.js",
       "./name": "./dist/name.js",
       "./ownership": "./dist/ownership.js",

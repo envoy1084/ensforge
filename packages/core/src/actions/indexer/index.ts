@@ -46,4 +46,6 @@ export {
 } from "./get-indexer-status/index.js";
 export * from "./names/index.js";
 export * from "./records/index.js";
+export * from "./registrations/index.js";
+export * from "./history/index.js";
 export * from "./models/index.js";
