@@ -1,7 +1,8 @@
-import { globSync } from "node:fs";
+import { globSync, readFileSync } from "node:fs";
 import { relative } from "node:path";
 
 import type { CodegenConfig } from "@graphql-codegen/cli";
+import { Kind, parse, visit } from "graphql";
 
 const graphqlRoot = "graphql/indexer";
 
@@ -26,6 +27,29 @@ const operationConfig = {
   enumsAsTypes: true,
 };
 
+const fragmentDependencies = (document: string, fragments: ReadonlyArray<string>) => {
+  const fragmentFiles = new Map(
+    fragments.flatMap((file) =>
+      parse(readFileSync(file, "utf8")).definitions.flatMap((definition) =>
+        definition.kind === Kind.FRAGMENT_DEFINITION ? [[definition.name.value, file]] : [],
+      ),
+    ),
+  );
+  const selected = new Set<string>();
+  const visitSpreads = (file: string) => {
+    visit(parse(readFileSync(file, "utf8")), {
+      FragmentSpread(node) {
+        const dependency = fragmentFiles.get(node.name.value);
+        if (dependency === undefined || selected.has(dependency)) return;
+        selected.add(dependency);
+        visitSpreads(dependency);
+      },
+    });
+  };
+  visitSpreads(document);
+  return [...selected];
+};
+
 const protocolOutput = (protocol: "v1" | "v2") => {
   const documentsRoot = `${graphqlRoot}/${protocol}/documents`;
   const fragments = globSync(`${documentsRoot}/fragments/**/*.graphql`);
@@ -39,7 +63,7 @@ const protocolOutput = (protocol: "v1" | "v2") => {
           `src/internal/indexer/generated/${protocol}/${output}`,
           {
             schema: `${graphqlRoot}/${protocol}/schema.graphql`,
-            documents: [document, ...fragments],
+            documents: [document, ...fragmentDependencies(document, fragments)],
             plugins: ["typescript-operations", "typed-document-node"],
             config: operationConfig,
           },

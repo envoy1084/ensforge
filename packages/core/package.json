@@ -53,6 +53,10 @@
       "workspace-source": "./src/actions/indexer/index.ts",
       "default": "./dist/indexer.js"
     },
+    "./indexer/names": {
+      "workspace-source": "./src/actions/indexer/names/index.ts",
+      "default": "./dist/indexer/names.js"
+    },
     "./migration": {
       "workspace-source": "./src/actions/migration/index.ts",
       "default": "./dist/migration.js"
@@ -114,6 +118,7 @@
       "./dns": "./dist/dns.js",
       "./events": "./dist/events.js",
       "./indexer": "./dist/indexer.js",
+      "./indexer/names": "./dist/indexer/names.js",
       "./migration": "./dist/migration.js",
       "./name": "./dist/name.js",
       "./ownership": "./dist/ownership.js",

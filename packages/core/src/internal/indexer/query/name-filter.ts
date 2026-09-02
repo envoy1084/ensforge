@@ -119,6 +119,7 @@ export const compileV2NameFilter = (filter: NameFilter): CompiledNameFilter<V2Na
       ...(filter.resolver === undefined ? {} : { resolver: filter.resolver.toLowerCase() }),
       ...(filter.expiryAfter === undefined ? {} : { expiryDate_gt: Number(filter.expiryAfter) }),
       ...(filter.expiryBefore === undefined ? {} : { expiryDate_lt: Number(filter.expiryBefore) }),
+      ...(filter.includeUnreachable === true ? { includeUnreachable: true } : {}),
     },
   };
 };

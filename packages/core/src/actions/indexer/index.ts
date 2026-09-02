@@ -44,4 +44,5 @@ export {
   type IndexerSourceStatusType,
   type IndexerStatusType,
 } from "./get-indexer-status/index.js";
+export * from "./names/index.js";
 export * from "./models/index.js";

@@ -42,6 +42,7 @@ describe("indexed name queries", () => {
       resolver: owner,
       expiryAfter: 1_800_000_000n,
       protocol: "v1",
+      includeUnreachable: true,
     };
 
     assert.deepStrictEqual(compileV1NameFilter(filter), {
@@ -64,6 +65,7 @@ describe("indexed name queries", () => {
         owner: owner.toLowerCase(),
         resolver: owner.toLowerCase(),
         expiryDate_gt: 1_800_000_000,
+        includeUnreachable: true,
       },
     });
   });

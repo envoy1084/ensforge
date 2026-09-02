@@ -10,6 +10,7 @@ export default defineConfig({
     events: "src/actions/events/index.ts",
     index: "src/index.ts",
     indexer: "src/actions/indexer/index.ts",
+    "indexer/names": "src/actions/indexer/names/index.ts",
     migration: "src/actions/migration/index.ts",
     name: "src/actions/name/index.ts",
     ownership: "src/actions/ownership/index.ts",

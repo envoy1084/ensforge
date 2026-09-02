@@ -1,0 +1,10 @@
+query V1GetIndexedName($id: ID!) {
+  _meta {
+    block {
+      number
+    }
+  }
+  domain(id: $id) {
+    ...V1IndexedNameFields
+  }
+}

@@ -23,6 +23,7 @@ export const NameFilter = Schema.Struct({
   resolver: Schema.optional(EthereumAddress),
   protocol: Schema.optional(Schema.Literals(["v1", "v2"])),
   migrated: Schema.optional(Schema.Boolean),
+  includeUnreachable: Schema.optional(Schema.Boolean),
   expiryAfter: Schema.optional(NonNegativeBigInt),
   expiryBefore: Schema.optional(NonNegativeBigInt),
 });
