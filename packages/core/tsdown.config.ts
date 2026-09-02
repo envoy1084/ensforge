@@ -15,6 +15,7 @@ export default defineConfig({
     "indexer/records": "src/actions/indexer/records/index.ts",
     "indexer/registries": "src/actions/indexer/registries/index.ts",
     "indexer/registrations": "src/actions/indexer/registrations/index.ts",
+    "indexer/resolvers": "src/actions/indexer/resolvers/index.ts",
     migration: "src/actions/migration/index.ts",
     name: "src/actions/name/index.ts",
     ownership: "src/actions/ownership/index.ts",

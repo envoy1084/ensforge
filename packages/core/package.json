@@ -73,6 +73,10 @@
       "workspace-source": "./src/actions/indexer/registries/index.ts",
       "default": "./dist/indexer/registries.js"
     },
+    "./indexer/resolvers": {
+      "workspace-source": "./src/actions/indexer/resolvers/index.ts",
+      "default": "./dist/indexer/resolvers.js"
+    },
     "./migration": {
       "workspace-source": "./src/actions/migration/index.ts",
       "default": "./dist/migration.js"
@@ -139,6 +143,7 @@
       "./indexer/records": "./dist/indexer/records.js",
       "./indexer/registrations": "./dist/indexer/registrations.js",
       "./indexer/registries": "./dist/indexer/registries.js",
+      "./indexer/resolvers": "./dist/indexer/resolvers.js",
       "./migration": "./dist/migration.js",
       "./name": "./dist/name.js",
       "./ownership": "./dist/ownership.js",

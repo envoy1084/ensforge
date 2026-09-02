@@ -48,5 +48,6 @@ export * from "./names/index.js";
 export * from "./records/index.js";
 export * from "./registries/index.js";
 export * from "./registrations/index.js";
+export * from "./resolvers/index.js";
 export * from "./history/index.js";
 export * from "./models/index.js";

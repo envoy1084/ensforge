@@ -81,6 +81,26 @@ export {
   type RegistrationOrder as RegistrationOrderType,
 } from "./registration.js";
 export {
+  IndexedOwnedResolver,
+  IndexedResolver,
+  IndexedResolverAlias,
+  IndexedResolverApproval,
+  IndexedResolverNameBinding,
+  IndexedResolverMetadata,
+  IndexedResolverV1,
+  IndexedResolverV2,
+  ResolverApprovalFilter,
+  type IndexedOwnedResolver as IndexedOwnedResolverType,
+  type IndexedResolver as IndexedResolverType,
+  type IndexedResolverAlias as IndexedResolverAliasType,
+  type IndexedResolverApproval as IndexedResolverApprovalType,
+  type IndexedResolverNameBinding as IndexedResolverNameBindingType,
+  type IndexedResolverMetadata as IndexedResolverMetadataType,
+  type IndexedResolverV1 as IndexedResolverV1Type,
+  type IndexedResolverV2 as IndexedResolverV2Type,
+  type ResolverApprovalFilter as ResolverApprovalFilterType,
+} from "./resolver.js";
+export {
   IndexedRegistry,
   IndexedRegistryName,
   IndexedRegistryRole,

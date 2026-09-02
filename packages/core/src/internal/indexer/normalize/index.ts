@@ -10,3 +10,10 @@ export { normalizeV2IndexerName, type V2IndexedNameWire } from "./v2-name.js";
 export { normalizeV1RecordEvent, normalizeV2RecordEvent } from "./record-event.js";
 export { normalizeV1Registration, normalizeV2Registration } from "./registration.js";
 export { normalizeV2Registry, normalizeV2RegistryRole } from "./registry.js";
+export {
+  normalizeV1IndexedResolver,
+  normalizeV2IndexedResolver,
+  normalizeV2OwnedResolver,
+  normalizeV2ResolverApproval,
+  normalizeV2ResolverMetadata,
+} from "./resolver.js";

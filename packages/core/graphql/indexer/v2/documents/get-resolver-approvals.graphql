@@ -1,0 +1,19 @@
+query V2GetResolverApprovals($delegate: String, $namehash: String) {
+  _meta {
+    block {
+      number
+    }
+  }
+  approvals(delegate: $delegate, namehash: $namehash) {
+    id
+    resolver
+    namehash
+    context
+    delegate
+    approved
+    blockNumber
+    timestamp
+    transactionHash
+    logIndex
+  }
+}

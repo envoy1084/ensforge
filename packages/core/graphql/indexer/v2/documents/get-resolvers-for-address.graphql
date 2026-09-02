@@ -1,0 +1,16 @@
+query V2GetResolversForAddress($owner: String!, $protocol: String) {
+  _meta {
+    block {
+      number
+    }
+  }
+  resolversByOwner(account: $owner, protocol: $protocol) {
+    address
+    nodeCount
+    aliases {
+      fromName
+      toName
+    }
+    roleHolderCount
+  }
+}

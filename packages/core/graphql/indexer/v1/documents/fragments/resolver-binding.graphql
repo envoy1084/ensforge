@@ -1,0 +1,11 @@
+fragment V1ResolverBindingFields on Resolver {
+  id
+  address
+  texts
+  coinTypes
+  contentHash
+  domain {
+    id
+    name
+  }
+}

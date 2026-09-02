@@ -1,0 +1,15 @@
+query V2GetResolverMetadata($resolver: String!) {
+  _meta {
+    block {
+      number
+    }
+  }
+  metadata(resolver: $resolver) {
+    id
+    resolver
+    graphqlUrl
+    blockNumber
+    timestamp
+    transactionHash
+  }
+}

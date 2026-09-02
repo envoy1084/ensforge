@@ -1,0 +1,21 @@
+fragment V2ResolverBindingFields on Resolver {
+  id
+  address
+  texts
+  coinTypes
+  contentHash
+  abis
+  pubkey {
+    x
+    y
+  }
+  interfaces {
+    interfaceId
+  }
+  reverseName
+  version
+  domain {
+    id
+    name
+  }
+}
