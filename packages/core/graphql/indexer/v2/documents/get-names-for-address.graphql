@@ -1,0 +1,73 @@
+query V2GetNamesForAddress(
+  $address: String!
+  $first: Int!
+  $ownerAfter: String
+  $resolvedAfter: String
+  $registrationAfter: String
+  $roleAfter: String
+  $includeUnreachable: Boolean
+) {
+  _meta {
+    block {
+      number
+    }
+  }
+  owned: domainConnection(
+    first: $first
+    after: $ownerAfter
+    where: { owner: $address, includeUnreachable: $includeUnreachable }
+  ) {
+    edges {
+      node {
+        ...V2IndexedNameFields
+      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+  }
+  resolved: domainConnection(
+    first: $first
+    after: $resolvedAfter
+    where: { resolvedAddress: $address, includeUnreachable: $includeUnreachable }
+  ) {
+    edges {
+      node {
+        ...V2IndexedNameFields
+      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+  }
+  registrations: registrationConnection(
+    first: $first
+    after: $registrationAfter
+    where: { registrant: $address }
+  ) {
+    edges {
+      node {
+        domain {
+          ...V2IndexedNameFields
+        }
+      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+  }
+  roles: roleConnection(first: $first, after: $roleAfter, account: $address) {
+    edges {
+      node {
+        name
+      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+  }
+}

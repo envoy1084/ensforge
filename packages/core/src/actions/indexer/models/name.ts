@@ -16,10 +16,12 @@ export type IndexedNameValue = typeof IndexedNameValue.Type;
 
 export const NameRelation = Schema.Literals([
   "owner",
+  "manager",
   "registry-owner",
   "registrant",
   "wrapped-owner",
   "resolved-address",
+  "role-holder",
 ]);
 export type NameRelation = typeof NameRelation.Type;
 
@@ -92,3 +94,23 @@ export type IndexedNameV2 = typeof IndexedNameV2.Type;
 
 export const IndexedName = Schema.Union([IndexedNameV1, IndexedNameV2]);
 export type IndexedName = typeof IndexedName.Type;
+
+const relatedFields = { relations: Schema.Array(NameRelation) };
+
+export const RelatedIndexedNameV1 = Schema.Struct({
+  ...IndexedNameV1.fields,
+  ...relatedFields,
+});
+export const RelatedIndexedNameV2 = Schema.Struct({
+  ...IndexedNameV2.fields,
+  ...relatedFields,
+});
+export const RelatedIndexedName = Schema.Union([RelatedIndexedNameV1, RelatedIndexedNameV2]);
+export type RelatedIndexedName = typeof RelatedIndexedName.Type;
+
+export const IndexedResolvedName = Schema.Struct({
+  name: RelatedIndexedName,
+  address: EthereumAddress,
+  verification: Schema.Literal("indexed-unverified"),
+});
+export type IndexedResolvedName = typeof IndexedResolvedName.Type;

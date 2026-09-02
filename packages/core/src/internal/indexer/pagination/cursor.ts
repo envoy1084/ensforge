@@ -2,11 +2,7 @@ import { Array as Arr, Effect, Order, Schema } from "effect";
 
 import { keccak256, stringToHex } from "viem";
 
-import {
-  IndexerCursor,
-  type NameFilter,
-  type NameOrder,
-} from "../../../actions/indexer/models/index.js";
+import { IndexerCursor, type NameOrder } from "../../../actions/indexer/models/index.js";
 import type { EnsforgeConfig } from "../../../config/config.js";
 import {
   getIndexerRuntimeConfig,
@@ -36,7 +32,7 @@ export type IndexerCursorPayload = typeof IndexerCursorPayload.Type;
 export interface IndexerCursorBinding {
   readonly action: string;
   readonly network: EnsNetwork;
-  readonly filter: NameFilter;
+  readonly filter: unknown;
   readonly order: NameOrder;
   readonly sources: Readonly<
     Record<
@@ -54,7 +50,7 @@ export interface IndexerCursorPositions {
 export const makeIndexerCursorBinding = (
   config: EnsforgeConfig,
   action: string,
-  filter: NameFilter,
+  filter: unknown,
   order: NameOrder,
 ): IndexerCursorBinding => {
   const states = getIndexerRuntimeConfig(config.indexer).sourceStates;

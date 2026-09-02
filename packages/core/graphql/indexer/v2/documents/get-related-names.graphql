@@ -1,0 +1,10 @@
+query V2GetRelatedNames($first: Int!, $names: [String!]!, $includeUnreachable: Boolean) {
+  _meta {
+    block {
+      number
+    }
+  }
+  domains(first: $first, where: { name_in: $names, includeUnreachable: $includeUnreachable }) {
+    ...V2IndexedNameFields
+  }
+}
