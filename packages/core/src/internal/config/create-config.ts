@@ -5,6 +5,7 @@ import type { PublicClient, WalletClient } from "viem";
 import type { SharedCreateConfigParameters, EnsforgeConfig } from "../../config/config.js";
 import { EnsforgeConfigTypeId } from "../../config/config.js";
 import { resolveGatewayOptions } from "../../config/gateway-options.js";
+import { resolveIndexerConfig } from "../../config/indexer-options.js";
 import { ensChainIds, EnsNetworkSchema } from "../../config/network.js";
 import { resolveReadOptions } from "../../config/read-options.js";
 import { resolveWriteOptions } from "../../config/write-options.js";
@@ -39,6 +40,7 @@ export const createConfigFromClients = (
   const reads = resolveReadOptions(parameters.reads);
   const writes = resolveWriteOptions(parameters.writes);
   const gateways = resolveGatewayOptions(parameters.gateways);
+  const indexer = resolveIndexerConfig(network, parameters.indexer);
 
   validateClientChain(publicClient, "public", network, chainId);
   if (clients.walletClient !== undefined) {
@@ -67,6 +69,7 @@ export const createConfigFromClients = (
       reads,
       writes,
       gateways,
+      indexer,
       deployments,
       ...(clients.walletClient === undefined ? {} : { walletClient: clients.walletClient }),
     },

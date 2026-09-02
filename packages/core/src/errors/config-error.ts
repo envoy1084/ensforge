@@ -13,6 +13,7 @@ export const ConfigErrorCode = Schema.Literals([
   "INVALID_READ_OPTIONS",
   "INVALID_WRITE_OPTIONS",
   "INVALID_GATEWAY_OPTIONS",
+  "INVALID_INDEXER_OPTIONS",
 ]);
 
 export type ConfigErrorCode = typeof ConfigErrorCode.Type;

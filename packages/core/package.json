@@ -49,6 +49,10 @@
       "workspace-source": "./src/actions/events/index.ts",
       "default": "./dist/events.js"
     },
+    "./indexer": {
+      "workspace-source": "./src/actions/indexer/index.ts",
+      "default": "./dist/indexer.js"
+    },
     "./migration": {
       "workspace-source": "./src/actions/migration/index.ts",
       "default": "./dist/migration.js"
@@ -109,6 +113,7 @@
       "./capabilities": "./dist/capabilities.js",
       "./dns": "./dist/dns.js",
       "./events": "./dist/events.js",
+      "./indexer": "./dist/indexer.js",
       "./migration": "./dist/migration.js",
       "./name": "./dist/name.js",
       "./ownership": "./dist/ownership.js",
@@ -144,7 +149,9 @@
     "@ensdomains/content-hash": "catalog:",
     "@ensforge/contracts": "workspace:*",
     "cborg": "catalog:",
-    "fflate": "catalog:"
+    "fflate": "catalog:",
+    "graphql": "catalog:",
+    "graphql-request": "catalog:"
   },
   "peerDependencies": {
     "effect": "^4.0.0-rc.112",
