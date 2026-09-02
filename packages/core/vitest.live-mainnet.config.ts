@@ -8,6 +8,6 @@ export default defineVitestConfig({
     fileParallelism: false,
     include: ["test/live/mainnet/**/*.test.ts"],
     maxWorkers: 1,
-    testTimeout: 45_000,
+    testTimeout: 90_000,
   },
 });

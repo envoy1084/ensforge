@@ -81,6 +81,15 @@ ENSFORGE_MAINNET_RPC_URL=https://… pnpm test:live:mainnet
 ENSFORGE_SEPOLIA_RPC_URL=https://… pnpm test:live:sepolia
 ```
 
+The indexer smoke tests use the public defaults. To avoid community endpoint rate limits, override
+them with authenticated or dedicated endpoints when available:
+
+```bash
+ENSFORGE_MAINNET_V1_INDEXER_URL=https://…
+ENSFORGE_SEPOLIA_V1_INDEXER_URL=https://…
+ENSFORGE_SEPOLIA_V2_INDEXER_URL=https://…
+```
+
 The Sepolia suite uses `ENSFORGE_SEPOLIA_V2_NAME` when set and otherwise reads the public
 `ensforge-smoke.eth` fixture tree. Run `pnpm setup:sepolia-v2` separately when that fixture needs to
 be created or refreshed.

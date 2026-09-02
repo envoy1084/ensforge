@@ -1,6 +1,7 @@
 import { Effect, Result } from "effect";
 
 import type { EnsforgeConfig } from "../../../../config/config.js";
+import { IndexerPaginationError } from "../../../../errors/indexer-pagination-error.js";
 import { requestIndexer } from "../../../../internal/indexer/client.js";
 import {
   V2GetSubnamesDocument,
@@ -32,6 +33,19 @@ export const queryV2Subnames = Effect.fn("queryV2Subnames")(function* (
   position: string | null,
 ): Effect.fn.Return<IndexerSourcePageResult<IndexedName, GetSubnamesError>> {
   const result = yield* Effect.gen(function* () {
+    const skip = yield* Effect.try({
+      try: () => {
+        const value = position === null ? 0 : Number(position);
+        if (!Number.isSafeInteger(value) || value < 0) throw new Error("Invalid offset");
+        return value;
+      },
+      catch: (cause) =>
+        new IndexerPaginationError({
+          code: "INVALID_CURSOR",
+          message: "The V2 subname cursor contains an invalid position",
+          cause,
+        }),
+    });
     const response = yield* requestIndexer<V2GetSubnamesQuery, V2GetSubnamesQueryVariables>(
       config,
       {
@@ -41,7 +55,7 @@ export const queryV2Subnames = Effect.fn("queryV2Subnames")(function* (
         variables: {
           id: parent,
           first: limit + 1,
-          after: position,
+          skip,
           where,
           ...compileV2NameOrder(order),
         } as V2GetSubnamesQueryVariables,
@@ -54,15 +68,20 @@ export const queryV2Subnames = Effect.fn("queryV2Subnames")(function* (
       operationName,
       data["_meta"].block.number,
     );
-    const connection = data.domain?.subregistry?.labelConnection;
+    const labels = data.domain?.subregistry?.labels ?? [];
+    // The current Sepolia V2 endpoint exposes pagination arguments on this
+    // field but returns the complete label set. Fall back to a local window
+    // when the response exceeds the requested size; retain server pagination
+    // for deployments that honor `first` and `skip`.
+    const window = labels.length > limit + 1 ? labels.slice(skip, skip + limit + 1) : labels;
     const candidates = yield* Effect.all(
-      (connection?.edges ?? []).map(({ cursor, node }) =>
+      window.map((node, index) =>
         normalizeV2IndexerName(node, {
           network: config.network,
           protocol: "v2",
           indexedBlock,
           operationName,
-        }).pipe(Effect.map((item) => ({ item, position: cursor }))),
+        }).pipe(Effect.map((item) => ({ item, position: String(skip + index + 1) }))),
       ),
       { concurrency: "unbounded" },
     );
@@ -71,7 +90,7 @@ export const queryV2Subnames = Effect.fn("queryV2Subnames")(function* (
       page: {
         protocol: "v2" as const,
         candidates,
-        hasNextPage: candidates.length > limit || (connection?.pageInfo.hasNextPage ?? false),
+        hasNextPage: candidates.length > limit,
       },
     };
   }).pipe(Effect.result);

@@ -152,7 +152,7 @@ export type V2IndexedNameFieldsFragment = {
 export type V2GetSubnamesQueryVariables = Exact<{
   id: string;
   first: number;
-  after?: string | null | undefined;
+  skip: number;
   where?: DomainFilter | null | undefined;
   orderBy: Domain_OrderBy;
   orderDirection: OrderDirection;
@@ -162,49 +162,43 @@ export type V2GetSubnamesQuery = {
   readonly _meta: { readonly block: { readonly number: number } };
   readonly domain: {
     readonly subregistry: {
-      readonly labelConnection: {
-        readonly edges: ReadonlyArray<{
-          readonly cursor: string;
-          readonly node: {
-            readonly id: string;
-            readonly protocol: string;
-            readonly name: string | null;
-            readonly labelName: string | null;
-            readonly labelhash: string;
-            readonly createdAt: number;
-            readonly expiryDate: number | null;
-            readonly subdomainCount: number;
-            readonly isMigrated: boolean;
-            readonly ttl: number | null;
-            readonly canonicalId: string | null;
-            readonly tokenId: string | null;
-            readonly tokenVersion: number | null;
-            readonly registrationDate: number | null;
-            readonly gracePeriodEnd: number | null;
-            readonly unreachableSince: number | null;
-            readonly isNormalized: boolean;
-            readonly isReachable: boolean;
-            readonly isWrapped: boolean;
-            readonly roleHolderCount: number;
-            readonly parent: {
-              readonly id: string;
-              readonly subregistry: { readonly address: string } | null;
-            } | null;
-            readonly owner: { readonly id: string };
-            readonly registrant: { readonly id: string } | null;
-            readonly resolvedAddress: { readonly id: string } | null;
-            readonly resolver: { readonly address: string } | null;
-            readonly wrappedOwner: { readonly id: string } | null;
-            readonly wrappedDomain: {
-              readonly fuses: number | null;
-              readonly expiryDate: number | null;
-              readonly owner: { readonly id: string } | null;
-            } | null;
-            readonly subregistry: { readonly address: string } | null;
-          };
-        }>;
-        readonly pageInfo: { readonly hasNextPage: boolean; readonly endCursor: string | null };
-      };
+      readonly labels: ReadonlyArray<{
+        readonly id: string;
+        readonly protocol: string;
+        readonly name: string | null;
+        readonly labelName: string | null;
+        readonly labelhash: string;
+        readonly createdAt: number;
+        readonly expiryDate: number | null;
+        readonly subdomainCount: number;
+        readonly isMigrated: boolean;
+        readonly ttl: number | null;
+        readonly canonicalId: string | null;
+        readonly tokenId: string | null;
+        readonly tokenVersion: number | null;
+        readonly registrationDate: number | null;
+        readonly gracePeriodEnd: number | null;
+        readonly unreachableSince: number | null;
+        readonly isNormalized: boolean;
+        readonly isReachable: boolean;
+        readonly isWrapped: boolean;
+        readonly roleHolderCount: number;
+        readonly parent: {
+          readonly id: string;
+          readonly subregistry: { readonly address: string } | null;
+        } | null;
+        readonly owner: { readonly id: string };
+        readonly registrant: { readonly id: string } | null;
+        readonly resolvedAddress: { readonly id: string } | null;
+        readonly resolver: { readonly address: string } | null;
+        readonly wrappedOwner: { readonly id: string } | null;
+        readonly wrappedDomain: {
+          readonly fuses: number | null;
+          readonly expiryDate: number | null;
+          readonly owner: { readonly id: string } | null;
+        } | null;
+        readonly subregistry: { readonly address: string } | null;
+      }>;
     } | null;
   } | null;
 };
@@ -355,8 +349,11 @@ export const V2GetSubnamesDocument = {
         },
         {
           kind: "VariableDefinition",
-          variable: { kind: "Variable", name: { kind: "Name", value: "after" } },
-          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+          variable: { kind: "Variable", name: { kind: "Name", value: "skip" } },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "Int" } },
+          },
         },
         {
           kind: "VariableDefinition",
@@ -421,7 +418,7 @@ export const V2GetSubnamesDocument = {
                     selections: [
                       {
                         kind: "Field",
-                        name: { kind: "Name", value: "labelConnection" },
+                        name: { kind: "Name", value: "labels" },
                         arguments: [
                           {
                             kind: "Argument",
@@ -430,8 +427,8 @@ export const V2GetSubnamesDocument = {
                           },
                           {
                             kind: "Argument",
-                            name: { kind: "Name", value: "after" },
-                            value: { kind: "Variable", name: { kind: "Name", value: "after" } },
+                            name: { kind: "Name", value: "skip" },
+                            value: { kind: "Variable", name: { kind: "Name", value: "skip" } },
                           },
                           {
                             kind: "Argument",
@@ -456,38 +453,8 @@ export const V2GetSubnamesDocument = {
                           kind: "SelectionSet",
                           selections: [
                             {
-                              kind: "Field",
-                              name: { kind: "Name", value: "edges" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "cursor" } },
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "node" },
-                                    selectionSet: {
-                                      kind: "SelectionSet",
-                                      selections: [
-                                        {
-                                          kind: "FragmentSpread",
-                                          name: { kind: "Name", value: "V2IndexedNameFields" },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                ],
-                              },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "pageInfo" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  { kind: "Field", name: { kind: "Name", value: "hasNextPage" } },
-                                  { kind: "Field", name: { kind: "Name", value: "endCursor" } },
-                                ],
-                              },
+                              kind: "FragmentSpread",
+                              name: { kind: "Name", value: "V2IndexedNameFields" },
                             },
                           ],
                         },

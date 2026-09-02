@@ -31,6 +31,21 @@ export const sepoliaPublicClient: PublicClient = createPublicClient({
 export const sepoliaConfig = createConfig({
   network: "sepolia",
   publicClient: sepoliaPublicClient,
+  ...(process.env.ENSFORGE_SEPOLIA_V1_INDEXER_URL === undefined &&
+  process.env.ENSFORGE_SEPOLIA_V2_INDEXER_URL === undefined
+    ? {}
+    : {
+        indexer: {
+          endpoints: {
+            ...(process.env.ENSFORGE_SEPOLIA_V1_INDEXER_URL === undefined
+              ? {}
+              : { v1: process.env.ENSFORGE_SEPOLIA_V1_INDEXER_URL }),
+            ...(process.env.ENSFORGE_SEPOLIA_V2_INDEXER_URL === undefined
+              ? {}
+              : { v2: process.env.ENSFORGE_SEPOLIA_V2_INDEXER_URL }),
+          },
+        },
+      }),
 });
 
 const configuredRoot = (process.env.ENSFORGE_SEPOLIA_V2_NAME ?? "ensforge-smoke.eth").toLowerCase();

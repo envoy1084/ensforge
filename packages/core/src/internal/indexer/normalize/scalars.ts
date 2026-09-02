@@ -59,13 +59,10 @@ export const decodeIndexedNameValue = (
   try {
     const normalized = Schema.decodeUnknownSync(NormalizedName)(normalize(rawName));
     if (namehash(normalized).toLowerCase() !== expectedNamehash.toLowerCase()) {
-      throw new Error("Indexed name does not match its namehash");
+      return { kind: "encoded", value: rawName };
     }
     return { kind: "normalized", value: normalized };
-  } catch (cause) {
-    if (cause instanceof Error && cause.message === "Indexed name does not match its namehash") {
-      throw cause;
-    }
+  } catch {
     return { kind: "encoded", value: rawName };
   }
 };

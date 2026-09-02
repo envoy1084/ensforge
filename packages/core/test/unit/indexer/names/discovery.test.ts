@@ -135,8 +135,10 @@ describe("indexed discovery actions", () => {
       const alice = v2Name("alice.eth", 30);
       const bob = v2Name("bob.eth", 20);
       const carol = v2Name("carol.eth", 10);
+      const operations: Array<string> = [];
       const fetch: typeof globalThis.fetch = (_input, init) => {
         const request = operation(init);
+        operations.push(request.query);
         return Promise.resolve(
           request.query.includes("V2GetRelatedNames")
             ? response({ data: { _meta: { block: { number: 200 } }, domains: [carol] } })
@@ -171,6 +173,15 @@ describe("indexed discovery actions", () => {
       assert.deepStrictEqual(
         page.items.map(({ relations }) => relations),
         [["owner", "manager", "resolved-address"], ["registrant"], ["role-holder"]],
+      );
+      assert.isTrue(operations.some((query) => query.includes("V2GetOwnedNames")));
+      assert.isTrue(operations.some((query) => query.includes("V2GetResolvedNames")));
+      assert.isTrue(operations.some((query) => query.includes("V2GetRegistrationsForAddress")));
+      assert.isTrue(operations.some((query) => query.includes("V2GetRolesForAddress")));
+      assert.isTrue(
+        operations
+          .filter((query) => !query.includes("V2GetRelatedNames"))
+          .every((query) => (query.match(/Connection\(/gu) ?? []).length === 1),
       );
     }),
   );
@@ -235,10 +246,7 @@ describe("indexed discovery actions", () => {
                   _meta: { block: { number: 200 } },
                   domain: {
                     subregistry: {
-                      labelConnection: {
-                        edges: [{ cursor: "child", node: child }],
-                        pageInfo: { hasNextPage: false, endCursor: "child" },
-                      },
+                      labels: [child],
                     },
                   },
                 },
@@ -274,10 +282,7 @@ describe("indexed discovery actions", () => {
                   _meta: { block: { number: 200 } },
                   domain: {
                     subregistry: {
-                      labelConnection: {
-                        edges: [{ cursor: "child", node: migrated }],
-                        pageInfo: { hasNextPage: false, endCursor: "child" },
-                      },
+                      labels: [migrated],
                     },
                   },
                 },
@@ -294,6 +299,53 @@ describe("indexed discovery actions", () => {
 
       assert.strictEqual(page.items.length, 1);
       assert.strictEqual(page.items[0]?.source.protocol, "v2");
+    }),
+  );
+
+  it.effect("paginates locally when the V2 registry ignores pagination arguments", () =>
+    Effect.gen(function* () {
+      const children = [
+        v2Name("one.parent.eth", 40),
+        v2Name("two.parent.eth", 30),
+        v2Name("three.parent.eth", 20),
+        v2Name("four.parent.eth", 10),
+      ];
+      const config = createConfig({
+        network: "sepolia",
+        publicClient: makeSepoliaPublicClient(),
+        indexer: {
+          endpoints: { v1: null },
+          fetch: () =>
+            Promise.resolve(
+              response({
+                data: {
+                  _meta: { block: { number: 200 } },
+                  domain: { subregistry: { labels: children } },
+                },
+              }),
+            ),
+          retry: { attempts: 0 },
+        },
+      });
+
+      const first = yield* getSubnames.effect(config, { name: "parent.eth", pageSize: 2 });
+      assert.isNotNull(first.pageInfo.cursor);
+      if (first.pageInfo.cursor === null) return;
+      const second = yield* getSubnames.effect(config, {
+        name: "parent.eth",
+        pageSize: 2,
+        cursor: first.pageInfo.cursor,
+      });
+
+      assert.deepStrictEqual(
+        first.items.map(({ label }) => label),
+        ["one", "two"],
+      );
+      assert.deepStrictEqual(
+        second.items.map(({ label }) => label),
+        ["three", "four"],
+      );
+      assert.isFalse(second.pageInfo.hasNextPage);
     }),
   );
 

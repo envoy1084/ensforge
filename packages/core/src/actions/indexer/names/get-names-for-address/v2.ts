@@ -2,11 +2,23 @@ import { Effect } from "effect";
 
 import type { EnsforgeConfig } from "../../../../config/config.js";
 import { IndexerDecodeError } from "../../../../errors/indexer-decode-error.js";
-import { requestIndexer } from "../../../../internal/indexer/client.js";
 import {
-  V2GetNamesForAddressDocument,
-  type V2GetNamesForAddressQuery,
-  type V2GetNamesForAddressQueryVariables,
+  requestIndexer,
+  type IndexerTransportResult,
+} from "../../../../internal/indexer/client.js";
+import {
+  V2GetOwnedNamesDocument,
+  type V2GetOwnedNamesQuery,
+  type V2GetOwnedNamesQueryVariables,
+  V2GetRegistrationsForAddressDocument,
+  type V2GetRegistrationsForAddressQuery,
+  type V2GetRegistrationsForAddressQueryVariables,
+  V2GetResolvedNamesDocument,
+  type V2GetResolvedNamesQuery,
+  type V2GetResolvedNamesQueryVariables,
+  V2GetRolesForAddressDocument,
+  type V2GetRolesForAddressQuery,
+  type V2GetRolesForAddressQueryVariables,
 } from "../../../../internal/indexer/generated/v2/get-names-for-address.js";
 import {
   V2GetRelatedNamesDocument,
@@ -21,11 +33,12 @@ import type { NameRelation, RelatedIndexedName } from "../../models/name.js";
 import type { NameFilter } from "../../models/query.js";
 import type { GetNamesForAddressError } from "./types.js";
 
-const operationName = "V2GetNamesForAddress";
 const relatedOperationName = "V2GetRelatedNames";
-const batchSize = 250;
+// The public V2 endpoint enforces a query-cost ceiling. A full indexed-name
+// projection remains comfortably below it at 100 connection nodes.
+const batchSize = 100;
 
-type V2Wire = V2GetNamesForAddressQuery["owned"]["edges"][number]["node"];
+type V2Wire = V2GetOwnedNamesQuery["owned"]["edges"][number]["node"];
 
 export const collectV2NamesForAddress = Effect.fn("collectV2NamesForAddress")(function* (
   config: EnsforgeConfig,
@@ -41,21 +54,8 @@ export const collectV2NamesForAddress = Effect.fn("collectV2NamesForAddress")(fu
     { readonly wire: V2Wire; readonly relations: Set<NameRelation> }
   >();
   const roleNames = new Set<string>();
-  const cursors = {
-    owner: null as string | null,
-    resolved: null as string | null,
-    registration: null as string | null,
-    role: null as string | null,
-  };
-  const active = {
-    owner:
-      selectedRelations.has("owner") ||
-      selectedRelations.has("manager") ||
-      selectedRelations.has("wrapped-owner"),
-    resolved: selectedRelations.has("resolved-address"),
-    registration: selectedRelations.has("registrant"),
-    role: selectedRelations.has("role-holder"),
-  };
+  const normalizedAddress = address.toLowerCase();
+  const includeUnreachable = filter.includeUnreachable === true;
   let indexedBlock = 0n;
 
   const add = (wire: V2Wire, relation: NameRelation) => {
@@ -65,65 +65,184 @@ export const collectV2NamesForAddress = Effect.fn("collectV2NamesForAddress")(fu
     else existing.relations.add(relation);
   };
 
-  while (Object.values(active).some(Boolean)) {
-    const response = yield* requestIndexer<
-      V2GetNamesForAddressQuery,
-      V2GetNamesForAddressQueryVariables
-    >(config, {
-      protocol: "v2",
-      operationName,
-      document: V2GetNamesForAddressDocument,
-      variables: {
-        address: address.toLowerCase(),
-        first: batchSize,
-        ownerAfter: cursors.owner,
-        resolvedAfter: cursors.resolved,
-        registrationAfter: cursors.registration,
-        roleAfter: cursors.role,
-        includeUnreachable: filter.includeUnreachable === true,
-      },
-    });
-    const data = yield* requireIndexerData(config, "v2", operationName, response);
-    indexedBlock = yield* decodeIndexedBlock(
-      config,
-      "v2",
-      operationName,
-      data["_meta"].block.number,
-    );
-    if (active.owner) {
+  if (
+    selectedRelations.has("owner") ||
+    selectedRelations.has("manager") ||
+    selectedRelations.has("wrapped-owner")
+  ) {
+    const operationName = "V2GetOwnedNames";
+    let after: string | null = null;
+    let hasNextPage = true;
+    while (hasNextPage) {
+      const response: IndexerTransportResult<V2GetOwnedNamesQuery> = yield* requestIndexer<
+        V2GetOwnedNamesQuery,
+        V2GetOwnedNamesQueryVariables
+      >(config, {
+        protocol: "v2",
+        operationName,
+        document: V2GetOwnedNamesDocument,
+        variables: { address: normalizedAddress, first: batchSize, after, includeUnreachable },
+      });
+      const data = yield* requireIndexerData<V2GetOwnedNamesQuery>(
+        config,
+        "v2",
+        operationName,
+        response,
+      );
+      indexedBlock = yield* decodeIndexedBlock(
+        config,
+        "v2",
+        operationName,
+        data["_meta"].block.number,
+      );
       for (const { node } of data.owned.edges) {
         add(node, "owner");
         add(node, "manager");
-        if (node.wrappedOwner?.id.toLowerCase() === address.toLowerCase())
-          add(node, "wrapped-owner");
+        if (node.wrappedOwner?.id.toLowerCase() === normalizedAddress) add(node, "wrapped-owner");
       }
-    }
-    if (active.resolved) for (const { node } of data.resolved.edges) add(node, "resolved-address");
-    if (active.registration)
-      for (const { node } of data.registrations.edges) add(node.domain, "registrant");
-    if (active.role)
-      for (const { node } of data.roles.edges) if (node.name !== null) roleNames.add(node.name);
-
-    for (const [key, connection] of [
-      ["owner", data.owned],
-      ["resolved", data.resolved],
-      ["registration", data.registrations],
-      ["role", data.roles],
-    ] as const) {
-      if (!active[key]) continue;
-      const next = connection.pageInfo.endCursor;
-      if (connection.pageInfo.hasNextPage && (next === null || next === cursors[key])) {
+      const next: string | null = data.owned.pageInfo.endCursor;
+      if (data.owned.pageInfo.hasNextPage && (next === null || next === after)) {
         return yield* new IndexerDecodeError({
           code: "INVALID_RESPONSE",
-          message: "The V2 indexer returned a non-advancing relation cursor",
+          message: "The V2 indexer returned a non-advancing ownership cursor",
           network: config.network,
           protocol: "v2",
           operationName,
-          cause: connection.pageInfo,
+          cause: data.owned.pageInfo,
         });
       }
-      cursors[key] = next;
-      active[key] = connection.pageInfo.hasNextPage;
+      after = next;
+      hasNextPage = data.owned.pageInfo.hasNextPage;
+    }
+  }
+
+  if (selectedRelations.has("resolved-address")) {
+    const operationName = "V2GetResolvedNames";
+    let after: string | null = null;
+    let hasNextPage = true;
+    while (hasNextPage) {
+      const response: IndexerTransportResult<V2GetResolvedNamesQuery> = yield* requestIndexer<
+        V2GetResolvedNamesQuery,
+        V2GetResolvedNamesQueryVariables
+      >(config, {
+        protocol: "v2",
+        operationName,
+        document: V2GetResolvedNamesDocument,
+        variables: { address: normalizedAddress, first: batchSize, after, includeUnreachable },
+      });
+      const data = yield* requireIndexerData<V2GetResolvedNamesQuery>(
+        config,
+        "v2",
+        operationName,
+        response,
+      );
+      indexedBlock = yield* decodeIndexedBlock(
+        config,
+        "v2",
+        operationName,
+        data["_meta"].block.number,
+      );
+      for (const { node } of data.resolved.edges) add(node, "resolved-address");
+      const next: string | null = data.resolved.pageInfo.endCursor;
+      if (data.resolved.pageInfo.hasNextPage && (next === null || next === after)) {
+        return yield* new IndexerDecodeError({
+          code: "INVALID_RESPONSE",
+          message: "The V2 indexer returned a non-advancing resolution cursor",
+          network: config.network,
+          protocol: "v2",
+          operationName,
+          cause: data.resolved.pageInfo,
+        });
+      }
+      after = next;
+      hasNextPage = data.resolved.pageInfo.hasNextPage;
+    }
+  }
+
+  if (selectedRelations.has("registrant")) {
+    const operationName = "V2GetRegistrationsForAddress";
+    let after: string | null = null;
+    let hasNextPage = true;
+    while (hasNextPage) {
+      const response: IndexerTransportResult<V2GetRegistrationsForAddressQuery> =
+        yield* requestIndexer<
+          V2GetRegistrationsForAddressQuery,
+          V2GetRegistrationsForAddressQueryVariables
+        >(config, {
+          protocol: "v2",
+          operationName,
+          document: V2GetRegistrationsForAddressDocument,
+          variables: { address: normalizedAddress, first: batchSize, after },
+        });
+      const data = yield* requireIndexerData<V2GetRegistrationsForAddressQuery>(
+        config,
+        "v2",
+        operationName,
+        response,
+      );
+      indexedBlock = yield* decodeIndexedBlock(
+        config,
+        "v2",
+        operationName,
+        data["_meta"].block.number,
+      );
+      for (const { node } of data.registrations.edges) add(node.domain, "registrant");
+      const next: string | null = data.registrations.pageInfo.endCursor;
+      if (data.registrations.pageInfo.hasNextPage && (next === null || next === after)) {
+        return yield* new IndexerDecodeError({
+          code: "INVALID_RESPONSE",
+          message: "The V2 indexer returned a non-advancing registration cursor",
+          network: config.network,
+          protocol: "v2",
+          operationName,
+          cause: data.registrations.pageInfo,
+        });
+      }
+      after = next;
+      hasNextPage = data.registrations.pageInfo.hasNextPage;
+    }
+  }
+
+  if (selectedRelations.has("role-holder")) {
+    const operationName = "V2GetRolesForAddress";
+    let after: string | null = null;
+    let hasNextPage = true;
+    while (hasNextPage) {
+      const response: IndexerTransportResult<V2GetRolesForAddressQuery> = yield* requestIndexer<
+        V2GetRolesForAddressQuery,
+        V2GetRolesForAddressQueryVariables
+      >(config, {
+        protocol: "v2",
+        operationName,
+        document: V2GetRolesForAddressDocument,
+        variables: { address: normalizedAddress, first: batchSize, after },
+      });
+      const data = yield* requireIndexerData<V2GetRolesForAddressQuery>(
+        config,
+        "v2",
+        operationName,
+        response,
+      );
+      indexedBlock = yield* decodeIndexedBlock(
+        config,
+        "v2",
+        operationName,
+        data["_meta"].block.number,
+      );
+      for (const { node } of data.roles.edges) if (node.name !== null) roleNames.add(node.name);
+      const next: string | null = data.roles.pageInfo.endCursor;
+      if (data.roles.pageInfo.hasNextPage && (next === null || next === after)) {
+        return yield* new IndexerDecodeError({
+          code: "INVALID_RESPONSE",
+          message: "The V2 indexer returned a non-advancing role cursor",
+          network: config.network,
+          protocol: "v2",
+          operationName,
+          cause: data.roles.pageInfo,
+        });
+      }
+      after = next;
+      hasNextPage = data.roles.pageInfo.hasNextPage;
     }
   }
 
@@ -136,11 +255,7 @@ export const collectV2NamesForAddress = Effect.fn("collectV2NamesForAddress")(fu
         protocol: "v2",
         operationName: relatedOperationName,
         document: V2GetRelatedNamesDocument,
-        variables: {
-          first: chunk.length,
-          names: chunk,
-          includeUnreachable: filter.includeUnreachable === true,
-        },
+        variables: { first: chunk.length, names: chunk, includeUnreachable },
       },
     );
     const data = yield* requireIndexerData(config, "v2", relatedOperationName, response);
@@ -155,7 +270,7 @@ export const collectV2NamesForAddress = Effect.fn("collectV2NamesForAddress")(fu
       network: config.network,
       protocol: "v2",
       indexedBlock,
-      operationName,
+      operationName: "V2GetNamesForAddress",
     });
     if (matchesNameFilter(item, filter)) names.push({ ...item, relations: selected });
   }

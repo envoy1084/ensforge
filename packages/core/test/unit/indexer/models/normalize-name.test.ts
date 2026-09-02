@@ -150,4 +150,16 @@ describe("indexed name normalization", () => {
       assert.deepStrictEqual(result.name, { kind: "encoded", value: encoded });
     }),
   );
+
+  it.effect("preserves a raw name whose normalized form has a different namehash", () =>
+    Effect.gen(function* () {
+      const rawName = "Alice.eth";
+      const result = yield* normalizeV1IndexedName(
+        { ...v1Wire, id: namehash(rawName), name: rawName },
+        { ...context, protocol: "v1" },
+      );
+
+      assert.deepStrictEqual(result.name, { kind: "encoded", value: rawName });
+    }),
+  );
 });

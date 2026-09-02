@@ -31,6 +31,9 @@ export const mainnetPublicClient: PublicClient = createPublicClient({
 export const mainnetConfig = createConfig({
   network: "mainnet",
   publicClient: mainnetPublicClient,
+  ...(process.env.ENSFORGE_MAINNET_V1_INDEXER_URL === undefined
+    ? {}
+    : { indexer: { endpoints: { v1: process.env.ENSFORGE_MAINNET_V1_INDEXER_URL } } }),
 });
 
 export const mainnetNames = {

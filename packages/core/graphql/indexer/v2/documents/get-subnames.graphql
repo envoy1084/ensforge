@@ -1,7 +1,7 @@
 query V2GetSubnames(
   $id: String!
   $first: Int!
-  $after: String
+  $skip: Int!
   $where: DomainFilter
   $orderBy: Domain_orderBy!
   $orderDirection: OrderDirection!
@@ -13,23 +13,14 @@ query V2GetSubnames(
   }
   domain(id: $id) {
     subregistry {
-      labelConnection(
+      labels(
         first: $first
-        after: $after
+        skip: $skip
         where: $where
         orderBy: $orderBy
         orderDirection: $orderDirection
       ) {
-        edges {
-          cursor
-          node {
-            ...V2IndexedNameFields
-          }
-        }
-        pageInfo {
-          hasNextPage
-          endCursor
-        }
+        ...V2IndexedNameFields
       }
     }
   }
