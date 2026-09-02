@@ -13,6 +13,7 @@ export default defineConfig({
     "indexer/history": "src/actions/indexer/history/index.ts",
     "indexer/names": "src/actions/indexer/names/index.ts",
     "indexer/records": "src/actions/indexer/records/index.ts",
+    "indexer/registries": "src/actions/indexer/registries/index.ts",
     "indexer/registrations": "src/actions/indexer/registrations/index.ts",
     migration: "src/actions/migration/index.ts",
     name: "src/actions/name/index.ts",

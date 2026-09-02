@@ -1,0 +1,15 @@
+fragment V2RegistryFields on RegistryInfo {
+  address
+  name
+  namehash
+  owner {
+    id
+  }
+  parentRegistry
+  createdAt
+  createdBlock
+  labelCount
+  referencedByCount
+  roleCount
+  eventCount
+}

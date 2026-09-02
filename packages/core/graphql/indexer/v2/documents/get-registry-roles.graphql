@@ -1,0 +1,29 @@
+query V2GetRegistryRoles($address: String!, $account: String, $first: Int!, $after: String) {
+  _meta {
+    block {
+      number
+    }
+  }
+  registry(address: $address) {
+    roleConnection(account: $account, first: $first, after: $after) {
+      edges {
+        cursor
+        node {
+          id
+          account
+          resource
+          name
+          roleBitmap
+          permissions
+          blockNumber
+          timestamp
+          transactionHash
+        }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+    }
+  }
+}

@@ -9,3 +9,4 @@ export { normalizeV1IndexedName, type V1IndexedNameWire } from "./v1-name.js";
 export { normalizeV2IndexerName, type V2IndexedNameWire } from "./v2-name.js";
 export { normalizeV1RecordEvent, normalizeV2RecordEvent } from "./record-event.js";
 export { normalizeV1Registration, normalizeV2Registration } from "./registration.js";
+export { normalizeV2Registry, normalizeV2RegistryRole } from "./registry.js";

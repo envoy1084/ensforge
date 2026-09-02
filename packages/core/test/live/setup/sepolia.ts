@@ -70,6 +70,7 @@ export const sepoliaNames = {
     customExpiry: `custom-expiry.${root}`,
     available: `${rootLabel}-available.eth`,
     indexedRegistration: "harmonia.eth",
+    indexedRegistry: "fur.eth",
   },
   v1: {
     reserved: "vitalik.eth",

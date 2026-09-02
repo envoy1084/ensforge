@@ -1,0 +1,10 @@
+query V2GetRegistriesForAddress($owner: String!) {
+  _meta {
+    block {
+      number
+    }
+  }
+  registries(owner: $owner) {
+    ...V2RegistryFields
+  }
+}

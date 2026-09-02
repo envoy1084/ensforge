@@ -81,6 +81,18 @@ export {
   type RegistrationOrder as RegistrationOrderType,
 } from "./registration.js";
 export {
+  IndexedRegistry,
+  IndexedRegistryName,
+  IndexedRegistryRole,
+  RegistryNameRelationship,
+  RegistryRoleFilter,
+  type IndexedRegistry as IndexedRegistryType,
+  type IndexedRegistryName as IndexedRegistryNameType,
+  type IndexedRegistryRole as IndexedRegistryRoleType,
+  type RegistryNameRelationship as RegistryNameRelationshipType,
+  type RegistryRoleFilter as RegistryRoleFilterType,
+} from "./registry.js";
+export {
   CompleteIndexerSourcePageStatus,
   DisabledIndexerSourcePageStatus,
   FailedIndexerSourcePageStatus,
@@ -90,3 +102,12 @@ export {
   type IndexedEntitySource as IndexedEntitySourceType,
   type IndexerSourcePageStatus as IndexerSourcePageStatusType,
 } from "./source.js";
+export {
+  V2IndexerResult,
+  V2IndexerUnsupported,
+  V2IndexerUnsupportedReason,
+  type V2IndexerResult as V2IndexerResultType,
+  type V2IndexerSupported,
+  type V2IndexerUnsupported as V2IndexerUnsupportedType,
+  type V2IndexerUnsupportedReason as V2IndexerUnsupportedReasonType,
+} from "./v2-support.js";
