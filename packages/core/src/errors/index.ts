@@ -6,6 +6,8 @@ export { DnsImportError, DnsImportErrorCode } from "./dns-import-error.js";
 export { GatewayError, GatewayErrorCode } from "./gateway-error.js";
 export { IndexerConfigError, IndexerConfigErrorCode } from "./indexer-config-error.js";
 export { IndexerDecodeError } from "./indexer-decode-error.js";
+export { IndexerFilterError, IndexerFilterErrorCode } from "./indexer-filter-error.js";
+export { IndexerPaginationError, IndexerPaginationErrorCode } from "./indexer-pagination-error.js";
 export { IndexerRequestError, IndexerRequestErrorCode } from "./indexer-request-error.js";
 export {
   IndexerGraphQLError,

@@ -2,7 +2,11 @@ export {
   IndexerConfigError,
   IndexerConfigErrorCode,
   IndexerDecodeError,
+  IndexerFilterError,
+  IndexerFilterErrorCode,
   IndexerGraphQLError,
+  IndexerPaginationError,
+  IndexerPaginationErrorCode,
   IndexerRequestError,
   IndexerRequestErrorCode,
   IndexerResponseError,
@@ -40,3 +44,4 @@ export {
   type IndexerSourceStatusType,
   type IndexerStatusType,
 } from "./get-indexer-status/index.js";
+export * from "./models/index.js";
