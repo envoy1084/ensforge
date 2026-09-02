@@ -44,6 +44,21 @@ export {
   type NameSearchMode as NameSearchModeType,
 } from "./query.js";
 export {
+  defaultRecordHistoryOrder,
+  IndexedRecordEvent,
+  IndexedRecordInventory,
+  IndexedRecordKind,
+  IndexedResolverBinding,
+  RecordHistoryFilter,
+  RecordHistoryOrder,
+  type IndexedRecordEvent as IndexedRecordEventType,
+  type IndexedRecordInventory as IndexedRecordInventoryType,
+  type IndexedRecordKind as IndexedRecordKindType,
+  type IndexedResolverBinding as IndexedResolverBindingType,
+  type RecordHistoryFilter as RecordHistoryFilterType,
+  type RecordHistoryOrder as RecordHistoryOrderType,
+} from "./record.js";
+export {
   CompleteIndexerSourcePageStatus,
   DisabledIndexerSourcePageStatus,
   FailedIndexerSourcePageStatus,

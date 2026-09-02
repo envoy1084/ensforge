@@ -28,12 +28,17 @@ export const mainnetPublicClient: PublicClient = createPublicClient({
   }),
 });
 
+const mainnetV1IndexerUrl =
+  process.env.ENSFORGE_MAINNET_V1_SUBGRAPH_URL ?? process.env.ENSFORGE_MAINNET_V1_INDEXER_URL;
+
 export const mainnetConfig = createConfig({
   network: "mainnet",
   publicClient: mainnetPublicClient,
-  ...(process.env.ENSFORGE_MAINNET_V1_INDEXER_URL === undefined
-    ? {}
-    : { indexer: { endpoints: { v1: process.env.ENSFORGE_MAINNET_V1_INDEXER_URL } } }),
+  indexer: {
+    timeout: 30_000,
+    retry: { attempts: 1 },
+    ...(mainnetV1IndexerUrl === undefined ? {} : { endpoints: { v1: mainnetV1IndexerUrl } }),
+  },
 });
 
 export const mainnetNames = {

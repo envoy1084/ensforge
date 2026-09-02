@@ -1,0 +1,48 @@
+query V2GetRecordHistory(
+  $first: Int!
+  $after: String
+  $where: EventFilter!
+  $orderDirection: OrderDirection!
+) {
+  _meta {
+    block {
+      number
+    }
+  }
+  eventConnection(
+    first: $first
+    after: $after
+    where: $where
+    orderBy: blockNumber
+    orderDirection: $orderDirection
+  ) {
+    edges {
+      cursor
+      node {
+        id
+        type
+        protocol
+        namehash
+        blockNumber
+        timestamp
+        transactionHash
+        contractAddress
+        data
+        key
+        value
+        asAddressChanged {
+          address
+          coinType
+        }
+        asTextChanged {
+          key
+          value
+        }
+      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+  }
+}

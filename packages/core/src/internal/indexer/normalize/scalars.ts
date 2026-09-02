@@ -5,6 +5,7 @@ import { namehash, normalize } from "viem/ens";
 
 import type { IndexedNameValue } from "../../../actions/indexer/models/name.js";
 import { Labelhash, Namehash } from "../../../schemas/hash.js";
+import { Hex } from "../../../schemas/hex.js";
 import { EthereumAddress } from "../../../schemas/identity.js";
 import { NormalizedName } from "../../../schemas/name.js";
 
@@ -45,6 +46,8 @@ export const decodeNullableBigInt = (value: unknown) =>
   value === null || value === undefined ? null : decodeBigInt(value);
 
 export const decodeInteger = (value: unknown) => Schema.decodeUnknownSync(Schema.Int)(value);
+
+export const decodeHex = (value: unknown) => Schema.decodeUnknownSync(Hex)(value);
 
 export const decodeNullableInteger = (value: unknown) =>
   value === null || value === undefined ? null : decodeInteger(value);

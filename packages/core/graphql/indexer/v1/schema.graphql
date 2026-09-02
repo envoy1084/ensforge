@@ -8,28 +8,42 @@ Marks the GraphQL type as indexable entity.  Each type that should be an entity 
 """
 directive @entity on OBJECT
 
-"""Defined a Subgraph ID for an object type"""
+"""
+Defined a Subgraph ID for an object type
+"""
 directive @subgraphId(id: String!) on OBJECT
 
 type AbiChanged implements ResolverEvent {
-  """The block number at which the event was emitted"""
+  """
+  The block number at which the event was emitted
+  """
   blockNumber: Int!
 
-  """The content type of the ABI change"""
+  """
+  The content type of the ABI change
+  """
   contentType: BigInt!
 
-  """Concatenation of block number and log ID"""
+  """
+  Concatenation of block number and log ID
+  """
   id: ID!
 
-  """Used to derive relationships to Resolvers"""
+  """
+  Used to derive relationships to Resolvers
+  """
   resolver: Resolver!
 
-  """The transaction hash of the transaction in which the event was emitted"""
+  """
+  The transaction hash of the transaction in which the event was emitted
+  """
   transactionID: Bytes!
 }
 
 input AbiChanged_filter {
-  """Filter for the block changed event."""
+  """
+  Filter for the block changed event.
+  """
   _change_block: BlockChangedFilter
   and: [AbiChanged_filter]
   blockNumber: Int
@@ -102,21 +116,49 @@ enum AbiChanged_orderBy {
 }
 
 type Account {
-  """The domains owned by the account"""
-  domains(first: Int = 100, orderBy: Domain_orderBy, orderDirection: OrderDirection, skip: Int = 0, where: Domain_filter): [Domain!]!
+  """
+  The domains owned by the account
+  """
+  domains(
+    first: Int = 100
+    orderBy: Domain_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
+    where: Domain_filter
+  ): [Domain!]!
 
-  """The unique identifier for the account"""
+  """
+  The unique identifier for the account
+  """
   id: ID!
 
-  """The Registrations made by the account"""
-  registrations(first: Int = 100, orderBy: Registration_orderBy, orderDirection: OrderDirection, skip: Int = 0, where: Registration_filter): [Registration!]
+  """
+  The Registrations made by the account
+  """
+  registrations(
+    first: Int = 100
+    orderBy: Registration_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
+    where: Registration_filter
+  ): [Registration!]
 
-  """The WrappedDomains owned by the account"""
-  wrappedDomains(first: Int = 100, orderBy: WrappedDomain_orderBy, orderDirection: OrderDirection, skip: Int = 0, where: WrappedDomain_filter): [WrappedDomain!]
+  """
+  The WrappedDomains owned by the account
+  """
+  wrappedDomains(
+    first: Int = 100
+    orderBy: WrappedDomain_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
+    where: WrappedDomain_filter
+  ): [WrappedDomain!]
 }
 
 input Account_filter {
-  """Filter for the block changed event."""
+  """
+  Filter for the block changed event.
+  """
   _change_block: BlockChangedFilter
   and: [Account_filter]
   domains_: Domain_filter
@@ -141,24 +183,36 @@ enum Account_orderBy {
 }
 
 type AddrChanged implements ResolverEvent {
-  """The new address associated with the resolver"""
+  """
+  The new address associated with the resolver
+  """
   addr: Account!
 
-  """The block number at which this event occurred"""
+  """
+  The block number at which this event occurred
+  """
   blockNumber: Int!
 
-  """Unique identifier for this event"""
+  """
+  Unique identifier for this event
+  """
   id: ID!
 
-  """The resolver associated with this event"""
+  """
+  The resolver associated with this event
+  """
   resolver: Resolver!
 
-  """The transaction ID for the transaction in which this event occurred"""
+  """
+  The transaction ID for the transaction in which this event occurred
+  """
   transactionID: Bytes!
 }
 
 input AddrChanged_filter {
-  """Filter for the block changed event."""
+  """
+  Filter for the block changed event.
+  """
   _change_block: BlockChangedFilter
   addr: String
   addr_: Account_filter
@@ -248,10 +302,14 @@ enum AddrChanged_orderBy {
 Indicates whether the current, partially filled bucket should be included in the response. Defaults to `exclude`
 """
 enum Aggregation_current {
-  """Exclude the current, partially filled bucket from the response"""
+  """
+  Exclude the current, partially filled bucket from the response
+  """
   exclude
 
-  """Include the current, partially filled bucket in the response"""
+  """
+  Include the current, partially filled bucket in the response
+  """
   include
 }
 
@@ -261,30 +319,46 @@ enum Aggregation_interval {
 }
 
 type AuthorisationChanged implements ResolverEvent {
-  """The block number at which the event occurred"""
+  """
+  The block number at which the event occurred
+  """
   blockNumber: Int!
 
-  """Unique identifier for this event"""
+  """
+  Unique identifier for this event
+  """
   id: ID!
 
-  """Whether the authorisation was added or removed"""
+  """
+  Whether the authorisation was added or removed
+  """
   isAuthorized: Boolean!
 
-  """The owner of the authorisation"""
+  """
+  The owner of the authorisation
+  """
   owner: Bytes!
 
-  """The resolver associated with this event"""
+  """
+  The resolver associated with this event
+  """
   resolver: Resolver!
 
-  """The target of the authorisation"""
+  """
+  The target of the authorisation
+  """
   target: Bytes!
 
-  """The transaction hash associated with the event"""
+  """
+  The transaction hash associated with the event
+  """
   transactionID: Bytes!
 }
 
 input AuthorisationChanged_filter {
-  """Filter for the block changed event."""
+  """
+  Filter for the block changed event.
+  """
   _change_block: BlockChangedFilter
   and: [AuthorisationChanged_filter]
   blockNumber: Int
@@ -391,24 +465,36 @@ input Block_height {
 scalar Bytes
 
 type ContenthashChanged implements ResolverEvent {
-  """The block number where the event occurred"""
+  """
+  The block number where the event occurred
+  """
   blockNumber: Int!
 
-  """The new content hash for the domain"""
+  """
+  The new content hash for the domain
+  """
   hash: Bytes!
 
-  """Concatenation of block number and log ID"""
+  """
+  Concatenation of block number and log ID
+  """
   id: ID!
 
-  """Used to derive relationships to Resolvers"""
+  """
+  Used to derive relationships to Resolvers
+  """
   resolver: Resolver!
 
-  """The ID of the transaction where the event occurred"""
+  """
+  The ID of the transaction where the event occurred
+  """
   transactionID: Bytes!
 }
 
 input ContenthashChanged_filter {
-  """Filter for the block changed event."""
+  """
+  Filter for the block changed event.
+  """
   _change_block: BlockChangedFilter
   and: [ContenthashChanged_filter]
   blockNumber: Int
@@ -483,27 +569,45 @@ enum ContenthashChanged_orderBy {
 }
 
 type Domain {
-  """The time when the domain was created"""
+  """
+  The time when the domain was created
+  """
   createdAt: BigInt!
 
-  """The events associated with the domain"""
-  events(first: Int = 100, orderBy: DomainEvent_orderBy, orderDirection: OrderDirection, skip: Int = 0, where: DomainEvent_filter): [DomainEvent!]!
+  """
+  The events associated with the domain
+  """
+  events(
+    first: Int = 100
+    orderBy: DomainEvent_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
+    where: DomainEvent_filter
+  ): [DomainEvent!]!
 
   """
   The expiry date for the domain, from either the registration, or the wrapped domain if PCC is burned
   """
   expiryDate: BigInt
 
-  """The namehash of the name"""
+  """
+  The namehash of the name
+  """
   id: ID!
 
-  """Indicates whether the domain has been migrated to a new registrar"""
+  """
+  Indicates whether the domain has been migrated to a new registrar
+  """
   isMigrated: Boolean!
 
-  """The human readable label name (imported from CSV), if known"""
+  """
+  The human readable label name (imported from CSV), if known
+  """
   labelName: String
 
-  """keccak256(labelName)"""
+  """
+  keccak256(labelName)
+  """
   labelhash: Bytes
 
   """
@@ -511,56 +615,94 @@ type Domain {
   """
   name: String
 
-  """The account that owns the domain"""
+  """
+  The account that owns the domain
+  """
   owner: Account!
 
-  """The namehash (id) of the parent name"""
+  """
+  The namehash (id) of the parent name
+  """
   parent: Domain
 
-  """The account that owns the ERC721 NFT for the domain"""
+  """
+  The account that owns the ERC721 NFT for the domain
+  """
   registrant: Account
 
-  """The registration associated with the domain"""
+  """
+  The registration associated with the domain
+  """
   registration: Registration
 
-  """Address logged from current resolver, if any"""
+  """
+  Address logged from current resolver, if any
+  """
   resolvedAddress: Account
 
-  """The resolver that controls the domain's settings"""
+  """
+  The resolver that controls the domain's settings
+  """
   resolver: Resolver
 
-  """The number of subdomains"""
+  """
+  The number of subdomains
+  """
   subdomainCount: Int!
 
-  """Can count domains from length of array"""
-  subdomains(first: Int = 100, orderBy: Domain_orderBy, orderDirection: OrderDirection, skip: Int = 0, where: Domain_filter): [Domain!]!
+  """
+  Can count domains from length of array
+  """
+  subdomains(
+    first: Int = 100
+    orderBy: Domain_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
+    where: Domain_filter
+  ): [Domain!]!
 
-  """The time-to-live (TTL) value of the domain's records"""
+  """
+  The time-to-live (TTL) value of the domain's records
+  """
   ttl: BigInt
 
-  """The wrapped domain associated with the domain"""
+  """
+  The wrapped domain associated with the domain
+  """
   wrappedDomain: WrappedDomain
 
-  """The account that owns the wrapped domain"""
+  """
+  The account that owns the wrapped domain
+  """
   wrappedOwner: Account
 }
 
 interface DomainEvent {
-  """The block number at which the event occurred"""
+  """
+  The block number at which the event occurred
+  """
   blockNumber: Int!
 
-  """The domain name associated with the event"""
+  """
+  The domain name associated with the event
+  """
   domain: Domain!
 
-  """The unique identifier of the event"""
+  """
+  The unique identifier of the event
+  """
   id: ID!
 
-  """The transaction hash of the transaction that triggered the event"""
+  """
+  The transaction hash of the transaction that triggered the event
+  """
   transactionID: Bytes!
 }
 
 input DomainEvent_filter {
-  """Filter for the block changed event."""
+  """
+  Filter for the block changed event.
+  """
   _change_block: BlockChangedFilter
   and: [DomainEvent_filter]
   blockNumber: Int
@@ -630,7 +772,9 @@ enum DomainEvent_orderBy {
 }
 
 input Domain_filter {
-  """Filter for the block changed event."""
+  """
+  Filter for the block changed event.
+  """
   _change_block: BlockChangedFilter
   and: [Domain_filter]
   createdAt: BigInt
@@ -908,10 +1052,14 @@ enum Domain_orderBy {
 }
 
 type ExpiryExtended implements DomainEvent {
-  """The block number at which the event occurred"""
+  """
+  The block number at which the event occurred
+  """
   blockNumber: Int!
 
-  """The domain name associated with the event"""
+  """
+  The domain name associated with the event
+  """
   domain: Domain!
 
   """
@@ -919,15 +1067,21 @@ type ExpiryExtended implements DomainEvent {
   """
   expiryDate: BigInt!
 
-  """The unique identifier of the event"""
+  """
+  The unique identifier of the event
+  """
   id: ID!
 
-  """The transaction hash of the transaction that triggered the event"""
+  """
+  The transaction hash of the transaction that triggered the event
+  """
   transactionID: Bytes!
 }
 
 input ExpiryExtended_filter {
-  """Filter for the block changed event."""
+  """
+  Filter for the block changed event.
+  """
   _change_block: BlockChangedFilter
   and: [ExpiryExtended_filter]
   blockNumber: Int
@@ -1006,24 +1160,36 @@ enum ExpiryExtended_orderBy {
 }
 
 type FusesSet implements DomainEvent {
-  """The block number at which the event occurred"""
+  """
+  The block number at which the event occurred
+  """
   blockNumber: Int!
 
-  """The domain name associated with the event"""
+  """
+  The domain name associated with the event
+  """
   domain: Domain!
 
-  """The number of fuses associated with the domain after the set event"""
+  """
+  The number of fuses associated with the domain after the set event
+  """
   fuses: Int!
 
-  """The unique identifier of the event"""
+  """
+  The unique identifier of the event
+  """
   id: ID!
 
-  """The transaction hash of the transaction that triggered the event"""
+  """
+  The transaction hash of the transaction that triggered the event
+  """
   transactionID: Bytes!
 }
 
 input FusesSet_filter {
-  """Filter for the block changed event."""
+  """
+  Filter for the block changed event.
+  """
   _change_block: BlockChangedFilter
   and: [FusesSet_filter]
   blockNumber: Int
@@ -1101,31 +1267,47 @@ enum FusesSet_orderBy {
   transactionID
 }
 
-"""8 bytes signed integer"""
+"""
+8 bytes signed integer
+"""
 scalar Int8
 
 type InterfaceChanged implements ResolverEvent {
-  """The block number in which the event occurred"""
+  """
+  The block number in which the event occurred
+  """
   blockNumber: Int!
 
-  """Concatenation of block number and log ID"""
+  """
+  Concatenation of block number and log ID
+  """
   id: ID!
 
-  """The address of the contract that implements the interface"""
+  """
+  The address of the contract that implements the interface
+  """
   implementer: Bytes!
 
-  """The ID of the EIP-1820 interface that was changed"""
+  """
+  The ID of the EIP-1820 interface that was changed
+  """
   interfaceID: Bytes!
 
-  """Used to derive relationships to Resolvers"""
+  """
+  Used to derive relationships to Resolvers
+  """
   resolver: Resolver!
 
-  """The transaction ID for the transaction in which the event occurred"""
+  """
+  The transaction ID for the transaction in which the event occurred
+  """
   transactionID: Bytes!
 }
 
 input InterfaceChanged_filter {
-  """Filter for the block changed event."""
+  """
+  Filter for the block changed event.
+  """
   _change_block: BlockChangedFilter
   and: [InterfaceChanged_filter]
   blockNumber: Int
@@ -1215,44 +1397,68 @@ The severity level of a log entry.
 Log levels are ordered from most to least severe: CRITICAL > ERROR > WARNING > INFO > DEBUG
 """
 enum LogLevel {
-  """Critical errors that require immediate attention"""
+  """
+  Critical errors that require immediate attention
+  """
   CRITICAL
 
-  """Detailed diagnostic information for debugging"""
+  """
+  Detailed diagnostic information for debugging
+  """
   DEBUG
 
-  """Error conditions that indicate a failure"""
+  """
+  Error conditions that indicate a failure
+  """
   ERROR
 
-  """Informational messages about normal operations"""
+  """
+  Informational messages about normal operations
+  """
   INFO
 
-  """Warning conditions that may require attention"""
+  """
+  Warning conditions that may require attention
+  """
   WARNING
 }
 
 type MulticoinAddrChanged implements ResolverEvent {
-  """The new address value for the given coin type"""
+  """
+  The new address value for the given coin type
+  """
   addr: Bytes!
 
-  """Block number in which this event was emitted"""
+  """
+  Block number in which this event was emitted
+  """
   blockNumber: Int!
 
-  """The coin type of the changed address"""
+  """
+  The coin type of the changed address
+  """
   coinType: BigInt!
 
-  """Unique identifier for the event"""
+  """
+  Unique identifier for the event
+  """
   id: ID!
 
-  """Resolver associated with this event"""
+  """
+  Resolver associated with this event
+  """
   resolver: Resolver!
 
-  """Transaction ID in which this event was emitted"""
+  """
+  Transaction ID in which this event was emitted
+  """
   transactionID: Bytes!
 }
 
 input MulticoinAddrChanged_filter {
-  """Filter for the block changed event."""
+  """
+  Filter for the block changed event.
+  """
   _change_block: BlockChangedFilter
   addr: Bytes
   addr_contains: Bytes
@@ -1336,24 +1542,36 @@ enum MulticoinAddrChanged_orderBy {
 }
 
 type NameChanged implements ResolverEvent {
-  """Block number where event occurred"""
+  """
+  Block number where event occurred
+  """
   blockNumber: Int!
 
-  """Concatenation of block number and log ID"""
+  """
+  Concatenation of block number and log ID
+  """
   id: ID!
 
-  """New ENS name value"""
+  """
+  New ENS name value
+  """
   name: String!
 
-  """Used to derive relationships to Resolvers"""
+  """
+  Used to derive relationships to Resolvers
+  """
   resolver: Resolver!
 
-  """Unique transaction ID where event occurred"""
+  """
+  Unique transaction ID where event occurred
+  """
   transactionID: Bytes!
 }
 
 input NameChanged_filter {
-  """Filter for the block changed event."""
+  """
+  Filter for the block changed event.
+  """
   _change_block: BlockChangedFilter
   and: [NameChanged_filter]
   blockNumber: Int
@@ -1438,27 +1656,41 @@ enum NameChanged_orderBy {
 }
 
 type NameRegistered implements RegistrationEvent {
-  """The block number of the event"""
+  """
+  The block number of the event
+  """
   blockNumber: Int!
 
-  """The expiry date of the registration"""
+  """
+  The expiry date of the registration
+  """
   expiryDate: BigInt!
 
-  """The unique identifier of the NameRegistered event"""
+  """
+  The unique identifier of the NameRegistered event
+  """
   id: ID!
 
-  """The account that registered the name"""
+  """
+  The account that registered the name
+  """
   registrant: Account!
 
-  """The registration associated with the event"""
+  """
+  The registration associated with the event
+  """
   registration: Registration!
 
-  """The transaction ID associated with the event"""
+  """
+  The transaction ID associated with the event
+  """
   transactionID: Bytes!
 }
 
 input NameRegistered_filter {
-  """Filter for the block changed event."""
+  """
+  Filter for the block changed event.
+  """
   _change_block: BlockChangedFilter
   and: [NameRegistered_filter]
   blockNumber: Int
@@ -1556,24 +1788,36 @@ enum NameRegistered_orderBy {
 }
 
 type NameRenewed implements RegistrationEvent {
-  """The block number of the event"""
+  """
+  The block number of the event
+  """
   blockNumber: Int!
 
-  """The new expiry date of the registration"""
+  """
+  The new expiry date of the registration
+  """
   expiryDate: BigInt!
 
-  """The unique identifier of the NameRenewed event"""
+  """
+  The unique identifier of the NameRenewed event
+  """
   id: ID!
 
-  """The registration associated with the event"""
+  """
+  The registration associated with the event
+  """
   registration: Registration!
 
-  """The transaction ID associated with the event"""
+  """
+  The transaction ID associated with the event
+  """
   transactionID: Bytes!
 }
 
 input NameRenewed_filter {
-  """Filter for the block changed event."""
+  """
+  Filter for the block changed event.
+  """
   _change_block: BlockChangedFilter
   and: [NameRenewed_filter]
   blockNumber: Int
@@ -1648,24 +1892,36 @@ enum NameRenewed_orderBy {
 }
 
 type NameTransferred implements RegistrationEvent {
-  """The block number of the event"""
+  """
+  The block number of the event
+  """
   blockNumber: Int!
 
-  """The ID of the event"""
+  """
+  The ID of the event
+  """
   id: ID!
 
-  """The new owner of the domain"""
+  """
+  The new owner of the domain
+  """
   newOwner: Account!
 
-  """The registration associated with the event"""
+  """
+  The registration associated with the event
+  """
   registration: Registration!
 
-  """The transaction ID of the event"""
+  """
+  The transaction ID of the event
+  """
   transactionID: Bytes!
 }
 
 input NameTransferred_filter {
-  """Filter for the block changed event."""
+  """
+  Filter for the block changed event.
+  """
   _change_block: BlockChangedFilter
   and: [NameTransferred_filter]
   blockNumber: Int
@@ -1754,24 +2010,36 @@ enum NameTransferred_orderBy {
 }
 
 type NameUnwrapped implements DomainEvent {
-  """The block number at which the event occurred"""
+  """
+  The block number at which the event occurred
+  """
   blockNumber: Int!
 
-  """The domain name associated with the event"""
+  """
+  The domain name associated with the event
+  """
   domain: Domain!
 
-  """The unique identifier of the event"""
+  """
+  The unique identifier of the event
+  """
   id: ID!
 
-  """The account that owns the domain after it was unwrapped"""
+  """
+  The account that owns the domain after it was unwrapped
+  """
   owner: Account!
 
-  """The transaction hash of the transaction that triggered the event"""
+  """
+  The transaction hash of the transaction that triggered the event
+  """
   transactionID: Bytes!
 }
 
 input NameUnwrapped_filter {
-  """Filter for the block changed event."""
+  """
+  Filter for the block changed event.
+  """
   _change_block: BlockChangedFilter
   and: [NameUnwrapped_filter]
   blockNumber: Int
@@ -1864,33 +2132,51 @@ enum NameUnwrapped_orderBy {
 }
 
 type NameWrapped implements DomainEvent {
-  """The block number at which the wrapped domain was wrapped"""
+  """
+  The block number at which the wrapped domain was wrapped
+  """
   blockNumber: Int!
 
-  """The domain name associated with the wrapped domain"""
+  """
+  The domain name associated with the wrapped domain
+  """
   domain: Domain!
 
-  """The expiry date of the wrapped domain registration"""
+  """
+  The expiry date of the wrapped domain registration
+  """
   expiryDate: BigInt!
 
-  """The number of fuses associated with the wrapped domain"""
+  """
+  The number of fuses associated with the wrapped domain
+  """
   fuses: Int!
 
-  """The unique identifier of the wrapped domain"""
+  """
+  The unique identifier of the wrapped domain
+  """
   id: ID!
 
-  """The human-readable name of the wrapped domain"""
+  """
+  The human-readable name of the wrapped domain
+  """
   name: String
 
-  """The account that owns the wrapped domain"""
+  """
+  The account that owns the wrapped domain
+  """
   owner: Account!
 
-  """The transaction hash of the transaction that wrapped the domain"""
+  """
+  The transaction hash of the transaction that wrapped the domain
+  """
   transactionID: Bytes!
 }
 
 input NameWrapped_filter {
-  """Filter for the block changed event."""
+  """
+  Filter for the block changed event.
+  """
   _change_block: BlockChangedFilter
   and: [NameWrapped_filter]
   blockNumber: Int
@@ -2022,27 +2308,41 @@ enum NameWrapped_orderBy {
 }
 
 type NewOwner implements DomainEvent {
-  """The block number at which the event occurred"""
+  """
+  The block number at which the event occurred
+  """
   blockNumber: Int!
 
-  """The domain name associated with the event"""
+  """
+  The domain name associated with the event
+  """
   domain: Domain!
 
-  """The unique identifier of the event"""
+  """
+  The unique identifier of the event
+  """
   id: ID!
 
-  """The new account that owns the domain"""
+  """
+  The new account that owns the domain
+  """
   owner: Account!
 
-  """The parent domain of the domain name associated with the event"""
+  """
+  The parent domain of the domain name associated with the event
+  """
   parentDomain: Domain!
 
-  """The transaction hash of the transaction that triggered the event"""
+  """
+  The transaction hash of the transaction that triggered the event
+  """
   transactionID: Bytes!
 }
 
 input NewOwner_filter {
-  """Filter for the block changed event."""
+  """
+  Filter for the block changed event.
+  """
   _change_block: BlockChangedFilter
   and: [NewOwner_filter]
   blockNumber: Int
@@ -2166,24 +2466,36 @@ enum NewOwner_orderBy {
 }
 
 type NewResolver implements DomainEvent {
-  """The block number at which the event occurred"""
+  """
+  The block number at which the event occurred
+  """
   blockNumber: Int!
 
-  """The domain name associated with the event"""
+  """
+  The domain name associated with the event
+  """
   domain: Domain!
 
-  """The unique identifier of the event"""
+  """
+  The unique identifier of the event
+  """
   id: ID!
 
-  """The new resolver contract address associated with the domain"""
+  """
+  The new resolver contract address associated with the domain
+  """
   resolver: Resolver!
 
-  """The transaction hash of the transaction that triggered the event"""
+  """
+  The transaction hash of the transaction that triggered the event
+  """
   transactionID: Bytes!
 }
 
 input NewResolver_filter {
-  """Filter for the block changed event."""
+  """
+  Filter for the block changed event.
+  """
   _change_block: BlockChangedFilter
   and: [NewResolver_filter]
   blockNumber: Int
@@ -2278,24 +2590,36 @@ enum NewResolver_orderBy {
 }
 
 type NewTTL implements DomainEvent {
-  """The block number at which the event occurred"""
+  """
+  The block number at which the event occurred
+  """
   blockNumber: Int!
 
-  """The domain name associated with the event"""
+  """
+  The domain name associated with the event
+  """
   domain: Domain!
 
-  """The unique identifier of the event"""
+  """
+  The unique identifier of the event
+  """
   id: ID!
 
-  """The transaction hash of the transaction that triggered the event"""
+  """
+  The transaction hash of the transaction that triggered the event
+  """
   transactionID: Bytes!
 
-  """The new TTL value (in seconds) associated with the domain"""
+  """
+  The new TTL value (in seconds) associated with the domain
+  """
   ttl: BigInt!
 }
 
 input NewTTL_filter {
-  """Filter for the block changed event."""
+  """
+  Filter for the block changed event.
+  """
   _change_block: BlockChangedFilter
   and: [NewTTL_filter]
   blockNumber: Int
@@ -2373,34 +2697,50 @@ enum NewTTL_orderBy {
   ttl
 }
 
-"""Defines the order direction, either ascending or descending"""
+"""
+Defines the order direction, either ascending or descending
+"""
 enum OrderDirection {
   asc
   desc
 }
 
 type PubkeyChanged implements ResolverEvent {
-  """Block number of the Ethereum block where the event occurred"""
+  """
+  Block number of the Ethereum block where the event occurred
+  """
   blockNumber: Int!
 
-  """Concatenation of block number and log ID"""
+  """
+  Concatenation of block number and log ID
+  """
   id: ID!
 
-  """Used to derive relationships to Resolvers"""
+  """
+  Used to derive relationships to Resolvers
+  """
   resolver: Resolver!
 
-  """Transaction hash of the Ethereum transaction where the event occurred"""
+  """
+  Transaction hash of the Ethereum transaction where the event occurred
+  """
   transactionID: Bytes!
 
-  """The x-coordinate of the new public key"""
+  """
+  The x-coordinate of the new public key
+  """
   x: Bytes!
 
-  """The y-coordinate of the new public key"""
+  """
+  The y-coordinate of the new public key
+  """
   y: Bytes!
 }
 
 input PubkeyChanged_filter {
-  """Filter for the block changed event."""
+  """
+  Filter for the block changed event.
+  """
   _change_block: BlockChangedFilter
   and: [PubkeyChanged_filter]
   blockNumber: Int
@@ -2490,7 +2830,9 @@ type Query {
   Query execution logs emitted by the subgraph during indexing. Results are sorted by timestamp in descending order (newest first).
   """
   _logs(
-    """Maximum number of logs to return. Default: 100, Maximum: 1000."""
+    """
+    Maximum number of logs to return. Default: 100, Maximum: 1000.
+    """
     first: Int = 100
 
     """
@@ -2503,7 +2845,9 @@ type Query {
     """
     level: LogLevel
 
-    """Sort direction for results. Default: desc (newest first)."""
+    """
+    Sort direction for results. Default: desc (newest first).
+    """
     orderDirection: OrderDirection = desc
 
     """
@@ -2511,7 +2855,9 @@ type Query {
     """
     search: String
 
-    """Number of logs to skip (for pagination). Default: 0, Maximum: 10000."""
+    """
+    Number of logs to skip (for pagination). Default: 0, Maximum: 10000.
+    """
     skip: Int = 0
 
     """
@@ -2520,7 +2866,9 @@ type Query {
     to: String
   ): [_Log_!]!
 
-  """Access to subgraph metadata"""
+  """
+  Access to subgraph metadata
+  """
   _meta(block: Block_height): _Meta_
   abiChanged(
     """
@@ -3365,47 +3713,79 @@ type Query {
 }
 
 type Registration {
-  """The cost associated with the domain registration"""
+  """
+  The cost associated with the domain registration
+  """
   cost: BigInt
 
-  """The domain name associated with the registration"""
+  """
+  The domain name associated with the registration
+  """
   domain: Domain!
 
-  """The events associated with the domain registration"""
-  events(first: Int = 100, orderBy: RegistrationEvent_orderBy, orderDirection: OrderDirection, skip: Int = 0, where: RegistrationEvent_filter): [RegistrationEvent!]!
+  """
+  The events associated with the domain registration
+  """
+  events(
+    first: Int = 100
+    orderBy: RegistrationEvent_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
+    where: RegistrationEvent_filter
+  ): [RegistrationEvent!]!
 
-  """The expiry date of the domain"""
+  """
+  The expiry date of the domain
+  """
   expiryDate: BigInt!
 
-  """The unique identifier of the registration"""
+  """
+  The unique identifier of the registration
+  """
   id: ID!
 
-  """The human-readable label name associated with the domain registration"""
+  """
+  The human-readable label name associated with the domain registration
+  """
   labelName: String
 
-  """The account that registered the domain"""
+  """
+  The account that registered the domain
+  """
   registrant: Account!
 
-  """The registration date of the domain"""
+  """
+  The registration date of the domain
+  """
   registrationDate: BigInt!
 }
 
 interface RegistrationEvent {
-  """The block number of the event"""
+  """
+  The block number of the event
+  """
   blockNumber: Int!
 
-  """The unique identifier of the registration event"""
+  """
+  The unique identifier of the registration event
+  """
   id: ID!
 
-  """The registration associated with the event"""
+  """
+  The registration associated with the event
+  """
   registration: Registration!
 
-  """The transaction ID associated with the event"""
+  """
+  The transaction ID associated with the event
+  """
   transactionID: Bytes!
 }
 
 input RegistrationEvent_filter {
-  """Filter for the block changed event."""
+  """
+  Filter for the block changed event.
+  """
   _change_block: BlockChangedFilter
   and: [RegistrationEvent_filter]
   blockNumber: Int
@@ -3471,7 +3851,9 @@ enum RegistrationEvent_orderBy {
 }
 
 input Registration_filter {
-  """Filter for the block changed event."""
+  """
+  Filter for the block changed event.
+  """
   _change_block: BlockChangedFilter
   and: [Registration_filter]
   cost: BigInt
@@ -3599,46 +3981,74 @@ type Resolver {
   """
   addr: Account
 
-  """The address of the resolver contract"""
+  """
+  The address of the resolver contract
+  """
   address: Bytes!
 
-  """The set of observed SLIP-44 coin types for this resolver"""
+  """
+  The set of observed SLIP-44 coin types for this resolver
+  """
   coinTypes: [BigInt!]
 
-  """The content hash for this resolver, in binary format"""
+  """
+  The content hash for this resolver, in binary format
+  """
   contentHash: Bytes
 
-  """The domain that this resolver is associated with"""
+  """
+  The domain that this resolver is associated with
+  """
   domain: Domain
 
-  """The events associated with this resolver"""
-  events(first: Int = 100, orderBy: ResolverEvent_orderBy, orderDirection: OrderDirection, skip: Int = 0, where: ResolverEvent_filter): [ResolverEvent!]!
+  """
+  The events associated with this resolver
+  """
+  events(
+    first: Int = 100
+    orderBy: ResolverEvent_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
+    where: ResolverEvent_filter
+  ): [ResolverEvent!]!
 
   """
   The unique identifier for this resolver, which is a concatenation of the resolver address and the domain namehash
   """
   id: ID!
 
-  """The set of observed text record keys for this resolver"""
+  """
+  The set of observed text record keys for this resolver
+  """
   texts: [String!]
 }
 
 interface ResolverEvent {
-  """The block number that the event occurred on"""
+  """
+  The block number that the event occurred on
+  """
   blockNumber: Int!
 
-  """Concatenation of block number and log ID"""
+  """
+  Concatenation of block number and log ID
+  """
   id: ID!
 
-  """Used to derive relationships to Resolvers"""
+  """
+  Used to derive relationships to Resolvers
+  """
   resolver: Resolver!
 
-  """The transaction hash of the event"""
+  """
+  The transaction hash of the event
+  """
   transactionID: Bytes!
 }
 
 input ResolverEvent_filter {
-  """Filter for the block changed event."""
+  """
+  Filter for the block changed event.
+  """
   _change_block: BlockChangedFilter
   and: [ResolverEvent_filter]
   blockNumber: Int
@@ -3702,7 +4112,9 @@ enum ResolverEvent_orderBy {
 }
 
 input Resolver_filter {
-  """Filter for the block changed event."""
+  """
+  Filter for the block changed event.
+  """
   _change_block: BlockChangedFilter
   addr: String
   addr_: Account_filter
@@ -3811,27 +4223,41 @@ enum Resolver_orderBy {
 }
 
 type TextChanged implements ResolverEvent {
-  """Block number of the Ethereum block in which the event occurred"""
+  """
+  Block number of the Ethereum block in which the event occurred
+  """
   blockNumber: Int!
 
-  """Concatenation of block number and log ID"""
+  """
+  Concatenation of block number and log ID
+  """
   id: ID!
 
-  """The key of the text record that was changed"""
+  """
+  The key of the text record that was changed
+  """
   key: String!
 
-  """Used to derive relationships to Resolvers"""
+  """
+  Used to derive relationships to Resolvers
+  """
   resolver: Resolver!
 
-  """Hash of the Ethereum transaction in which the event occurred"""
+  """
+  Hash of the Ethereum transaction in which the event occurred
+  """
   transactionID: Bytes!
 
-  """The new value of the text record that was changed"""
+  """
+  The new value of the text record that was changed
+  """
   value: String
 }
 
 input TextChanged_filter {
-  """Filter for the block changed event."""
+  """
+  Filter for the block changed event.
+  """
   _change_block: BlockChangedFilter
   and: [TextChanged_filter]
   blockNumber: Int
@@ -3936,28 +4362,42 @@ enum TextChanged_orderBy {
   value
 }
 
-"""A string representation of microseconds UNIX timestamp (16 digits)"""
+"""
+A string representation of microseconds UNIX timestamp (16 digits)
+"""
 scalar Timestamp
 
 type Transfer implements DomainEvent {
-  """The block number at which the event occurred"""
+  """
+  The block number at which the event occurred
+  """
   blockNumber: Int!
 
-  """The domain name associated with the event"""
+  """
+  The domain name associated with the event
+  """
   domain: Domain!
 
-  """The unique identifier of the event"""
+  """
+  The unique identifier of the event
+  """
   id: ID!
 
-  """The account that owns the domain after the transfer"""
+  """
+  The account that owns the domain after the transfer
+  """
   owner: Account!
 
-  """The transaction hash of the transaction that triggered the event"""
+  """
+  The transaction hash of the transaction that triggered the event
+  """
   transactionID: Bytes!
 }
 
 input Transfer_filter {
-  """Filter for the block changed event."""
+  """
+  Filter for the block changed event.
+  """
   _change_block: BlockChangedFilter
   and: [Transfer_filter]
   blockNumber: Int
@@ -4050,24 +4490,36 @@ enum Transfer_orderBy {
 }
 
 type VersionChanged implements ResolverEvent {
-  """The block number at which the event occurred"""
+  """
+  The block number at which the event occurred
+  """
   blockNumber: Int!
 
-  """Unique identifier for this event"""
+  """
+  Unique identifier for this event
+  """
   id: ID!
 
-  """The resolver associated with this event"""
+  """
+  The resolver associated with this event
+  """
   resolver: Resolver!
 
-  """The transaction hash associated with the event"""
+  """
+  The transaction hash associated with the event
+  """
   transactionID: Bytes!
 
-  """The new version number of the resolver"""
+  """
+  The new version number of the resolver
+  """
   version: BigInt!
 }
 
 input VersionChanged_filter {
-  """Filter for the block changed event."""
+  """
+  Filter for the block changed event.
+  """
   _change_block: BlockChangedFilter
   and: [VersionChanged_filter]
   blockNumber: Int
@@ -4140,27 +4592,41 @@ enum VersionChanged_orderBy {
 }
 
 type WrappedDomain {
-  """The domain that is wrapped by this WrappedDomain"""
+  """
+  The domain that is wrapped by this WrappedDomain
+  """
   domain: Domain!
 
-  """The expiry date of the wrapped domain"""
+  """
+  The expiry date of the wrapped domain
+  """
   expiryDate: BigInt!
 
-  """The number of fuses remaining on the wrapped domain"""
+  """
+  The number of fuses remaining on the wrapped domain
+  """
   fuses: Int!
 
-  """unique identifier for each instance of the WrappedDomain entity"""
+  """
+  unique identifier for each instance of the WrappedDomain entity
+  """
   id: ID!
 
-  """The name of the wrapped domain"""
+  """
+  The name of the wrapped domain
+  """
   name: String
 
-  """The account that owns this WrappedDomain"""
+  """
+  The account that owns this WrappedDomain
+  """
   owner: Account!
 }
 
 input WrappedDomain_filter {
-  """Filter for the block changed event."""
+  """
+  Filter for the block changed event.
+  """
   _change_block: BlockChangedFilter
   and: [WrappedDomain_filter]
   domain: String
@@ -4272,24 +4738,36 @@ enum WrappedDomain_orderBy {
 }
 
 type WrappedTransfer implements DomainEvent {
-  """The block number at which the event occurred"""
+  """
+  The block number at which the event occurred
+  """
   blockNumber: Int!
 
-  """The domain name associated with the event"""
+  """
+  The domain name associated with the event
+  """
   domain: Domain!
 
-  """The unique identifier of the event"""
+  """
+  The unique identifier of the event
+  """
   id: ID!
 
-  """The account that owns the wrapped domain after the transfer"""
+  """
+  The account that owns the wrapped domain after the transfer
+  """
   owner: Account!
 
-  """The transaction hash of the transaction that triggered the event"""
+  """
+  The transaction hash of the transaction that triggered the event
+  """
   transactionID: Bytes!
 }
 
 input WrappedTransfer_filter {
-  """Filter for the block changed event."""
+  """
+  Filter for the block changed event.
+  """
   _change_block: BlockChangedFilter
   and: [WrappedTransfer_filter]
   blockNumber: Int
@@ -4382,16 +4860,24 @@ enum WrappedTransfer_orderBy {
 }
 
 type _Block_ {
-  """The hash of the block"""
+  """
+  The hash of the block
+  """
   hash: Bytes
 
-  """The block number"""
+  """
+  The block number
+  """
   number: Int!
 
-  """The hash of the parent block"""
+  """
+  The hash of the parent block
+  """
   parentHash: Bytes
 
-  """Integer representation of the timestamp stored in blocks for the chain"""
+  """
+  Integer representation of the timestamp stored in blocks for the chain
+  """
   timestamp: Int
 }
 
@@ -4400,10 +4886,14 @@ A key-value pair of additional data associated with a log entry.
 These correspond to arguments passed to the log function in the subgraph code.
 """
 type _LogArgument_ {
-  """The parameter name"""
+  """
+  The parameter name
+  """
   key: String!
 
-  """The parameter value, serialized as a string"""
+  """
+  The parameter value, serialized as a string
+  """
   value: String!
 }
 
@@ -4412,13 +4902,19 @@ Source code location metadata for a log entry.
 Indicates where in the subgraph's AssemblyScript code the log statement was executed.
 """
 type _LogMeta_ {
-  """The column number in the source file"""
+  """
+  The column number in the source file
+  """
   column: Int!
 
-  """The line number in the source file"""
+  """
+  The line number in the source file
+  """
   line: Int!
 
-  """The module or file path where the log was emitted"""
+  """
+  The module or file path where the log was emitted
+  """
   module: String!
 }
 
@@ -4432,10 +4928,14 @@ type _Log_ {
   """
   arguments: [_LogArgument_!]!
 
-  """Unique identifier for this log entry"""
+  """
+  Unique identifier for this log entry
+  """
   id: String!
 
-  """The severity level of the log entry"""
+  """
+  The severity level of the log entry
+  """
   level: LogLevel!
 
   """
@@ -4443,10 +4943,14 @@ type _Log_ {
   """
   meta: _LogMeta_!
 
-  """The deployment hash of the subgraph that emitted this log"""
+  """
+  The deployment hash of the subgraph that emitted this log
+  """
   subgraphId: String!
 
-  """The log message text"""
+  """
+  The log message text
+  """
   text: String!
 
   """
@@ -4455,7 +4959,9 @@ type _Log_ {
   timestamp: String!
 }
 
-"""The type for the top-level _meta field"""
+"""
+The type for the top-level _meta field
+"""
 type _Meta_ {
   """
   Information about a specific subgraph block. The hash of the block
@@ -4465,15 +4971,21 @@ type _Meta_ {
   """
   block: _Block_!
 
-  """The deployment ID"""
+  """
+  The deployment ID
+  """
   deployment: String!
 
-  """If `true`, the subgraph encountered indexing errors at some past block"""
+  """
+  If `true`, the subgraph encountered indexing errors at some past block
+  """
   hasIndexingErrors: Boolean!
 }
 
 enum _SubgraphErrorPolicy_ {
-  """Data will be returned even if the subgraph has indexing errors"""
+  """
+  Data will be returned even if the subgraph has indexing errors
+  """
   allow
 
   """

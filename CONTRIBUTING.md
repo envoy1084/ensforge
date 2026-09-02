@@ -74,7 +74,7 @@ The test environment starts once for the suite, seeds its fixtures, and resets c
 tests. Normal runs pull the published image and do not build ENS contracts locally.
 
 Live read-only smoke suites verify the public deployments separately. They require provider URLs and
-never submit transactions:
+never submit transactions. The commands automatically load a root `.env` file when present:
 
 ```sh
 ENSFORGE_MAINNET_RPC_URL=https://… pnpm test:live:mainnet
@@ -85,10 +85,12 @@ The indexer smoke tests use the public defaults. To avoid community endpoint rat
 them with authenticated or dedicated endpoints when available:
 
 ```bash
-ENSFORGE_MAINNET_V1_INDEXER_URL=https://…
+ENSFORGE_MAINNET_V1_SUBGRAPH_URL=https://…
 ENSFORGE_SEPOLIA_V1_INDEXER_URL=https://…
 ENSFORGE_SEPOLIA_V2_INDEXER_URL=https://…
 ```
+
+`ENSFORGE_MAINNET_V1_INDEXER_URL` remains supported as a compatibility alias.
 
 The Sepolia suite uses `ENSFORGE_SEPOLIA_V2_NAME` when set and otherwise reads the public
 `ensforge-smoke.eth` fixture tree. Run `pnpm setup:sepolia-v2` separately when that fixture needs to
