@@ -13,4 +13,5 @@ Use the newer ENS staging GraphQL deployment for Sepolia V2 discovery and valida
 against the indexed `ensforge-smoke.eth` fixture hierarchy.
 Keep registration feeds server-filterable, require bounded resolver-approval selectors, default
 address discovery to effective ownership, and push registry role resource filters into the V2
-connection.
+connection. Require a name anchor for semantic event kinds that the V2 indexer cannot filter by
+wire event type.

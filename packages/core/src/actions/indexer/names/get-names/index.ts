@@ -99,7 +99,13 @@ const getNamesEffect = Effect.fn("ensforge.getNames")(function* (
   const binding = makeIndexerCursorBinding(config, "getNames", filter, order);
   const initialPositions: IndexerCursorPositions = {
     v1: { position: null, exhausted: states.v1 !== "enabled" || compiled.v1.excludesSource },
-    v2: { position: null, exhausted: states.v2 !== "enabled" || compiled.v2.excludesSource },
+    v2: {
+      position: null,
+      exhausted:
+        states.v2 !== "enabled" ||
+        compiled.v2.excludesSource ||
+        (filter.protocol === "v1" && states.v1 === "enabled"),
+    },
   };
   const positions =
     decoded.cursor === undefined

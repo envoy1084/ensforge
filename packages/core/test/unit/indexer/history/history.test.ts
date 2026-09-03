@@ -1,5 +1,5 @@
 import { assert, describe, it } from "@effect/vitest";
-import { Effect } from "effect";
+import { Effect, Exit } from "effect";
 
 import { namehash } from "viem/ens";
 
@@ -263,6 +263,21 @@ describe("indexed history", () => {
       });
 
       assert.isEmpty(page.items);
+    }),
+  );
+
+  it.effect("rejects unbounded semantic event scans", () =>
+    Effect.gen(function* () {
+      const config = createConfig({
+        network: "sepolia",
+        publicClient: makeSepoliaPublicClient(),
+      });
+
+      const result = yield* Effect.exit(
+        getEvents.effect(config, { filter: { kinds: ["migration"] } }),
+      );
+
+      assert.isTrue(Exit.isFailure(result));
     }),
   );
 });

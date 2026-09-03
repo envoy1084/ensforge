@@ -249,6 +249,38 @@ describe("indexed name actions", () => {
     }),
   );
 
+  it.effect("uses the dedicated V1 source for a V1-only name list", () =>
+    Effect.gen(function* () {
+      let requests = 0;
+      const fetch: typeof globalThis.fetch = (_input, init) => {
+        const request = operation(init);
+        requests += 1;
+        assert.include(request.query, "V1GetNames");
+        return Promise.resolve(
+          response({
+            data: {
+              _meta: { block: { number: 100 } },
+              domains: [v1Name("legacy.eth", 10)],
+            },
+          }),
+        );
+      };
+      const config = createConfig({
+        network: "sepolia",
+        publicClient: makeSepoliaPublicClient(),
+        indexer: { fetch, retry: { attempts: 0 } },
+      });
+
+      const result = yield* getNames.effect(config, {
+        filter: { protocol: "v1" },
+        pageSize: 1,
+      });
+
+      assert.strictEqual(requests, 1);
+      assert.strictEqual(result.items[0]?.protocol, "v1");
+    }),
+  );
+
   it.effect("refills V2 pages when a portable protocol filter is applied locally", () =>
     Effect.gen(function* () {
       let requests = 0;

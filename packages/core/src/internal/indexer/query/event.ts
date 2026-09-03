@@ -102,4 +102,14 @@ export const validateEventFilter = (filter: EventFilter): void => {
       message: "At least one event kind is required",
     });
   }
+  if (
+    filter.name === undefined &&
+    filter.namehash === undefined &&
+    filter.kinds?.some((kind) => kind === "migration" || kind === "unknown")
+  ) {
+    throw new IndexerFilterError({
+      code: "UNSUPPORTED_FILTER",
+      message: "Migration and unknown event filters require a name or namehash",
+    });
+  }
 };
