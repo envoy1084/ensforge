@@ -14,6 +14,7 @@ import {
   lexicographicSortSchema,
   printSchema,
 } from "graphql";
+import { format } from "oxfmt";
 
 const root = resolve(import.meta.dirname, "..");
 const sources = {
@@ -31,6 +32,26 @@ const sources = {
 };
 
 class SchemaRefreshError extends Data.TaggedError("SchemaRefreshError") {}
+
+const formatSchema = Effect.fn("formatSchema")(function* (schema) {
+  const result = yield* Effect.tryPromise({
+    try: () => format(resolve(root, "graphql/indexer/schema.graphql"), schema),
+    catch: (cause) =>
+      new SchemaRefreshError({
+        message: "Schema formatting failed",
+        retryable: false,
+        cause,
+      }),
+  });
+  if (result.errors.length > 0) {
+    return yield* new SchemaRefreshError({
+      message: "Schema formatting returned errors",
+      retryable: false,
+      cause: result.errors,
+    });
+  }
+  return result.code;
+});
 
 const requestSchema = Effect.fn("requestSchema")(function* ({ url }) {
   const client = yield* HttpClient.HttpClient;
@@ -68,7 +89,7 @@ const requestSchema = Effect.fn("requestSchema")(function* ({ url }) {
     Predicate.isObject(body) &&
     "data" in body
   ) {
-    return yield* Effect.try({
+    const schema = yield* Effect.try({
       try: () => `${printSchema(lexicographicSortSchema(buildClientSchema(body.data)))}\n`,
       catch: (cause) =>
         new SchemaRefreshError({
@@ -77,6 +98,7 @@ const requestSchema = Effect.fn("requestSchema")(function* ({ url }) {
           cause,
         }),
     });
+    return yield* formatSchema(schema);
   }
 
   return yield* new SchemaRefreshError({
