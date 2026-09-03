@@ -10,6 +10,7 @@ import {
   makeCapabilitiesActions,
   makeDnsActions,
   makeEventsActions,
+  makeIndexerActions,
   makeMigrationActions,
   makeNameActions,
   makeOwnershipActions,
@@ -24,6 +25,7 @@ import {
   type CapabilitiesActions,
   type DnsActions,
   type EventsActions,
+  type IndexerActions,
   type MigrationActions,
   type NameActions,
   type OwnershipActions,
@@ -42,6 +44,7 @@ export class Ensforge {
   readonly capabilities: CapabilitiesActions;
   readonly dns: DnsActions;
   readonly events: EventsActions;
+  readonly indexer: IndexerActions;
   readonly migration: MigrationActions;
   readonly name: NameActions;
   readonly ownership: OwnershipActions;
@@ -61,6 +64,7 @@ export class Ensforge {
     this.capabilities = makeCapabilitiesActions(config);
     this.dns = makeDnsActions(config);
     this.events = makeEventsActions(config);
+    this.indexer = makeIndexerActions(config);
     this.migration = makeMigrationActions(config);
     this.name = makeNameActions(config);
     this.ownership = makeOwnershipActions(config);

@@ -32,6 +32,29 @@ const queryHooks = [
   "useEnsEvents",
   "useNameHistory",
   "useWatchEnsEvents",
+  "useDecodedName",
+  "useEvents",
+  "useIndexedName",
+  "useIndexedRecords",
+  "useIndexedResolver",
+  "useIndexerStatus",
+  "useIndexedNameHistory",
+  "useNames",
+  "useNamesForAddress",
+  "useRecordHistory",
+  "useRegistrations",
+  "useRegistrationsForAddress",
+  "useRegistrationHistory",
+  "useRegistriesForAddress",
+  "useIndexedRegistry",
+  "useRegistryLabels",
+  "useIndexedRegistryRoles",
+  "useResolvedNamesForAddress",
+  "useResolverApprovals",
+  "useResolverMetadata",
+  "useResolversForAddress",
+  "useSubnames",
+  "useSearchNames",
   "useMigrationEligibility",
   "useMigrationPlan",
   "useMigrationStatus",
@@ -185,6 +208,29 @@ const queryAtoms = [
   "getEnsEventsAtom",
   "getNameHistoryAtom",
   "watchEnsEventsAtom",
+  "getDecodedNameAtom",
+  "getEventsAtom",
+  "getIndexedNameAtom",
+  "getIndexedRecordsAtom",
+  "getIndexedResolverAtom",
+  "getIndexerStatusAtom",
+  "getIndexedNameHistoryAtom",
+  "getNamesAtom",
+  "getNamesForAddressAtom",
+  "getRecordHistoryAtom",
+  "getRegistrationsAtom",
+  "getRegistrationsForAddressAtom",
+  "getRegistrationHistoryAtom",
+  "getRegistriesForAddressAtom",
+  "getIndexedRegistryAtom",
+  "getRegistryLabelsAtom",
+  "getIndexedRegistryRolesAtom",
+  "getResolvedNamesForAddressAtom",
+  "getResolverApprovalsAtom",
+  "getResolverMetadataAtom",
+  "getResolversForAddressAtom",
+  "getSubnamesAtom",
+  "searchNamesAtom",
   "getMigrationEligibilityAtom",
   "getMigrationPlanAtom",
   "getMigrationStatusAtom",
@@ -314,6 +360,18 @@ describe("public action surface", () => {
   it("exports a named hook for every supported SDK query and mutation", () => {
     for (const name of [...queryHooks, ...mutationHooks]) {
       expect(Reflect.get(react, name), name).toBeTypeOf("function");
+    }
+
+    const hooksWithoutSuspense = new Set([
+      "useReadBatch",
+      "useReadBatchSettled",
+      "useRecords",
+      "useWatchEnsEvents",
+    ]);
+    for (const name of queryHooks) {
+      if (hooksWithoutSuspense.has(name)) continue;
+      const suspenseName = `${name}Suspense`;
+      expect(Reflect.get(react, suspenseName), suspenseName).toBeTypeOf("function");
     }
   });
 

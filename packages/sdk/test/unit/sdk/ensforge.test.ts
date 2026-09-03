@@ -50,6 +50,31 @@ const actionNames = {
     "setZoneHash",
   ],
   events: ["getEnsEvents", "getNameHistory", "watchEnsEvents"],
+  indexer: [
+    "getDecodedName",
+    "getEvents",
+    "getIndexedName",
+    "getIndexedRecords",
+    "getIndexedResolver",
+    "getIndexerStatus",
+    "getNameHistory",
+    "getNames",
+    "getNamesForAddress",
+    "getRecordHistory",
+    "getRegistrations",
+    "getRegistrationsForAddress",
+    "getRegistrationHistory",
+    "getRegistriesForAddress",
+    "getRegistry",
+    "getRegistryLabels",
+    "getRegistryRoles",
+    "getResolvedNamesForAddress",
+    "getResolverApprovals",
+    "getResolverMetadata",
+    "getResolversForAddress",
+    "getSubnames",
+    "searchNames",
+  ],
   migration: [
     "approveMigration",
     "getMigrationEligibility",
@@ -204,7 +229,7 @@ describe("Ensforge", () => {
       }
     }
 
-    expect(Object.values(actionNames).flat()).toHaveLength(149);
+    expect(Object.values(actionNames).flat()).toHaveLength(172);
   });
 
   it("accepts a Wagmi config", () => {
@@ -236,6 +261,7 @@ describe("Ensforge", () => {
     const events = sdk.events.watchEnsEvents.stream({ name: "ens.eth" });
 
     expect(Effect.isEffect(sdk.name.getOwner.effect({ name: "ens.eth" }))).toBe(true);
+    expect(Effect.isEffect(sdk.indexer.getIndexedName.effect({ name: "ens.eth" }))).toBe(true);
     expect(Effect.isEffect(batch)).toBe(true);
     expect(write.operation).toBe("setText");
     expect(Stream.isStream(events)).toBe(true);

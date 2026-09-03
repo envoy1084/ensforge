@@ -8,6 +8,8 @@ import {
   prefetch,
   prefetchEffect,
   useInvalidate,
+  useIndexedName,
+  useIndexedNameSuspense,
   useOwner,
   useRecords,
   useSetText,
@@ -27,6 +29,10 @@ it("preserves named hook parameter and result types", () => {
     Parameters<ReturnType<typeof useSetText>["mutate"]>[0]
   >().toEqualTypeOf<SetTextParameters>();
   expectTypeOf(useRecords).toBeFunction();
+  expectTypeOf(useIndexedName).parameter(0).toHaveProperty("enabled");
+  expectTypeOf(useIndexedName).parameter(0).toHaveProperty("atom");
+  expectTypeOf(useIndexedNameSuspense).parameter(0).not.toHaveProperty("enabled");
+  expectTypeOf(useIndexedNameSuspense).returns.toHaveProperty("data");
 });
 
 it("exposes Effect Atom-native options and concise cache helpers", () => {

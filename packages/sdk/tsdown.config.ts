@@ -9,6 +9,7 @@ export default defineConfig({
     dns: "src/entrypoints/dns.ts",
     events: "src/entrypoints/events.ts",
     index: "src/index.ts",
+    indexer: "src/entrypoints/indexer.ts",
     migration: "src/entrypoints/migration.ts",
     name: "src/entrypoints/name.ts",
     ownership: "src/entrypoints/ownership.ts",

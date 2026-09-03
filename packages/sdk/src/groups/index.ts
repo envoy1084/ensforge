@@ -2,6 +2,7 @@ export { makeBatchActions, type BatchActions } from "./batch.js";
 export { makeCapabilitiesActions, type CapabilitiesActions } from "./capabilities.js";
 export { makeDnsActions, type DnsActions } from "./dns.js";
 export { makeEventsActions, type EventsActions } from "./events.js";
+export { makeIndexerActions, type IndexerActions } from "./indexer.js";
 export { makeMigrationActions, type MigrationActions } from "./migration.js";
 export { makeNameActions, type NameActions } from "./name.js";
 export { makeOwnershipActions, type OwnershipActions } from "./ownership.js";

@@ -2,6 +2,7 @@ export * from "./batch.js";
 export * from "./capabilities.js";
 export * from "./dns.js";
 export * from "./events.js";
+export * from "./indexer.js";
 export * from "./migration.js";
 export * from "./name.js";
 export * from "./ownership.js";

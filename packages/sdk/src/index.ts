@@ -29,6 +29,7 @@ export type {
   CapabilitiesActions,
   DnsActions,
   EventsActions,
+  IndexerActions,
   MigrationActions,
   NameActions,
   OwnershipActions,
