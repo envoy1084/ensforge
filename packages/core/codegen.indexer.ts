@@ -64,7 +64,7 @@ const protocolOutput = (protocol: "v1" | "v2") => {
           {
             schema: `${graphqlRoot}/${protocol}/schema.graphql`,
             documents: [document, ...fragmentDependencies(document, fragments)],
-            plugins: ["typescript-operations", "typed-document-node"],
+            plugins: ["typescript-operations", "./scripts/codegen/typed-document-string.mjs"],
             config: operationConfig,
           },
         ];

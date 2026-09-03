@@ -1,27 +1,32 @@
-import { Duration, Effect } from "effect";
-
-import { print } from "graphql";
-import {
-  GraphQLClient,
-  type RawRequestOptions,
-  type RequestDocument,
-  type Variables,
-} from "graphql-request";
+import { Duration, Effect, Schema } from "effect";
+import { FetchHttpClient, HttpBody, HttpClient, HttpClientRequest } from "effect/unstable/http";
 
 import type { EnsforgeConfig } from "../../config/config.js";
 import { getIndexerRuntimeConfig } from "../../config/indexer-options.js";
 import { IndexerConfigError } from "../../errors/indexer-config-error.js";
-import type { IndexerDecodeError } from "../../errors/indexer-decode-error.js";
-import type { IndexerRequestError } from "../../errors/indexer-request-error.js";
-import type { IndexerGraphQLError as IndexerGraphQLErrorType } from "../../errors/indexer-response-error.js";
+import { IndexerDecodeError } from "../../errors/indexer-decode-error.js";
+import { IndexerRequestError } from "../../errors/indexer-request-error.js";
+import {
+  IndexerGraphQLError,
+  type IndexerGraphQLError as IndexerGraphQLErrorType,
+} from "../../errors/indexer-response-error.js";
 import type { IndexerUnavailableError } from "../../errors/indexer-unavailable-error.js";
-import { indexerErrorFromCause, IndexerRequestTimeoutCause } from "./error.js";
+import {
+  indexerRequestErrorFromCause,
+  IndexerRequestTimeoutCause,
+  retryAfterMilliseconds,
+} from "./error.js";
 import { resolveIndexerSource, type IndexerSource } from "./source.js";
 
-export interface IndexerRequestParameters<VariablesType extends Variables = Variables> {
+type IndexerVariables = object;
+type IndexerRequestDocument = { readonly toString: () => string };
+
+export interface IndexerRequestParameters<
+  VariablesType extends IndexerVariables = Record<string, never>,
+> {
   readonly protocol: "v1" | "v2";
   readonly operationName: string;
-  readonly document: RequestDocument;
+  readonly document: IndexerRequestDocument;
   readonly variables?: VariablesType;
 }
 
@@ -38,26 +43,11 @@ export type IndexerTransportError =
   | IndexerRequestError
   | IndexerDecodeError;
 
-const clients = new WeakMap<EnsforgeConfig["indexer"], Map<string, GraphQLClient>>();
-
-const getClient = (config: EnsforgeConfig, source: IndexerSource): GraphQLClient => {
-  let byProtocol = clients.get(config.indexer);
-  if (byProtocol === undefined) {
-    byProtocol = new Map();
-    clients.set(config.indexer, byProtocol);
-  }
-
-  const existing = byProtocol.get(source.protocol);
-  if (existing !== undefined) return existing;
-
-  const runtime = getIndexerRuntimeConfig(config.indexer);
-  const client = new GraphQLClient(source.endpoint, {
-    errorPolicy: "all",
-    ...(runtime.fetch === undefined ? {} : { fetch: runtime.fetch }),
-  });
-  byProtocol.set(source.protocol, client);
-  return client;
-};
+const IndexerResponseEnvelope = Schema.Struct({
+  data: Schema.optional(Schema.Unknown),
+  errors: Schema.optional(Schema.NullOr(Schema.Array(Schema.Unknown))),
+  extensions: Schema.optional(Schema.Unknown),
+});
 
 const resolveHeaders = (
   config: EnsforgeConfig,
@@ -79,31 +69,9 @@ const resolveHeaders = (
 };
 
 const normalizeErrors = (errors: ReadonlyArray<unknown> | undefined) =>
-  (errors ?? []).flatMap((error): ReadonlyArray<IndexerGraphQLErrorType> => {
-    if (typeof error !== "object" || error === null || !("message" in error)) return [];
-    const candidate = error as {
-      readonly message: unknown;
-      readonly path?: ReadonlyArray<string | number>;
-      readonly locations?: ReadonlyArray<{ readonly line: number; readonly column: number }>;
-      readonly extensions?: unknown;
-    };
-    if (typeof candidate.message !== "string") return [];
-    return [
-      {
-        message: candidate.message,
-        ...(candidate.path === undefined ? {} : { path: [...candidate.path] }),
-        ...(candidate.locations === undefined ? {} : { locations: [...candidate.locations] }),
-        ...(candidate.extensions === undefined ? {} : { extensions: candidate.extensions }),
-      },
-    ];
-  });
+  (errors ?? []).filter(Schema.is(IndexerGraphQLError));
 
-const printRequestDocument = (document: RequestDocument): string =>
-  typeof document === "object" && document !== null && "kind" in document
-    ? print(document)
-    : String(document);
-
-const requestOnce = <Result, VariablesType extends Variables>(
+const requestOnce = <Result, VariablesType extends IndexerVariables>(
   config: EnsforgeConfig,
   source: IndexerSource,
   parameters: IndexerRequestParameters<VariablesType>,
@@ -111,42 +79,105 @@ const requestOnce = <Result, VariablesType extends Variables>(
 ): Effect.Effect<IndexerTransportResult<Result>, IndexerTransportError> =>
   Effect.gen(function* () {
     const headers = yield* resolveHeaders(config, source);
-    const client = getClient(config, source);
-
-    return yield* Effect.tryPromise({
-      try: (signal) => {
-        const controller = new AbortController();
-        const abort = () => controller.abort(signal.reason);
-        if (signal.aborted) abort();
-        else signal.addEventListener("abort", abort, { once: true });
-
-        let timer: ReturnType<typeof setTimeout> | undefined;
-        const timeout = new Promise<never>((_resolve, reject) => {
-          timer = setTimeout(() => {
-            reject(new IndexerRequestTimeoutCause());
-            controller.abort();
-          }, config.indexer.timeout);
-        });
-        const pending = client.rawRequest<Result, VariablesType>({
-          query: printRequestDocument(parameters.document),
+    const runtime = getIndexerRuntimeConfig(config.indexer);
+    const body = yield* Effect.try({
+      try: () =>
+        JSON.stringify({
+          query: String(parameters.document),
           ...(parameters.variables === undefined ? {} : { variables: parameters.variables }),
-          requestHeaders: headers,
-          signal: controller.signal,
-        } as RawRequestOptions<VariablesType>);
+        }),
+      catch: (cause) =>
+        indexerRequestErrorFromCause(source, parameters.operationName, attempt, cause),
+    });
+    const request = HttpClientRequest.post(source.endpoint).pipe(
+      HttpClientRequest.setHeaders(headers),
+      HttpClientRequest.acceptJson,
+      HttpClientRequest.setBody(HttpBody.raw(body, { contentType: "application/json" })),
+    );
 
-        return Promise.race([pending, timeout]).finally(() => {
-          if (timer !== undefined) clearTimeout(timer);
-          signal.removeEventListener("abort", abort);
+    const execute = Effect.gen(function* () {
+      const client = yield* HttpClient.HttpClient;
+      const response = yield* client
+        .execute(request)
+        .pipe(
+          Effect.mapError((cause) =>
+            indexerRequestErrorFromCause(source, parameters.operationName, attempt, cause),
+          ),
+        );
+
+      if (response.status < 200 || response.status >= 300) {
+        const retryAfter = retryAfterMilliseconds(response.headers);
+        return yield* new IndexerRequestError({
+          code: "HTTP_FAILED",
+          message: `The ${source.identity} indexer request failed with HTTP ${response.status}`,
+          network: source.network,
+          protocol: source.protocol,
+          operationName: parameters.operationName,
+          attempt,
+          retryable: [408, 429, 500, 502, 503, 504].includes(response.status),
+          status: response.status,
+          ...(retryAfter === undefined ? {} : { retryAfter }),
+          cause: response,
         });
-      },
-      catch: (cause) => indexerErrorFromCause(source, parameters.operationName, attempt, cause),
-    }).pipe(
-      Effect.map((response) => ({
-        data: response.data,
-        errors: normalizeErrors(response.errors),
+      }
+
+      const json = yield* response.json.pipe(
+        Effect.mapError(
+          (cause) =>
+            new IndexerDecodeError({
+              code: "INVALID_RESPONSE",
+              message: `The ${source.identity} indexer returned malformed JSON`,
+              network: source.network,
+              protocol: source.protocol,
+              operationName: parameters.operationName,
+              cause,
+            }),
+        ),
+      );
+      const envelope = yield* Schema.decodeUnknownEffect(IndexerResponseEnvelope)(json).pipe(
+        Effect.mapError(
+          (cause) =>
+            new IndexerDecodeError({
+              code: "INVALID_RESPONSE",
+              message: `The ${source.identity} indexer returned an invalid GraphQL response`,
+              network: source.network,
+              protocol: source.protocol,
+              operationName: parameters.operationName,
+              cause,
+            }),
+        ),
+      );
+
+      return {
+        data: envelope.data as Result | undefined,
+        errors: normalizeErrors(envelope.errors ?? undefined),
         status: response.status,
-        ...(response.extensions === undefined ? {} : { extensions: response.extensions }),
-      })),
+        ...(envelope.extensions === undefined ? {} : { extensions: envelope.extensions }),
+      };
+    }).pipe(Effect.provide(FetchHttpClient.layer));
+
+    const withFetch =
+      runtime.fetch === undefined
+        ? execute
+        : execute.pipe(Effect.provideService(FetchHttpClient.Fetch, runtime.fetch));
+
+    return yield* withFetch.pipe(
+      Effect.timeoutOrElse({
+        duration: Duration.millis(config.indexer.timeout),
+        orElse: () =>
+          Effect.fail(
+            new IndexerRequestError({
+              code: "REQUEST_TIMEOUT",
+              message: `The ${source.identity} indexer request timed out`,
+              network: source.network,
+              protocol: source.protocol,
+              operationName: parameters.operationName,
+              attempt,
+              retryable: true,
+              cause: new IndexerRequestTimeoutCause(),
+            }),
+          ),
+      }),
     );
   });
 
@@ -156,7 +187,10 @@ const retryDelay = (error: IndexerRequestError, attempt: number): number => {
   return Math.round(base * (0.75 + Math.random() * 0.5));
 };
 
-export const requestIndexer = <Result, VariablesType extends Variables = Variables>(
+export const requestIndexer = <
+  Result,
+  VariablesType extends IndexerVariables = Record<string, never>,
+>(
   config: EnsforgeConfig,
   parameters: IndexerRequestParameters<VariablesType>,
 ): Effect.Effect<IndexerTransportResult<Result>, IndexerTransportError> =>

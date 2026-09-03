@@ -4,7 +4,7 @@ type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type Incremental<T> =
   | T
   | { [P in keyof T]?: P extends " $fragmentName" | "__typename" ? T[P] : never };
-import type { TypedDocumentNode as DocumentNode } from "@graphql-typed-document-node/core";
+import type { TypedDocumentString } from "../../document.js";
 export type V2GetResolverMetadataQueryVariables = Exact<{
   resolver: string;
 }>;
@@ -21,67 +21,8 @@ export type V2GetResolverMetadataQuery = {
   } | null;
 };
 
-export const V2GetResolverMetadataDocument = {
-  kind: "Document",
-  definitions: [
-    {
-      kind: "OperationDefinition",
-      operation: "query",
-      name: { kind: "Name", value: "V2GetResolverMetadata" },
-      variableDefinitions: [
-        {
-          kind: "VariableDefinition",
-          variable: { kind: "Variable", name: { kind: "Name", value: "resolver" } },
-          type: {
-            kind: "NonNullType",
-            type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "_meta" },
-            selectionSet: {
-              kind: "SelectionSet",
-              selections: [
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "block" },
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [{ kind: "Field", name: { kind: "Name", value: "number" } }],
-                  },
-                },
-              ],
-            },
-          },
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "metadata" },
-            arguments: [
-              {
-                kind: "Argument",
-                name: { kind: "Name", value: "resolver" },
-                value: { kind: "Variable", name: { kind: "Name", value: "resolver" } },
-              },
-            ],
-            selectionSet: {
-              kind: "SelectionSet",
-              selections: [
-                { kind: "Field", name: { kind: "Name", value: "id" } },
-                { kind: "Field", name: { kind: "Name", value: "resolver" } },
-                { kind: "Field", name: { kind: "Name", value: "graphqlUrl" } },
-                { kind: "Field", name: { kind: "Name", value: "blockNumber" } },
-                { kind: "Field", name: { kind: "Name", value: "timestamp" } },
-                { kind: "Field", name: { kind: "Name", value: "transactionHash" } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<V2GetResolverMetadataQuery, V2GetResolverMetadataQueryVariables>;
+export const V2GetResolverMetadataDocument =
+  "query V2GetResolverMetadata($resolver: String!) {\n  _meta {\n    block {\n      number\n    }\n  }\n  metadata(resolver: $resolver) {\n    id\n    resolver\n    graphqlUrl\n    blockNumber\n    timestamp\n    transactionHash\n  }\n}" as TypedDocumentString<
+    V2GetResolverMetadataQuery,
+    V2GetResolverMetadataQueryVariables
+  >;

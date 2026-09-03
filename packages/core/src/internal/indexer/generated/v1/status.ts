@@ -4,7 +4,7 @@ type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type Incremental<T> =
   | T
   | { [P in keyof T]?: P extends " $fragmentName" | "__typename" ? T[P] : never };
-import type { TypedDocumentNode as DocumentNode } from "@graphql-typed-document-node/core";
+import type { TypedDocumentString } from "../../document.js";
 export type V1IndexerStatusQueryVariables = Exact<{ [key: string]: never }>;
 
 export type V1IndexerStatusQuery = {
@@ -19,41 +19,8 @@ export type V1IndexerStatusQuery = {
   } | null;
 };
 
-export const V1IndexerStatusDocument = {
-  kind: "Document",
-  definitions: [
-    {
-      kind: "OperationDefinition",
-      operation: "query",
-      name: { kind: "Name", value: "V1IndexerStatus" },
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "_meta" },
-            selectionSet: {
-              kind: "SelectionSet",
-              selections: [
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "block" },
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      { kind: "Field", name: { kind: "Name", value: "number" } },
-                      { kind: "Field", name: { kind: "Name", value: "hash" } },
-                      { kind: "Field", name: { kind: "Name", value: "timestamp" } },
-                    ],
-                  },
-                },
-                { kind: "Field", name: { kind: "Name", value: "deployment" } },
-                { kind: "Field", name: { kind: "Name", value: "hasIndexingErrors" } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<V1IndexerStatusQuery, V1IndexerStatusQueryVariables>;
+export const V1IndexerStatusDocument =
+  "query V1IndexerStatus {\n  _meta {\n    block {\n      number\n      hash\n      timestamp\n    }\n    deployment\n    hasIndexingErrors\n  }\n}" as TypedDocumentString<
+    V1IndexerStatusQuery,
+    V1IndexerStatusQueryVariables
+  >;

@@ -1,5 +1,6 @@
 import { assert, describe, it } from "@effect/vitest";
 import { Effect, Fiber } from "effect";
+import { TestClock } from "effect/testing";
 
 import {
   IndexerDecodeError,
@@ -46,6 +47,7 @@ describe("indexer client", () => {
     Effect.gen(function* () {
       const fetch: typeof globalThis.fetch = (_input, init) => {
         assert.instanceOf(init?.signal, AbortSignal);
+        assert.deepStrictEqual(JSON.parse(String(init?.body)), { query });
         return Promise.resolve(response({ data: { _meta: { block: { number: 42 } } } }));
       };
       const result = yield* request(makeConfig(fetch));
@@ -174,21 +176,29 @@ describe("indexer client", () => {
 
   it.effect("times out requests and aborts the active fetch", () =>
     Effect.gen(function* () {
-      let signal: AbortSignal | undefined;
+      let resolveSignal: (signal: AbortSignal) => void;
+      const signalReady = new Promise<AbortSignal>((resolve) => {
+        resolveSignal = resolve;
+      });
       const fetch: typeof globalThis.fetch = (_input, init) => {
-        signal = init?.signal as AbortSignal;
+        const signal = init?.signal as AbortSignal;
+        resolveSignal(signal);
         return new Promise((_resolve, reject) =>
-          signal?.addEventListener("abort", () =>
-            reject(new DOMException("aborted", "AbortError")),
-          ),
+          signal.addEventListener("abort", () => reject(new DOMException("aborted", "AbortError"))),
         );
       };
-      const error = yield* request(makeConfig(fetch, { timeout: 10 })).pipe(Effect.flip);
+      const fiber = yield* Effect.forkChild(
+        request(makeConfig(fetch, { timeout: 10 })).pipe(Effect.flip),
+      );
+      const signal = yield* Effect.promise(() => signalReady);
+
+      yield* TestClock.adjust(10);
+      const error = yield* Fiber.join(fiber);
 
       assert.instanceOf(error, IndexerRequestError);
       if (!(error instanceof IndexerRequestError)) return;
       assert.strictEqual(error.code, "REQUEST_TIMEOUT");
-      assert.isTrue(signal?.aborted);
+      assert.isTrue(signal.aborted);
     }),
   );
 

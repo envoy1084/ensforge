@@ -5,3 +5,5 @@
 Add the ENS indexer configuration and GraphQL transport foundation, including network-aware source
 defaults, lazy authentication headers, request cancellation, timeouts, transient retries, and typed
 indexer errors through the isolated `@ensforge/core/indexer` entrypoint.
+Use Effect's fetch HTTP client for indexer requests and emit generated operations as typed query
+strings so consumers do not install GraphQL transport or runtime packages.

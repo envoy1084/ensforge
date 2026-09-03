@@ -183,16 +183,13 @@
     "@ensdomains/content-hash": "catalog:",
     "@ensforge/contracts": "workspace:*",
     "cborg": "catalog:",
-    "fflate": "catalog:",
-    "graphql": "catalog:",
-    "graphql-request": "catalog:"
+    "fflate": "catalog:"
   },
   "devDependencies": {
     "@effect/platform-node": "catalog:",
     "@graphql-codegen/cli": "catalog:",
-    "@graphql-codegen/typed-document-node": "catalog:",
     "@graphql-codegen/typescript-operations": "catalog:",
-    "@graphql-typed-document-node/core": "catalog:"
+    "graphql": "catalog:"
   },
   "peerDependencies": {
     "effect": "^4.0.0-rc.112",
