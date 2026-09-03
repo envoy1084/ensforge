@@ -132,6 +132,9 @@ importers:
       tsdown:
         specifier: 0.22.14
         version: 0.22.14(@arethetypeswrong/core@0.18.5)(@volar/typescript@2.4.28)(publint@0.3.24)(tsx@4.22.4)(typescript@6.0.3)(vue-tsc@3.3.11(typescript@6.0.3))
+      tslib:
+        specifier: 2.8.1
+        version: 2.8.1
       turbo:
         specifier: 2.10.12
         version: 2.10.12
