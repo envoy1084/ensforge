@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "vitepress build",
+    "build": "pnpm --filter @ensforge/sdk... build && vitepress build",
     "dev": "vitepress dev --port 3000",
     "lint": "oxlint --deny-warnings .vitepress",
     "preview": "vitepress preview --port 3000"
