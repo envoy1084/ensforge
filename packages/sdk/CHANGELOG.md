@@ -1,5 +1,24 @@
 # @ensforge/sdk
 
+## 0.3.0
+
+### Minor Changes
+
+- 2f7b053: Expose all indexer actions through the grouped SDK and add Effect Atom query and Suspense hooks for
+  the complete indexer surface.
+
+### Patch Changes
+
+- 1f829bd: Support Wagmi 2.19 and 3.x, including RainbowKit applications, and point package homepages to
+  ensforge.com.
+- Updated dependencies [ab3b407]
+- Updated dependencies [67227c2]
+- Updated dependencies [2448cb6]
+- Updated dependencies [722707f]
+- Updated dependencies [7f43949]
+- Updated dependencies [1f829bd]
+  - @ensforge/core@0.3.0
+
 ## 0.2.0
 
 ### Minor Changes

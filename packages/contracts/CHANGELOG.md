@@ -1,5 +1,12 @@
 # @ensforge/contracts
 
+## 0.3.0
+
+### Patch Changes
+
+- 1f829bd: Support Wagmi 2.19 and 3.x, including RainbowKit applications, and point package homepages to
+  ensforge.com.
+
 ## 0.2.0
 
 ### Minor Changes
