@@ -27,6 +27,8 @@ const result = await sdk.indexer.getIndexedRecords({ name: "example.eth" });
 
 :::
 
+<ReadActionDemo action="indexer.getIndexedRecords" />
+
 ## Parameters
 
 ```ts

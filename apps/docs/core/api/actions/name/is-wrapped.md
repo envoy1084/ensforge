@@ -28,6 +28,8 @@ const wrapped = await isWrapped(config, { name: "example.eth" });
 
 :::
 
+<ReadActionDemo action="name.isWrapped" />
+
 ## Parameters
 
 ```ts

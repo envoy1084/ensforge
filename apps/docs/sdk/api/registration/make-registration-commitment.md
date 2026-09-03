@@ -32,6 +32,8 @@ const result = await sdk.registration.makeRegistrationCommitment({
 
 :::
 
+<ReadActionDemo action="registration.makeRegistrationCommitment" />
+
 ## Parameters
 
 ```ts

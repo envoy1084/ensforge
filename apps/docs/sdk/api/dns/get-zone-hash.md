@@ -29,6 +29,8 @@ const result = await sdk.dns.getZoneHash({
 
 :::
 
+<ReadActionDemo action="dns.getZoneHash" />
+
 ## Parameters
 
 ```ts

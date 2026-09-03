@@ -32,6 +32,8 @@ const result = await getResolverDelegateApproval(config, {
 
 :::
 
+<ReadActionDemo action="capabilities.getResolverDelegateApproval" />
+
 ## Parameters
 
 ```ts

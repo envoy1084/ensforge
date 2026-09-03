@@ -30,6 +30,8 @@ const result = await isPaymentTokenSupported(config, {
 
 :::
 
+<ReadActionDemo action="registration.isPaymentTokenSupported" />
+
 ## Parameters
 
 ```ts

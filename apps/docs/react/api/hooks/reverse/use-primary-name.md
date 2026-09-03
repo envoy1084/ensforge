@@ -33,6 +33,8 @@ function Component() {
 
 :::
 
+<ReadActionDemo action="reverse.getPrimaryName" />
+
 ## Parameters
 
 ```ts

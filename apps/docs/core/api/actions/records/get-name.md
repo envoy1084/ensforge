@@ -30,6 +30,8 @@ const result = await getName(config, {
 
 :::
 
+<ReadActionDemo action="records.getName" />
+
 ## Parameters
 
 ```ts

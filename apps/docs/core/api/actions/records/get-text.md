@@ -31,6 +31,8 @@ const result = await getText(config, {
 
 :::
 
+<ReadActionDemo action="records.getText" />
+
 ## Parameters
 
 ```ts

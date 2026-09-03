@@ -29,6 +29,8 @@ const result = await sdk.wrapping.getWrapperExpiry({
 
 :::
 
+<ReadActionDemo action="wrapping.getWrapperExpiry" />
+
 ## Parameters
 
 ```ts

@@ -31,6 +31,8 @@ const result = await getResolversForAddress(config, {
 
 :::
 
+<ReadActionDemo action="indexer.getResolversForAddress" />
+
 ## Parameters
 
 ```ts

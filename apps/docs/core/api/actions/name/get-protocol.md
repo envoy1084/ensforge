@@ -28,6 +28,8 @@ const protocol = await getProtocol(config, { name: "example.eth" });
 
 :::
 
+<ReadActionDemo action="name.getProtocol" />
+
 ## Parameters
 
 ```ts

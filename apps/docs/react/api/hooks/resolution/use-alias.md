@@ -33,6 +33,8 @@ function Component() {
 
 :::
 
+<ReadActionDemo action="resolution.getAlias" />
+
 ## Parameters
 
 ```ts

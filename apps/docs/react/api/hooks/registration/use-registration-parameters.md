@@ -31,6 +31,8 @@ function Component() {
 
 :::
 
+<ReadActionDemo action="registration.getRegistrationParameters" />
+
 ## Parameters
 
 ```ts

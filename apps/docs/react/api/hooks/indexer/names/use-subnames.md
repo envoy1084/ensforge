@@ -34,6 +34,8 @@ function Component() {
 
 :::
 
+<ReadActionDemo action="indexer.getSubnames" />
+
 ## Parameters
 
 ```ts

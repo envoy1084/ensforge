@@ -29,6 +29,8 @@ const result = await sdk.name.isAvailable({
 
 :::
 
+<ReadActionDemo action="name.isAvailable" />
+
 ## Parameters
 
 ```ts

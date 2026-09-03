@@ -31,6 +31,8 @@ const result = await getInterface(config, {
 
 :::
 
+<ReadActionDemo action="records.getInterface" />
+
 ## Parameters
 
 ```ts

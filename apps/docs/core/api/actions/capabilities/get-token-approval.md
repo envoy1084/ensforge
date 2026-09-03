@@ -30,6 +30,8 @@ const result = await getTokenApproval(config, {
 
 :::
 
+<ReadActionDemo action="capabilities.getTokenApproval" />
+
 ## Parameters
 
 ```ts

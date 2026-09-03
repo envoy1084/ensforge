@@ -29,6 +29,8 @@ const result = await sdk.records.getName({
 
 :::
 
+<ReadActionDemo action="records.getName" />
+
 ## Parameters
 
 ```ts

@@ -33,6 +33,8 @@ function Component() {
 
 :::
 
+<ReadActionDemo action="registration.isPaymentTokenSupported" />
+
 ## Parameters
 
 ```ts

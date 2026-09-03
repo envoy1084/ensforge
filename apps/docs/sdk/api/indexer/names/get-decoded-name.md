@@ -30,6 +30,8 @@ const result = await sdk.indexer.getDecodedName({
 
 :::
 
+<ReadActionDemo action="indexer.getDecodedName" />
+
 ## Parameters
 
 ```ts

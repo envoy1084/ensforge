@@ -31,6 +31,8 @@ const result = await getWrapperPermissions(config, {
 
 :::
 
+<ReadActionDemo action="capabilities.getWrapperPermissions" />
+
 ## Parameters
 
 ```ts

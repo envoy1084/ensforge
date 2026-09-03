@@ -30,6 +30,8 @@ const result = await sdk.indexer.getResolversForAddress({
 
 :::
 
+<ReadActionDemo action="indexer.getResolversForAddress" />
+
 ## Parameters
 
 ```ts

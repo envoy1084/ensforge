@@ -28,6 +28,8 @@ const result = await getIndexedRecords(config, { name: "example.eth" });
 
 :::
 
+<ReadActionDemo action="indexer.getIndexedRecords" />
+
 ## Parameters
 
 ```ts

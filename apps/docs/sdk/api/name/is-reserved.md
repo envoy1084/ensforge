@@ -29,6 +29,8 @@ const result = await sdk.name.isReserved({
 
 :::
 
+<ReadActionDemo action="name.isReserved" />
+
 ## Parameters
 
 ```ts

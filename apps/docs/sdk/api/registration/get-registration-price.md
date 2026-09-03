@@ -30,6 +30,8 @@ const result = await sdk.registration.getRegistrationPrice({
 
 :::
 
+<ReadActionDemo action="registration.getRegistrationPrice" />
+
 ## Parameters
 
 ```ts

@@ -30,6 +30,8 @@ const result = await getPubkey(config, {
 
 :::
 
+<ReadActionDemo action="records.getPubkey" />
+
 ## Parameters
 
 ```ts

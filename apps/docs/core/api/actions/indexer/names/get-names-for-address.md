@@ -32,6 +32,8 @@ const result = await getNamesForAddress(config, {
 
 :::
 
+<ReadActionDemo action="indexer.getNamesForAddress" />
+
 ## Parameters
 
 ```ts

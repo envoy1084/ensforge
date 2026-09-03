@@ -33,6 +33,8 @@ function Component() {
 
 :::
 
+<ReadActionDemo action="migration.getMigrationStatus" />
+
 ## Parameters
 
 ```ts

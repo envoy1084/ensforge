@@ -31,6 +31,8 @@ const result = await sdk.indexer.getRegistrations({
 
 :::
 
+<ReadActionDemo action="indexer.getRegistrations" />
+
 ## Parameters
 
 ```ts

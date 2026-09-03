@@ -31,6 +31,8 @@ const result = await getDecodedName(config, {
 
 :::
 
+<ReadActionDemo action="indexer.getDecodedName" />
+
 ## Parameters
 
 ```ts

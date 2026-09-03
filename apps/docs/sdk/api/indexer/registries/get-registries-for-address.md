@@ -30,6 +30,8 @@ const result = await sdk.indexer.getRegistriesForAddress({
 
 :::
 
+<ReadActionDemo action="indexer.getRegistriesForAddress" />
+
 ## Parameters
 
 ```ts

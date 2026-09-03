@@ -30,6 +30,8 @@ const result = await sdk.records.getData({
 
 :::
 
+<ReadActionDemo action="records.getData" />
+
 ## Parameters
 
 ```ts

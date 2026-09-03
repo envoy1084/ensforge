@@ -30,6 +30,8 @@ const result = await sdk.indexer.getIndexedResolver({
 
 :::
 
+<ReadActionDemo action="indexer.getIndexedResolver" />
+
 ## Parameters
 
 ```ts

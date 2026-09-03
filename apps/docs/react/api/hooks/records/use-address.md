@@ -33,6 +33,8 @@ function Component() {
 
 :::
 
+<ReadActionDemo action="records.getAddress" />
+
 ## Parameters
 
 ```ts

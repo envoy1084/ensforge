@@ -28,6 +28,8 @@ const renewable = await isRenewable(config, { name: "example.eth" });
 
 :::
 
+<ReadActionDemo action="name.isRenewable" />
+
 ## Parameters
 
 ```ts

@@ -30,6 +30,8 @@ const result = await getDnsImportPlan(config, {
 
 :::
 
+<ReadActionDemo action="dns.getDnsImportPlan" />
+
 ## Parameters
 
 ```ts

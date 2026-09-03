@@ -31,6 +31,8 @@ const result = await sdk.capabilities.getResolverDelegateApproval({
 
 :::
 
+<ReadActionDemo action="capabilities.getResolverDelegateApproval" />
+
 ## Parameters
 
 ```ts

@@ -32,6 +32,8 @@ const result = await hasResolverRoles(config, {
 
 :::
 
+<ReadActionDemo action="capabilities.hasResolverRoles" />
+
 ## Parameters
 
 ```ts

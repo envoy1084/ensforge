@@ -30,6 +30,8 @@ const result = await sdk.capabilities.getRegistryRoles({
 
 :::
 
+<ReadActionDemo action="capabilities.getRegistryRoles" />
+
 ## Parameters
 
 ```ts

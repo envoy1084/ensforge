@@ -29,6 +29,8 @@ const result = await sdk.records.getAddress({
 
 :::
 
+<ReadActionDemo action="records.getAddress" />
+
 ## Parameters
 
 ```ts

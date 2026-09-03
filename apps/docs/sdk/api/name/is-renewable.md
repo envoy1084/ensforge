@@ -29,6 +29,8 @@ const result = await sdk.name.isRenewable({
 
 :::
 
+<ReadActionDemo action="name.isRenewable" />
+
 ## Parameters
 
 ```ts

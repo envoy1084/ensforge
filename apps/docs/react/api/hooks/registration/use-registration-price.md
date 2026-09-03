@@ -34,6 +34,8 @@ function Component() {
 
 :::
 
+<ReadActionDemo action="registration.getRegistrationPrice" />
+
 ## Parameters
 
 ```ts

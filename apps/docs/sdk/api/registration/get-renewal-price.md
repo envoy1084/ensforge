@@ -30,6 +30,8 @@ const result = await sdk.registration.getRenewalPrice({
 
 :::
 
+<ReadActionDemo action="registration.getRenewalPrice" />
+
 ## Parameters
 
 ```ts

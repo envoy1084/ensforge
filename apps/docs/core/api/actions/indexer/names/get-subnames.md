@@ -31,6 +31,8 @@ const result = await getSubnames(config, {
 
 :::
 
+<ReadActionDemo action="indexer.getSubnames" />
+
 ## Parameters
 
 ```ts

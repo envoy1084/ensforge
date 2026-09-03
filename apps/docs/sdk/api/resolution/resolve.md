@@ -30,6 +30,8 @@ const result = await sdk.resolution.resolve({
 
 :::
 
+<ReadActionDemo action="resolution.resolve" />
+
 ## Parameters
 
 ```ts

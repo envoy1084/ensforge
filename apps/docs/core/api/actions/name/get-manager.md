@@ -28,6 +28,8 @@ const manager = await getManager(config, { name: "ens.eth" });
 
 :::
 
+<ReadActionDemo action="name.getManager" />
+
 ## Parameters
 
 ```ts

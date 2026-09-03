@@ -3,9 +3,7 @@ import type { Root } from "react-dom/client";
 
 import { onBeforeUnmount, onMounted, ref } from "vue";
 
-import type { ReadActionId } from "./definitions";
-
-const props = defineProps<{ action: ReadActionId }>();
+const props = defineProps<{ action: string }>();
 const container = ref<HTMLElement>();
 let root: Root | undefined;
 

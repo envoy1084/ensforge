@@ -30,6 +30,8 @@ const result = await sdk.capabilities.getResolverRoles({
 
 :::
 
+<ReadActionDemo action="capabilities.getResolverRoles" />
+
 ## Parameters
 
 ```ts

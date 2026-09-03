@@ -29,6 +29,8 @@ const result = await sdk.indexer.getResolverMetadata({
 
 :::
 
+<ReadActionDemo action="indexer.getResolverMetadata" />
+
 ## Parameters
 
 ```ts

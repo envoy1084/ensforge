@@ -30,6 +30,8 @@ const result = await getDnsClaimStatus(config, {
 
 :::
 
+<ReadActionDemo action="dns.getDnsClaimStatus" />
+
 ## Parameters
 
 ```ts

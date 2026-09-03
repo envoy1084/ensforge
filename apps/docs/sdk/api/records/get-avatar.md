@@ -29,6 +29,8 @@ const result = await sdk.records.getAvatar({
 
 :::
 
+<ReadActionDemo action="records.getAvatar" />
+
 ## Parameters
 
 ```ts

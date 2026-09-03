@@ -36,6 +36,8 @@ function Component() {
 
 :::
 
+<ReadActionDemo action="registration.makeRegistrationCommitment" />
+
 ## Parameters
 
 ```ts

@@ -31,6 +31,8 @@ const result = await getRenewalPrice(config, {
 
 :::
 
+<ReadActionDemo action="registration.getRenewalPrice" />
+
 ## Parameters
 
 ```ts

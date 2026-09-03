@@ -28,6 +28,8 @@ const registry = await getRegistry(config, { name: "example.eth" });
 
 :::
 
+<ReadActionDemo action="name.getRegistry" />
+
 ## Parameters
 
 ```ts

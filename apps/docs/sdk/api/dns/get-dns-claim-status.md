@@ -29,6 +29,8 @@ const result = await sdk.dns.getDnsClaimStatus({
 
 :::
 
+<ReadActionDemo action="dns.getDnsClaimStatus" />
+
 ## Parameters
 
 ```ts

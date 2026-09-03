@@ -22,8 +22,8 @@ export const wagmiConfig = getDefaultConfig({
   projectId: walletConnectProjectId ?? "",
   ssr: true,
   transports: {
-    [mainnet.id]: http(import.meta.env.VITE_ENSFORGE_MAINNET_RPC_URL || undefined),
-    [sepolia.id]: http(import.meta.env.VITE_ENSFORGE_SEPOLIA_RPC_URL || undefined),
+    [mainnet.id]: http(import.meta.env.VITE_ENSFORGE_MAINNET_RPC_URL?.trim() || undefined),
+    [sepolia.id]: http(import.meta.env.VITE_ENSFORGE_SEPOLIA_RPC_URL?.trim() || undefined),
   },
   ...(wallets ? { wallets } : {}),
 });

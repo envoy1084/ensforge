@@ -30,6 +30,8 @@ const result = await getAvatar(config, {
 
 :::
 
+<ReadActionDemo action="records.getAvatar" />
+
 ## Parameters
 
 ```ts

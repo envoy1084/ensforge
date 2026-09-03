@@ -30,6 +30,8 @@ const result = await getResolverVersion(config, {
 
 :::
 
+<ReadActionDemo action="resolution.getResolverVersion" />
+
 ## Parameters
 
 ```ts

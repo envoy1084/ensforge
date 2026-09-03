@@ -30,6 +30,8 @@ const resource = await getCanonicalResource(config, {
 
 :::
 
+<ReadActionDemo action="name.getCanonicalResource" />
+
 ## Parameters
 
 ```ts

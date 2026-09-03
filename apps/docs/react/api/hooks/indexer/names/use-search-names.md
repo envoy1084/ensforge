@@ -36,6 +36,8 @@ function Component() {
 
 :::
 
+<ReadActionDemo action="indexer.searchNames" />
+
 ## Parameters
 
 ```ts

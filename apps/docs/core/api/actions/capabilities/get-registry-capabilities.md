@@ -30,6 +30,8 @@ const result = await getRegistryCapabilities(config, {
 
 :::
 
+<ReadActionDemo action="capabilities.getRegistryCapabilities" />
+
 ## Parameters
 
 ```ts

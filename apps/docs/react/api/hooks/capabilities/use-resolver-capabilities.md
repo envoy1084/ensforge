@@ -33,6 +33,8 @@ function Component() {
 
 :::
 
+<ReadActionDemo action="capabilities.getResolverCapabilities" />
+
 ## Parameters
 
 ```ts

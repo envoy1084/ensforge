@@ -6,7 +6,7 @@ import { darkTheme, lightTheme, RainbowKitProvider } from "@rainbow-me/rainbowki
 import { WagmiProvider } from "wagmi";
 import { mainnet } from "wagmi/chains";
 
-import { wagmiConfig } from "./config";
+import { wagmiConfig } from "../runtime/wagmi-config";
 
 const queryClient = new QueryClient();
 

@@ -30,6 +30,8 @@ const result = await getContentHash(config, {
 
 :::
 
+<ReadActionDemo action="records.getContentHash" />
+
 ## Parameters
 
 ```ts

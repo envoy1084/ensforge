@@ -30,6 +30,8 @@ const result = await getWrapperExpiry(config, {
 
 :::
 
+<ReadActionDemo action="wrapping.getWrapperExpiry" />
+
 ## Parameters
 
 ```ts

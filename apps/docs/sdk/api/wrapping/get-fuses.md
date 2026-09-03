@@ -29,6 +29,8 @@ const result = await sdk.wrapping.getFuses({
 
 :::
 
+<ReadActionDemo action="wrapping.getFuses" />
+
 ## Parameters
 
 ```ts

@@ -31,6 +31,8 @@ const result = await getNameCapabilities(config, {
 
 :::
 
+<ReadActionDemo action="capabilities.getNameCapabilities" />
+
 ## Parameters
 
 ```ts

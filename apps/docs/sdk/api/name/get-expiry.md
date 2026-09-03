@@ -29,6 +29,8 @@ const result = await sdk.name.getExpiry({
 
 :::
 
+<ReadActionDemo action="name.getExpiry" />
+
 ## Parameters
 
 ```ts

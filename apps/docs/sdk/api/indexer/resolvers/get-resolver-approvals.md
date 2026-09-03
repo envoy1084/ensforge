@@ -33,6 +33,8 @@ const result = await sdk.indexer.getResolverApprovals({
 
 :::
 
+<ReadActionDemo action="indexer.getResolverApprovals" />
+
 ## Parameters
 
 ```ts

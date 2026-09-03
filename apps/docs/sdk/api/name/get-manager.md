@@ -29,6 +29,8 @@ const result = await sdk.name.getManager({
 
 :::
 
+<ReadActionDemo action="name.getManager" />
+
 ## Parameters
 
 ```ts

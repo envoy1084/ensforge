@@ -29,6 +29,8 @@ const result = await sdk.registration.isPaymentTokenSupported({
 
 :::
 
+<ReadActionDemo action="registration.isPaymentTokenSupported" />
+
 ## Parameters
 
 ```ts

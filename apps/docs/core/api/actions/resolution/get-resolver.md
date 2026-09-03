@@ -30,6 +30,8 @@ const result = await getResolver(config, {
 
 :::
 
+<ReadActionDemo action="resolution.getResolver" />
+
 ## Parameters
 
 ```ts

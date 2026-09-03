@@ -33,6 +33,8 @@ const result = await makeRegistrationCommitment(config, {
 
 :::
 
+<ReadActionDemo action="registration.makeRegistrationCommitment" />
+
 ## Parameters
 
 ```ts

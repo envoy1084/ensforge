@@ -27,6 +27,8 @@ const result = await sdk.indexer.getIndexedName({ name: "example.eth" });
 
 :::
 
+<ReadActionDemo action="indexer.getIndexedName" />
+
 ## Parameters
 
 ```ts

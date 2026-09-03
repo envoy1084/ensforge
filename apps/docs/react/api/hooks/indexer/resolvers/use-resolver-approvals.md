@@ -37,6 +37,8 @@ function Component() {
 
 :::
 
+<ReadActionDemo action="indexer.getResolverApprovals" />
+
 ## Parameters
 
 ```ts

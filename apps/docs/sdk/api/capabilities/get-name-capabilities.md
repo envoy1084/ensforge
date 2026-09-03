@@ -30,6 +30,8 @@ const result = await sdk.capabilities.getNameCapabilities({
 
 :::
 
+<ReadActionDemo action="capabilities.getNameCapabilities" />
+
 ## Parameters
 
 ```ts

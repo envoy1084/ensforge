@@ -27,6 +27,8 @@ const result = await sdk.indexer.getRegistry({ name: "example.eth" });
 
 :::
 
+<ReadActionDemo action="indexer.getRegistry" />
+
 ## Parameters
 
 ```ts

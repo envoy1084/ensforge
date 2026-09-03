@@ -29,6 +29,8 @@ const result = await sdk.name.getNameState({
 
 :::
 
+<ReadActionDemo action="name.getNameState" />
+
 ## Parameters
 
 ```ts

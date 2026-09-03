@@ -28,6 +28,8 @@ const status = await getNameStatus(config, { name: "example.eth" });
 
 :::
 
+<ReadActionDemo action="name.getNameStatus" />
+
 ## Parameters
 
 ```ts

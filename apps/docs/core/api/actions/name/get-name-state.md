@@ -32,6 +32,8 @@ if (state.kind === "v2-reserved") {
 
 :::
 
+<ReadActionDemo action="name.getNameState" />
+
 ## Parameters
 
 ```ts

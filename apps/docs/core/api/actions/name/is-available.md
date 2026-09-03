@@ -28,6 +28,8 @@ const available = await isAvailable(config, { name: "example.eth" });
 
 :::
 
+<ReadActionDemo action="name.isAvailable" />
+
 ## Parameters
 
 ```ts

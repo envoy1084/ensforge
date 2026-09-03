@@ -30,6 +30,8 @@ const result = await sdk.records.getAddresses({
 
 :::
 
+<ReadActionDemo action="records.getAddresses" />
+
 ## Parameters
 
 ```ts

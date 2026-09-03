@@ -29,6 +29,8 @@ const result = await sdk.capabilities.getResolverCapabilities({
 
 :::
 
+<ReadActionDemo action="capabilities.getResolverCapabilities" />
+
 ## Parameters
 
 ```ts

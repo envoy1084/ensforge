@@ -29,6 +29,8 @@ const result = await sdk.records.getPubkey({
 
 :::
 
+<ReadActionDemo action="records.getPubkey" />
+
 ## Parameters
 
 ```ts

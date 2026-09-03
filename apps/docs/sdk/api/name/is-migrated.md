@@ -29,6 +29,8 @@ const result = await sdk.name.isMigrated({
 
 :::
 
+<ReadActionDemo action="name.isMigrated" />
+
 ## Parameters
 
 ```ts

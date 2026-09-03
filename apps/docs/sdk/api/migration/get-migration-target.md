@@ -29,6 +29,8 @@ const result = await sdk.migration.getMigrationTarget({
 
 :::
 
+<ReadActionDemo action="migration.getMigrationTarget" />
+
 ## Parameters
 
 ```ts

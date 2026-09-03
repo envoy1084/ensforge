@@ -31,6 +31,8 @@ const result = await sdk.indexer.getEvents({
 
 :::
 
+<ReadActionDemo action="indexer.getEvents" />
+
 ## Parameters
 
 ```ts

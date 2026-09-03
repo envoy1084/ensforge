@@ -31,6 +31,8 @@ const result = await getRegistrationPrice(config, {
 
 :::
 
+<ReadActionDemo action="registration.getRegistrationPrice" />
+
 ## Parameters
 
 ```ts

@@ -27,6 +27,8 @@ const result = await sdk.registration.getRegistrationParameters({});
 
 :::
 
+<ReadActionDemo action="registration.getRegistrationParameters" />
+
 ## Parameters
 
 ```ts

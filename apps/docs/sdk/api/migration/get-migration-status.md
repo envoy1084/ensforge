@@ -29,6 +29,8 @@ const result = await sdk.migration.getMigrationStatus({
 
 :::
 
+<ReadActionDemo action="migration.getMigrationStatus" />
+
 ## Parameters
 
 ```ts

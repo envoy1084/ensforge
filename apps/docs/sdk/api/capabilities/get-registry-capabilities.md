@@ -29,6 +29,8 @@ const result = await sdk.capabilities.getRegistryCapabilities({
 
 :::
 
+<ReadActionDemo action="capabilities.getRegistryCapabilities" />
+
 ## Parameters
 
 ```ts

@@ -32,6 +32,8 @@ const result = await getRegistryLabels(config, {
 
 :::
 
+<ReadActionDemo action="indexer.getRegistryLabels" />
+
 ## Parameters
 
 ```ts

@@ -33,6 +33,8 @@ function Component() {
 
 :::
 
+<ReadActionDemo action="name.getManager" />
+
 ## Parameters
 
 ```ts

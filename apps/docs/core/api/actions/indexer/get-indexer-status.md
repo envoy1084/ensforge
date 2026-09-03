@@ -28,6 +28,8 @@ const result = await getIndexerStatus(config);
 
 :::
 
+<ReadActionDemo action="indexer.getIndexerStatus" />
+
 ## Parameters
 
 This operation does not accept parameters.

@@ -29,6 +29,8 @@ const result = await sdk.name.getTokenId({
 
 :::
 
+<ReadActionDemo action="name.getTokenId" />
+
 ## Parameters
 
 ```ts

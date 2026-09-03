@@ -29,6 +29,8 @@ const result = await sdk.records.getAbi({
 
 :::
 
+<ReadActionDemo action="records.getAbi" />
+
 ## Parameters
 
 ```ts

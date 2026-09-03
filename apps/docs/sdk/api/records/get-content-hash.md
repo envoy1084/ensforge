@@ -29,6 +29,8 @@ const result = await sdk.records.getContentHash({
 
 :::
 
+<ReadActionDemo action="records.getContentHash" />
+
 ## Parameters
 
 ```ts

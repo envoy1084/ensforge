@@ -32,6 +32,8 @@ const result = await getOperatorApproval(config, {
 
 :::
 
+<ReadActionDemo action="capabilities.getOperatorApproval" />
+
 ## Parameters
 
 ```ts

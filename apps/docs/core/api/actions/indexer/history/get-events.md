@@ -32,6 +32,8 @@ const result = await getEvents(config, {
 
 :::
 
+<ReadActionDemo action="indexer.getEvents" />
+
 ## Parameters
 
 ```ts

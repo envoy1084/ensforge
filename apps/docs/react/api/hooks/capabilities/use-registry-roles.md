@@ -34,6 +34,8 @@ function Component() {
 
 :::
 
+<ReadActionDemo action="capabilities.getRegistryRoles" />
+
 ## Parameters
 
 ```ts

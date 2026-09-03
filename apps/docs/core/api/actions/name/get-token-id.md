@@ -28,6 +28,8 @@ const tokenId = await getTokenId(config, { name: "ens.eth" });
 
 :::
 
+<ReadActionDemo action="name.getTokenId" />
+
 ## Parameters
 
 ```ts

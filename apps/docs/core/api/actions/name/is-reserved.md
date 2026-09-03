@@ -28,6 +28,8 @@ const reserved = await isReserved(config, { name: "example.eth" });
 
 :::
 
+<ReadActionDemo action="name.isReserved" />
+
 ## Parameters
 
 ```ts

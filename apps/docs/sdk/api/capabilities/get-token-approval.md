@@ -29,6 +29,8 @@ const result = await sdk.capabilities.getTokenApproval({
 
 :::
 
+<ReadActionDemo action="capabilities.getTokenApproval" />
+
 ## Parameters
 
 ```ts

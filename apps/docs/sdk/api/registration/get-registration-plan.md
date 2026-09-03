@@ -32,6 +32,8 @@ const result = await sdk.registration.getRegistrationPlan({
 
 :::
 
+<ReadActionDemo action="registration.getRegistrationPlan" />
+
 ## Parameters
 
 ```ts

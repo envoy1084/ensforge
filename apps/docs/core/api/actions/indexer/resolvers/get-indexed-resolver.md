@@ -31,6 +31,8 @@ const result = await getIndexedResolver(config, {
 
 :::
 
+<ReadActionDemo action="indexer.getIndexedResolver" />
+
 ## Parameters
 
 ```ts

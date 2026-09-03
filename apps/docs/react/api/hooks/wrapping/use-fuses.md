@@ -33,6 +33,8 @@ function Component() {
 
 :::
 
+<ReadActionDemo action="wrapping.getFuses" />
+
 ## Parameters
 
 ```ts

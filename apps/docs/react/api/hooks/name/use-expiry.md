@@ -33,6 +33,8 @@ function Component() {
 
 :::
 
+<ReadActionDemo action="name.getExpiry" />
+
 ## Parameters
 
 ```ts

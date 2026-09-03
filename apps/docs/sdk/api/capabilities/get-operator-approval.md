@@ -31,6 +31,8 @@ const result = await sdk.capabilities.getOperatorApproval({
 
 :::
 
+<ReadActionDemo action="capabilities.getOperatorApproval" />
+
 ## Parameters
 
 ```ts

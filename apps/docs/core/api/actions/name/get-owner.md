@@ -28,7 +28,7 @@ const result = await getOwner(config, { name: "ens.eth" });
 
 :::
 
-<ReadActionDemo action="getOwner" />
+<ReadActionDemo action="name.getOwner" />
 
 ## Parameters
 

@@ -30,6 +30,8 @@ const result = await getPrimaryName(config, {
 
 :::
 
+<ReadActionDemo action="reverse.getPrimaryName" />
+
 ## Parameters
 
 ```ts

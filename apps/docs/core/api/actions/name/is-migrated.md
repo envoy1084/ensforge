@@ -28,6 +28,8 @@ const migrated = await isMigrated(config, { name: "example.eth" });
 
 :::
 
+<ReadActionDemo action="name.isMigrated" />
+
 ## Parameters
 
 ```ts

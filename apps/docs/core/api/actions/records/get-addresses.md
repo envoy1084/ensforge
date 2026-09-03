@@ -31,6 +31,8 @@ const result = await getAddresses(config, {
 
 :::
 
+<ReadActionDemo action="records.getAddresses" />
+
 ## Parameters
 
 ```ts

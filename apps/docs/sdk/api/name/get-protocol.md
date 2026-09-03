@@ -29,6 +29,8 @@ const result = await sdk.name.getProtocol({
 
 :::
 
+<ReadActionDemo action="name.getProtocol" />
+
 ## Parameters
 
 ```ts

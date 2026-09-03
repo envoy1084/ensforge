@@ -30,6 +30,8 @@ const result = await getAlias(config, {
 
 :::
 
+<ReadActionDemo action="resolution.getAlias" />
+
 ## Parameters
 
 ```ts

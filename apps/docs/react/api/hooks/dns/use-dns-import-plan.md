@@ -33,6 +33,8 @@ function Component() {
 
 :::
 
+<ReadActionDemo action="dns.getDnsImportPlan" />
+
 ## Parameters
 
 ```ts

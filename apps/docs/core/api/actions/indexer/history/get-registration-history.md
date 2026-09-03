@@ -31,6 +31,8 @@ const result = await getRegistrationHistory(config, {
 
 :::
 
+<ReadActionDemo action="indexer.getRegistrationHistory" />
+
 ## Parameters
 
 ```ts

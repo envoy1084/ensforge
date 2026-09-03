@@ -29,6 +29,8 @@ const result = await sdk.registration.getCommitmentStatus({
 
 :::
 
+<ReadActionDemo action="registration.getCommitmentStatus" />
+
 ## Parameters
 
 ```ts

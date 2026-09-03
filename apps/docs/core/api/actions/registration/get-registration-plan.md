@@ -33,6 +33,8 @@ const result = await getRegistrationPlan(config, {
 
 :::
 
+<ReadActionDemo action="registration.getRegistrationPlan" />
+
 ## Parameters
 
 ```ts

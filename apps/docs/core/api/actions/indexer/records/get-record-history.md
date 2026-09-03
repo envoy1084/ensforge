@@ -32,6 +32,8 @@ const result = await getRecordHistory(config, {
 
 :::
 
+<ReadActionDemo action="indexer.getRecordHistory" />
+
 ## Parameters
 
 ```ts

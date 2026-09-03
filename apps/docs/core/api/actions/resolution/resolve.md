@@ -31,6 +31,8 @@ const result = await resolve(config, {
 
 :::
 
+<ReadActionDemo action="resolution.resolve" />
+
 ## Parameters
 
 ```ts

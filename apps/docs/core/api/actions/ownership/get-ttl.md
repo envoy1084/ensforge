@@ -30,6 +30,8 @@ const result = await getTtl(config, {
 
 :::
 
+<ReadActionDemo action="ownership.getTtl" />
+
 ## Parameters
 
 ```ts

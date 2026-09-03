@@ -29,6 +29,8 @@ const result = await sdk.resolution.getAlias({
 
 :::
 
+<ReadActionDemo action="resolution.getAlias" />
+
 ## Parameters
 
 ```ts

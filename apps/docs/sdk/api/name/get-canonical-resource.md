@@ -29,6 +29,8 @@ const result = await sdk.name.getCanonicalResource({
 
 :::
 
+<ReadActionDemo action="name.getCanonicalResource" />
+
 ## Parameters
 
 ```ts

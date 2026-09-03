@@ -30,6 +30,8 @@ const result = await sdk.indexer.getRegistrationHistory({
 
 :::
 
+<ReadActionDemo action="indexer.getRegistrationHistory" />
+
 ## Parameters
 
 ```ts

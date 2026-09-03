@@ -29,6 +29,8 @@ const result = await sdk.name.getOwner({
 
 :::
 
+<ReadActionDemo action="name.getOwner" />
+
 ## Parameters
 
 ```ts

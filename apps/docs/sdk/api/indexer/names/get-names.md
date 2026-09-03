@@ -31,6 +31,8 @@ const result = await sdk.indexer.getNames({
 
 :::
 
+<ReadActionDemo action="indexer.getNames" />
+
 ## Parameters
 
 ```ts

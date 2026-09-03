@@ -34,6 +34,8 @@ const result = await getResolverApprovals(config, {
 
 :::
 
+<ReadActionDemo action="indexer.getResolverApprovals" />
+
 ## Parameters
 
 ```ts

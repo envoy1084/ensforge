@@ -32,6 +32,8 @@ const result = await getNames(config, {
 
 :::
 
+<ReadActionDemo action="indexer.getNames" />
+
 ## Parameters
 
 ```ts

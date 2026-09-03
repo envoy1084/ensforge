@@ -31,6 +31,8 @@ const result = await sdk.indexer.getRegistryLabels({
 
 :::
 
+<ReadActionDemo action="indexer.getRegistryLabels" />
+
 ## Parameters
 
 ```ts

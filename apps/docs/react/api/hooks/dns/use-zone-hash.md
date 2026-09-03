@@ -33,6 +33,8 @@ function Component() {
 
 :::
 
+<ReadActionDemo action="dns.getZoneHash" />
+
 ## Parameters
 
 ```ts

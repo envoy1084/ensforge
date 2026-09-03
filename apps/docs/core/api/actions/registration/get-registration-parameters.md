@@ -28,6 +28,8 @@ const result = await getRegistrationParameters(config, {});
 
 :::
 
+<ReadActionDemo action="registration.getRegistrationParameters" />
+
 ## Parameters
 
 ```ts

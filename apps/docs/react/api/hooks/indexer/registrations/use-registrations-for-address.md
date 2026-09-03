@@ -35,6 +35,8 @@ function Component() {
 
 :::
 
+<ReadActionDemo action="indexer.getRegistrationsForAddress" />
+
 ## Parameters
 
 ```ts

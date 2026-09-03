@@ -30,6 +30,8 @@ const result = await sdk.dns.hasDnsRecords({
 
 :::
 
+<ReadActionDemo action="dns.hasDnsRecords" />
+
 ## Parameters
 
 ```ts

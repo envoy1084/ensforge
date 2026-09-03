@@ -31,6 +31,8 @@ const result = await getResolvedNamesForAddress(config, {
 
 :::
 
+<ReadActionDemo action="indexer.getResolvedNamesForAddress" />
+
 ## Parameters
 
 ```ts

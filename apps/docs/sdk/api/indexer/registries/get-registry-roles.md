@@ -31,6 +31,8 @@ const result = await sdk.indexer.getRegistryRoles({
 
 :::
 
+<ReadActionDemo action="indexer.getRegistryRoles" />
+
 ## Parameters
 
 ```ts

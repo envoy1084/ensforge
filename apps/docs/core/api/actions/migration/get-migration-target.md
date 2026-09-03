@@ -30,6 +30,8 @@ const result = await getMigrationTarget(config, {
 
 :::
 
+<ReadActionDemo action="migration.getMigrationTarget" />
+
 ## Parameters
 
 ```ts

@@ -30,6 +30,8 @@ const result = await getCommitmentStatus(config, {
 
 :::
 
+<ReadActionDemo action="registration.getCommitmentStatus" />
+
 ## Parameters
 
 ```ts

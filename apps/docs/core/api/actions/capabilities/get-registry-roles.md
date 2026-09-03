@@ -31,6 +31,8 @@ const result = await getRegistryRoles(config, {
 
 :::
 
+<ReadActionDemo action="capabilities.getRegistryRoles" />
+
 ## Parameters
 
 ```ts

@@ -30,6 +30,8 @@ const result = await getZoneHash(config, {
 
 :::
 
+<ReadActionDemo action="dns.getZoneHash" />
+
 ## Parameters
 
 ```ts

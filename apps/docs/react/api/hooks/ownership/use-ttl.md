@@ -33,6 +33,8 @@ function Component() {
 
 :::
 
+<ReadActionDemo action="ownership.getTtl" />
+
 ## Parameters
 
 ```ts

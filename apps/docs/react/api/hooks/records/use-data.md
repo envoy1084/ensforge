@@ -34,6 +34,8 @@ function Component() {
 
 :::
 
+<ReadActionDemo action="records.getData" />
+
 ## Parameters
 
 ```ts

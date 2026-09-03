@@ -11,10 +11,8 @@ const copyToClipboard = async (value: string): Promise<boolean> => {
     const textarea = document.createElement("textarea");
     textarea.value = value;
     textarea.setAttribute("readonly", "");
-    textarea.style.position = "fixed";
-    textarea.style.opacity = "0";
+    textarea.style.cssText = "position:fixed;opacity:0";
     document.body.append(textarea);
-    textarea.focus();
     textarea.select();
 
     try {
@@ -35,40 +33,33 @@ export function ResultCodeBlock({ code }: ResultCodeBlockProps) {
   const resetTimeout = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   useEffect(() => {
-    let isCurrent = true;
+    let current = true;
     setHighlighted(undefined);
 
-    const highlight = async () => {
-      try {
-        const html = await highlightCode(code, {
-          darkTheme: "vitesse-dark",
-          language: "json",
-          theme: "vitesse-light",
-        });
-        if (isCurrent) {
-          setHighlighted(html.replace('class="shiki ', 'class="shiki vp-code '));
-        }
-      } catch {
-        if (isCurrent) setHighlighted(undefined);
-      }
-    };
-    void highlight();
+    void highlightCode(code, {
+      darkTheme: "vitesse-dark",
+      language: "json",
+      theme: "vitesse-light",
+    }).then(
+      (html) => {
+        if (current) setHighlighted(html.replace('class="shiki ', 'class="shiki vp-code '));
+        return undefined;
+      },
+      () => {
+        if (current) setHighlighted(undefined);
+        return undefined;
+      },
+    );
 
     return () => {
-      isCurrent = false;
+      current = false;
     };
   }, [code]);
 
-  useEffect(
-    () => () => {
-      clearTimeout(resetTimeout.current);
-    },
-    [],
-  );
+  useEffect(() => () => clearTimeout(resetTimeout.current), []);
 
   const copy = async () => {
     if (!(await copyToClipboard(code))) return;
-
     setIsCopied(true);
     clearTimeout(resetTimeout.current);
     resetTimeout.current = setTimeout(() => setIsCopied(false), 2_000);

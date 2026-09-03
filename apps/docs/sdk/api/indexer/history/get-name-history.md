@@ -31,6 +31,8 @@ const result = await sdk.indexer.getNameHistory({
 
 :::
 
+<ReadActionDemo action="indexer.getNameHistory" />
+
 ## Parameters
 
 ```ts

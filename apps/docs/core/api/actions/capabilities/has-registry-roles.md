@@ -32,6 +32,8 @@ const result = await hasRegistryRoles(config, {
 
 :::
 
+<ReadActionDemo action="capabilities.hasRegistryRoles" />
+
 ## Parameters
 
 ```ts

@@ -29,6 +29,8 @@ const result = await sdk.dns.getDnsImportPlan({
 
 :::
 
+<ReadActionDemo action="dns.getDnsImportPlan" />
+
 ## Parameters
 
 ```ts

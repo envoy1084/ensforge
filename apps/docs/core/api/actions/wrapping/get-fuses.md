@@ -30,6 +30,8 @@ const result = await getFuses(config, {
 
 :::
 
+<ReadActionDemo action="wrapping.getFuses" />
+
 ## Parameters
 
 ```ts

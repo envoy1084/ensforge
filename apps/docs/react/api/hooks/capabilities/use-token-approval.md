@@ -33,6 +33,8 @@ function Component() {
 
 :::
 
+<ReadActionDemo action="capabilities.getTokenApproval" />
+
 ## Parameters
 
 ```ts

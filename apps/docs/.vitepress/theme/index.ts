@@ -5,12 +5,12 @@ import type { EnhanceAppContext, Theme } from "vitepress";
 import CopyOrDownloadAsMarkdownButtons from "vitepress-plugin-llms/vitepress-components/CopyOrDownloadAsMarkdownButtons.vue";
 import DefaultTheme from "vitepress/theme";
 
-import ReadActionDemo from "./read-action-demo/read-action-demo.vue";
+import ReadActionDemo from "./read-actions/read-action-demo.vue";
 import WalletConnectButton from "./wallet-connect/wallet-connect-button.vue";
 
 import "virtual:group-icons.css";
 import "@shikijs/vitepress-twoslash/style.css";
-import "./read-action-demo/tailwind.css";
+import "./styles/demo.css";
 import "virtual:uno.css";
 import "./style.css";
 

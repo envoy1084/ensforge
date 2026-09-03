@@ -35,6 +35,8 @@ function Component() {
 
 :::
 
+<ReadActionDemo action="dns.getDnsRecord" />
+
 ## Parameters
 
 ```ts

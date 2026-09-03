@@ -29,6 +29,8 @@ const result = await sdk.ownership.getTtl({
 
 :::
 
+<ReadActionDemo action="ownership.getTtl" />
+
 ## Parameters
 
 ```ts

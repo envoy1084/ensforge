@@ -27,6 +27,8 @@ const result = await sdk.indexer.getIndexerStatus();
 
 :::
 
+<ReadActionDemo action="indexer.getIndexerStatus" />
+
 ## Parameters
 
 This operation does not accept parameters.

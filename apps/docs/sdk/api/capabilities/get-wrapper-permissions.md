@@ -30,6 +30,8 @@ const result = await sdk.capabilities.getWrapperPermissions({
 
 :::
 
+<ReadActionDemo action="capabilities.getWrapperPermissions" />
+
 ## Parameters
 
 ```ts

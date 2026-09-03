@@ -33,6 +33,8 @@ const result = await searchNames(config, {
 
 :::
 
+<ReadActionDemo action="indexer.searchNames" />
+
 ## Parameters
 
 ```ts

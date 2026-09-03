@@ -29,6 +29,8 @@ const result = await sdk.name.isWrapped({
 
 :::
 
+<ReadActionDemo action="name.isWrapped" />
+
 ## Parameters
 
 ```ts

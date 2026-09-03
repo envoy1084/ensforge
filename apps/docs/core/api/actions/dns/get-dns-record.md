@@ -32,6 +32,8 @@ const result = await getDnsRecord(config, {
 
 :::
 
+<ReadActionDemo action="dns.getDnsRecord" />
+
 ## Parameters
 
 ```ts

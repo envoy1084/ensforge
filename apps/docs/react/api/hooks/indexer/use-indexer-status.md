@@ -31,6 +31,8 @@ function Component() {
 
 :::
 
+<ReadActionDemo action="indexer.getIndexerStatus" />
+
 ## Parameters
 
 ```ts

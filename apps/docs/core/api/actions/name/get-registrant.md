@@ -28,6 +28,8 @@ const registrant = await getRegistrant(config, { name: "ens.eth" });
 
 :::
 
+<ReadActionDemo action="name.getRegistrant" />
+
 ## Parameters
 
 ```ts

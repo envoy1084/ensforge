@@ -28,6 +28,8 @@ const expiry = await getExpiry(config, { name: "ens.eth" });
 
 :::
 
+<ReadActionDemo action="name.getExpiry" />
+
 ## Parameters
 
 ```ts

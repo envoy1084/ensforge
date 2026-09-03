@@ -29,6 +29,8 @@ const result = await sdk.reverse.getPrimaryName({
 
 :::
 
+<ReadActionDemo action="reverse.getPrimaryName" />
+
 ## Parameters
 
 ```ts

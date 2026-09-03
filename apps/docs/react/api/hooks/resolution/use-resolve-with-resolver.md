@@ -35,6 +35,8 @@ function Component() {
 
 :::
 
+<ReadActionDemo action="resolution.resolveWithResolver" />
+
 ## Parameters
 
 ```ts

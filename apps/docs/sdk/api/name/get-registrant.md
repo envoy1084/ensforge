@@ -29,6 +29,8 @@ const result = await sdk.name.getRegistrant({
 
 :::
 
+<ReadActionDemo action="name.getRegistrant" />
+
 ## Parameters
 
 ```ts

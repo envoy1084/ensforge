@@ -30,6 +30,8 @@ const result = await getMigrationStatus(config, {
 
 :::
 
+<ReadActionDemo action="migration.getMigrationStatus" />
+
 ## Parameters
 
 ```ts

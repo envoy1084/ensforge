@@ -30,6 +30,8 @@ const result = await getResolverMetadata(config, {
 
 :::
 
+<ReadActionDemo action="indexer.getResolverMetadata" />
+
 ## Parameters
 
 ```ts

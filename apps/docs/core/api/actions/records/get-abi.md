@@ -30,6 +30,8 @@ const result = await getAbi(config, {
 
 :::
 
+<ReadActionDemo action="records.getAbi" />
+
 ## Parameters
 
 ```ts
