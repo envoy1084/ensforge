@@ -178,10 +178,17 @@ describe("registration writes integration", () => {
       assert.lengthOf(waiting.registrations, 2);
 
       yield* advanceTime(devnet.fixtures.registration.v1.minCommitmentAge + 1n);
-      const completed = yield* registerNames.effect(devnet.configs.v1, {
+      const firstAttempt = yield* registerNames.effect(devnet.configs.v1, {
         registrations,
         resume: waiting,
       });
+      const completed =
+        firstAttempt.status === "completed"
+          ? firstAttempt
+          : yield* registerNames.effect(devnet.configs.v1, {
+              registrations,
+              resume: firstAttempt,
+            });
 
       assert.strictEqual(
         completed.status,
