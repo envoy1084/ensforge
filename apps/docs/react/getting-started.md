@@ -1,29 +1,70 @@
 ---
 title: Getting Started
-description: Configure ensforge React and render your first ENS query and mutation.
+description: Install ensforge React, add the provider, and read or write ENS from a component.
 ---
 
 # Getting Started
 
-## Add the provider
+ensforge React turns SDK actions into Effect Atom hooks with shared caching, Suspense, invalidation,
+and typed mutation state.
 
-Place `EnsforgeProvider` once near the root of your client application. It accepts SDK configuration
-directly, so you do not need to construct an SDK just for React.
+## Install
+
+Install the React package with its peer dependencies.
 
 ::: code-group
 
-<<< @/snippets/react/provider.tsx
+```sh [pnpm]
+pnpm add @ensforge/react react scheduler effect@rc viem
+```
 
-<<< @/snippets/wagmi/config.ts
+```sh [npm]
+npm install @ensforge/react react scheduler effect@rc viem
+```
+
+```sh [yarn]
+yarn add @ensforge/react react scheduler effect@rc viem
+```
+
+```sh [bun]
+bun add @ensforge/react react scheduler effect@rc viem
+```
 
 :::
 
-The provider creates one immutable SDK and one Effect Atom registry. If you already have an
-`Ensforge` instance, pass it through `sdk` instead of `config`.
+## Add the provider
+
+Create a viem client and place `EnsforgeProvider` once near the root of your client application. The
+provider accepts SDK configuration directly.
+
+```tsx [providers.tsx]
+"use client";
+
+import type { ReactNode } from "react";
+
+import { EnsforgeProvider } from "@ensforge/react";
+import { createPublicClient, http } from "viem";
+import { mainnet } from "viem/chains";
+
+const publicClient = createPublicClient({
+  chain: mainnet,
+  transport: http(process.env.NEXT_PUBLIC_MAINNET_RPC_URL),
+});
+
+export function Providers({ children }: { children: ReactNode }) {
+  return (
+    <EnsforgeProvider config={{ network: "mainnet", publicClient }}>{children}</EnsforgeProvider>
+  );
+}
+```
+
+The provider creates one immutable SDK and one Effect Atom registry. If application code already
+shares an `Ensforge` instance, pass `sdk={sdk}` instead of `config`.
 
 ## Read a name
 
-Read hooks execute below the provider and share Effect Atom work for identical parameters.
+Read hooks start below the provider and share work when their action parameters and atom options are
+equal.
 
 ```tsx [profile.tsx]
 import { useAvatar, useOwner } from "@ensforge/react";
@@ -38,19 +79,55 @@ export function Profile({ name }: { name: string }) {
 
   return (
     <article>
-      {avatar.data?.url && <img alt="" src={avatar.data.url} />}
-      <p>{owner.data?.owner ?? "Unowned"}</p>
+      {avatar.data?.uri ? <img alt="" src={avatar.data.uri} /> : null}
+      <p>{owner.data.owner ?? "Unowned"}</p>
     </article>
   );
 }
 ```
 
-Use top-level `enabled` for conditional reads and `map` to expose only the value needed by a
-component. Configure caching, retries, and refreshes through the nested `atom` options.
+Use `enabled` for conditional reads and `map` to expose only the value a component needs. Configure
+caching, retries, and refresh behavior through the nested `atom` options.
+
+## Add Wagmi
+
+When the application already uses Wagmi, pass its config to both providers. ensforge supports Wagmi
+2.19 and 3.x.
+
+```sh
+pnpm add wagmi
+```
+
+::: code-group
+
+```tsx [providers.tsx]
+"use client";
+
+import type { ReactNode } from "react";
+
+import { EnsforgeProvider } from "@ensforge/react";
+import { WagmiProvider } from "wagmi";
+import { wagmiConfig } from "./wagmi";
+
+export function Providers({ children }: { children: ReactNode }) {
+  return (
+    <WagmiProvider config={wagmiConfig}>
+      <EnsforgeProvider config={{ network: "mainnet", wagmiConfig }}>{children}</EnsforgeProvider>
+    </WagmiProvider>
+  );
+}
+```
+
+<<< @/snippets/wagmi/config.ts[wagmi.ts]
+
+:::
+
+Reads use the configured public client. Mutations resolve the active account and wallet when they
+run, so reconnecting does not require recreating the ensforge provider.
 
 ## Write a record
 
-Mutation hooks are idle until one of their execution functions is called.
+Mutation hooks stay idle until `mutate`, `mutateAsync`, or `mutateEffect` is called.
 
 ```tsx [website-form.tsx]
 import { useSetText } from "@ensforge/react";
@@ -71,12 +148,39 @@ export function WebsiteForm({ name }: { name: string }) {
 }
 ```
 
-Use `mutate` for `Exit` callbacks, `mutateAsync` for Promise control flow, or `mutateEffect` to stay inside
-Effect.
+Use `mutate` with Effect `Exit` callbacks, `mutateAsync` in Promise control flow, or
+`mutateEffect` while composing Effect programs.
+
+## Use Effect
+
+Query and mutation controls expose Effect-native operations without bypassing hook state.
+
+```tsx [refresh-owner.tsx]
+import { Effect } from "effect";
+import { useOwner } from "@ensforge/react";
+
+export function RefreshOwner({ name }: { name: string }) {
+  const owner = useOwner({ name });
+
+  const refresh = () =>
+    Effect.runPromise(
+      owner.refreshEffect().pipe(
+        Effect.retry({ times: 2 }),
+        Effect.tap((result) => Effect.log(`owner: ${result.owner}`)),
+      ),
+    );
+
+  return <button onClick={refresh}>Refresh owner</button>;
+}
+```
+
+Import atom factories from `@ensforge/react/atoms` when derived state should be composed directly
+at the Effect Atom layer.
 
 ## Next steps
 
-- Configure [atom options](/react/api/atom-options).
-- Learn [caching and invalidation](/react/guides/caching).
-- Use [Effect Atom](/react/guides/effect-atom) directly.
-- Browse all [hooks](/react/api/hooks/records/use-address).
+- Configure request behavior with [Atom Options](/react/api/atom-options).
+- Learn [Caching and Invalidation](/react/guides/caching).
+- Add loading boundaries with [Suspense](/react/guides/suspense).
+- Compose atoms directly with [Effect Atom](/react/guides/effect-atom).
+- Browse all [React hooks](/react/api/hooks/name/use-owner).

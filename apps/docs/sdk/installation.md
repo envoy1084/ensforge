@@ -25,7 +25,8 @@ bun add @ensforge/sdk effect@rc viem
 
 :::
 
-Install `wagmi` as well when you plan to construct the SDK from a Wagmi config.
+Install `wagmi` as well when you plan to construct the SDK from a Wagmi config. Wagmi 2.19 and 3.x
+are supported.
 
 ```sh
 pnpm add wagmi

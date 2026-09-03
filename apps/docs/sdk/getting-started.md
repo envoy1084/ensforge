@@ -1,91 +1,151 @@
 ---
 title: Getting Started
-description: Create an ensforge client and call Promise or Effect methods.
+description: Install ensforge, create an SDK client, and call ENS with Promises or Effect.
 ---
 
 # Getting Started
 
-The SDK binds one ensforge configuration and exposes actions through capability groups such as
-`name`, `records`, and `registration`. Create the client once for a network and reuse it.
+The SDK binds your network and Ethereum clients once, then exposes ENS operations through focused
+groups such as `name`, `records`, `registration`, and `indexer`.
 
-## Create a client
+## Install
 
-Create a viem `PublicClient`, then pass it to `Ensforge`.
+Install the SDK with Effect and viem.
 
 ::: code-group
 
-```ts [index.ts]
-import { sdk } from "./client";
-
-const owner = await sdk.name.getOwner({ name: "sdk.eth" });
-
-if (owner === null) {
-  console.log("The name has no owner");
-} else {
-  console.log(owner.address, owner.protocol);
-}
+```sh [pnpm]
+pnpm add @ensforge/sdk effect@rc viem
 ```
 
-<<< @/snippets/sdk/client.ts[client.ts]
+```sh [npm]
+npm install @ensforge/sdk effect@rc viem
+```
+
+```sh [yarn]
+yarn add @ensforge/sdk effect@rc viem
+```
+
+```sh [bun]
+bun add @ensforge/sdk effect@rc viem
+```
 
 :::
 
-The selected `network` and viem client chain must match. A mainnet client cannot be used with
-`network: "sepolia"`.
+ensforge is ESM-only and includes its TypeScript declarations.
 
-## Read resolver records
+## Create an SDK
 
-Methods are grouped by the ENS capability they operate on.
+Create one viem `PublicClient`, pass it to `Ensforge`, and export the SDK from a shared module.
 
-::: code-group
+```ts [client.ts]
+import { Ensforge } from "@ensforge/sdk";
+import { createPublicClient, http } from "viem";
+import { mainnet } from "viem/chains";
+
+const publicClient = createPublicClient({
+  chain: mainnet,
+  transport: http(process.env.MAINNET_RPC_URL),
+});
+
+export const sdk = new Ensforge({
+  network: "mainnet",
+  publicClient,
+});
+```
+
+The viem client chain must match `network`. Use an authenticated RPC endpoint in production to avoid
+public-provider rate limits.
+
+## Read ENS
+
+SDK methods return Promises, so they work in scripts, route handlers, server functions, and existing
+async code without an Effect runtime at the call site.
 
 ```ts [profile.ts]
 import { sdk } from "./client";
 
-const [address, avatar, url] = await Promise.all([
-  sdk.records.getAddress({ name: "sdk.eth" }),
-  sdk.records.getAvatar({ name: "sdk.eth" }),
-  sdk.records.getText({ name: "sdk.eth", key: "url" }),
+const [owner, address, avatar] = await Promise.all([
+  sdk.name.getOwner({ name: "ens.eth" }),
+  sdk.records.getAddress({ name: "ens.eth" }),
+  sdk.records.getAvatar({ name: "ens.eth" }),
 ]);
+
+console.log({ owner: owner.owner, address: address.address, avatar: avatar?.uri });
 ```
 
-<<< @/snippets/sdk/client.ts[client.ts]
-
-:::
-
-Use [`sdk.batch.readBatch`](/sdk/api/batch/read-batch) when compatible reads should share a
-Multicall request while retaining their individual result types.
+Names are normalized before contract interaction. Invalid names and failed reads reject with typed
+ensforge errors.
 
 ## Use Effect
 
-Every method is Promise-first and also exposes the underlying Effect through `.effect`.
-
-::: code-group
+Every SDK method exposes its underlying Effect through `.effect`. Use it when you need typed error
+channels, retries, interruption, concurrency, or tracing.
 
 ```ts [profile.ts]
 import { Effect } from "effect";
 import { sdk } from "./client";
 
-const profile = Effect.gen(function* () {
-  const owner = yield* sdk.name.getOwner.effect({ name: "sdk.eth" });
-  const avatar = yield* sdk.records.getAvatar.effect({ name: "sdk.eth" });
-
-  return { owner, avatar };
-});
+const profile = Effect.all(
+  {
+    owner: sdk.name.getOwner.effect({ name: "ens.eth" }),
+    address: sdk.records.getAddress.effect({ name: "ens.eth" }),
+    avatar: sdk.records.getAvatar.effect({ name: "ens.eth" }),
+  },
+  { concurrency: "unbounded" },
+);
 
 const result = await Effect.runPromise(profile);
 ```
 
-<<< @/snippets/sdk/client.ts[client.ts]
+The Promise and Effect forms execute the same implementation and return the same success value.
 
-:::
+## Add a wallet
 
-Both forms execute the same implementation. Use Promises at conventional application boundaries and
-Effects when you need typed failures, interruption, retries, concurrency, or tracing.
+Pass a viem `WalletClient` when this SDK will submit transactions.
 
-## Use a Wagmi config
+```ts [client.ts]
+import { Ensforge } from "@ensforge/sdk";
+import { createPublicClient, createWalletClient, custom, http } from "viem";
+import { mainnet } from "viem/chains";
 
-If the application already uses Wagmi, provide its config instead of creating viem clients twice.
+const publicClient = createPublicClient({
+  chain: mainnet,
+  transport: http(process.env.MAINNET_RPC_URL),
+});
+
+const walletClient = createWalletClient({
+  chain: mainnet,
+  transport: custom(window.ethereum),
+});
+
+export const sdk = new Ensforge({
+  network: "mainnet",
+  publicClient,
+  walletClient,
+});
+```
+
+Write methods simulate by default before submitting the transaction.
+
+```ts [update-profile.ts]
+import { sdk } from "./client";
+
+const receipt = await sdk.records.setText({
+  name: "example.eth",
+  key: "url",
+  value: "https://example.com",
+});
+```
+
+## Use an existing Wagmi config
+
+Install `wagmi` and use the optional entrypoint when your application already owns a Wagmi config.
+ensforge supports Wagmi 2.19 and 3.x.
+
+```sh
+pnpm add wagmi
+```
 
 ::: code-group
 
@@ -103,13 +163,13 @@ export const sdk = createEnsforge({
 
 :::
 
-The public client is selected immediately. The wallet client is resolved when a write runs, so
-account and connector changes do not require recreating the SDK.
+Reads use Wagmi's public client. Writes resolve the currently connected wallet when they execute,
+so account and connector changes do not require recreating the SDK.
 
 ## Import types
 
-Runtime APIs and shared configuration types are exported from `@ensforge/sdk`. Action-specific
-types use group entrypoints so TypeScript only loads the part of the SDK you ask for.
+Shared configuration types are exported from `@ensforge/sdk`. Action-specific types use focused
+group entrypoints to keep editor work small.
 
 ```ts
 import type { CreateConfigParameters } from "@ensforge/sdk";
@@ -117,13 +177,12 @@ import type { GetOwnerParameters } from "@ensforge/sdk/name";
 import type { SetTextParameters } from "@ensforge/sdk/records";
 ```
 
-Each SDK group has a matching type entrypoint, including `batch`, `registration`, `resolution`, and
-`wrapping`. Calling methods through an `Ensforge` instance remains fully inferred without importing
-these types explicitly.
+Calling methods through `sdk` remains fully inferred; import these types only when annotating your
+own boundaries.
 
 ## Next steps
 
-- Learn the [`Ensforge` constructor](/sdk/api/ensforge).
-- Browse [Grouped Actions](/sdk/guides/grouped-actions).
-- Compose reads and writes in [Batching](/sdk/guides/batching).
+- Browse the [`Ensforge` client](/sdk/api/ensforge) and its grouped methods.
+- Learn how to combine compatible reads in [Batching](/sdk/guides/batching).
 - Handle typed failures in [Error Handling](/sdk/guides/error-handling).
+- Build a UI with [ensforge React](/react/getting-started).

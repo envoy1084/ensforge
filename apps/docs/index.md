@@ -11,10 +11,10 @@ hero:
   actions:
     - theme: brand
       text: Get started
-      link: /react/getting-started
+      link: /sdk/getting-started
     - theme: alt
-      text: Explore the SDK
-      link: /sdk/
+      text: Explore React
+      link: /react/getting-started
     - theme: alt
       text: View on GitHub
       link: https://github.com/envoy1084/ensforge

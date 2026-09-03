@@ -11,7 +11,7 @@ const configuredSiteUrl =
   process.env.SITE_URL ??
   process.env.VERCEL_PROJECT_PRODUCTION_URL ??
   process.env.DOCS_URL ??
-  "https://ensforge.vercel.app";
+  "https://ensforge.com";
 const siteUrl =
   `${configuredSiteUrl.startsWith("http") ? "" : "https://"}${configuredSiteUrl}`.replace(
     /\/+$/,

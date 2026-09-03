@@ -25,7 +25,7 @@ bun add @ensforge/react react effect@rc viem
 
 :::
 
-Add `wagmi` when using a Wagmi config in the provider.
+Add `wagmi` when using a Wagmi config in the provider. Wagmi 2.19 and 3.x are supported.
 
 ```sh
 pnpm add wagmi

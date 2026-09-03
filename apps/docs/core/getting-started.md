@@ -1,71 +1,133 @@
 ---
 title: Getting Started
-description: Configure ensforge Core and read your first ENS name.
+description: Install ensforge Core, configure Ethereum clients, and call ENS actions with Promises or Effect.
 ---
 
 # Getting Started
 
-## Create the config
+Core provides standalone ENS actions and utilities. Pass one shared config to any action, or prepare
+typed requests for batching without adopting the grouped SDK client.
 
-ensforge uses a viem `PublicClient` for contract and RPC reads. Create it and the Core config in one
-shared module.
+## Install
 
-<<< @/snippets/core/config.ts
-
-The client chain must match the selected network. ensforge supports `mainnet` and `sepolia`.
-For production, pass an authenticated RPC URL to `http`; public endpoints are commonly rate-limited.
-
-## Read a name
-
-Actions accept the config first and an action-specific parameter object second.
+Install Core with Effect and viem.
 
 ::: code-group
 
-```ts [index.ts]
-import { getNameState, getOwner } from "@ensforge/core";
-import { config } from "./config";
-
-const owner = await getOwner(config, { name: "ens.eth" });
-const state = await getNameState(config, { name: "ens.eth" });
+```sh [pnpm]
+pnpm add @ensforge/core effect@rc viem
 ```
 
-<<< @/snippets/core/config.ts
+```sh [npm]
+npm install @ensforge/core effect@rc viem
+```
+
+```sh [yarn]
+yarn add @ensforge/core effect@rc viem
+```
+
+```sh [bun]
+bun add @ensforge/core effect@rc viem
+```
 
 :::
 
-Names are normalized before they are used. Invalid names fail with a typed `NameError`.
+## Create a config
 
-## Use an existing Wagmi config
-
-If your application already uses Wagmi, use the optional Wagmi entrypoint instead of creating
-separate viem clients.
-
-::: code-group
+Create a viem `PublicClient`, then pass it to `createConfig`. Keep the result in one module and reuse
+it across actions.
 
 ```ts [config.ts]
-import { createWagmiConfig } from "@ensforge/core/wagmi";
-import { wagmiConfig } from "./wagmi";
+import { createConfig } from "@ensforge/core";
+import { createPublicClient, http } from "viem";
+import { mainnet } from "viem/chains";
 
-export const config = createWagmiConfig({
+const publicClient = createPublicClient({
+  chain: mainnet,
+  transport: http(process.env.MAINNET_RPC_URL),
+});
+
+export const config = createConfig({
   network: "mainnet",
-  wagmiConfig,
+  publicClient,
 });
 ```
 
-<<< @/snippets/wagmi/config.ts
+The client chain must match `network`. ensforge supports Mainnet and Sepolia. Use an authenticated
+RPC URL in production to avoid public-provider rate limits.
 
-:::
+## Call an action
 
-Reads use Wagmi's public client. Writes resolve the active wallet client when the action executes, so
-account changes do not require recreating the ensforge config.
+The default action interface returns a Promise. Pass the config first and the action parameters
+second.
+
+```ts [profile.ts]
+import { getAddress, getOwner } from "@ensforge/core";
+import { config } from "./config";
+
+const owner = await getOwner(config, { name: "ens.eth" });
+const address = await getAddress(config, { name: "ens.eth" });
+
+console.log({ owner: owner.owner, address: address.address });
+```
+
+Names are normalized before they are hashed or sent to a contract. Invalid names and failed reads
+reject with typed ensforge errors.
+
+## Use Effect
+
+Every action exposes its primary Effect implementation through `.effect`. The success value matches
+the Promise API while expected failures remain in the typed error channel.
+
+```ts [profile.ts]
+import { Effect } from "effect";
+import { getAddress, getOwner } from "@ensforge/core";
+import { config } from "./config";
+
+const profile = Effect.gen(function* () {
+  const owner = yield* getOwner.effect(config, { name: "ens.eth" });
+  const address = yield* getAddress.effect(config, { name: "ens.eth" });
+
+  return { owner, address };
+});
+
+const result = await Effect.runPromise(profile);
+```
+
+Use Effect operators directly for retries, timeouts, concurrency, logging, and tagged error
+handling. No environment is required because the config already contains the action services.
+
+## Batch reads
+
+Use `.request` to describe compatible reads, then execute them through `readBatch`. Each tuple entry
+keeps its own result type.
+
+```ts [profile.ts]
+import { getAddress, getOwner, readBatch } from "@ensforge/core";
+import { config } from "./config";
+
+const [owner, address] = await readBatch(config, [
+  getOwner.request({ name: "ens.eth" }),
+  getAddress.request({ name: "ens.eth" }),
+]);
+```
+
+The executor groups compatible contract reads through Multicall and preserves direct or CCIP-Read
+execution where aggregation is not possible.
 
 ## Add writes
 
-When using viem directly, include a wallet client.
+Include a viem `WalletClient` when the config will submit transactions.
 
-```ts
-import { createWalletClient, custom } from "viem";
+```ts [config.ts]
+import { createConfig } from "@ensforge/core";
+import { createPublicClient, createWalletClient, custom, http } from "viem";
 import { mainnet } from "viem/chains";
+
+const publicClient = createPublicClient({
+  chain: mainnet,
+  transport: http(process.env.MAINNET_RPC_URL),
+});
 
 const walletClient = createWalletClient({
   chain: mainnet,
@@ -79,18 +141,52 @@ export const config = createConfig({
 });
 ```
 
-You can now call write actions such as `setText`. Writes simulate by default and wait for
-confirmation unless the config or action requests submitted-only behavior.
+You can now call write actions with the same config.
 
-```ts
+```ts [update-profile.ts]
 import { setText } from "@ensforge/core";
+import { config } from "./config";
 
-const result = await setText(config, {
+const receipt = await setText(config, {
   name: "example.eth",
   key: "url",
   value: "https://example.com",
 });
 ```
 
-Continue with [Effect](/core/effect), [Error Handling](/core/guides/error-handling), or browse the
-[Name Actions](/core/api/actions/name/get-name-state).
+Writes simulate by default and wait for confirmation unless you select submitted-only behavior.
+
+## Use an existing Wagmi config
+
+Install `wagmi` and use the optional entrypoint when your application already owns its clients.
+ensforge supports Wagmi 2.19 and 3.x.
+
+```sh
+pnpm add wagmi
+```
+
+::: code-group
+
+```ts [config.ts]
+import { createWagmiConfig } from "@ensforge/core/wagmi";
+import { wagmiConfig } from "./wagmi";
+
+export const config = createWagmiConfig({
+  network: "mainnet",
+  wagmiConfig,
+});
+```
+
+<<< @/snippets/wagmi/config.ts[wagmi.ts]
+
+:::
+
+Reads use Wagmi's public client. Writes resolve the active wallet when they execute, so account and
+connector changes do not require recreating the config.
+
+## Next steps
+
+- Learn Effect composition and typed failures in the [Effect guide](/core/guides/effect).
+- See how requests are grouped in [Batching](/core/guides/batching).
+- Configure boundaries in [`createConfig`](/core/api/create-config).
+- Browse all [Core actions](/core/api/actions).

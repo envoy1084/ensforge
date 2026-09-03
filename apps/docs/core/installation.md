@@ -34,7 +34,8 @@ bun add @ensforge/core effect@rc viem
 - A viem `PublicClient`, or a Wagmi `Config`
 - A `WalletClient` or connected Wagmi account for writes
 
-Wagmi is only required when you pass a Wagmi config to `createConfig`.
+Wagmi is only required when you pass a Wagmi config to `createConfig`. Wagmi 2.19 and 3.x are
+supported.
 
 ```sh
 pnpm add wagmi

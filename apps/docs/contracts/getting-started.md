@@ -1,12 +1,77 @@
 ---
 title: Getting Started
-description: Read ENS contracts directly with typed deployments and ABI fragments.
+description: Install ensforge Contracts and use typed ENS deployments and ABI fragments with viem.
 ---
 
 # Getting Started
 
-Import a deployment and the smallest ABI fragment required by the call. Deployment objects keep the
-chain, support status, contract addresses, and source commit together.
+Contracts provides versioned ENS deployment metadata, complete ABIs, focused fragments, interfaces,
+and resolver profiles for direct contract integration.
+
+## Install
+
+Install the contracts package with viem.
+
+::: code-group
+
+```sh [pnpm]
+pnpm add @ensforge/contracts viem
+```
+
+```sh [npm]
+npm install @ensforge/contracts viem
+```
+
+```sh [yarn]
+yarn add @ensforge/contracts viem
+```
+
+```sh [bun]
+bun add @ensforge/contracts viem
+```
+
+:::
+
+## Create a client
+
+Create a viem client for the network you intend to query.
+
+```ts [client.ts]
+import { createPublicClient, http } from "viem";
+import { mainnet } from "viem/chains";
+
+export const publicClient = createPublicClient({
+  chain: mainnet,
+  transport: http(process.env.MAINNET_RPC_URL),
+});
+```
+
+Use an authenticated RPC endpoint in production. The client chain and selected deployment must
+always match.
+
+## Select a deployment
+
+Deployment objects keep addresses, chain metadata, protocol version, release status, and source
+provenance together.
+
+```ts
+import {
+  mainnetV1Deployment,
+  sepoliaV1Deployment,
+  sepoliaV2Deployment,
+} from "@ensforge/contracts/deployments";
+
+const registry = mainnetV1Deployment.contracts.registry;
+const registrar = sepoliaV2Deployment.contracts.ethRegistrar;
+```
+
+Mainnet currently routes through ENSv1. Sepolia includes ENSv1 compatibility contracts and the
+supported ENSv2 deployment.
+
+## Read a contract
+
+Import the smallest ABI fragment required by the call. viem infers the function name, arguments,
+and return value from the fragment.
 
 ::: code-group
 
@@ -24,39 +89,47 @@ const owner = await publicClient.readContract({
 });
 ```
 
-<<< @/snippets/contracts/client.ts
+<<< @/snippets/contracts/client.ts[client.ts]
 
 :::
 
-Because fragments are exported `as const`, viem infers `functionName`, `args`, and the returned
-address from the selected ABI.
+Fragments include the custom errors needed to decode relevant reverts. Related fragments are grouped
+by contract capability so one read does not retain every contract definition.
 
-Use a complete ABI when the caller needs several unrelated functions or event decoding.
+## Use a complete ABI
 
-```ts
+Use a complete ABI when one module calls several unrelated functions, watches multiple events, or
+passes the contract definition to another tool.
+
+```ts [registry.ts]
+import { mainnetV1Deployment } from "@ensforge/contracts/deployments";
 import { ensRegistryV1Abi } from "@ensforge/contracts/v1";
+import { getContract } from "viem";
+import { publicClient } from "./client";
+
+export const registry = getContract({
+  address: mainnetV1Deployment.contracts.registry,
+  abi: ensRegistryV1Abi,
+  client: publicClient,
+});
 ```
 
-Focused fragments include the custom errors needed to decode relevant reverts. They are grouped by
-contract capability so importing one action does not retain every ENS contract definition.
+Complete ABIs and focused fragments are both exported `as const`, preserving viem's type inference.
 
-## Select a deployment
+## Import resolver profiles
+
+Resolver profile entrypoints expose interoperable ENS record interfaces independently of a specific
+resolver deployment.
 
 ```ts
-import {
-  mainnetV1Deployment,
-  sepoliaV1Deployment,
-  sepoliaV2Deployment,
-} from "@ensforge/contracts/deployments";
+import { addressResolverAbi, textResolverAbi } from "@ensforge/contracts/resolver-profiles";
 ```
 
-Do not mix a deployment object with a client connected to another chain. ENSv2 addresses are grouped
-into public contracts, implementations, migration contracts, infrastructure, and optional
-experimental or test-token contracts.
+Use these definitions when detecting or calling standardized resolver capabilities directly.
 
 ## Next steps
 
-- Choose a focused [entrypoint](/contracts/guides/entrypoints).
+- Choose the smallest [package entrypoint](/contracts/guides/entrypoints).
 - Learn when to use [ABI fragments](/contracts/guides/fragments).
-- Inspect [deployment provenance](/contracts/guides/deployments).
-- Compose [resolver profiles](/contracts/guides/resolver-profiles).
+- Inspect [deployment status and provenance](/contracts/guides/deployments).
+- Browse the available [resolver profiles](/contracts/guides/resolver-profiles).
