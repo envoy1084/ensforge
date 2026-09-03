@@ -69,8 +69,8 @@ export const sepoliaNames = {
     nested: `nested.branch.${root}`,
     customExpiry: `custom-expiry.${root}`,
     available: `${rootLabel}-available.eth`,
-    indexedRegistration: "harmonia.eth",
-    indexedRegistry: "fur.eth",
+    indexedRegistration: root,
+    indexedRegistry: root,
   },
   v1: {
     reserved: "vitalik.eth",
@@ -81,6 +81,7 @@ export const sepoliaNames = {
 } as const;
 
 export const sepoliaFixtureAccounts = {
+  owner: "0x5b7d523F27C5b2232536fB900EBffB590d03fF5d",
   operator: "0x000000000000000000000000000000000000bEEF",
   secondary: "0x000000000000000000000000000000000000dEaD",
 } as const;

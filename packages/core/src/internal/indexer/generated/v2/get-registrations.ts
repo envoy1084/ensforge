@@ -10,6 +10,8 @@ export type OrderDirection = "asc" | "desc";
 
 /** Filter criteria for querying registrations */
 export type RegistrationFilter = {
+  /** Boolean AND: every sub-filter must match. Each element is a full RegistrationFilter, nested recursively (subgraph parity). */
+  readonly and?: ReadonlyArray<RegistrationFilter> | null | undefined;
   /** Filter by expiry date greater than */
   readonly expiryDate_gt?: number | null | undefined;
   /** Filter by expiry date greater than or equal */
@@ -18,6 +20,8 @@ export type RegistrationFilter = {
   readonly expiryDate_lt?: number | null | undefined;
   /** Filter by expiry date less than or equal */
   readonly expiryDate_lte?: number | null | undefined;
+  /** Boolean OR: any sub-filter matches. Each element is a full RegistrationFilter, nested recursively; the OR group is AND-combined with sibling fields. */
+  readonly or?: ReadonlyArray<RegistrationFilter> | null | undefined;
   /** Filter by protocol (v1 or v2) */
   readonly protocol?: string | null | undefined;
   /** Filter by registrant address */

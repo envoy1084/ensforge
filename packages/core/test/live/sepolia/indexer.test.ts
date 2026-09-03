@@ -13,10 +13,10 @@ import {
   getSubnames,
   searchNames,
 } from "../../../src/actions/indexer/index.js";
-import { sepoliaConfig, sepoliaNames } from "../setup/sepolia.js";
+import { sepoliaConfig, sepoliaFixtureAccounts, sepoliaNames } from "../setup/sepolia.js";
 
-const indexedV2Name = "testingname.eth";
-const indexedV2Owner = "0x00A2895816e64F152FF81c8A931DC1bd9F5c3ce3";
+const indexedV2Name = sepoliaNames.v2.root;
+const indexedV2Owner = sepoliaFixtureAccounts.owner;
 const fixtureSeededAtBlock = 11_601_253n;
 
 describe("Sepolia indexers", () => {
@@ -67,7 +67,7 @@ describe("Sepolia indexers", () => {
       assert.strictEqual(names.items[0]?.namehash, namehash(indexedV2Name));
 
       const search = yield* searchNames.effect(sepoliaConfig, {
-        query: "testingname",
+        query: indexedV2Name.slice(0, -4),
         field: "label",
         mode: "starts-with",
         filter: { protocol: "v2" },
@@ -109,7 +109,7 @@ describe("Sepolia indexers", () => {
         filter: { protocol: "v2" },
       });
       const resolvedName = resolved.items.find(
-        ({ name }) => name.namehash === namehash(indexedV2Name),
+        ({ name }) => name.namehash === namehash(sepoliaNames.v2.profile),
       );
       assert.isDefined(resolvedName);
       assert.strictEqual(resolvedName?.verification, "indexed-unverified");
@@ -119,7 +119,7 @@ describe("Sepolia indexers", () => {
   it.effect("decodes indexed V1 and V2 labels", () =>
     Effect.gen(function* () {
       const decodedV2 = yield* getDecodedName.effect(sepoliaConfig, {
-        name: `[${labelhash("testingname").slice(2)}].eth`,
+        name: `[${labelhash(indexedV2Name.slice(0, -4)).slice(2)}].eth`,
       });
       const decodedV1 = yield* getDecodedName.effect(sepoliaConfig, {
         name: `[${labelhash("vitalik").slice(2)}].eth`,

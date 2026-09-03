@@ -7,6 +7,8 @@ export type Incremental<T> =
 import type { TypedDocumentNode as DocumentNode } from "@graphql-typed-document-node/core";
 /** Filter criteria for querying events */
 export type EventFilter = {
+  /** Boolean AND: every sub-filter must match. Each element is a full EventFilter, nested recursively (subgraph parity). */
+  readonly and?: ReadonlyArray<EventFilter> | null | undefined;
   /** Filter by block number greater than */
   readonly blockNumber_gt?: number | null | undefined;
   /** Filter by block number greater than or equal */
@@ -19,8 +21,17 @@ export type EventFilter = {
   readonly contractAddress?: string | null | undefined;
   /** Filter by domain name */
   readonly domain?: string | null | undefined;
+  /**
+   * Address involvement (ensv2 extension): matches events where the address is the
+   *   owner, sender (`from`), or recipient (`to`). Per-address history is
+   *   `events(where:{involved:"0x…"}, orderBy: blockNumber, orderDirection: asc)`;
+   *   per-name history is `events(where:{namehash:"0x…"})`.
+   */
+  readonly involved?: string | null | undefined;
   /** Filter by namehash */
   readonly namehash?: string | null | undefined;
+  /** Boolean OR: any sub-filter matches. Each element is a full EventFilter, nested recursively; the OR group is AND-combined with sibling fields. */
+  readonly or?: ReadonlyArray<EventFilter> | null | undefined;
   /** Filter by protocol (v1 or v2) */
   readonly protocol?: string | null | undefined;
   /** Filter by timestamp greater than */

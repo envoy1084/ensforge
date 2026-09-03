@@ -27,7 +27,7 @@ const sources = {
       url: "https://api.studio.thegraph.com/query/49574/enssepolia/version/latest",
     },
   ],
-  v2: [{ network: "sepolia", url: "https://graphql.ens.dev/graphql" }],
+  v2: [{ network: "sepolia", url: "https://staging-graphql.ens.dev/graphql" }],
 };
 
 class SchemaRefreshError extends Data.TaggedError("SchemaRefreshError") {}

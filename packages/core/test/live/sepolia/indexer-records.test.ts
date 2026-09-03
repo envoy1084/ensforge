@@ -17,7 +17,7 @@ describe("Sepolia indexed records", () => {
   it.effect("reads V2 inventory and typed record history", () =>
     Effect.gen(function* () {
       const inventory = yield* getIndexedRecords.effect(sepoliaConfig, {
-        name: "testingname.eth",
+        name: sepoliaNames.v2.profile,
       });
       const current = inventory.bindings.find(
         ({ current: isCurrent, source }) => isCurrent && source.protocol === "v2",
@@ -26,7 +26,7 @@ describe("Sepolia indexed records", () => {
       assert.include(current?.records.coinTypes ?? [], 60n);
 
       const history = yield* getRecordHistory.effect(sepoliaConfig, {
-        name: "testingname.eth",
+        name: sepoliaNames.v2.profile,
         filter: { kinds: ["address"] },
       });
       assert.isAbove(history.items.length, 0);

@@ -63,7 +63,7 @@ export const defaultIndexerEndpoints = Object.freeze({
   }),
   sepolia: Object.freeze({
     v1: "https://api.studio.thegraph.com/query/49574/enssepolia/version/latest",
-    v2: "https://graphql.ens.dev/graphql",
+    v2: "https://staging-graphql.ens.dev/graphql",
   }),
 }) satisfies Readonly<Record<EnsNetwork, ResolvedIndexerEndpoints>>;
 

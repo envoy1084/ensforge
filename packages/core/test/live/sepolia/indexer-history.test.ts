@@ -3,13 +3,17 @@ import { Effect } from "effect";
 
 import { getNameHistory } from "../../../src/actions/indexer/history/index.js";
 import { getRegistrations } from "../../../src/actions/indexer/registrations/index.js";
-import { sepoliaConfig, sepoliaNames } from "../setup/sepolia.js";
+import { sepoliaConfig, sepoliaFixtureAccounts, sepoliaNames } from "../setup/sepolia.js";
 
 describe("Sepolia indexed registration history", () => {
   it.effect("reads the V2 smoke registration", () =>
     Effect.gen(function* () {
       const page = yield* getRegistrations.effect(sepoliaConfig, {
-        filter: { name: sepoliaNames.v2.indexedRegistration, protocols: ["v2"] },
+        filter: {
+          name: sepoliaNames.v2.indexedRegistration,
+          registrant: sepoliaFixtureAccounts.owner,
+          protocols: ["v2"],
+        },
         pageSize: 1,
       });
       assert.lengthOf(page.items, 1);

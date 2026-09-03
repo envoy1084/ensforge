@@ -15,14 +15,14 @@ describe("Sepolia indexed resolvers", () => {
   it.effect("reads V2 resolver details and binding inventories", () =>
     Effect.gen(function* () {
       const name = yield* getIndexedName.effect(sepoliaConfig, {
-        name: sepoliaNames.v2.indexedRegistry,
+        name: sepoliaNames.v2.profile,
       });
       if (name?.resolver === null || name === null) return assert.fail("expected a V2 resolver");
 
       const resolver = yield* getIndexedResolver.effect(sepoliaConfig, {
         address: name.resolver,
         protocol: "v2",
-        name: sepoliaNames.v2.indexedRegistry,
+        name: sepoliaNames.v2.profile,
       });
       assert.strictEqual(resolver?.protocol, "v2");
       assert.isAbove(resolver?.bindings.length ?? 0, 0);
@@ -34,7 +34,7 @@ describe("Sepolia indexed resolvers", () => {
     Effect.gen(function* () {
       const [name, registry] = yield* Effect.all(
         [
-          getIndexedName.effect(sepoliaConfig, { name: sepoliaNames.v2.indexedRegistry }),
+          getIndexedName.effect(sepoliaConfig, { name: sepoliaNames.v2.profile }),
           getRegistry.effect(sepoliaConfig, { name: sepoliaNames.v2.indexedRegistry }),
         ],
         { concurrency: "unbounded" },

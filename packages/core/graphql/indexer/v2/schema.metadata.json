@@ -1,11 +1,11 @@
 {
   "protocol": "v2",
-  "retrievedAt": "2026-09-02T19:22:08.206Z",
-  "sha256": "b0f298adb80aa8268d08fcb70f9dbba88c6d857a8756559fbc5f367f194c2c12",
+  "retrievedAt": "2026-09-02T23:55:41.875Z",
+  "sha256": "7f19fa6e49aae7f0436610480180fd0ec5fc56d73054eeaee00b77ac69cc51e1",
   "sources": [
     {
       "network": "sepolia",
-      "url": "https://graphql.ens.dev/graphql"
+      "url": "https://staging-graphql.ens.dev/graphql"
     }
   ]
 }
