@@ -1,85 +1,15 @@
 ---
 title: useIsReservedSuspense
-description: Suspense hook for checking whether the name is reserved.
+description: This hook is documented with useIsReserved.
+search: false
+noindex: true
+canonical: /react/api/hooks/name/use-is-reserved#suspense
+head:
+  - - meta
+    - http-equiv: refresh
+      content: "0; url=/react/api/hooks/name/use-is-reserved#suspense"
 ---
 
 # useIsReservedSuspense
 
-Suspense hook for checking whether the name is reserved.
-
-## Import
-
-```tsx
-import { useIsReservedSuspense } from "@ensforge/react";
-```
-
-## Usage
-
-::: code-group
-
-```tsx [component.tsx]
-import { useIsReservedSuspense } from "@ensforge/react";
-
-function Component() {
-  const result = useIsReservedSuspense({
-    name: "example.eth",
-  });
-
-  return <pre>{JSON.stringify(result.data, null, 2)}</pre>;
-}
-```
-
-<<< @/snippets/react/provider.tsx
-
-:::
-
-## Parameters
-
-```ts
-import type { UseEnsSuspenseAtomParameters } from "@ensforge/react";
-import type { GetNameStateParameters } from "@ensforge/sdk/name";
-```
-
-### name
-
-`string`
-
-ENS name used by the operation. ensforge normalizes it before creating the query key or interacting with a contract.
-
-### blockNumber
-
-`bigint | undefined`
-
-Block number to read from. Cannot be combined with `blockTag`.
-
-### blockTag
-
-`"latest" | "earliest" | "pending" | "safe" | "finalized" | undefined`
-
-Named block state to read from. Cannot be combined with `blockNumber`.
-
-<!--@include: @/shared/react/suspense-atom-parameters.md-->
-
-## Return Type
-
-```ts
-type Result = ReturnType<typeof useIsReservedSuspense>;
-```
-
-<!--@include: @/shared/react/suspense-atom-result.md-->
-
-## Effect Atom
-
-```ts
-import { isReservedAtom } from "@ensforge/react/atoms";
-import { sdk } from "./client";
-
-const atom = isReservedAtom(sdk, parameters, options);
-```
-
-The hook creates this atom with the SDK and registry supplied by [`EnsforgeProvider`](/react/api/ensforge-provider).
-
-## Action
-
-- [`isReserved`](/core/api/actions/name/is-reserved)
-- [`sdk.name.isReserved`](/sdk/api/name/is-reserved)
+This page moved to the [useIsReserved Suspense section](/react/api/hooks/name/use-is-reserved#suspense).

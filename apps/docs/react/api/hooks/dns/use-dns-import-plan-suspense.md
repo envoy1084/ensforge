@@ -1,85 +1,15 @@
 ---
 title: useDnsImportPlanSuspense
-description: Suspense hook for fetching dns import plan.
+description: This hook is documented with useDnsImportPlan.
+search: false
+noindex: true
+canonical: /react/api/hooks/dns/use-dns-import-plan#suspense
+head:
+  - - meta
+    - http-equiv: refresh
+      content: "0; url=/react/api/hooks/dns/use-dns-import-plan#suspense"
 ---
 
 # useDnsImportPlanSuspense
 
-Suspense hook for fetching dns import plan.
-
-## Import
-
-```tsx
-import { useDnsImportPlanSuspense } from "@ensforge/react";
-```
-
-## Usage
-
-::: code-group
-
-```tsx [component.tsx]
-import { useDnsImportPlanSuspense } from "@ensforge/react";
-
-function Component() {
-  const result = useDnsImportPlanSuspense({
-    name: "example.eth",
-  });
-
-  return <pre>{JSON.stringify(result.data, null, 2)}</pre>;
-}
-```
-
-<<< @/snippets/react/provider.tsx
-
-:::
-
-## Parameters
-
-```ts
-import type { UseEnsSuspenseAtomParameters } from "@ensforge/react";
-import type { GetDnsImportPlanParameters } from "@ensforge/sdk/dns";
-```
-
-### name
-
-`string`
-
-ENS name used by the operation. ensforge normalizes it before creating the query key or interacting with a contract.
-
-### blockNumber
-
-`bigint | undefined`
-
-Block number to read from. Cannot be combined with `blockTag`.
-
-### blockTag
-
-`"latest" | "earliest" | "pending" | "safe" | "finalized" | undefined`
-
-Named block state to read from. Cannot be combined with `blockNumber`.
-
-<!--@include: @/shared/react/suspense-atom-parameters.md-->
-
-## Return Type
-
-```ts
-type Result = ReturnType<typeof useDnsImportPlanSuspense>;
-```
-
-<!--@include: @/shared/react/suspense-atom-result.md-->
-
-## Effect Atom
-
-```ts
-import { getDnsImportPlanAtom } from "@ensforge/react/atoms";
-import { sdk } from "./client";
-
-const atom = getDnsImportPlanAtom(sdk, parameters, options);
-```
-
-The hook creates this atom with the SDK and registry supplied by [`EnsforgeProvider`](/react/api/ensforge-provider).
-
-## Action
-
-- [`getDnsImportPlan`](/core/api/actions/dns/get-dns-import-plan)
-- [`sdk.dns.getDnsImportPlan`](/sdk/api/dns/get-dns-import-plan)
+This page moved to the [useDnsImportPlan Suspense section](/react/api/hooks/dns/use-dns-import-plan#suspense).

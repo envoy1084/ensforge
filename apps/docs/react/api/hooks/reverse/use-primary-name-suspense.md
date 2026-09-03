@@ -1,91 +1,15 @@
 ---
 title: usePrimaryNameSuspense
-description: Suspense hook for fetching primary name.
+description: This hook is documented with usePrimaryName.
+search: false
+noindex: true
+canonical: /react/api/hooks/reverse/use-primary-name#suspense
+head:
+  - - meta
+    - http-equiv: refresh
+      content: "0; url=/react/api/hooks/reverse/use-primary-name#suspense"
 ---
 
 # usePrimaryNameSuspense
 
-Suspense hook for fetching primary name.
-
-## Import
-
-```tsx
-import { usePrimaryNameSuspense } from "@ensforge/react";
-```
-
-## Usage
-
-::: code-group
-
-```tsx [component.tsx]
-import { usePrimaryNameSuspense } from "@ensforge/react";
-
-function Component() {
-  const result = usePrimaryNameSuspense({
-    address: "0x0000000000000000000000000000000000000001",
-  });
-
-  return <pre>{JSON.stringify(result.data, null, 2)}</pre>;
-}
-```
-
-<<< @/snippets/react/provider.tsx
-
-:::
-
-## Parameters
-
-```ts
-import type { UseEnsSuspenseAtomParameters } from "@ensforge/react";
-import type { GetPrimaryNameParameters } from "@ensforge/sdk/reverse";
-```
-
-### address
-
-`string`
-
-Address used by the operation.
-
-### coinType
-
-`bigint | undefined`
-
-SLIP-44 coin type. Optional address reads default to `60n`.
-
-### blockNumber
-
-`bigint | undefined`
-
-Block number to read from. Cannot be combined with `blockTag`.
-
-### blockTag
-
-`"latest" | "earliest" | "pending" | "safe" | "finalized" | undefined`
-
-Named block state to read from. Cannot be combined with `blockNumber`.
-
-<!--@include: @/shared/react/suspense-atom-parameters.md-->
-
-## Return Type
-
-```ts
-type Result = ReturnType<typeof usePrimaryNameSuspense>;
-```
-
-<!--@include: @/shared/react/suspense-atom-result.md-->
-
-## Effect Atom
-
-```ts
-import { getPrimaryNameAtom } from "@ensforge/react/atoms";
-import { sdk } from "./client";
-
-const atom = getPrimaryNameAtom(sdk, parameters, options);
-```
-
-The hook creates this atom with the SDK and registry supplied by [`EnsforgeProvider`](/react/api/ensforge-provider).
-
-## Action
-
-- [`getPrimaryName`](/core/api/actions/reverse/get-primary-name)
-- [`sdk.reverse.getPrimaryName`](/sdk/api/reverse/get-primary-name)
+This page moved to the [usePrimaryName Suspense section](/react/api/hooks/reverse/use-primary-name#suspense).

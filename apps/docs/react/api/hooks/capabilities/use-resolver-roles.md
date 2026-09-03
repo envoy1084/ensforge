@@ -81,6 +81,56 @@ type Result = ReturnType<typeof useResolverRoles>;
 
 <!--@include: @/shared/react/atom-result.md-->
 
+## Suspense
+
+Use `useResolverRolesSuspense` when the read belongs beneath React [Suspense](https://react.dev/reference/react/Suspense) and an error boundary. It starts immediately, suspends during the initial load, and throws typed failures to the nearest error boundary.
+
+### Import
+
+```tsx
+import { useResolverRolesSuspense } from "@ensforge/react";
+```
+
+### Usage
+
+::: code-group
+
+```tsx [component.tsx]
+import { useResolverRolesSuspense } from "@ensforge/react";
+
+function Component() {
+  const result = useResolverRolesSuspense({
+    name: "example.eth",
+    account: {},
+  });
+
+  return <pre>{JSON.stringify(result.data, null, 2)}</pre>;
+}
+```
+
+<<< @/snippets/react/provider.tsx
+
+:::
+
+### Parameters
+
+`useResolverRolesSuspense` accepts the same operation parameters described above. Its Effect Atom options omit `enabled` because a Suspense read always executes.
+
+```ts
+import type { UseEnsSuspenseAtomParameters } from "@ensforge/react";
+import type { GetResolverRolesParameters } from "@ensforge/sdk/capabilities";
+```
+
+<!--@include: @/shared/react/suspense-atom-parameters.md-->
+
+### Return Type
+
+```ts
+type Result = ReturnType<typeof useResolverRolesSuspense>;
+```
+
+<!--@include: @/shared/react/suspense-atom-result.md-->
+
 ## Effect Atom
 
 ```ts

@@ -75,6 +75,56 @@ type Result = ReturnType<typeof useData>;
 
 <!--@include: @/shared/react/atom-result.md-->
 
+## Suspense
+
+Use `useDataSuspense` when the read belongs beneath React [Suspense](https://react.dev/reference/react/Suspense) and an error boundary. It starts immediately, suspends during the initial load, and throws typed failures to the nearest error boundary.
+
+### Import
+
+```tsx
+import { useDataSuspense } from "@ensforge/react";
+```
+
+### Usage
+
+::: code-group
+
+```tsx [component.tsx]
+import { useDataSuspense } from "@ensforge/react";
+
+function Component() {
+  const result = useDataSuspense({
+    name: "example.eth",
+    key: "url",
+  });
+
+  return <pre>{JSON.stringify(result.data, null, 2)}</pre>;
+}
+```
+
+<<< @/snippets/react/provider.tsx
+
+:::
+
+### Parameters
+
+`useDataSuspense` accepts the same operation parameters described above. Its Effect Atom options omit `enabled` because a Suspense read always executes.
+
+```ts
+import type { UseEnsSuspenseAtomParameters } from "@ensforge/react";
+import type { GetDataParameters } from "@ensforge/sdk/records";
+```
+
+<!--@include: @/shared/react/suspense-atom-parameters.md-->
+
+### Return Type
+
+```ts
+type Result = ReturnType<typeof useDataSuspense>;
+```
+
+<!--@include: @/shared/react/suspense-atom-result.md-->
+
 ## Effect Atom
 
 ```ts

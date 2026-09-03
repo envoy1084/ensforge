@@ -119,6 +119,45 @@ type Result = ReturnType<typeof useRegistrationCommitment>;
 
 <!--@include: @/shared/react/atom-result.md-->
 
+## Suspense
+
+Use `useRegistrationCommitmentSuspense` when the read belongs beneath React [Suspense](https://react.dev/reference/react/Suspense) and an error boundary. It starts immediately, suspends during the initial load, and throws typed failures to the nearest error boundary.
+
+### Import
+
+```tsx
+import { useRegistrationCommitmentSuspense } from "@ensforge/react";
+```
+
+### Usage
+
+```tsx
+function Component() {
+  const result = useRegistrationCommitmentSuspense({
+    name: "example.eth",
+    duration: 365n * 24n * 60n * 60n,
+    owner: "0x0000000000000000000000000000000000000001",
+    secret: "0x0000000000000000000000000000000000000000000000000000000000000001",
+  });
+
+  return <pre>{JSON.stringify(result.data, null, 2)}</pre>;
+}
+```
+
+### Parameters
+
+`useRegistrationCommitmentSuspense` accepts the same operation parameters described above. Its Effect Atom options omit `enabled` because a Suspense read always executes.
+
+```ts
+type Parameters = Parameters<typeof useRegistrationCommitmentSuspense>[0];
+```
+
+<!--@include: @/shared/react/suspense-atom-parameters.md-->
+
+### Return Type
+
+<!--@include: @/shared/react/suspense-atom-result.md-->
+
 ## Effect Atom
 
 ```ts

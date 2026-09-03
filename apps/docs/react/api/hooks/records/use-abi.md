@@ -74,6 +74,55 @@ type Result = ReturnType<typeof useAbi>;
 
 <!--@include: @/shared/react/atom-result.md-->
 
+## Suspense
+
+Use `useAbiSuspense` when the read belongs beneath React [Suspense](https://react.dev/reference/react/Suspense) and an error boundary. It starts immediately, suspends during the initial load, and throws typed failures to the nearest error boundary.
+
+### Import
+
+```tsx
+import { useAbiSuspense } from "@ensforge/react";
+```
+
+### Usage
+
+::: code-group
+
+```tsx [component.tsx]
+import { useAbiSuspense } from "@ensforge/react";
+
+function Component() {
+  const result = useAbiSuspense({
+    name: "example.eth",
+  });
+
+  return <pre>{JSON.stringify(result.data, null, 2)}</pre>;
+}
+```
+
+<<< @/snippets/react/provider.tsx
+
+:::
+
+### Parameters
+
+`useAbiSuspense` accepts the same operation parameters described above. Its Effect Atom options omit `enabled` because a Suspense read always executes.
+
+```ts
+import type { UseEnsSuspenseAtomParameters } from "@ensforge/react";
+import type { GetAbiParameters } from "@ensforge/sdk/records";
+```
+
+<!--@include: @/shared/react/suspense-atom-parameters.md-->
+
+### Return Type
+
+```ts
+type Result = ReturnType<typeof useAbiSuspense>;
+```
+
+<!--@include: @/shared/react/suspense-atom-result.md-->
+
 ## Effect Atom
 
 ```ts

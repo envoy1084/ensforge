@@ -86,7 +86,6 @@ export default withTwoslashInlineCache(
         },
       ],
       ["meta", { content: "#315cf5", name: "theme-color" }],
-      ["meta", { content: "index, follow", name: "robots" }],
       [
         "meta",
         {
@@ -135,7 +134,12 @@ export default withTwoslashInlineCache(
         light: "vitesse-light",
       },
     },
-    sitemap: { hostname: siteUrl, lastmodDateOnly: true },
+    sitemap: {
+      hostname: siteUrl,
+      lastmodDateOnly: true,
+      transformItems: (items) =>
+        items.filter(({ url }) => !url.endsWith("-suspense") && !url.endsWith("-suspense/")),
+    },
     srcExclude: ["README.md", "shared/**"],
     themeConfig: {
       editLink: {
@@ -207,12 +211,23 @@ export default withTwoslashInlineCache(
     title: "ensforge",
     titleTemplate: ":title | ensforge",
     transformHead({ pageData }) {
-      const canonicalUrl = new URL(pageData.relativePath.replace(/index\.md$/, ""), `${siteUrl}/`);
+      const canonicalPath =
+        typeof pageData.frontmatter.canonical === "string"
+          ? pageData.frontmatter.canonical
+          : pageData.relativePath.replace(/index\.md$/, "").replace(/\.md$/, "");
+      const canonicalUrl = new URL(canonicalPath, `${siteUrl}/`);
       const socialTitle =
         pageData.title === "ensforge" ? "ensforge" : `${pageData.title} | ensforge`;
       const socialDescription = pageData.description || siteDescription;
-      const canonicalHref = canonicalUrl.href.replace(/\.md$/, "");
+      const canonicalHref = canonicalUrl.href;
       return [
+        [
+          "meta",
+          {
+            content: pageData.frontmatter.noindex === true ? "noindex, follow" : "index, follow",
+            name: "robots",
+          },
+        ],
         ["link", { href: canonicalHref, rel: "canonical" }],
         ["meta", { content: canonicalHref, property: "og:url" }],
         ["meta", { content: socialTitle, property: "og:title" }],
@@ -226,7 +241,7 @@ export default withTwoslashInlineCache(
         tailwindcss(),
         llmstxt({
           description: "Type-safe TypeScript tools for ENS",
-          ignoreFiles: ["README.md", "shared/", "snippets/"],
+          ignoreFiles: ["README.md", "shared/", "snippets/", "react/api/hooks/**/*-suspense.md"],
         }),
         groupIconVitePlugin(),
         unocss(),

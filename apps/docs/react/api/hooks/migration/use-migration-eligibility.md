@@ -75,6 +75,56 @@ type Result = ReturnType<typeof useMigrationEligibility>;
 
 <!--@include: @/shared/react/atom-result.md-->
 
+## Suspense
+
+Use `useMigrationEligibilitySuspense` when the read belongs beneath React [Suspense](https://react.dev/reference/react/Suspense) and an error boundary. It starts immediately, suspends during the initial load, and throws typed failures to the nearest error boundary.
+
+### Import
+
+```tsx
+import { useMigrationEligibilitySuspense } from "@ensforge/react";
+```
+
+### Usage
+
+::: code-group
+
+```tsx [component.tsx]
+import { useMigrationEligibilitySuspense } from "@ensforge/react";
+
+function Component() {
+  const result = useMigrationEligibilitySuspense({
+    name: "example.eth",
+    account: {},
+  });
+
+  return <pre>{JSON.stringify(result.data, null, 2)}</pre>;
+}
+```
+
+<<< @/snippets/react/provider.tsx
+
+:::
+
+### Parameters
+
+`useMigrationEligibilitySuspense` accepts the same operation parameters described above. Its Effect Atom options omit `enabled` because a Suspense read always executes.
+
+```ts
+import type { UseEnsSuspenseAtomParameters } from "@ensforge/react";
+import type { GetMigrationEligibilityParameters } from "@ensforge/sdk/migration";
+```
+
+<!--@include: @/shared/react/suspense-atom-parameters.md-->
+
+### Return Type
+
+```ts
+type Result = ReturnType<typeof useMigrationEligibilitySuspense>;
+```
+
+<!--@include: @/shared/react/suspense-atom-result.md-->
+
 ## Effect Atom
 
 ```ts
