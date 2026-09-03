@@ -5,36 +5,26 @@ import { mainnet, sepolia } from "wagmi/chains";
 import type { Network } from "./network";
 import { wagmiConfig } from "./wagmi-config";
 
-const endpoint = (value: string | undefined): string | undefined => value?.trim() || undefined;
-
-const endpoints = (v1: string | undefined, v2: string | undefined) => {
-  const v1Endpoint = endpoint(v1);
-  const v2Endpoint = endpoint(v2);
-  return {
-    ...(v1Endpoint === undefined ? {} : { v1: v1Endpoint }),
-    ...(v2Endpoint === undefined ? {} : { v2: v2Endpoint }),
-  };
-};
+const siteOrigin = typeof window === "undefined" ? "http://localhost:3000" : window.location.origin;
+const indexerEndpoint = (network: Network, protocol: "v1" | "v2") =>
+  new URL(`/api/indexer/${network}/${protocol}`, siteOrigin).href;
 
 const parametersByNetwork = {
   mainnet: {
     network: "mainnet",
     publicClient: getPublicClient(wagmiConfig, { chainId: mainnet.id }),
     indexer: {
-      endpoints: endpoints(
-        import.meta.env.VITE_ENSFORGE_MAINNET_V1_INDEXER_URL,
-        import.meta.env.VITE_ENSFORGE_MAINNET_V2_INDEXER_URL,
-      ),
+      endpoints: { v1: indexerEndpoint("mainnet", "v1") },
     },
   },
   sepolia: {
     network: "sepolia",
     publicClient: getPublicClient(wagmiConfig, { chainId: sepolia.id }),
     indexer: {
-      endpoints: endpoints(
-        import.meta.env.VITE_ENSFORGE_SEPOLIA_V1_INDEXER_URL,
-        import.meta.env.VITE_ENSFORGE_SEPOLIA_V2_INDEXER_URL,
-      ),
+      endpoints: {
+        v1: indexerEndpoint("sepolia", "v1"),
+        v2: indexerEndpoint("sepolia", "v2"),
+      },
     },
   },
 } as const;

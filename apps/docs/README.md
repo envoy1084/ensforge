@@ -11,6 +11,11 @@ pnpm --filter @ensforge/docs preview
 The production site defaults to `https://ensforge.com`. Set `SITE_URL` during preview deployments to
 override canonical URLs and the generated sitemap hostname.
 
+Interactive indexer examples use same-origin server routes so upstream credentials and CORS policies
+are not exposed to the browser. Configure custom endpoints with the server-only
+`ENSFORGE_MAINNET_V1_INDEXER_URL`, `ENSFORGE_SEPOLIA_V1_INDEXER_URL`, and
+`ENSFORGE_SEPOLIA_V2_INDEXER_URL` variables. Do not give indexer credentials a `VITE_` prefix.
+
 Vocs generates the sitemap, robots directives, `llms.txt`, `llms-full.txt`, per-page Markdown, and
 the MCP endpoint as part of the application.
 
