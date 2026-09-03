@@ -27,7 +27,7 @@ export function WalletConnectButton() {
 
         return (
           <div
-            className="ensforge-demo ensforge-wallet-control flex items-center"
+            className="ensforge-wallet ensforge-wallet-control flex items-center"
             {...(!ready && {
               "aria-hidden": true,
               style: {
@@ -40,9 +40,9 @@ export function WalletConnectButton() {
             {!connected ? (
               <Button
                 aria-label="Connect wallet"
-                className="ensforge-wallet-button rounded-lg"
+                className="ensforge-wallet-button"
                 size="sm"
-                variant="secondary"
+                variant="outline"
                 onPress={openConnectModal}
               >
                 Connect
@@ -50,7 +50,7 @@ export function WalletConnectButton() {
             ) : chain.unsupported ? (
               <Button
                 aria-label="Switch to a supported network"
-                className="ensforge-wallet-button rounded-lg"
+                className="ensforge-wallet-button"
                 size="sm"
                 variant="danger"
                 onPress={openChainModal}
@@ -60,9 +60,9 @@ export function WalletConnectButton() {
             ) : (
               <Button
                 aria-label={`Open wallet account for ${account.ensName ?? account.address}`}
-                className="ensforge-wallet-button rounded-lg"
+                className="ensforge-wallet-button"
                 size="sm"
-                variant="secondary"
+                variant="outline"
                 onPress={openAccountModal}
               >
                 {account.ensAvatar ? (

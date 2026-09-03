@@ -9,22 +9,22 @@ outline: false
 
 import { HomePage } from "vocs";
 
-<div className="ensforge-home mx-auto w-full max-w-[1120px] px-6 pb-24 pt-10 md:px-0 md:pt-20">
-  <div className="grid items-center gap-14 md:grid-cols-[minmax(0,1fr)_minmax(360px,0.9fr)] md:gap-16">
-    <section className="flex max-w-[520px] flex-col items-start">
+<div className="ensforge-home mx-auto w-full max-w-[1480px] px-6 pb-24 pt-8 md:px-10 md:pt-12 xl:px-14">
+  <div className="grid items-center gap-14 lg:grid-cols-[minmax(0,1fr)_minmax(440px,0.82fr)] lg:gap-20 xl:gap-28">
+    <section className="flex max-w-[640px] flex-col items-start">
       <img
         alt="ensforge"
-        className="h-auto w-[280px] dark:hidden sm:w-[360px]"
+        className="h-auto w-[280px] dark:hidden sm:w-[420px]"
         src="/brand/wordmark-light.svg"
       />
       <img
         alt="ensforge"
-        className="hidden h-auto w-[280px] dark:block sm:w-[360px]"
+        className="hidden h-auto w-[280px] dark:block sm:w-[420px]"
         src="/brand/wordmark-dark.svg"
       />
-      <p className="mt-8 max-w-[500px] text-[20px] leading-[1.55] text-[var(--vocs-text-color-secondary)] sm:text-[22px]">
+      <div className="mt-8 max-w-[610px] text-[20px] leading-[1.55] text-[var(--vocs-text-color-secondary)] sm:text-[23px]">
         Build ENS applications with <strong className="font-medium text-[var(--vocs-text-color-heading)]">typed actions</strong>, <strong className="font-medium text-[var(--vocs-text-color-heading)]">React hooks</strong>, and one interface across ENS protocols.
-      </p>
+      </div>
       <div className="mt-8 flex flex-wrap gap-2">
         <HomePage.Button href="/sdk/getting-started" variant="accent">Get started</HomePage.Button>
         <HomePage.Button href="/react/getting-started">Explore React</HomePage.Button>
@@ -32,7 +32,7 @@ import { HomePage } from "vocs";
       </div>
     </section>
 
-    <section aria-label="ENS resolution pipeline" className="ensforge-pipeline relative overflow-hidden rounded-2xl border border-[var(--vocs-border-color-primary)] p-5 sm:p-6">
+    <section aria-label="ENS resolution pipeline" className="ensforge-pipeline relative w-full overflow-hidden rounded-2xl border border-[var(--vocs-border-color-primary)] p-5 sm:p-7">
       <div className="mb-8 flex items-center justify-between">
         <span className="font-mono text-xs text-[var(--vocs-text-color-muted)]">resolve.name</span>
         <span className="ensforge-live-dot font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--vocs-text-color-muted)]">mainnet</span>
@@ -61,7 +61,7 @@ import { HomePage } from "vocs";
 
   </div>
 
-<div className="mt-20 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+<div className="mt-20 grid gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:gap-4">
   <a className="ensforge-feature" href="/sdk/getting-started">
     <span className="ensforge-feature-label">SDK</span>
     <strong>One configured client</strong>

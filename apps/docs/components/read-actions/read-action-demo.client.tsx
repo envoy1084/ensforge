@@ -49,8 +49,12 @@ function ReadActionDemoContent({ action }: ReadActionDemoProps) {
 
   useEffect(() => {
     let current = true;
+    execution.current += 1;
     setDefinition(undefined);
     setLoadError(undefined);
+    setResult(undefined);
+    setError(undefined);
+    setIsRunning(false);
     void loadReadAction(action).then(
       (loaded) => {
         if (current) setDefinition(loaded);
@@ -99,15 +103,12 @@ function ReadActionDemoContent({ action }: ReadActionDemoProps) {
   };
 
   return (
-    <section className="ensforge-demo my-8 rounded-xl border border-[var(--vocs-border-color-primary)] p-4 sm:p-5">
+    <section className="ensforge-demo my-8 rounded-[10px] border border-[var(--vocs-border-color-primary)] p-4 sm:p-5">
       <div className="mb-4 flex items-center justify-between gap-4">
-        <div className="font-mono text-sm font-semibold text-[var(--vocs-text-color-heading)]">
-          {definition?.label ?? action.split(".").at(-1)}
-        </div>
-
+        <span className="text-xs font-medium text-[var(--vocs-text-color-secondary)]">Network</span>
         <Segment
           aria-label="Network"
-          className="shrink-0 rounded-lg"
+          className="ensforge-network-segment shrink-0"
           selectedKey={network}
           size="sm"
           onSelectionChange={(key) => selectNetwork(String(key) as Network)}
@@ -147,7 +148,7 @@ function ReadActionDemoContent({ action }: ReadActionDemoProps) {
 export function ReadActionDemo(props: ReadActionDemoProps) {
   return (
     <ClientOnly>
-      <ReadActionDemoContent {...props} />
+      <ReadActionDemoContent key={props.action} {...props} />
     </ClientOnly>
   );
 }

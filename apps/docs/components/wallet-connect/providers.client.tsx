@@ -1,6 +1,6 @@
 "use client";
 
-import { type ReactNode, useEffect, useState } from "react";
+import { type ReactNode, useEffect, useMemo, useState } from "react";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
@@ -28,13 +28,22 @@ export function WalletProviders({ children }: { readonly children: ReactNode }) 
     return () => observer.disconnect();
   }, []);
 
-  const theme = isDark
-    ? darkTheme({
-        accentColor: "#ffb21c",
-        accentColorForeground: "#1b1007",
-        borderRadius: "medium",
-      })
-    : lightTheme({ accentColor: "#d95712", borderRadius: "medium" });
+  const theme = useMemo(
+    () =>
+      isDark
+        ? darkTheme({
+            accentColor: "#ffb21c",
+            accentColorForeground: "#1b1007",
+            borderRadius: "small",
+            overlayBlur: "small",
+          })
+        : lightTheme({
+            accentColor: "#d95712",
+            borderRadius: "small",
+            overlayBlur: "small",
+          }),
+    [isDark],
+  );
 
   return (
     <WagmiProvider config={wagmiConfig}>
