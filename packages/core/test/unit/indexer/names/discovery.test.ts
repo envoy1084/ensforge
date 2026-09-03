@@ -112,12 +112,7 @@ describe("indexed discovery actions", () => {
       });
 
       const first = yield* getNamesForAddress.effect(config, { address: owner, pageSize: 1 });
-      assert.deepStrictEqual(first.items[0]?.relations, [
-        "owner",
-        "manager",
-        "registry-owner",
-        "registrant",
-      ]);
+      assert.deepStrictEqual(first.items[0]?.relations, ["owner"]);
       if (first.pageInfo.cursor === null) return assert.fail("expected another relation page");
       const second = yield* getNamesForAddress.effect(config, {
         address: owner,

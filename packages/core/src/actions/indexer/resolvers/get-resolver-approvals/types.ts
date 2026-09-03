@@ -19,7 +19,7 @@ import type { ResolverIndexerError } from "../types.js";
 const PositivePageSize = Schema.Int.pipe(Schema.check(Schema.isGreaterThan(0)));
 
 export const GetResolverApprovalsParameters = Schema.Struct({
-  filter: Schema.optional(ResolverApprovalFilter),
+  filter: ResolverApprovalFilter,
   pageSize: Schema.optional(PositivePageSize),
   cursor: Schema.optional(IndexerCursor),
 });

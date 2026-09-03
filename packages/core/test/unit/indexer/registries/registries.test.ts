@@ -173,47 +173,49 @@ describe("indexed registries", () => {
 
   it.effect("filters roles while preserving raw bitmap and decoded permissions", () =>
     Effect.gen(function* () {
-      const fetch: typeof globalThis.fetch = () =>
-        Promise.resolve(
+      const fetch: typeof globalThis.fetch = (_input, init) => {
+        const operation = request(init);
+        assert.strictEqual(operation.variables.registry, registry.toLowerCase());
+        assert.strictEqual(operation.variables.resource, "1");
+        return Promise.resolve(
           response({
             _meta: { block: { number: 500 } },
-            registry: {
-              roleConnection: {
-                edges: [
-                  {
-                    cursor: "role-1",
-                    node: {
-                      id: "role-1",
-                      account,
-                      resource: "1",
-                      name: "alice.eth",
-                      roleBitmap: "0x00",
-                      permissions: [],
-                      blockNumber: 10,
-                      timestamp: 100,
-                      transactionHash,
-                    },
+            roleConnection: {
+              edges: [
+                {
+                  cursor: "role-1",
+                  node: {
+                    id: "role-1",
+                    account,
+                    resource: "1",
+                    name: "alice.eth",
+                    roleBitmap: "0x00",
+                    permissions: [],
+                    blockNumber: 10,
+                    timestamp: 100,
+                    transactionHash,
                   },
-                  {
-                    cursor: "role-2",
-                    node: {
-                      id: "role-2",
-                      account,
-                      resource: "1",
-                      name: "alice.eth",
-                      roleBitmap: "0x01",
-                      permissions: ["SET_RESOLVER"],
-                      blockNumber: 20,
-                      timestamp: 200,
-                      transactionHash,
-                    },
+                },
+                {
+                  cursor: "role-2",
+                  node: {
+                    id: "role-2",
+                    account,
+                    resource: "1",
+                    name: "alice.eth",
+                    roleBitmap: "0x01",
+                    permissions: ["SET_RESOLVER"],
+                    blockNumber: 20,
+                    timestamp: 200,
+                    transactionHash,
                   },
-                ],
-                pageInfo: { hasNextPage: false, endCursor: "role-2" },
-              },
+                },
+              ],
+              pageInfo: { hasNextPage: false, endCursor: "role-2" },
             },
           }),
         );
+      };
       const config = createConfig({
         network: "sepolia",
         publicClient: makeSepoliaPublicClient(),
@@ -222,7 +224,7 @@ describe("indexed registries", () => {
 
       const result = yield* getRegistryRoles.effect(config, {
         registry,
-        filter: { active: true, permission: "SET_RESOLVER" },
+        filter: { resource: "1", active: true, permission: "SET_RESOLVER" },
       });
       assert.strictEqual(result.status, "supported");
       if (result.status !== "supported") return;

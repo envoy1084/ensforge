@@ -51,7 +51,7 @@ describe("Sepolia indexed resolvers", () => {
           getResolversForAddress.effect(sepoliaConfig, { address: owner }),
           getResolverMetadata.effect(sepoliaConfig, { resolver: name.resolver }),
           getResolverApprovals.effect(sepoliaConfig, {
-            filter: { resolver: name.resolver },
+            filter: { namehash: name.namehash, resolver: name.resolver },
           }),
         ],
         { concurrency: "unbounded" },

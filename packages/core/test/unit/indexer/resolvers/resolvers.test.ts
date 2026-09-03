@@ -1,5 +1,5 @@
 import { assert, describe, it } from "@effect/vitest";
-import { Effect } from "effect";
+import { Effect, Exit, Schema } from "effect";
 
 import { namehash } from "viem/ens";
 
@@ -10,6 +10,7 @@ import {
   getResolversForAddress,
 } from "../../../../src/actions/indexer/resolvers/index.js";
 import { createConfig } from "../../../../src/index.js";
+import { Namehash } from "../../../../src/schemas/hash.js";
 import {
   makeMainnetPublicClient,
   makeSepoliaPublicClient,
@@ -19,7 +20,7 @@ const resolver = "0x0000000000000000000000000000000000001000" as const;
 const secondResolver = "0x0000000000000000000000000000000000002000" as const;
 const owner = "0x0000000000000000000000000000000000003000" as const;
 const delegate = "0x0000000000000000000000000000000000004000" as const;
-const aliceNamehash = namehash("alice.eth");
+const aliceNamehash = Schema.decodeUnknownSync(Namehash)(namehash("alice.eth"));
 const transactionHash = `0x${"ab".repeat(32)}` as const;
 
 const response = (data: unknown) =>
@@ -221,7 +222,10 @@ describe("indexed resolvers", () => {
         indexer: { endpoints: { v1: null }, fetch, retry: { attempts: 0 } },
       });
 
-      const first = yield* getResolverApprovals.effect(config, { pageSize: 1 });
+      const first = yield* getResolverApprovals.effect(config, {
+        filter: { namehash: aliceNamehash },
+        pageSize: 1,
+      });
       assert.strictEqual(first.status, "supported");
       if (first.status !== "supported" || first.value.pageInfo.cursor === null) {
         return assert.fail("expected an approval cursor");
@@ -233,6 +237,7 @@ describe("indexed resolvers", () => {
       assert.isFalse(first.value.items[0]?.approved);
 
       const second = yield* getResolverApprovals.effect(config, {
+        filter: { namehash: aliceNamehash },
         pageSize: 1,
         cursor: first.value.pageInfo.cursor,
       });
@@ -255,6 +260,21 @@ describe("indexed resolvers", () => {
       );
       assert.isFalse(filtered.value.items[0]?.approved);
       assert.include(requestedDelegates, delegate.toLowerCase());
+    }),
+  );
+
+  it.effect("requires an indexed approval anchor", () =>
+    Effect.gen(function* () {
+      const config = createConfig({
+        network: "sepolia",
+        publicClient: makeSepoliaPublicClient(),
+        indexer: { endpoints: { v1: null }, retry: { attempts: 0 } },
+      });
+      const result = yield* Effect.exit(
+        getResolverApprovals.effect(config, { filter: {}, pageSize: 1 }),
+      );
+
+      assert.isTrue(Exit.isFailure(result));
     }),
   );
 

@@ -31,8 +31,8 @@ export const eventTypes = Object.freeze({
     "VersionChanged",
   ],
   migration: [],
-  subregistry: [],
-  role: [],
+  subregistry: ["SubregistryUpdated"],
+  role: ["EACRolesChanged"],
   reverse: ["ReverseClaimed"],
   unknown: [],
 }) satisfies Readonly<Record<IndexedEvent["kind"], ReadonlyArray<string>>>;

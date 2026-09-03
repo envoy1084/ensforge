@@ -19,9 +19,7 @@ import {
   decodeNullableAddress,
 } from "./scalars.js";
 
-type RegistryRoleWire = NonNullable<
-  V2GetRegistryRolesQuery["registry"]
->["roleConnection"]["edges"][number]["node"];
+type RegistryRoleWire = V2GetRegistryRolesQuery["roleConnection"]["edges"][number]["node"];
 
 export const normalizeV2Registry = Effect.fn("normalizeV2Registry")(function* (
   wire: V2RegistryFieldsFragment,

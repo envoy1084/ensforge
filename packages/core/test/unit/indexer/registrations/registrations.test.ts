@@ -1,5 +1,5 @@
 import { assert, describe, it } from "@effect/vitest";
-import { Effect } from "effect";
+import { Effect, Exit } from "effect";
 
 import { namehash } from "viem/ens";
 
@@ -124,6 +124,22 @@ describe("indexed registrations", () => {
 
       yield* getRegistrationsForAddress.effect(config, { address: registrant });
       assert.strictEqual(requests, 2);
+    }),
+  );
+
+  it.effect("rejects exact-name filters on the registration collection", () =>
+    Effect.gen(function* () {
+      const config = createConfig({
+        network: "sepolia",
+        publicClient: makeSepoliaPublicClient(),
+      });
+      const result = yield* Effect.exit(
+        getRegistrations.effect(config, {
+          filter: { name: "alice.eth" },
+        } as never),
+      );
+
+      assert.isTrue(Exit.isFailure(result));
     }),
   );
 });

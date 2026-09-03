@@ -6,15 +6,14 @@ import { getRegistrations } from "../../../src/actions/indexer/registrations/ind
 import { mainnetConfig } from "../setup/mainnet.js";
 
 describe("Mainnet indexed registration history", () => {
-  it.effect("reads a V1 registration", () =>
+  it.effect("reads the recent V1 registration feed", () =>
     Effect.gen(function* () {
       const page = yield* getRegistrations.effect(mainnetConfig, {
-        filter: { name: "vitalik.eth", protocols: ["v1"] },
-        pageSize: 1,
+        filter: { protocols: ["v1"] },
+        pageSize: 3,
       });
-      assert.lengthOf(page.items, 1);
-      assert.strictEqual(page.items[0]?.protocol, "v1");
-      assert.strictEqual(page.items[0]?.name.value, "vitalik.eth");
+      assert.lengthOf(page.items, 3);
+      assert.isTrue(page.items.every(({ protocol }) => protocol === "v1"));
     }),
   );
 

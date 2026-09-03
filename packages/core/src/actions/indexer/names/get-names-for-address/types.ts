@@ -27,11 +27,4 @@ export const GetNamesForAddressResult = IndexerPage(RelatedIndexedName);
 export type GetNamesForAddressResult = IndexerPageType<RelatedIndexedNameType>;
 export type GetNamesForAddressError = GetNamesError;
 
-export const defaultAddressRelations = Object.freeze([
-  "owner",
-  "manager",
-  "registry-owner",
-  "registrant",
-  "wrapped-owner",
-  "role-holder",
-] as const);
+export const defaultAddressRelations = Object.freeze(["owner"] as const);

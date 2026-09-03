@@ -1,7 +1,5 @@
 import { Effect, Schema } from "effect";
 
-import { normalize } from "viem/ens";
-
 import { defineAction } from "../../../../action/action.js";
 import type { EnsforgeConfig } from "../../../../config/config.js";
 import {
@@ -85,16 +83,14 @@ export const getRegistrationsEffect = Effect.fn("ensforge.getRegistrations")(fun
   const filter = yield* Effect.try({
     try: (): RegistrationFilter => {
       validateRegistrationFilter(decoded.filter ?? {});
-      return decoded.filter?.name === undefined
-        ? (decoded.filter ?? {})
-        : { ...decoded.filter, name: normalize(decoded.filter.name) };
+      return decoded.filter ?? {};
     },
     catch: (cause) =>
       cause instanceof IndexerFilterError
         ? cause
         : new IndexerFilterError({
             code: "INVALID_FILTER",
-            message: "The registration name is invalid",
+            message: "The registration filter is invalid",
           }),
   });
   const order: RegistrationOrder = decoded.order ?? defaultRegistrationOrder;
@@ -105,12 +101,9 @@ export const getRegistrationsEffect = Effect.fn("ensforge.getRegistrations")(fun
       message: `pageSize cannot exceed ${config.indexer.maximumPageSize}`,
     });
   }
-  const graphNumbers = [
-    filter.registeredAfter,
-    filter.registeredBefore,
-    filter.expiryAfter,
-    filter.expiryBefore,
-  ].filter((value): value is bigint => value !== undefined);
+  const graphNumbers = [filter.expiryAfter, filter.expiryBefore].filter(
+    (value): value is bigint => value !== undefined,
+  );
   if (graphNumbers.some((value) => value > 2_147_483_647n)) {
     return yield* new IndexerFilterError({
       code: "INVALID_FILTER",

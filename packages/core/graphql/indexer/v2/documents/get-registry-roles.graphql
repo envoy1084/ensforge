@@ -1,29 +1,40 @@
-query V2GetRegistryRoles($address: String!, $account: String, $first: Int!, $after: String) {
+query V2GetRegistryRoles(
+  $registry: String!
+  $account: String
+  $resource: String
+  $first: Int!
+  $after: String
+) {
   _meta {
     block {
       number
     }
   }
-  registry(address: $address) {
-    roleConnection(account: $account, first: $first, after: $after) {
-      edges {
-        cursor
-        node {
-          id
-          account
-          resource
-          name
-          roleBitmap
-          permissions
-          blockNumber
-          timestamp
-          transactionHash
-        }
+  roleConnection(
+    contract: $registry
+    protocol: "v2"
+    account: $account
+    resource: $resource
+    first: $first
+    after: $after
+  ) {
+    edges {
+      cursor
+      node {
+        id
+        account
+        resource
+        name
+        roleBitmap
+        permissions
+        blockNumber
+        timestamp
+        transactionHash
       }
-      pageInfo {
-        hasNextPage
-        endCursor
-      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
     }
   }
 }

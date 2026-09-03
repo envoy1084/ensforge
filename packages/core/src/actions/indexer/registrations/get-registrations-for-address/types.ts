@@ -1,6 +1,5 @@
 import { Schema } from "effect";
 
-import { Namehash } from "../../../../schemas/hash.js";
 import { EthereumAddress } from "../../../../schemas/identity.js";
 import { IndexerCursor } from "../../models/pagination.js";
 import { RegistrationOrder } from "../../models/registration.js";
@@ -9,11 +8,11 @@ import type { GetRegistrationsError, GetRegistrationsResult } from "../get-regis
 const PositivePageSize = Schema.Int.pipe(Schema.check(Schema.isGreaterThan(0)));
 const NonNegativeBigInt = Schema.BigInt.pipe(Schema.check(Schema.isGreaterThanOrEqualToBigInt(0n)));
 const AddressRegistrationFilter = Schema.Struct({
-  name: Schema.optional(Schema.String),
-  namehash: Schema.optional(Namehash),
+  name: Schema.optional(Schema.Never),
+  namehash: Schema.optional(Schema.Never),
   protocols: Schema.optional(Schema.Array(Schema.Literals(["v1", "v2"]))),
-  registeredAfter: Schema.optional(NonNegativeBigInt),
-  registeredBefore: Schema.optional(NonNegativeBigInt),
+  registeredAfter: Schema.optional(Schema.Never),
+  registeredBefore: Schema.optional(Schema.Never),
   expiryAfter: Schema.optional(NonNegativeBigInt),
   expiryBefore: Schema.optional(NonNegativeBigInt),
 });

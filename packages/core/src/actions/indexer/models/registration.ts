@@ -33,12 +33,12 @@ export const IndexedRegistration = Schema.Struct({
 export type IndexedRegistration = typeof IndexedRegistration.Type;
 
 export const RegistrationFilter = Schema.Struct({
-  name: Schema.optional(Schema.String),
-  namehash: Schema.optional(Namehash),
+  name: Schema.optional(Schema.Never),
+  namehash: Schema.optional(Schema.Never),
   registrant: Schema.optional(EthereumAddress),
   protocols: Schema.optional(Schema.Array(Schema.Literals(["v1", "v2"]))),
-  registeredAfter: Schema.optional(NonNegativeBigInt),
-  registeredBefore: Schema.optional(NonNegativeBigInt),
+  registeredAfter: Schema.optional(Schema.Never),
+  registeredBefore: Schema.optional(Schema.Never),
   expiryAfter: Schema.optional(NonNegativeBigInt),
   expiryBefore: Schema.optional(NonNegativeBigInt),
 });

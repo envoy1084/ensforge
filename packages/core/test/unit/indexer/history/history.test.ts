@@ -234,4 +234,35 @@ describe("indexed history", () => {
       assert.isFalse(second.pageInfo.hasNextPage);
     }),
   );
+
+  it.effect("pushes V2 role and subregistry kinds into the event connection", () =>
+    Effect.gen(function* () {
+      const fetch: typeof globalThis.fetch = (_input, init) => {
+        const { variables } = request(init);
+        assert.deepInclude(variables.where, {
+          type_in: ["EACRolesChanged", "SubregistryUpdated"],
+        });
+        return Promise.resolve(
+          response({
+            _meta: { block: { number: 250 } },
+            eventConnection: {
+              edges: [],
+              pageInfo: { hasNextPage: false, endCursor: null },
+            },
+          }),
+        );
+      };
+      const config = createConfig({
+        network: "sepolia",
+        publicClient: makeSepoliaPublicClient(),
+        indexer: { endpoints: { v1: null }, fetch, retry: { attempts: 0 } },
+      });
+
+      const page = yield* getEvents.effect(config, {
+        filter: { kinds: ["role", "subregistry"] },
+      });
+
+      assert.isEmpty(page.items);
+    }),
+  );
 });

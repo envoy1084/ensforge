@@ -73,12 +73,18 @@ const getResolverApprovalsEffect = Effect.fn("ensforge.getResolverApprovals")(fu
   );
   const unsupported = getV2IndexerUnsupported(config);
   if (unsupported !== null) return unsupported;
+  if (decoded.filter.namehash === undefined && decoded.filter.delegate === undefined) {
+    return yield* new IndexerFilterError({
+      code: "INVALID_FILTER",
+      message: "Filter resolver approvals by namehash or delegate",
+    });
+  }
   const filter: ResolverApprovalFilter = {
     ...decoded.filter,
-    ...(decoded.filter?.resolver !== undefined && {
+    ...(decoded.filter.resolver !== undefined && {
       resolver: getAddress(decoded.filter.resolver),
     }),
-    ...(decoded.filter?.delegate !== undefined && {
+    ...(decoded.filter.delegate !== undefined && {
       delegate: getAddress(decoded.filter.delegate),
     }),
   };

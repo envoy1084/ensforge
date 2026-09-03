@@ -10,25 +10,11 @@ export const matchesRegistrationFilter = (
   filter: RegistrationFilter,
 ): boolean => {
   if (
-    filter.name !== undefined &&
-    (registration.name.kind !== "normalized" || registration.name.value !== filter.name)
-  )
-    return false;
-  if (
-    filter.namehash !== undefined &&
-    registration.namehash.toLowerCase() !== filter.namehash.toLowerCase()
-  )
-    return false;
-  if (
     filter.registrant !== undefined &&
     registration.registrant.toLowerCase() !== filter.registrant.toLowerCase()
   )
     return false;
   if (filter.protocols !== undefined && !filter.protocols.includes(registration.protocol))
-    return false;
-  if (filter.registeredAfter !== undefined && registration.registeredAt <= filter.registeredAfter)
-    return false;
-  if (filter.registeredBefore !== undefined && registration.registeredAt >= filter.registeredBefore)
     return false;
   if (filter.expiryAfter !== undefined && registration.expiry <= filter.expiryAfter) return false;
   if (filter.expiryBefore !== undefined && registration.expiry >= filter.expiryBefore) return false;
@@ -53,16 +39,20 @@ export const compareRegistrations =
   };
 
 export const validateRegistrationFilter = (filter: RegistrationFilter): void => {
-  if (filter.name !== undefined && filter.namehash !== undefined) {
-    throw new IndexerFilterError({
-      code: "INVALID_FILTER",
-      message: "Filter registrations by name or namehash, not both",
-    });
-  }
   if (filter.protocols?.length === 0) {
     throw new IndexerFilterError({
       code: "INVALID_FILTER",
       message: "At least one registration protocol is required",
+    });
+  }
+  if (
+    filter.expiryAfter !== undefined &&
+    filter.expiryBefore !== undefined &&
+    filter.expiryAfter >= filter.expiryBefore
+  ) {
+    throw new IndexerFilterError({
+      code: "INVALID_FILTER",
+      message: "expiryAfter must be less than expiryBefore",
     });
   }
 };

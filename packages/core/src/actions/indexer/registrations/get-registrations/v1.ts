@@ -1,7 +1,5 @@
 import { Effect, Result } from "effect";
 
-import { namehash as makeNamehash, normalize } from "viem/ens";
-
 import type { EnsforgeConfig } from "../../../../config/config.js";
 import { IndexerPaginationError } from "../../../../errors/indexer-pagination-error.js";
 import { requestIndexer } from "../../../../internal/indexer/client.js";
@@ -66,20 +64,10 @@ export const queryV1Registrations = Effect.fn("queryV1Registrations")(function* 
     let skip = initialSkip;
     let indexedBlock = 0n;
     let hasNextPage = true;
-    const normalizedName = filter.name === undefined ? undefined : normalize(filter.name);
-    const namehash = normalizedName === undefined ? filter.namehash : makeNamehash(normalizedName);
-
     while (candidates.length <= limit && hasNextPage) {
       const batchSize = limit + 1;
       const where: V1GetRegistrationsQueryVariables["where"] = {
-        ...(namehash === undefined ? {} : { domain: namehash }),
         ...(filter.registrant === undefined ? {} : { registrant: filter.registrant.toLowerCase() }),
-        ...(filter.registeredAfter === undefined
-          ? {}
-          : { registrationDate_gt: filter.registeredAfter.toString() }),
-        ...(filter.registeredBefore === undefined
-          ? {}
-          : { registrationDate_lt: filter.registeredBefore.toString() }),
         ...(filter.expiryAfter === undefined
           ? {}
           : { expiryDate_gt: filter.expiryAfter.toString() }),

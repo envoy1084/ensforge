@@ -125,8 +125,9 @@ const getRegistryRolesEffect = Effect.fn("ensforge.getRegistryRoles")(function* 
       operationName,
       document: V2GetRegistryRolesDocument,
       variables: {
-        address: registry.toLowerCase(),
+        registry: registry.toLowerCase(),
         account: filter.account?.toLowerCase() ?? null,
+        resource: filter.resource?.toLowerCase() ?? null,
         first: requestSize,
         after,
       },
@@ -138,11 +139,7 @@ const getRegistryRolesEffect = Effect.fn("ensforge.getRegistryRoles")(function* 
       operationName,
       data["_meta"].block.number,
     );
-    const connection = data.registry?.roleConnection;
-    if (connection === undefined) {
-      hasNextPage = false;
-      break;
-    }
+    const connection = data.roleConnection;
     hasNextPage = connection.pageInfo.hasNextPage;
     for (const { cursor, node } of connection.edges) {
       after = cursor;
