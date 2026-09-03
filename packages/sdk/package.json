@@ -12,7 +12,7 @@
     "wagmi",
     "web3"
   ],
-  "homepage": "https://ensforge.envoy1084.xyz/sdk/",
+  "homepage": "https://ensforge.com",
   "bugs": "https://github.com/envoy1084/ensforge/issues",
   "license": "Apache-2.0",
   "repository": {
@@ -142,7 +142,7 @@
   "peerDependencies": {
     "effect": "^4.0.0-rc.112",
     "viem": "^2.56.0",
-    "wagmi": "^3.0.0"
+    "wagmi": ">=2.19.0 <4.0.0"
   },
   "peerDependenciesMeta": {
     "wagmi": {

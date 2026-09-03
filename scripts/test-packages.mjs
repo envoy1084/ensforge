@@ -60,7 +60,7 @@ const writeLocalPackageOverrides = (projectDirectory) => {
     .join("\n");
   write(
     join(projectDirectory, "pnpm-workspace.yaml"),
-    `packages:\n  - "."\n\nallowBuilds:\n  esbuild: true\n  msgpackr-extract: true\n\noverrides:\n${overrides}\n`,
+    `packages:\n  - "."\n\nallowBuilds:\n  bufferutil: true\n  esbuild: true\n  keccak: true\n  msgpackr-extract: true\n  utf-8-validate: true\n\noverrides:\n${overrides}\n`,
   );
 };
 
@@ -174,67 +174,72 @@ assert.match(mainnetV1Deployment.contracts.registry, /^0x[0-9a-fA-F]{40}$/);
 `,
   );
 
-  const reactProject = join(temporaryRoot, "react-consumer");
-  write(
-    join(reactProject, "package.json"),
-    `${JSON.stringify(
-      {
-        name: "ensforge-react-consumer",
-        private: true,
-        type: "module",
-        scripts: {
-          check: "tsc --noEmit && vite build",
+  const reactProjects = [
+    { directory: join(temporaryRoot, "react-consumer-wagmi-2"), wagmi: "2.19.5" },
+    { directory: join(temporaryRoot, "react-consumer-wagmi-3"), wagmi: catalogVersion("wagmi") },
+  ];
+
+  for (const { directory: reactProject, wagmi } of reactProjects) {
+    write(
+      join(reactProject, "package.json"),
+      `${JSON.stringify(
+        {
+          name: `ensforge-react-consumer-wagmi-${wagmi.split(".")[0]}`,
+          private: true,
+          type: "module",
+          scripts: {
+            check: "tsc --noEmit && vite build",
+          },
+          dependencies: {
+            "@ensforge/contracts": fileDependency(reactProject, tarballs.contracts),
+            "@ensforge/core": fileDependency(reactProject, tarballs.core),
+            "@ensforge/react": fileDependency(reactProject, tarballs.react),
+            "@ensforge/sdk": fileDependency(reactProject, tarballs.sdk),
+            effect: catalogVersion("effect"),
+            react: catalogVersion("react"),
+            "react-dom": catalogVersion("react-dom"),
+            scheduler: catalogVersion("scheduler"),
+            viem: catalogVersion("viem"),
+            wagmi,
+          },
+          devDependencies: {
+            "@types/react": catalogVersion("@types/react"),
+            "@types/react-dom": catalogVersion("@types/react-dom"),
+            typescript: dependencyVersion("typescript"),
+            vite: dependencyVersion("vite"),
+          },
         },
-        dependencies: {
-          "@ensforge/contracts": fileDependency(reactProject, tarballs.contracts),
-          "@ensforge/core": fileDependency(reactProject, tarballs.core),
-          "@ensforge/react": fileDependency(reactProject, tarballs.react),
-          "@ensforge/sdk": fileDependency(reactProject, tarballs.sdk),
-          effect: catalogVersion("effect"),
-          react: catalogVersion("react"),
-          "react-dom": catalogVersion("react-dom"),
-          scheduler: catalogVersion("scheduler"),
-          viem: catalogVersion("viem"),
-          wagmi: catalogVersion("wagmi"),
+        null,
+        2,
+      )}\n`,
+    );
+    write(
+      join(reactProject, "tsconfig.json"),
+      `${JSON.stringify(
+        {
+          compilerOptions: {
+            jsx: "react-jsx",
+            lib: ["DOM", "ES2024"],
+            module: "ESNext",
+            moduleResolution: "Bundler",
+            noEmit: true,
+            skipLibCheck: true,
+            strict: true,
+            target: "ES2024",
+          },
+          include: ["src"],
         },
-        devDependencies: {
-          "@types/react": catalogVersion("@types/react"),
-          "@types/react-dom": catalogVersion("@types/react-dom"),
-          typescript: dependencyVersion("typescript"),
-          vite: dependencyVersion("vite"),
-        },
-      },
-      null,
-      2,
-    )}\n`,
-  );
-  write(
-    join(reactProject, "tsconfig.json"),
-    `${JSON.stringify(
-      {
-        compilerOptions: {
-          jsx: "react-jsx",
-          lib: ["DOM", "ES2024"],
-          module: "ESNext",
-          moduleResolution: "Bundler",
-          noEmit: true,
-          skipLibCheck: true,
-          strict: true,
-          target: "ES2024",
-        },
-        include: ["src"],
-      },
-      null,
-      2,
-    )}\n`,
-  );
-  write(
-    join(reactProject, "index.html"),
-    `<div id="root"></div><script type="module" src="/src/main.tsx"></script>\n`,
-  );
-  write(
-    join(reactProject, "src/main.tsx"),
-    `import { StrictMode } from "react";
+        null,
+        2,
+      )}\n`,
+    );
+    write(
+      join(reactProject, "index.html"),
+      `<div id="root"></div><script type="module" src="/src/main.tsx"></script>\n`,
+    );
+    write(
+      join(reactProject, "src/main.tsx"),
+      `import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { EnsforgeProvider, useOwner, useSetText } from "@ensforge/react";
 import { createConfig, http } from "wagmi";
@@ -268,9 +273,10 @@ createRoot(document.getElementById("root")!).render(
   </StrictMode>,
 );
 `,
-  );
+    );
+  }
 
-  for (const project of [nodeProject, reactProject]) {
+  for (const project of [nodeProject, ...reactProjects.map(({ directory }) => directory)]) {
     writeLocalPackageOverrides(project);
     run("pnpm", ["install", "--prefer-offline"], project);
     run("pnpm", ["check"], project);

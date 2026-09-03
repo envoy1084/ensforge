@@ -60,6 +60,8 @@ describe("createConfig with Wagmi", () => {
         transports: { [sepolia.id]: transport },
       });
       const config = createEnsforgeConfig({ network: "sepolia", wagmiConfig });
+      const connector = wagmiConfig.connectors[0];
+      if (!connector) throw new Error("Expected the mock Wagmi connector to be configured");
       const beforeConnection = yield* Effect.exit(
         Effect.provide(resolveWalletContext(), getConfigLayer(config)),
       );
@@ -71,7 +73,7 @@ describe("createConfig with Wagmi", () => {
 
       yield* Effect.tryPromise(() =>
         connect(wagmiConfig, {
-          connector: wagmiConfig.connectors[0],
+          connector,
           chainId: sepolia.id,
         }),
       );
