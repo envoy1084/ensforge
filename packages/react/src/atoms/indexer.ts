@@ -11,7 +11,9 @@ export const getIndexedResolverAtom = makeQueryAtom(
   "indexer",
   (sdk) => sdk.indexer.getIndexedResolver,
 );
-export const getIndexerStatusAtom = makeQueryAtom("indexer", (sdk) => sdk.indexer.getIndexerStatus);
+export const getIndexerStatusAtom = makeQueryAtom("indexer", (sdk) => ({
+  effect: (_parameters: object) => sdk.indexer.getIndexerStatus.effect(),
+}));
 export const getIndexedNameHistoryAtom = makeQueryAtom(
   "indexer",
   (sdk) => sdk.indexer.getNameHistory,

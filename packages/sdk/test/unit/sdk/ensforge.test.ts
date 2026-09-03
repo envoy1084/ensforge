@@ -262,6 +262,7 @@ describe("Ensforge", () => {
 
     expect(Effect.isEffect(sdk.name.getOwner.effect({ name: "ens.eth" }))).toBe(true);
     expect(Effect.isEffect(sdk.indexer.getIndexedName.effect({ name: "ens.eth" }))).toBe(true);
+    expect(Effect.isEffect(sdk.indexer.getIndexerStatus.effect())).toBe(true);
     expect(Effect.isEffect(batch)).toBe(true);
     expect(write.operation).toBe("setText");
     expect(Stream.isStream(events)).toBe(true);

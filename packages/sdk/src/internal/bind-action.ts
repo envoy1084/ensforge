@@ -3,6 +3,7 @@ import type { Effect, Stream } from "effect";
 import type {
   EnsAction,
   EnsEvent,
+  EnsNoParametersAction,
   EnsReadAction,
   EnsReadRequest,
   EnsforgeConfig,
@@ -33,6 +34,12 @@ export interface BoundBaseAction<Parameters, Success, Failure> {
   readonly effect: (parameters: Parameters) => Effect.Effect<Success, Failure>;
 }
 
+export interface BoundNoParametersAction<Success, Failure> {
+  (options?: Effect.RunOptions): Promise<Success>;
+
+  readonly effect: () => Effect.Effect<Success, Failure>;
+}
+
 export interface BoundReadAction<Parameters, Success, Failure> extends BoundBaseAction<
   Parameters,
   Success,
@@ -50,13 +57,15 @@ export interface BoundWriteAction<Parameters, Success, Failure> extends BoundBas
 }
 
 export type BoundAction<Action extends Callable> =
-  Action extends EnsReadAction<infer Parameters, infer Success, infer Failure>
-    ? BoundReadAction<Parameters, Success, Failure>
-    : Action extends EnsWriteAction<infer Parameters, infer Success, infer Failure>
-      ? BoundWriteAction<Parameters, Success, Failure>
-      : Action extends EnsAction<infer Parameters, infer Success, infer Failure>
-        ? BoundBaseAction<Parameters, Success, Failure>
-        : never;
+  Action extends EnsNoParametersAction<infer Success, infer Failure>
+    ? BoundNoParametersAction<Success, Failure>
+    : Action extends EnsReadAction<infer Parameters, infer Success, infer Failure>
+      ? BoundReadAction<Parameters, Success, Failure>
+      : Action extends EnsWriteAction<infer Parameters, infer Success, infer Failure>
+        ? BoundWriteAction<Parameters, Success, Failure>
+        : Action extends EnsAction<infer Parameters, infer Success, infer Failure>
+          ? BoundBaseAction<Parameters, Success, Failure>
+          : never;
 
 export interface BoundGetRecordsAction {
   <const Selection extends GetRecordsSelection>(

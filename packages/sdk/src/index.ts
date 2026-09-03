@@ -43,6 +43,7 @@ export type {
 } from "./groups/index.js";
 export type {
   BoundAction,
+  BoundNoParametersAction,
   BoundGetRecordsAction,
   BoundReadBatch,
   BoundReadBatchSettled,
