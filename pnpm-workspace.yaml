@@ -29,10 +29,12 @@ catalog:
   wagmi: "3.7.7"
 
 allowBuilds:
+  bufferutil: true
   esbuild: true
   keccak: true
   lefthook: true
   msgpackr-extract: true
+  utf-8-validate: true
 
 overrides:
   "vite@<6.4.3": "6.4.3"
