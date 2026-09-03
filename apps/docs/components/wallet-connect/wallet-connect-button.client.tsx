@@ -6,6 +6,11 @@ import { Button } from "@thenamespace/uikit/button";
 
 const shortenAddress = (address: string): string => `${address.slice(0, 6)}…${address.slice(-4)}`;
 
+const walletButtonClassName =
+  "h-8 min-w-max rounded-lg border-[var(--vocs-border-color-primary)] bg-[color-mix(in_srgb,var(--vocs-background-color-primary)_88%,transparent)] px-3 text-[0.8125rem] font-semibold text-[var(--vocs-text-color-primary)] hover:border-[color-mix(in_srgb,var(--vocs-text-color-muted)_45%,transparent)] hover:bg-[var(--vocs-background-color-surfaceTint)]";
+
+const walletDangerButtonClassName = "h-8 min-w-max rounded-lg px-3 text-[0.8125rem] font-semibold";
+
 export function WalletConnectButton() {
   return (
     <ConnectButton.Custom>
@@ -27,7 +32,7 @@ export function WalletConnectButton() {
 
         return (
           <div
-            className="ensforge-wallet ensforge-wallet-control flex items-center"
+            className="ensforge-wallet flex items-center"
             {...(!ready && {
               "aria-hidden": true,
               style: {
@@ -40,7 +45,7 @@ export function WalletConnectButton() {
             {!connected ? (
               <Button
                 aria-label="Connect wallet"
-                className="ensforge-wallet-button"
+                className={walletButtonClassName}
                 size="sm"
                 variant="outline"
                 onPress={openConnectModal}
@@ -50,7 +55,7 @@ export function WalletConnectButton() {
             ) : chain.unsupported ? (
               <Button
                 aria-label="Switch to a supported network"
-                className="ensforge-wallet-button"
+                className={walletDangerButtonClassName}
                 size="sm"
                 variant="danger"
                 onPress={openChainModal}
@@ -60,7 +65,7 @@ export function WalletConnectButton() {
             ) : (
               <Button
                 aria-label={`Open wallet account for ${account.ensName ?? account.address}`}
-                className="ensforge-wallet-button"
+                className={`${walletButtonClassName} max-w-56`}
                 size="sm"
                 variant="outline"
                 onPress={openAccountModal}
@@ -73,7 +78,9 @@ export function WalletConnectButton() {
                     />
                   </Avatar>
                 ) : null}
-                <span>{account.ensName ?? shortenAddress(account.address)}</span>
+                <span className="min-w-0 truncate">
+                  {account.ensName ?? shortenAddress(account.address)}
+                </span>
               </Button>
             )}
           </div>

@@ -9,6 +9,8 @@ import { ResultCodeBlock } from "../code/result-code-block";
 import { FormRenderer } from "../form/form-renderer";
 import type { Network } from "../runtime/network";
 import { getSdk } from "../runtime/sdk";
+import { WalletProviders } from "../wallet-connect/providers.client";
+import { WalletConnectButton } from "../wallet-connect/wallet-connect-button.client";
 import { loadReadAction } from "./registry/manifest";
 import type { AnyReadActionDefinition } from "./registry/types";
 
@@ -104,18 +106,23 @@ function ReadActionDemoContent({ action }: ReadActionDemoProps) {
 
   return (
     <section className="ensforge-demo my-8 rounded-[10px] border border-[var(--vocs-border-color-primary)] p-4 sm:p-5">
-      <div className="mb-4 flex items-center justify-between gap-4">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <span className="text-xs font-medium text-[var(--vocs-text-color-secondary)]">Network</span>
-        <Segment
-          aria-label="Network"
-          className="ensforge-network-segment shrink-0"
-          selectedKey={network}
-          size="sm"
-          onSelectionChange={(key) => selectNetwork(String(key) as Network)}
-        >
-          <Segment.Item id="mainnet">Mainnet</Segment.Item>
-          <Segment.Item id="sepolia">Sepolia</Segment.Item>
-        </Segment>
+        <div className="ml-auto flex max-w-full flex-wrap items-center justify-end gap-2">
+          <Segment
+            aria-label="Network"
+            className="ensforge-network-segment shrink-0"
+            selectedKey={network}
+            size="sm"
+            onSelectionChange={(key) => selectNetwork(String(key) as Network)}
+          >
+            <Segment.Item id="mainnet">Mainnet</Segment.Item>
+            <Segment.Item id="sepolia">Sepolia</Segment.Item>
+          </Segment>
+          <WalletProviders>
+            <WalletConnectButton />
+          </WalletProviders>
+        </div>
       </div>
 
       {form ? (

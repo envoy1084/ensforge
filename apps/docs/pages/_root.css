@@ -1,6 +1,6 @@
+@import "tailwindcss";
 @import "@thenamespace/uikit/styles.css";
 @import "@rainbow-me/rainbowkit/styles.css";
-@import "tailwindcss" important;
 
 @source "../components/**/*.{ts,tsx}";
 @source "./**/*.{md,mdx,ts,tsx}";
@@ -96,108 +96,14 @@
   border-radius: 0.5rem;
 }
 
-.ensforge-wallet-slot {
-  position: fixed;
-  right: 0.75rem;
-  top: 0.75rem;
-  z-index: 40;
-}
-
-.ensforge-wallet-button.button {
-  background: color-mix(in srgb, var(--vocs-background-color-primary) 88%, transparent);
-  border-color: var(--vocs-border-color-primary);
-  border-radius: 0.5rem;
-  color: var(--vocs-text-color-primary);
-  font-size: 0.8125rem;
-  font-weight: 600;
-  height: 2rem;
-  min-width: max-content;
-  padding-inline: 0.75rem;
-}
-
-.ensforge-wallet-button.button:hover,
-.ensforge-wallet-button.button[data-hovered="true"] {
-  background: var(--vocs-background-color-surfaceTint);
-  border-color: color-mix(in srgb, var(--vocs-text-color-muted) 45%, transparent);
-}
-
-[data-v-gutter-top] {
-  padding-right: 7.5rem;
-}
-
-.ensforge-result {
-  background: var(--vocs-background-color-surfaceTint);
-  border: 1px solid var(--vocs-border-color-primary);
-  border-radius: 0.625rem;
-  overflow: hidden;
-  position: relative;
-}
-
-.ensforge-result-code {
-  background: transparent !important;
-  font-family: var(--vocs-font-family-mono);
-  font-size: 0.8125rem;
-  line-height: 1.65;
-  margin: 0;
-  overflow-x: auto;
-  padding: 2.5rem 1rem 1rem;
-}
-
-.ensforge-result .shiki,
-.ensforge-result .shiki span {
+.ensforge-result-code.shiki,
+.ensforge-result-code.shiki span {
   color: var(--shiki-light, var(--vocs-text-color-primary));
 }
 
-[data-vocs-theme="dark"] .ensforge-result .shiki,
-[data-vocs-theme="dark"] .ensforge-result .shiki span {
+[data-vocs-theme="dark"] .ensforge-result-code.shiki,
+[data-vocs-theme="dark"] .ensforge-result-code.shiki span {
   color: var(--shiki-dark, var(--vocs-text-color-primary));
-}
-
-.ensforge-result-language {
-  color: var(--vocs-text-color-muted);
-  font-family: var(--vocs-font-family-mono);
-  font-size: 0.6875rem;
-  left: 1rem;
-  position: absolute;
-  text-transform: uppercase;
-  top: 0.75rem;
-}
-
-.ensforge-result-copy {
-  align-items: center;
-  background: transparent;
-  border: 0;
-  color: var(--vocs-text-color-muted);
-  cursor: pointer;
-  display: flex;
-  height: 2rem;
-  justify-content: center;
-  position: absolute;
-  right: 0.5rem;
-  top: 0.4rem;
-  width: 2rem;
-  z-index: 1;
-}
-
-.ensforge-result-copy::before {
-  content: "Copy";
-  font-size: 0.6875rem;
-}
-
-.ensforge-result-copy[title="Copied"]::before {
-  color: var(--vocs-color-green);
-  content: "Copied";
-}
-
-@media (width < 748px) {
-  .ensforge-wallet-slot {
-    right: 5.5rem;
-    top: 0.5rem;
-  }
-
-  [data-v-gutter-top] {
-    padding-right: 0;
-  }
 }
 
 [data-layout="minimal"] {
@@ -209,50 +115,6 @@
   max-width: 1480px;
 }
 
-.ensforge-pipeline {
-  background:
-    linear-gradient(var(--vocs-background-color-primary), var(--vocs-background-color-primary))
-      padding-box,
-    linear-gradient(135deg, rgb(217 87 18 / 55%), rgb(255 192 56 / 10%) 45%, transparent 70%)
-      border-box;
-  box-shadow: 0 32px 80px rgb(96 37 8 / 9%);
-}
-
-.ensforge-pipeline::before {
-  background: radial-gradient(circle, rgb(255 146 32 / 16%) 0 1px, transparent 1.5px);
-  background-size: 18px 18px;
-  content: "";
-  inset: 0;
-  mask-image: linear-gradient(to bottom right, black, transparent 66%);
-  pointer-events: none;
-  position: absolute;
-}
-
-.ensforge-live-dot::before {
-  background: var(--ensforge-spark);
-  border-radius: 999px;
-  box-shadow: 0 0 0 4px rgb(255 178 28 / 12%);
-  content: "";
-  display: inline-block;
-  height: 0.375rem;
-  margin-right: 0.5rem;
-  width: 0.375rem;
-}
-
-.ensforge-pipeline-step {
-  align-items: center;
-  border-bottom: 1px solid var(--vocs-border-color-primary);
-  display: flex;
-  gap: 0.875rem;
-  min-height: 3.25rem;
-  position: relative;
-}
-
-.ensforge-pipeline-result {
-  border-bottom-color: color-mix(in srgb, var(--ensforge-ember) 38%, transparent);
-}
-
-.ensforge-step-index,
 .ensforge-feature-label {
   color: var(--ensforge-ember);
   font-family: var(--vocs-font-family-mono);

@@ -9,9 +9,8 @@ outline: false
 
 import { HomePage } from "vocs";
 
-<div className="ensforge-home mx-auto w-full max-w-[1480px] px-6 pb-24 pt-8 md:px-10 md:pt-12 xl:px-14">
-  <div className="grid items-center gap-14 lg:grid-cols-[minmax(0,1fr)_minmax(440px,0.82fr)] lg:gap-20 xl:gap-28">
-    <section className="flex max-w-[640px] flex-col items-start">
+<div className="ensforge-home mx-auto w-full max-w-[1200px] px-6 pb-24 pt-16 md:px-10 md:pt-24">
+    <section className="mx-auto flex max-w-[780px] flex-col items-center text-center">
       <img
         alt="ensforge"
         className="h-auto w-[280px] dark:hidden sm:w-[420px]"
@@ -25,43 +24,14 @@ import { HomePage } from "vocs";
       <div className="mt-8 max-w-[610px] text-[20px] leading-[1.55] text-[var(--vocs-text-color-secondary)] sm:text-[23px]">
         Build ENS applications with <strong className="font-medium text-[var(--vocs-text-color-heading)]">typed actions</strong>, <strong className="font-medium text-[var(--vocs-text-color-heading)]">React hooks</strong>, and one interface across ENS protocols.
       </div>
-      <div className="mt-8 flex flex-wrap gap-2">
+      <div className="mt-8 flex flex-wrap justify-center gap-2">
         <HomePage.Button href="/sdk/getting-started" variant="accent">Get started</HomePage.Button>
         <HomePage.Button href="/react/getting-started">Explore React</HomePage.Button>
         <HomePage.Button href="https://github.com/envoy1084/ensforge">GitHub</HomePage.Button>
       </div>
     </section>
 
-    <section aria-label="ENS resolution pipeline" className="ensforge-pipeline relative w-full overflow-hidden rounded-2xl border border-[var(--vocs-border-color-primary)] p-5 sm:p-7">
-      <div className="mb-8 flex items-center justify-between">
-        <span className="font-mono text-xs text-[var(--vocs-text-color-muted)]">resolve.name</span>
-        <span className="ensforge-live-dot font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--vocs-text-color-muted)]">mainnet</span>
-      </div>
-      <div className="space-y-3 font-mono text-sm">
-        <div className="ensforge-pipeline-step">
-          <span className="ensforge-step-index">01</span>
-          <span className="text-[var(--vocs-text-color-secondary)]">name</span>
-          <strong className="ml-auto font-medium text-[var(--vocs-text-color-heading)]">ens.eth</strong>
-        </div>
-        <div className="ensforge-pipeline-step">
-          <span className="ensforge-step-index">02</span>
-          <span className="text-[var(--vocs-text-color-secondary)]">protocol</span>
-          <strong className="ml-auto font-medium text-[var(--vocs-text-color-heading)]">v1 · v2</strong>
-        </div>
-        <div className="ensforge-pipeline-step ensforge-pipeline-result">
-          <span className="ensforge-step-index">03</span>
-          <span className="text-[var(--vocs-text-color-secondary)]">owner</span>
-          <strong className="ml-auto font-medium text-[var(--vocs-text-color-heading)]">0x57f1…ea85</strong>
-        </div>
-      </div>
-      <div className="mt-6 rounded-xl bg-[var(--vocs-background-color-surfaceTint)] px-4 py-3 font-mono text-[13px] text-[var(--vocs-text-color-secondary)]">
-        <span className="text-[var(--ensforge-ember)]">await</span> sdk.name.getOwner(&#123; name: <span className="text-[var(--ensforge-flame)]">"ens.eth"</span> &#125;)
-      </div>
-    </section>
-
-  </div>
-
-<div className="mt-20 grid gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:gap-4">
+<div className="mt-24 grid gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:gap-4">
   <a className="ensforge-feature" href="/sdk/getting-started">
     <span className="ensforge-feature-label">SDK</span>
     <strong>One configured client</strong>
@@ -83,17 +53,4 @@ import { HomePage } from "vocs";
     <p>Versioned addresses, complete ABIs, focused fragments, and interface identifiers.</p>
   </a>
 </div>
-
-  <section className="mt-24 grid gap-10 border-t border-[var(--vocs-border-color-primary)] pt-16 md:grid-cols-[0.8fr_1.2fr]">
-    <div>
-      <p className="font-mono text-xs uppercase tracking-[0.18em] text-[var(--ensforge-ember)]">Start with the interface you need</p>
-      <h2 className="mt-4 text-3xl font-semibold tracking-tight text-[var(--vocs-text-color-heading)]">The same ENS model at every layer.</h2>
-    </div>
-    <div className="grid gap-6 text-[17px] leading-7 text-[var(--vocs-text-color-secondary)] sm:grid-cols-2">
-      <p className="m-0">Use <code>@ensforge/sdk</code> for the shortest path from configuration to a complete ENS client.</p>
-      <p className="m-0">Use <code>@ensforge/react</code> when ENS state belongs directly in a React interface.</p>
-      <p className="m-0">Use <code>@ensforge/core</code> for standalone actions, Effect programs, and custom composition.</p>
-      <p className="m-0">Use <code>@ensforge/contracts</code> when you need contract metadata without the SDK runtime.</p>
-    </div>
-  </section>
 </div>
