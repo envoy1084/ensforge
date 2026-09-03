@@ -214,6 +214,55 @@ const actionGroups = {
     "wrapName",
   ],
 } as const;
+const indexerActionGroups = {
+  status: ["getIndexerStatus"],
+  names: [
+    "getDecodedName",
+    "getIndexedName",
+    "getNames",
+    "getNamesForAddress",
+    "getResolvedNamesForAddress",
+    "getSubnames",
+    "searchNames",
+  ],
+  records: ["getIndexedRecords", "getRecordHistory"],
+  registrations: ["getRegistrations", "getRegistrationsForAddress"],
+  registries: ["getRegistriesForAddress", "getRegistry", "getRegistryLabels", "getRegistryRoles"],
+  resolvers: [
+    "getIndexedResolver",
+    "getResolverApprovals",
+    "getResolverMetadata",
+    "getResolversForAddress",
+  ],
+  history: ["getEvents", "getNameHistory", "getRegistrationHistory"],
+} as const;
+const indexerHookGroups = {
+  status: ["useIndexerStatus"],
+  names: [
+    "useDecodedName",
+    "useIndexedName",
+    "useNames",
+    "useNamesForAddress",
+    "useResolvedNamesForAddress",
+    "useSubnames",
+    "useSearchNames",
+  ],
+  records: ["useIndexedRecords", "useRecordHistory"],
+  registrations: ["useRegistrations", "useRegistrationsForAddress"],
+  registries: [
+    "useRegistriesForAddress",
+    "useIndexedRegistry",
+    "useRegistryLabels",
+    "useIndexedRegistryRoles",
+  ],
+  resolvers: [
+    "useIndexedResolver",
+    "useResolverApprovals",
+    "useResolverMetadata",
+    "useResolversForAddress",
+  ],
+  history: ["useEvents", "useIndexedNameHistory", "useRegistrationHistory"],
+} as const;
 const hookGroups = {
   context: ["useEnsforge", "useEnsforgeRegistry"],
   cache: ["useInvalidate"],
@@ -623,6 +672,25 @@ export const sidebar: DefaultTheme.Sidebar = {
     apiGroup("/core/api/actions/reverse", "Reverse Actions", actionGroups.reverse),
     apiGroup("/core/api/actions/subnames", "Subnames Actions", actionGroups.subnames),
     apiGroup("/core/api/actions/wrapping", "Wrapping Actions", actionGroups.wrapping),
+    apiGroup("/core/api/actions/indexer", "Indexer Status", indexerActionGroups.status),
+    apiGroup("/core/api/actions/indexer/names", "Indexer Names", indexerActionGroups.names),
+    apiGroup("/core/api/actions/indexer/records", "Indexer Records", indexerActionGroups.records),
+    apiGroup(
+      "/core/api/actions/indexer/registrations",
+      "Indexer Registrations",
+      indexerActionGroups.registrations,
+    ),
+    apiGroup(
+      "/core/api/actions/indexer/registries",
+      "Indexer Registries",
+      indexerActionGroups.registries,
+    ),
+    apiGroup(
+      "/core/api/actions/indexer/resolvers",
+      "Indexer Resolvers",
+      indexerActionGroups.resolvers,
+    ),
+    apiGroup("/core/api/actions/indexer/history", "Indexer History", indexerActionGroups.history),
   ],
   "/sdk/": [
     {
@@ -665,6 +733,17 @@ export const sidebar: DefaultTheme.Sidebar = {
     apiGroup("/sdk/api/reverse", "Reverse Methods", actionGroups.reverse),
     apiGroup("/sdk/api/subnames", "Subnames Methods", actionGroups.subnames),
     apiGroup("/sdk/api/wrapping", "Wrapping Methods", actionGroups.wrapping),
+    apiGroup("/sdk/api/indexer", "Indexer Status", indexerActionGroups.status),
+    apiGroup("/sdk/api/indexer/names", "Indexer Names", indexerActionGroups.names),
+    apiGroup("/sdk/api/indexer/records", "Indexer Records", indexerActionGroups.records),
+    apiGroup(
+      "/sdk/api/indexer/registrations",
+      "Indexer Registrations",
+      indexerActionGroups.registrations,
+    ),
+    apiGroup("/sdk/api/indexer/registries", "Indexer Registries", indexerActionGroups.registries),
+    apiGroup("/sdk/api/indexer/resolvers", "Indexer Resolvers", indexerActionGroups.resolvers),
+    apiGroup("/sdk/api/indexer/history", "Indexer History", indexerActionGroups.history),
   ],
   "/react/": [
     {
@@ -746,6 +825,25 @@ export const sidebar: DefaultTheme.Sidebar = {
     apiGroup("/react/api/hooks/reverse", "Reverse Hooks", hookGroups.reverse),
     apiGroup("/react/api/hooks/subnames", "Subnames Hooks", hookGroups.subnames),
     apiGroup("/react/api/hooks/wrapping", "Wrapping Hooks", hookGroups.wrapping),
+    apiGroup("/react/api/hooks/indexer", "Indexer Status", indexerHookGroups.status),
+    apiGroup("/react/api/hooks/indexer/names", "Indexer Names", indexerHookGroups.names),
+    apiGroup("/react/api/hooks/indexer/records", "Indexer Records", indexerHookGroups.records),
+    apiGroup(
+      "/react/api/hooks/indexer/registrations",
+      "Indexer Registrations",
+      indexerHookGroups.registrations,
+    ),
+    apiGroup(
+      "/react/api/hooks/indexer/registries",
+      "Indexer Registries",
+      indexerHookGroups.registries,
+    ),
+    apiGroup(
+      "/react/api/hooks/indexer/resolvers",
+      "Indexer Resolvers",
+      indexerHookGroups.resolvers,
+    ),
+    apiGroup("/react/api/hooks/indexer/history", "Indexer History", indexerHookGroups.history),
   ],
   "/contracts/": [
     {

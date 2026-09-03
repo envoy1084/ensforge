@@ -70,6 +70,25 @@ Default viem wallet client used by write methods. Omit it for a read-only SDK.
 const ens = new Ensforge({ network: "mainnet", publicClient, walletClient });
 ```
 
+### indexer
+
+`IndexerConfig | false | undefined`
+
+Configures the V1 and V2 indexer sources used by `sdk.indexer`. You can override endpoints and
+headers or disable indexed queries entirely. See [Core Config](/core/api/config#indexer) for every
+policy option.
+
+```ts
+const ens = new Ensforge({
+  network: "mainnet",
+  publicClient,
+  indexer: {
+    endpoints: { v1: process.env.ENS_V1_INDEXER_URL },
+    failureMode: "partial",
+  },
+});
+```
+
 ## Wagmi
 
 `Config | undefined`
@@ -101,6 +120,7 @@ The validated Core configuration shared by every method.
 | `capabilities` | Authorization, roles, approvals, and write routing     |
 | `dns`          | DNS records and DNS namespace imports                  |
 | `events`       | Event queries, history, and streams                    |
+| `indexer`      | Indexed names, records, registrations, and discovery   |
 | `migration`    | ENS migration planning and execution                   |
 | `name`         | Name state, ownership, status, and protocol reads      |
 | `ownership`    | Managers, registrants, transfers, and TTL              |

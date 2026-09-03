@@ -14,6 +14,7 @@ predictable without changing action behavior or result types.
 | `capabilities` | Contract support, approvals, roles, permissions, and write targets.        |
 | `dns`          | DNS records, DNSSEC claims, and imports.                                   |
 | `events`       | Event queries, history, and watchers.                                      |
+| `indexer`      | Indexed search, pagination, ownership, records, and historical activity.   |
 | `migration`    | ENSv1 to ENSv2 eligibility, planning, approval, and execution.             |
 | `name`         | Ownership, lifecycle, protocol, registry, and composed state.              |
 | `ownership`    | Manager, registrant, TTL, reclaim, and transfers.                          |
@@ -43,6 +44,32 @@ const avatar = await sdk.records.getAvatar({ name: "sdk.eth" });
 
 Use `name` for registration and ownership state, `resolution` for resolver infrastructure, and
 `records` for data stored by a resolver.
+
+## Query indexed state
+
+Use `indexer` for discovery, filters, pagination, and historical data that would be expensive to
+reconstruct from RPC logs. The SDK queries the relevant V1 and V2 sources and returns a normalized
+result.
+
+```ts
+const page = await sdk.indexer.getNamesForAddress({
+  address: account,
+  first: 25,
+  filter: { relation: "owner" },
+});
+
+const nextPage = page.pageInfo.hasNextPage
+  ? await sdk.indexer.getNamesForAddress({
+      address: account,
+      first: 25,
+      cursor: page.pageInfo.endCursor,
+      filter: { relation: "owner" },
+    })
+  : undefined;
+```
+
+Indexer methods retain `.effect`, but do not expose `.request`: GraphQL requests do not participate
+in RPC Multicall batching.
 
 ## Retained action interfaces
 

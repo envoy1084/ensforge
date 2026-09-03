@@ -69,6 +69,24 @@ Registration, migration, DNS import, and other multi-stage actions expose Promis
 but may not expose `.call`. They build and execute write plans, returning progress that can be passed
 back through `resume`.
 
+## Indexer actions
+
+Indexer actions are exported from the isolated `@ensforge/core/indexer` entrypoint. They use
+GraphQL sources for search, filtering, pagination, and historical state while preserving the same
+Promise and `.effect` interfaces as other Core actions.
+
+```ts
+import { getNamesForAddress } from "@ensforge/core/indexer";
+
+const page = await getNamesForAddress(config, {
+  address: account,
+  first: 25,
+});
+```
+
+They do not expose `.request` because GraphQL operations cannot be added to an RPC Multicall. Use
+their cursor pagination and run independent Effects concurrently when composing larger queries.
+
 ## Defining actions
 
 `defineAction`, `defineReadAction`, and `defineWriteAction` are public for integrations that need to

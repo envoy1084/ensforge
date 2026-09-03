@@ -51,3 +51,21 @@ const effect = owner.refreshEffect();
 ```
 
 The Promise and Effect controls refresh the same atom. See [Atom Result](/react/api/atom-result).
+
+## Indexed queries
+
+Indexer hooks use the same Effect Atom lifecycle and cache controls as RPC-backed read hooks. Use
+them for search, pagination, address portfolios, and history.
+
+```tsx
+const names = useNamesForAddress({
+  address,
+  first: 25,
+  filter: { relation: "owner" },
+  atom: { swr: { staleTime: "1 minute" } },
+});
+```
+
+Results identify their V1 or V2 source where the distinction matters. V2-only operations return a
+discriminated support result, allowing the same component to run on a network without a configured
+V2 indexer.

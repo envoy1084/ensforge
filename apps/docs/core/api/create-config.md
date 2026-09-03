@@ -84,6 +84,28 @@ Default simulation, confirmation, and status retry policies. See [`Config`](/cor
 Network policy for HTTP resources reached through avatar, content, metadata, or DNS workflows. See
 [`Config`](/core/api/config#gateways).
 
+### indexer
+
+`IndexerConfig | false | undefined`
+
+Configures the ENS indexers used by actions from `@ensforge/core/indexer`. Override the V1 or V2
+GraphQL endpoint, attach request headers, or tune timeout, retry, failure, and pagination policies.
+Set this option to `false` for an RPC-only application.
+
+```ts
+const config = createConfig({
+  network: "mainnet",
+  publicClient,
+  indexer: {
+    endpoints: { v1: process.env.ENS_V1_INDEXER_URL },
+    headers: { Authorization: `Bearer ${process.env.INDEXER_TOKEN}` },
+    failureMode: "partial",
+  },
+});
+```
+
+See [`Config`](/core/api/config#indexer).
+
 ## Return Type
 
 ```ts

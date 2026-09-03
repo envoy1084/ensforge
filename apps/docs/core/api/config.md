@@ -24,9 +24,9 @@ Use viem clients through the root entrypoint or the optional Wagmi adapter.
 ### viem clients
 
 ```ts
-import { createWagmiConfig } from "@ensforge/core/wagmi";
+import { createConfig } from "@ensforge/core";
 
-createWagmiConfig({
+createConfig({
   network: "mainnet",
   publicClient,
   walletClient,
@@ -38,7 +38,9 @@ createWagmiConfig({
 ### Wagmi config
 
 ```ts
-createConfig({
+import { createWagmiConfig } from "@ensforge/core/wagmi";
+
+createWagmiConfig({
   network: "mainnet",
   wagmiConfig,
 });
@@ -106,6 +108,44 @@ interface GatewayOptions {
 Use an allowlist when resolving user-controlled resources in a server environment with access to
 private networks.
 
+## Indexer
+
+```ts
+interface IndexerConfig {
+  enabled?: boolean;
+  endpoints?: { v1?: string | null; v2?: string | null };
+  headers?:
+    | Readonly<Record<string, string>>
+    | ((source: {
+        network: EnsNetwork;
+        protocol: "v1" | "v2";
+      }) => Readonly<Record<string, string>> | Promise<Readonly<Record<string, string>>>);
+  fetch?: typeof globalThis.fetch;
+  timeout?: number;
+  retry?: { attempts?: number };
+  failureMode?: "strict" | "partial";
+  maximumPageSize?: number;
+}
+```
+
+Indexer actions use separate V1 and V2 GraphQL sources and combine their results into stable public
+types. Defaults are selected for the configured network; an endpoint can be replaced with a hosted
+or authenticated service without changing an action call.
+
+| Option            |        Default | Description                                                                         |
+| ----------------- | -------------: | ----------------------------------------------------------------------------------- |
+| `enabled`         |         `true` | Enables indexer requests.                                                           |
+| `endpoints`       |  network-aware | Overrides either protocol endpoint; `null` disables that source.                    |
+| `headers`         |           `{}` | Static or source-aware request headers.                                             |
+| `fetch`           | global `fetch` | Custom Fetch implementation for tests or specialized runtimes.                      |
+| `timeout`         |        `15000` | Request timeout in milliseconds.                                                    |
+| `retry.attempts`  |            `2` | Retries after the initial request.                                                  |
+| `failureMode`     |     `"strict"` | Fails combined queries on one source error; `"partial"` retains successful sources. |
+| `maximumPageSize` |          `100` | Largest accepted `first` value for paginated queries.                               |
+
+Use [`getIndexerStatus`](/core/api/actions/indexer/get-indexer-status) to inspect which
+sources are ready, disabled, unavailable, or failed at runtime.
+
 ## Resolved config
 
 ```ts
@@ -117,6 +157,7 @@ interface EnsforgeConfig {
   readonly reads: ResolvedReadOptions;
   readonly writes: ResolvedWriteOptions;
   readonly gateways: ResolvedGatewayOptions;
+  readonly indexer: ResolvedIndexerConfig;
   readonly deployments: EnsDeploymentProfile;
 }
 ```
