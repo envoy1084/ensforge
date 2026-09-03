@@ -6,7 +6,7 @@
   "scripts": {
     "build": "NODE_OPTIONS='--max-old-space-size=6144' vocs build",
     "dev": "vocs dev --port 3000",
-    "lint": "oxlint --deny-warnings components pages sidebar.ts vocs.config.ts",
+    "lint": "oxlint --deny-warnings components pages sidebar.ts vite.config.ts vocs.config.ts",
     "preview": "vocs preview --port 3000"
   },
   "dependencies": {
