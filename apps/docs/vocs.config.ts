@@ -50,6 +50,8 @@ export default defineConfig({
     enabled: true,
     sources: [McpSource.github({ name: "ensforge", repo: "envoy1084/ensforge" })],
   },
+  ogImageUrl: (_path, { baseUrl }) =>
+    `${baseUrl ?? ""}/api/og?title=%title&description=%description`,
   renderStrategy: "dynamic",
   rootDir: ".",
   search: {
