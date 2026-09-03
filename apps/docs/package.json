@@ -4,8 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "pnpm --filter @ensforge/sdk... build && pnpm clean && NODE_OPTIONS='--max-old-space-size=6144' vocs build",
-    "clean": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\"",
+    "build": "NODE_OPTIONS='--max-old-space-size=6144' vocs build",
     "dev": "vocs dev --port 3000",
     "lint": "oxlint --deny-warnings components pages sidebar.ts vocs.config.ts",
     "preview": "vocs preview --port 3000"
