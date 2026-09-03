@@ -4,6 +4,7 @@
 !.env.example
 .ensforge/
 .repos/
+apps/docs/pages.gen.ts
 .turbo/
 coverage/
 dist/

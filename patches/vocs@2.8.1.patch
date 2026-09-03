@@ -1,0 +1,32 @@
+diff --git a/dist/internal/llms.js b/dist/internal/llms.js
+index 0def63bf24120048bcc621b8d8c8eb470eac564f..adaa2beaaf6982f858bae6776366b1c1b093a604 100644
+--- a/dist/internal/llms.js
++++ b/dist/internal/llms.js
+@@ -39,7 +39,7 @@ export async function buildLlmsContent(options) {
+             : await fs.readFile(page.content.path, 'utf-8');
+         const content = typeof page.content === 'string'
+             ? rawContent
+-            : await MarkdownImports.inlineMarkdownImportsAsync(rawContent, page.content.path, (source, filePath) => MarkdownComponents.inlineMarkdownComponents(source, filePath, componentOptions));
++            : await MarkdownComponents.inlineMarkdownComponents(MarkdownImports.inlineMarkdownImports(rawContent, page.content.path), page.content.path, componentOptions);
+         const file = await unified()
+             .use(remarkParse)
+             .use(remarkMdx)
+diff --git a/src/internal/llms.ts b/src/internal/llms.ts
+index bd6f101bc32f554d7a0ddbc805a78e46ae0b8fb5..766a208852a2c1b578a16a8c8680ef0001e78624 100644
+--- a/src/internal/llms.ts
++++ b/src/internal/llms.ts
+@@ -57,11 +57,10 @@ export async function buildLlmsContent(options: buildLlmsContent.Options) {
+       const content =
+         typeof page.content === 'string'
+           ? rawContent
+-          : await MarkdownImports.inlineMarkdownImportsAsync(
+-              rawContent,
++          : await MarkdownComponents.inlineMarkdownComponents(
++              MarkdownImports.inlineMarkdownImports(rawContent, page.content.path),
+               page.content.path,
+-              (source, filePath) =>
+-                MarkdownComponents.inlineMarkdownComponents(source, filePath, componentOptions),
++              componentOptions,
+             )
+       const file = await unified()
+         .use(remarkParse)
