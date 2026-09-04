@@ -13,11 +13,11 @@
     "wagmi"
   ],
   "homepage": "https://ensforge.com",
-  "bugs": "https://github.com/envoy1084/ensforge/issues",
+  "bugs": "https://github.com/thenamespace/ensforge/issues",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/envoy1084/ensforge.git",
+    "url": "git+https://github.com/thenamespace/ensforge.git",
     "directory": "packages/react"
   },
   "files": [

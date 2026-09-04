@@ -23,7 +23,7 @@ export default defineConfig({
   checkDeadlinks: true,
   description,
   editLink: {
-    link: "https://github.com/envoy1084/ensforge/edit/main/apps/docs/pages/:path",
+    link: "https://github.com/thenamespace/ensforge/edit/main/apps/docs/pages/:path",
     text: "Suggest changes to this page",
   },
   head: (_path, { frontmatter }) => ({
@@ -48,7 +48,7 @@ export default defineConfig({
   },
   mcp: {
     enabled: true,
-    sources: [McpSource.github({ name: "ensforge", repo: "envoy1084/ensforge" })],
+    sources: [McpSource.github({ name: "ensforge", repo: "thenamespace/ensforge" })],
   },
   ogImageUrl: (_path, { baseUrl }) =>
     `${baseUrl ?? ""}/api/og?title=%title&description=%description`,
@@ -67,7 +67,7 @@ export default defineConfig({
     include: (path) => !path.endsWith("-suspense"),
     lastmod: true,
   },
-  socials: [{ icon: "github", link: "https://github.com/envoy1084/ensforge" }],
+  socials: [{ icon: "github", link: "https://github.com/thenamespace/ensforge" }],
   srcDir: ".",
   title: "ensforge",
   titleTemplate: "%s | ensforge",
@@ -81,12 +81,12 @@ export default defineConfig({
         { external: true, link: "https://www.npmjs.com/org/ensforge", text: "npm" },
         {
           external: true,
-          link: "https://github.com/envoy1084/ensforge/releases",
+          link: "https://github.com/thenamespace/ensforge/releases",
           text: "Releases",
         },
         {
           external: true,
-          link: "https://github.com/envoy1084/ensforge/discussions",
+          link: "https://github.com/thenamespace/ensforge/discussions",
           text: "Discussions",
         },
       ],
