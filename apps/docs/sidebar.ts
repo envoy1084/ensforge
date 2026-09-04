@@ -52,7 +52,12 @@ const indexerGroup = (
   }>,
 ): SidebarItem => ({
   collapsed: true,
-  items: groups.map((group) => apiGroup(`${base}${group.path}`, group.text, group.names)),
+  items: groups.flatMap((group) =>
+    group.names.map((name) => ({
+      link: `${base}${group.path}/${slug(name)}`,
+      text: name,
+    })),
+  ),
   text,
 });
 
