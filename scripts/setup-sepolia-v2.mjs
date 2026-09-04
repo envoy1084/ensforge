@@ -56,10 +56,6 @@ const fixtureConfig = {
       protocol: "ipfs",
       value: "QmYwAPJzv5CZsnAzt8auVZRnGiRAK8vN2jEw9kDrYb3a5f",
     },
-    pubkey: {
-      x: `0x${"11".repeat(32)}`,
-      y: `0x${"22".repeat(32)}`,
-    },
     interface: { interfaceId: "0x01ffc9a7" },
     data: { key: "com.ensforge.docs", value: "0x656e73666f726765" },
   },
@@ -73,7 +69,6 @@ Usage:
   ENSFORGE_SEPOLIA_PRIVATE_KEY=0x... \\
   pnpm setup:sepolia-v2 --apply
 
-Optional environment variables:
 Without --apply, the script performs preflight checks and prints the fixture plan.
 Progress and generated fixture data are written under .ensforge/.
 `;
@@ -96,6 +91,14 @@ if (!/^0x[\da-fA-F]{64}$/.test(privateKey)) {
 }
 
 const account = privateKeyToAccount(privateKey);
+const publicKey = account.publicKey;
+const pubkey = {
+  x: `0x${publicKey.slice(4, 68)}`,
+  y: `0x${publicKey.slice(68, 132)}`,
+};
+if (!/^0x[\da-fA-F]{64}$/.test(pubkey.x) || !/^0x[\da-fA-F]{64}$/.test(pubkey.y)) {
+  throw new Error("Unable to derive an uncompressed secp256k1 public key from the signer");
+}
 const root = fixtureConfig.rootName.toLowerCase();
 const rootName = root.endsWith(".eth") ? root : `${root}.eth`;
 const rootLabel = rootName.slice(0, -4);
@@ -128,7 +131,7 @@ const fixtures = makeSepoliaV2Fixtures({
   bareRoot,
   btcAddress: fixtureConfig.addresses.bitcoin,
   operator,
-  profile: fixtureConfig.profile,
+  profile: { ...fixtureConfig.profile, pubkey },
   root: rootName,
   secondary,
   solanaAddress: fixtureConfig.addresses.solana,
