@@ -156,6 +156,9 @@ importers:
 
   apps/docs:
     dependencies:
+      '@ensforge/core':
+        specifier: workspace:*
+        version: link:../../packages/core
       '@ensforge/sdk':
         specifier: workspace:*
         version: link:../../packages/sdk

@@ -3,6 +3,7 @@ title: readBatchSettled
 description: Executes a read batch and preserves each result or failure.
 ---
 
+import { ReadActionDemo } from "../../../../components/read-actions/read-action-demo.client.tsx";
 import SharedSnippet0 from "../../../../shared/sdk/effect.mdx";
 import SharedSnippet1 from "../../../../shared/sdk/error.mdx";
 
@@ -33,6 +34,8 @@ const result = await sdk.batch.readBatchSettled({
 ```
 
 :::
+
+<ReadActionDemo action="batch.readBatchSettled" />
 
 ## Parameters
 

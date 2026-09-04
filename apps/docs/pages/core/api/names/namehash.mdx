@@ -3,6 +3,8 @@ title: namehash
 description: Compute the ENS namehash of a name.
 ---
 
+import { ReadActionDemo } from "../../../../components/read-actions/read-action-demo.client.tsx";
+
 # namehash
 
 Computes the recursive ENS namehash.
@@ -18,6 +20,8 @@ import { namehash } from "@ensforge/core";
 ```ts
 const node = namehash("ens.eth");
 ```
+
+<ReadActionDemo action="utilities.namehash" />
 
 ## Parameters
 

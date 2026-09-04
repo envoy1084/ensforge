@@ -3,6 +3,8 @@ title: dnsDecodeName
 description: Decode DNS wire-format bytes into a normalized ENS name.
 ---
 
+import { ReadActionDemo } from "../../../../components/read-actions/read-action-demo.client.tsx";
+
 # dnsDecodeName
 
 Decodes length-prefixed DNS labels into a normalized ENS name.
@@ -18,6 +20,8 @@ import { dnsDecodeName } from "@ensforge/core";
 ```ts
 const name = dnsDecodeName(encoded);
 ```
+
+<ReadActionDemo action="utilities.dnsDecodeName" />
 
 ## Parameters
 

@@ -3,6 +3,8 @@ title: fromCoinType
 description: Inspect the namespace represented by an ENS coin type.
 ---
 
+import { ReadActionDemo } from "../../../../components/read-actions/read-action-demo.client.tsx";
+
 # fromCoinType
 
 Converts a coin type into its SLIP-44 or ENSIP-11 namespace description.
@@ -18,6 +20,8 @@ import { fromCoinType } from "@ensforge/core";
 ```ts
 const namespace = fromCoinType(60n);
 ```
+
+<ReadActionDemo action="utilities.fromCoinType" />
 
 ## Return Type
 

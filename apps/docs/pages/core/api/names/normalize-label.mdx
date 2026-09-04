@@ -3,6 +3,8 @@ title: normalizeLabel
 description: Normalize one ENS label with ENSIP-15.
 ---
 
+import { ReadActionDemo } from "../../../../components/read-actions/read-action-demo.client.tsx";
+
 # normalizeLabel
 
 Normalizes and validates one ENS label.
@@ -18,6 +20,8 @@ import { normalizeLabel } from "@ensforge/core";
 ```ts
 const label = normalizeLabel("Example");
 ```
+
+<ReadActionDemo action="utilities.normalizeLabel" />
 
 ## Parameters
 

@@ -3,6 +3,7 @@ title: getWriteTarget
 description: Resolves the contract, resource, and authorization required for an ENS write.
 ---
 
+import { ReadActionDemo } from "../../../../../components/read-actions/read-action-demo.client.tsx";
 import SharedSnippet0 from "../../../../../shared/core/effect.mdx";
 import SharedSnippet1 from "../../../../../shared/core/request.mdx";
 import SharedSnippet2 from "../../../../../shared/core/error.mdx";
@@ -36,6 +37,8 @@ const result = await getWriteTarget(config, {
 ```
 
 :::
+
+<ReadActionDemo action="capabilities.getWriteTarget" />
 
 ## Parameters
 

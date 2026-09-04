@@ -3,6 +3,8 @@ title: toCoinType
 description: Convert an EVM chain ID into an ENS coin type.
 ---
 
+import { ReadActionDemo } from "../../../../components/read-actions/read-action-demo.client.tsx";
+
 # toCoinType
 
 Converts an EVM chain ID to the corresponding ENSIP-11 coin type.
@@ -18,6 +20,8 @@ import { toCoinType } from "@ensforge/core";
 ```ts
 const coinType = toCoinType(8453);
 ```
+
+<ReadActionDemo action="utilities.toCoinType" />
 
 ## Return Type
 

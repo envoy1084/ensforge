@@ -1,5 +1,9 @@
 import { defineForm } from "../../../form/define-form";
-import { defaultNameByNetwork, zeroAddress } from "../../../runtime/network";
+import {
+  defaultAccountByNetwork,
+  defaultNameByNetwork,
+  zeroAddress,
+} from "../../../runtime/network";
 import { addressField, bytes32Field, durationField, ensNameField } from "../shared-fields";
 import { defineReadAction } from "../types";
 
@@ -8,7 +12,7 @@ const registrationForm = (network: "mainnet" | "sepolia") =>
     fields: {
       name: ensNameField({ initialValue: defaultNameByNetwork[network], label: "Name" }),
       duration: durationField(),
-      owner: addressField({ initialValue: zeroAddress, label: "Owner" }),
+      owner: addressField({ initialValue: defaultAccountByNetwork[network], label: "Owner" }),
       secret: bytes32Field("Secret"),
     },
   });

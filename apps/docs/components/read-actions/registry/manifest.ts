@@ -5,8 +5,10 @@ type DefinitionModule = {
 };
 
 const groupLoaders = {
+  batch: () => import("./groups/batch"),
   capabilities: () => import("./groups/capabilities"),
   dns: () => import("./groups/dns"),
+  events: () => import("./groups/events"),
   indexer: () => import("./groups/indexer"),
   migration: () => import("./groups/migration"),
   name: () => import("./groups/name"),
@@ -15,6 +17,7 @@ const groupLoaders = {
   registration: () => import("./groups/registration"),
   resolution: () => import("./groups/resolution"),
   reverse: () => import("./groups/reverse"),
+  utilities: () => import("./groups/utilities"),
   wrapping: () => import("./groups/wrapping"),
 } satisfies Readonly<Record<string, () => Promise<DefinitionModule>>>;
 

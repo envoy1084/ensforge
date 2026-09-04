@@ -3,6 +3,8 @@ title: encodeContentHash
 description: Encode a content-addressed URI into an ENS content hash.
 ---
 
+import { ReadActionDemo } from "../../../../components/read-actions/read-action-demo.client.tsx";
+
 # encodeContentHash
 
 Encodes a supported content protocol and value into resolver content-hash bytes.
@@ -18,6 +20,8 @@ import { encodeContentHash } from "@ensforge/core";
 ```ts
 const contentHash = encodeContentHash({ protocol: "ipfs", value: cid });
 ```
+
+<ReadActionDemo action="utilities.encodeContentHash" />
 
 ## Return Type
 

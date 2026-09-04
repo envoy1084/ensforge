@@ -44,7 +44,7 @@ function ReadActionDemoContent({ action }: ReadActionDemoProps) {
   const [definition, setDefinition] = useState<AnyReadActionDefinition>();
   const [loadError, setLoadError] = useState<string>();
   const [network, setNetwork] = useState<Network>(initialNetwork);
-  const [result, setResult] = useState<string>();
+  const [result, setResult] = useState<{ readonly json: string; readonly value: unknown }>();
   const [error, setError] = useState<string>();
   const [isRunning, setIsRunning] = useState(false);
   const execution = useRef(0);
@@ -73,6 +73,10 @@ function ReadActionDemoContent({ action }: ReadActionDemoProps) {
   }, [action]);
 
   const form = useMemo(() => definition?.createForm(network), [definition, network]);
+  const imageSource =
+    result && definition?.presentation?.kind === "image"
+      ? definition.presentation.source(result.value)
+      : undefined;
 
   const selectNetwork = (nextNetwork: Network) => {
     execution.current += 1;
@@ -93,7 +97,9 @@ function ReadActionDemoContent({ action }: ReadActionDemoProps) {
     try {
       const sdk = await getSdk(network);
       const nextResult = await definition.execute({ sdk, values });
-      if (execution.current === currentExecution) setResult(stringifyResult(nextResult));
+      if (execution.current === currentExecution) {
+        setResult({ json: stringifyResult(nextResult), value: nextResult });
+      }
     } catch (cause) {
       if (execution.current === currentExecution) {
         setResult(undefined);
@@ -145,7 +151,14 @@ function ReadActionDemoContent({ action }: ReadActionDemoProps) {
               {error}
             </p>
           ) : null}
-          {result ? <ResultCodeBlock code={result} /> : null}
+          {imageSource ? (
+            <img
+              alt="Resolved ENS avatar"
+              className="mb-4 aspect-square w-full max-w-64 rounded-lg border border-[var(--vocs-border-color-primary)] object-cover"
+              src={imageSource}
+            />
+          ) : null}
+          {result ? <ResultCodeBlock code={result.json} /> : null}
         </div>
       ) : null}
     </section>

@@ -42,6 +42,28 @@ export const definitions = {
     id: "dns.getDnsRecord",
     label: "getDnsRecord",
   }),
+  "dns.getDnsRecords": defineReadAction({
+    createForm: (network) =>
+      defineForm({
+        fields: {
+          name: ensNameField({ initialValue: defaultNameByNetwork[network], label: "Name" }),
+          recordName: textField({ initialValue: "_ens.example.com", label: "DNS record name" }),
+          resource: integerField({
+            initialValue: 16,
+            label: "Resource type",
+            maximum: 65_535,
+            minimum: 0,
+          }),
+        },
+      }),
+    execute: ({ sdk, values }) =>
+      sdk.dns.getDnsRecords({
+        name: values.name,
+        records: [{ recordName: values.recordName, resource: values.resource }],
+      }),
+    id: "dns.getDnsRecords",
+    label: "getDnsRecords",
+  }),
   "dns.getZoneHash": nameAction("dns.getZoneHash", "getZoneHash", (sdk, name) =>
     sdk.dns.getZoneHash({ name }),
   ),

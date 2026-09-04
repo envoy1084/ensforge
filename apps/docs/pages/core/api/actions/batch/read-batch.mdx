@@ -3,6 +3,7 @@ title: readBatch
 description: Executes a typed collection of ENS read requests, using Multicall where compatible.
 ---
 
+import { ReadActionDemo } from "../../../../../components/read-actions/read-action-demo.client.tsx";
 import SharedSnippet0 from "../../../../../shared/core/effect.mdx";
 import SharedSnippet1 from "../../../../../shared/core/error.mdx";
 
@@ -34,6 +35,8 @@ const result = await readBatch(config, {
 ```
 
 :::
+
+<ReadActionDemo action="batch.readBatch" />
 
 ## Parameters
 

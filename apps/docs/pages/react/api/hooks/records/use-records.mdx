@@ -3,6 +3,7 @@ title: useRecords
 description: Hook for fetching records.
 ---
 
+import { ReadActionDemo } from "../../../../../components/read-actions/read-action-demo.client.tsx";
 import SharedSnippet0 from "../../../../../shared/react/atom-parameters.mdx";
 
 # useRecords
@@ -27,6 +28,8 @@ function Component() {
   return <pre>{JSON.stringify(result.data, null, 2)}</pre>;
 }
 ```
+
+<ReadActionDemo action="records.getRecords" />
 
 ## Parameters
 

@@ -11,6 +11,12 @@ export interface ReadActionDefinition<Fields extends FieldMap = FieldMap> {
   }) => Promise<unknown>;
   readonly id: string;
   readonly label: string;
+  readonly presentation?:
+    | {
+        readonly kind: "image";
+        readonly source: (result: unknown) => string | undefined;
+      }
+    | undefined;
 }
 
 export type AnyReadActionDefinition = ReadActionDefinition<FieldMap>;

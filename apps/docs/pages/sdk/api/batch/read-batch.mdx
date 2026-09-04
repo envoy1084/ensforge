@@ -3,6 +3,7 @@ title: readBatch
 description: Executes typed read requests with configuration already bound.
 ---
 
+import { ReadActionDemo } from "../../../../components/read-actions/read-action-demo.client.tsx";
 import SharedSnippet0 from "../../../../shared/sdk/effect.mdx";
 import SharedSnippet1 from "../../../../shared/sdk/error.mdx";
 
@@ -33,6 +34,8 @@ const result = await sdk.batch.readBatch({
 ```
 
 :::
+
+<ReadActionDemo action="batch.readBatch" />
 
 ## Parameters
 

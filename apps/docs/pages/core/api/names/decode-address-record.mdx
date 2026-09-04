@@ -3,6 +3,8 @@ title: decodeAddressRecord
 description: Decode ENS address record bytes for a coin type.
 ---
 
+import { ReadActionDemo } from "../../../../components/read-actions/read-action-demo.client.tsx";
+
 # decodeAddressRecord
 
 Decodes resolver address bytes into the human-readable form for a SLIP-44 coin type.
@@ -18,6 +20,8 @@ import { decodeAddressRecord } from "@ensforge/core";
 ```ts
 const address = decodeAddressRecord({ coinType: 60n, data });
 ```
+
+<ReadActionDemo action="utilities.decodeAddressRecord" />
 
 ## Return Type
 

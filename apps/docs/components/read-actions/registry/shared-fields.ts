@@ -8,7 +8,7 @@ import {
   selectField,
   textField,
 } from "../../form/fields/factories";
-import { defaultNameByNetwork, zeroAddress, type Network } from "../../runtime/network";
+import { defaultAccountByNetwork, defaultNameByNetwork, type Network } from "../../runtime/network";
 
 export const nameForm = (network: Network) =>
   defineForm({
@@ -29,17 +29,17 @@ export const nameAndPageForm = (network: Network) =>
     },
   });
 
-export const addressForm = () =>
+export const addressForm = (network: Network) =>
   defineForm({
     fields: {
-      address: addressField({ initialValue: zeroAddress, label: "Address" }),
+      address: addressField({ initialValue: defaultAccountByNetwork[network], label: "Address" }),
     },
   });
 
-export const addressAndPageForm = () =>
+export const addressAndPageForm = (network: Network) =>
   defineForm({
     fields: {
-      address: addressField({ initialValue: zeroAddress, label: "Address" }),
+      address: addressField({ initialValue: defaultAccountByNetwork[network], label: "Address" }),
       pageSize: integerField({ initialValue: 20, label: "Page size", maximum: 100, minimum: 1 }),
     },
   });
@@ -55,8 +55,7 @@ export const durationField = () =>
     placeholder: "31536000",
   });
 
-export const accountField = (label = "Account") =>
-  addressField({ initialValue: zeroAddress, label });
+export const accountField = (label = "Account") => addressField({ label });
 
 export const bytes32Field = (label: string) =>
   hexField({

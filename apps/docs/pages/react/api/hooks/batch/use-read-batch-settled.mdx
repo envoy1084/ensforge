@@ -3,6 +3,7 @@ title: useReadBatchSettled
 description: Hook for running read batch settled.
 ---
 
+import { ReadActionDemo } from "../../../../../components/read-actions/read-action-demo.client.tsx";
 import SharedSnippet0 from "../../../../../shared/react/atom-parameters.mdx";
 
 # useReadBatchSettled
@@ -24,6 +25,8 @@ function Component() {
   return <pre>{JSON.stringify(result.data, null, 2)}</pre>;
 }
 ```
+
+<ReadActionDemo action="batch.readBatchSettled" />
 
 ## Parameters
 

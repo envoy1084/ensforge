@@ -88,13 +88,13 @@
 }
 
 .ensforge-demo .input,
-.ensforge-demo .native-select__trigger {
+.ensforge-demo [data-slot="select-trigger"] {
   border-radius: 0.5rem;
 }
 
-.ensforge-demo :where(.button, .input, .native-select__select, .segment__item):focus-visible,
+.ensforge-demo :where(.button, .input, [data-slot="select-trigger"], .segment__item):focus-visible,
 .ensforge-demo
-  :where(.button, .input, .native-select__select, .segment__item)[data-focus-visible="true"] {
+  :where(.button, .input, [data-slot="select-trigger"], .segment__item)[data-focus-visible="true"] {
   box-shadow: 0 0 0 1px var(--focus);
   outline: none;
 }

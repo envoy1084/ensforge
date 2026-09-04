@@ -6,7 +6,8 @@ import { Description } from "@thenamespace/uikit/description";
 import { FieldError } from "@thenamespace/uikit/field-error";
 import { Input } from "@thenamespace/uikit/input";
 import { Label } from "@thenamespace/uikit/label";
-import { NativeSelect } from "@thenamespace/uikit/native-select";
+import { ListBox } from "@thenamespace/uikit/list-box";
+import { Select } from "@thenamespace/uikit/select";
 import { Switch } from "@thenamespace/uikit/switch";
 import { TextField } from "@thenamespace/uikit/textfield";
 
@@ -46,33 +47,32 @@ const SelectInputField = ({ draft, error, field, fieldKey, onChange }: RenderFie
   if (field.control !== "select" || typeof draft !== "string") return null;
 
   return (
-    <div className="grid gap-2">
-      <label
-        className="text-sm font-medium text-[var(--vocs-text-color-heading)]"
-        htmlFor={`ensforge-demo-${fieldKey}`}
-      >
-        {field.label}
-      </label>
-      <NativeSelect fullWidth variant="secondary">
-        <NativeSelect.Trigger
-          id={`ensforge-demo-${fieldKey}`}
-          value={draft}
-          onChange={(event) => onChange(event.target.value)}
-        >
+    <Select
+      className="w-full"
+      fullWidth
+      isInvalid={error !== undefined}
+      value={draft}
+      variant="secondary"
+      onChange={(value) => onChange(String(value))}
+    >
+      <Label>{field.label}</Label>
+      <Select.Trigger className="rounded-lg" id={`ensforge-demo-${fieldKey}`}>
+        <Select.Value />
+        <Select.Indicator />
+      </Select.Trigger>
+      {field.description ? <Description>{field.description}</Description> : null}
+      <Select.Popover className="ensforge-demo">
+        <ListBox>
           {field.options.map((option) => (
-            <NativeSelect.Option key={option.value} value={option.value}>
+            <ListBox.Item id={option.value} key={option.value} textValue={option.label}>
               {option.label}
-            </NativeSelect.Option>
+              <ListBox.ItemIndicator />
+            </ListBox.Item>
           ))}
-        </NativeSelect.Trigger>
-      </NativeSelect>
-      {field.description ? (
-        <p className="m-0 text-xs leading-5 text-[var(--vocs-text-color-secondary)]">
-          {field.description}
-        </p>
-      ) : null}
-      {error ? <p className="m-0 text-xs text-[var(--vocs-color-red)]">{error}</p> : null}
-    </div>
+        </ListBox>
+      </Select.Popover>
+      {error ? <FieldError>{error}</FieldError> : null}
+    </Select>
   );
 };
 

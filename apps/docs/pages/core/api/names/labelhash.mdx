@@ -3,6 +3,8 @@ title: labelhash
 description: Compute the keccak256 labelhash of an ENS label.
 ---
 
+import { ReadActionDemo } from "../../../../components/read-actions/read-action-demo.client.tsx";
+
 # labelhash
 
 Computes the keccak256 hash of one ENS label.
@@ -18,6 +20,8 @@ import { labelhash } from "@ensforge/core";
 ```ts
 const tokenLabel = labelhash("ens");
 ```
+
+<ReadActionDemo action="utilities.labelhash" />
 
 ## Parameters
 

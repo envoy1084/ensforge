@@ -3,6 +3,7 @@ title: getNameHistory
 description: Gets the normalized event history for one ENS name.
 ---
 
+import { ReadActionDemo } from "../../../../../components/read-actions/read-action-demo.client.tsx";
 import SharedSnippet0 from "../../../../../shared/core/effect.mdx";
 import SharedSnippet1 from "../../../../../shared/core/error.mdx";
 
@@ -35,6 +36,8 @@ const result = await getNameHistory(config, {
 ```
 
 :::
+
+<ReadActionDemo action="events.getNameHistory" />
 
 ## Parameters
 

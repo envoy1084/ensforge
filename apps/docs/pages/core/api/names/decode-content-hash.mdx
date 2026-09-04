@@ -3,6 +3,8 @@ title: decodeContentHash
 description: Decode an ENS content hash into its protocol and value.
 ---
 
+import { ReadActionDemo } from "../../../../components/read-actions/read-action-demo.client.tsx";
+
 # decodeContentHash
 
 Decodes resolver content-hash bytes.
@@ -18,6 +20,8 @@ import { decodeContentHash } from "@ensforge/core";
 ```ts
 const decoded = decodeContentHash(contentHash);
 ```
+
+<ReadActionDemo action="utilities.decodeContentHash" />
 
 ## Return Type
 

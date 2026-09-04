@@ -3,6 +3,8 @@ title: normalizeName
 description: Normalize a complete ENS name with ENSIP-15.
 ---
 
+import { ReadActionDemo } from "../../../../components/read-actions/read-action-demo.client.tsx";
+
 # normalizeName
 
 Normalizes and validates a complete ENS name.
@@ -18,6 +20,8 @@ import { normalizeName } from "@ensforge/core";
 ```ts
 const name = normalizeName("ENS.eth");
 ```
+
+<ReadActionDemo action="utilities.normalizeName" />
 
 ## Parameters
 

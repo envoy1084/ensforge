@@ -3,6 +3,8 @@ title: dnsEncodeName
 description: Encode an ENS name in DNS wire format.
 ---
 
+import { ReadActionDemo } from "../../../../components/read-actions/read-action-demo.client.tsx";
+
 # dnsEncodeName
 
 Encodes a name as length-prefixed DNS labels terminated by a zero byte.
@@ -18,6 +20,8 @@ import { dnsEncodeName } from "@ensforge/core";
 ```ts
 const encoded = dnsEncodeName("ens.eth");
 ```
+
+<ReadActionDemo action="utilities.dnsEncodeName" />
 
 ## Return Type
 

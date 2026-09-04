@@ -3,6 +3,8 @@ title: analyzeName
 description: Classify a normalized ENS name and derive its labels and parent.
 ---
 
+import { ReadActionDemo } from "../../../../components/read-actions/read-action-demo.client.tsx";
+
 # analyzeName
 
 Returns structural information reused by registration, migration, and routing actions.
@@ -18,6 +20,8 @@ import { analyzeName } from "@ensforge/core";
 ```ts
 const analysis = analyzeName(normalizeName("sub.example.eth"));
 ```
+
+<ReadActionDemo action="utilities.analyzeName" />
 
 ## Parameters
 

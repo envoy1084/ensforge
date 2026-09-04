@@ -1,6 +1,10 @@
 import { defineForm } from "../../../form/define-form";
 import { toggleField } from "../../../form/fields/factories";
-import { defaultNameByNetwork, zeroAddress } from "../../../runtime/network";
+import {
+  defaultAccountByNetwork,
+  defaultNameByNetwork,
+  defaultResolverByNetwork,
+} from "../../../runtime/network";
 import {
   addressAndPageForm,
   addressField,
@@ -124,10 +128,13 @@ export const definitions = {
     label: "getRegistrations",
   }),
   "indexer.getRegistrationsForAddress": defineReadAction({
-    createForm: () =>
+    createForm: (network) =>
       defineForm({
         fields: {
-          address: addressField({ initialValue: zeroAddress, label: "Address" }),
+          address: addressField({
+            initialValue: defaultAccountByNetwork[network],
+            label: "Address",
+          }),
           protocol: protocolField(),
           pageSize: pageSizeField(),
         },
@@ -174,10 +181,16 @@ export const definitions = {
     label: "getRegistry",
   }),
   "indexer.getRegistryLabels": defineReadAction({
-    createForm: () =>
+    createForm: (network) =>
       defineForm({
         fields: {
-          address: addressField({ initialValue: zeroAddress, label: "Registry address" }),
+          address: addressField({
+            initialValue:
+              network === "mainnet"
+                ? "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e"
+                : "0xBDC85dD5b15D7ecb354cd7cb6f2c50b4f2c4F0E2",
+            label: "Registry address",
+          }),
           relationship: selectField({
             initialValue: "label",
             label: "Relationship",
@@ -194,10 +207,16 @@ export const definitions = {
     label: "getRegistryLabels",
   }),
   "indexer.getRegistryRoles": defineReadAction({
-    createForm: () =>
+    createForm: (network) =>
       defineForm({
         fields: {
-          registry: addressField({ initialValue: zeroAddress, label: "Registry address" }),
+          registry: addressField({
+            initialValue:
+              network === "mainnet"
+                ? "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e"
+                : "0xBDC85dD5b15D7ecb354cd7cb6f2c50b4f2c4F0E2",
+            label: "Registry address",
+          }),
           active: toggleField({ initialValue: true, label: "Only active roles" }),
           pageSize: pageSizeField(),
         },
@@ -218,10 +237,13 @@ export const definitions = {
     label: "getIndexedResolver",
   }),
   "indexer.getResolverApprovals": defineReadAction({
-    createForm: () =>
+    createForm: (network) =>
       defineForm({
         fields: {
-          resolver: addressField({ initialValue: zeroAddress, label: "Resolver address" }),
+          resolver: addressField({
+            initialValue: defaultResolverByNetwork[network],
+            label: "Resolver address",
+          }),
           approved: toggleField({ initialValue: true, label: "Approved" }),
           pageSize: pageSizeField(),
         },
@@ -235,10 +257,13 @@ export const definitions = {
     label: "getResolverApprovals",
   }),
   "indexer.getResolverMetadata": defineReadAction({
-    createForm: () =>
+    createForm: (network) =>
       defineForm({
         fields: {
-          resolver: addressField({ initialValue: zeroAddress, label: "Resolver address" }),
+          resolver: addressField({
+            initialValue: defaultResolverByNetwork[network],
+            label: "Resolver address",
+          }),
         },
       }),
     execute: ({ sdk, values }) => sdk.indexer.getResolverMetadata(values),

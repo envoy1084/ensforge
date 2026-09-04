@@ -1,9 +1,25 @@
 import type { Ensforge } from "@ensforge/sdk";
+import { encodeFunctionData } from "viem";
+import { namehash } from "viem/ens";
 
 import { defineForm } from "../../../form/define-form";
-import { defaultNameByNetwork, zeroAddress } from "../../../runtime/network";
-import { addressField, ensNameField, hexField, nameForm } from "../shared-fields";
+import { stringListField } from "../../../form/fields/factories";
+import { defaultNameByNetwork, defaultResolverByNetwork } from "../../../runtime/network";
+import { addressField, bigintField, ensNameField, hexField, nameForm } from "../shared-fields";
 import { defineReadAction, type AnyReadActionDefinition } from "../types";
+
+const addrAbi = [
+  {
+    type: "function",
+    name: "addr",
+    stateMutability: "view",
+    inputs: [{ name: "node", type: "bytes32" }],
+    outputs: [{ name: "", type: "address" }],
+  },
+] as const;
+
+const encodeAddressCall = (name: string) =>
+  encodeFunctionData({ abi: addrAbi, functionName: "addr", args: [namehash(name)] });
 
 const nameAction = (
   id: string,
@@ -34,7 +50,10 @@ export const definitions = {
       defineForm({
         fields: {
           name: ensNameField({ initialValue: defaultNameByNetwork[network], label: "Name" }),
-          data: hexField({ initialValue: "0x", label: "Resolver calldata" }),
+          data: hexField({
+            initialValue: encodeAddressCall(defaultNameByNetwork[network]),
+            label: "Resolver calldata",
+          }),
         },
       }),
     execute: ({ sdk, values }) => sdk.resolution.resolve(values),
@@ -46,12 +65,51 @@ export const definitions = {
       defineForm({
         fields: {
           name: ensNameField({ initialValue: defaultNameByNetwork[network], label: "Name" }),
-          data: hexField({ initialValue: "0x", label: "Resolver calldata" }),
-          resolverAddress: addressField({ initialValue: zeroAddress, label: "Resolver address" }),
+          data: hexField({
+            initialValue: encodeAddressCall(defaultNameByNetwork[network]),
+            label: "Resolver calldata",
+          }),
+          resolverAddress: addressField({
+            initialValue: defaultResolverByNetwork[network],
+            label: "Resolver address",
+          }),
         },
       }),
     execute: ({ sdk, values }) => sdk.resolution.resolveWithResolver(values),
     id: "resolution.resolveWithResolver",
     label: "resolveWithResolver",
+  }),
+  "resolution.resolveBatch": defineReadAction({
+    createForm: (network) =>
+      defineForm({
+        fields: {
+          names: stringListField({
+            initialValue: [defaultNameByNetwork[network]],
+            label: "Names",
+            minimumLength: 1,
+            placeholder: "name.eth",
+          }),
+        },
+      }),
+    execute: ({ sdk, values }) =>
+      sdk.resolution.resolveBatch({
+        calls: values.names.map((name) => ({
+          name,
+          data: encodeAddressCall(name),
+        })),
+      }),
+    id: "resolution.resolveBatch",
+    label: "resolveBatch",
+  }),
+  "resolution.predictResolverAddress": defineReadAction({
+    createForm: () =>
+      defineForm({
+        fields: {
+          salt: bigintField({ initialValue: 1n, label: "Salt", minimum: 0n }),
+        },
+      }),
+    execute: ({ sdk, values }) => sdk.resolution.predictResolverAddress({ salt: values.salt }),
+    id: "resolution.predictResolverAddress",
+    label: "predictResolverAddress",
   }),
 } as const;
