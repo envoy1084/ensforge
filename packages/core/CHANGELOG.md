@@ -1,5 +1,13 @@
 # @ensforge/core
 
+## 0.3.1
+
+### Patch Changes
+
+- aed1b6d: Move package repository metadata and release provenance to the Namespace GitHub organization.
+- Updated dependencies [aed1b6d]
+  - @ensforge/contracts@0.3.1
+
 ## 0.3.0
 
 ### Minor Changes

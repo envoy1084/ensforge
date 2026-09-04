@@ -1,5 +1,11 @@
 # @ensforge/contracts
 
+## 0.3.1
+
+### Patch Changes
+
+- aed1b6d: Move package repository metadata and release provenance to the Namespace GitHub organization.
+
 ## 0.3.0
 
 ### Patch Changes
