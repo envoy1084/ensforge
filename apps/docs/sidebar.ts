@@ -42,6 +42,20 @@ const contractGroup = (text: string, modules: ReadonlyArray<string>): SidebarIte
   text,
 });
 
+const indexerGroup = (
+  base: string,
+  text: string,
+  groups: ReadonlyArray<{
+    readonly path: string;
+    readonly text: string;
+    readonly names: ReadonlyArray<string>;
+  }>,
+): SidebarItem => ({
+  collapsed: true,
+  items: groups.map((group) => apiGroup(`${base}${group.path}`, group.text, group.names)),
+  text,
+});
+
 const actionGroups = {
   batch: [
     "estimateCalls",
@@ -266,6 +280,34 @@ const indexerHookGroups = {
   ],
   history: ["useEvents", "useIndexedNameHistory", "useRegistrationHistory"],
 } as const;
+
+const indexerActionSections = [
+  { path: "", text: "Status", names: indexerActionGroups.status },
+  { path: "/names", text: "Names", names: indexerActionGroups.names },
+  { path: "/records", text: "Records", names: indexerActionGroups.records },
+  {
+    path: "/registrations",
+    text: "Registrations",
+    names: indexerActionGroups.registrations,
+  },
+  { path: "/registries", text: "Registries", names: indexerActionGroups.registries },
+  { path: "/resolvers", text: "Resolvers", names: indexerActionGroups.resolvers },
+  { path: "/history", text: "History", names: indexerActionGroups.history },
+] as const;
+
+const indexerHookSections = [
+  { path: "", text: "Status", names: indexerHookGroups.status },
+  { path: "/names", text: "Names", names: indexerHookGroups.names },
+  { path: "/records", text: "Records", names: indexerHookGroups.records },
+  {
+    path: "/registrations",
+    text: "Registrations",
+    names: indexerHookGroups.registrations,
+  },
+  { path: "/registries", text: "Registries", names: indexerHookGroups.registries },
+  { path: "/resolvers", text: "Resolvers", names: indexerHookGroups.resolvers },
+  { path: "/history", text: "History", names: indexerHookGroups.history },
+] as const;
 const hookGroups = {
   context: ["useEnsforge", "useEnsforgeRegistry"],
   cache: ["useInvalidate"],
@@ -675,25 +717,7 @@ export const sidebar = {
     apiGroup("/core/api/actions/permissions", "Permissions Actions", actionGroups.permissions),
     apiGroup("/core/api/actions/wrapping", "Wrapping Actions", actionGroups.wrapping),
     apiGroup("/core/api/actions/events", "Events Actions", actionGroups.events),
-    apiGroup("/core/api/actions/indexer", "Indexer Status", indexerActionGroups.status),
-    apiGroup("/core/api/actions/indexer/names", "Indexer Names", indexerActionGroups.names),
-    apiGroup("/core/api/actions/indexer/records", "Indexer Records", indexerActionGroups.records),
-    apiGroup(
-      "/core/api/actions/indexer/registrations",
-      "Indexer Registrations",
-      indexerActionGroups.registrations,
-    ),
-    apiGroup(
-      "/core/api/actions/indexer/registries",
-      "Indexer Registries",
-      indexerActionGroups.registries,
-    ),
-    apiGroup(
-      "/core/api/actions/indexer/resolvers",
-      "Indexer Resolvers",
-      indexerActionGroups.resolvers,
-    ),
-    apiGroup("/core/api/actions/indexer/history", "Indexer History", indexerActionGroups.history),
+    indexerGroup("/core/api/actions/indexer", "Indexer Actions", indexerActionSections),
   ],
   "/sdk/": [
     {
@@ -736,17 +760,7 @@ export const sidebar = {
     apiGroup("/sdk/api/permissions", "Permissions Methods", actionGroups.permissions),
     apiGroup("/sdk/api/wrapping", "Wrapping Methods", actionGroups.wrapping),
     apiGroup("/sdk/api/events", "Events Methods", actionGroups.events),
-    apiGroup("/sdk/api/indexer", "Indexer Status", indexerActionGroups.status),
-    apiGroup("/sdk/api/indexer/names", "Indexer Names", indexerActionGroups.names),
-    apiGroup("/sdk/api/indexer/records", "Indexer Records", indexerActionGroups.records),
-    apiGroup(
-      "/sdk/api/indexer/registrations",
-      "Indexer Registrations",
-      indexerActionGroups.registrations,
-    ),
-    apiGroup("/sdk/api/indexer/registries", "Indexer Registries", indexerActionGroups.registries),
-    apiGroup("/sdk/api/indexer/resolvers", "Indexer Resolvers", indexerActionGroups.resolvers),
-    apiGroup("/sdk/api/indexer/history", "Indexer History", indexerActionGroups.history),
+    indexerGroup("/sdk/api/indexer", "Indexer Methods", indexerActionSections),
   ],
   "/react/": [
     {
@@ -829,25 +843,7 @@ export const sidebar = {
       ],
       text: "Advanced",
     },
-    apiGroup("/react/api/hooks/indexer", "Indexer Status", indexerHookGroups.status),
-    apiGroup("/react/api/hooks/indexer/names", "Indexer Names", indexerHookGroups.names),
-    apiGroup("/react/api/hooks/indexer/records", "Indexer Records", indexerHookGroups.records),
-    apiGroup(
-      "/react/api/hooks/indexer/registrations",
-      "Indexer Registrations",
-      indexerHookGroups.registrations,
-    ),
-    apiGroup(
-      "/react/api/hooks/indexer/registries",
-      "Indexer Registries",
-      indexerHookGroups.registries,
-    ),
-    apiGroup(
-      "/react/api/hooks/indexer/resolvers",
-      "Indexer Resolvers",
-      indexerHookGroups.resolvers,
-    ),
-    apiGroup("/react/api/hooks/indexer/history", "Indexer History", indexerHookGroups.history),
+    indexerGroup("/react/api/hooks/indexer", "Indexer Hooks", indexerHookSections),
   ],
   "/contracts/": [
     {
