@@ -33,6 +33,7 @@ export const makeSepoliaV2Fixtures = ({
   bareRoot,
   btcAddress,
   operator,
+  profile,
   root,
   secondary,
   solanaAddress,
@@ -63,16 +64,13 @@ export const makeSepoliaV2Fixtures = ({
       { coinType: baseCoinType, address: account },
     ],
     texts: [
-      { key: "description", value: "ensforge ENSv2 Sepolia documentation profile" },
-      { key: "url", value: "https://ensforge.com" },
-      { key: "com.twitter", value: "thenamespace" },
-      { key: "email", value: "hello@ensforge.com" },
-      { key: "avatar", value: "https://ensforge.com/og.png" },
+      { key: "description", value: profile.description },
+      { key: "url", value: profile.url },
+      { key: "com.twitter", value: profile.twitter },
+      { key: "email", value: profile.email },
+      { key: "avatar", value: profile.avatar },
     ],
-    contentHash: {
-      protocol: "ipfs",
-      value: "QmYwAPJzv5CZsnAzt8auVZRnGiRAK8vN2jEw9kDrYb3a5f",
-    },
+    contentHash: profile.contentHash,
     abi: [
       {
         type: "function",
@@ -82,12 +80,9 @@ export const makeSepoliaV2Fixtures = ({
         outputs: [{ name: "", type: "address" }],
       },
     ],
-    pubkey: {
-      x: `0x${"11".repeat(32)}`,
-      y: `0x${"22".repeat(32)}`,
-    },
-    interface: { interfaceId: "0x01ffc9a7", implementer: account },
-    data: { key: "com.ensforge.docs", value: "0x656e73666f726765" },
+    pubkey: profile.pubkey,
+    interface: { ...profile.interface, implementer: account },
+    data: profile.data,
     name,
   });
 

@@ -37,9 +37,33 @@ const confirmations = 2;
 const apply = process.argv.includes("--apply");
 const help = process.argv.includes("--help") || process.argv.includes("-h");
 
-// Fill these fixture addresses before running the script with --apply.
-const btcAddress = "";
-const solanaAddress = "";
+// Edit these public fixture values before running the script with --apply.
+const fixtureConfig = {
+  rootName: "ensforge.eth",
+  addresses: {
+    bitcoin: "",
+    solana: "",
+    secondary: "0x000000000000000000000000000000000000dead",
+    operator: "0x000000000000000000000000000000000000beef",
+  },
+  profile: {
+    description: "ensforge ENSv2 Sepolia documentation profile",
+    url: "https://ensforge.com",
+    twitter: "thenamespace",
+    email: "hello@ensforge.com",
+    avatar: "https://ensforge.com/og.png",
+    contentHash: {
+      protocol: "ipfs",
+      value: "QmYwAPJzv5CZsnAzt8auVZRnGiRAK8vN2jEw9kDrYb3a5f",
+    },
+    pubkey: {
+      x: `0x${"11".repeat(32)}`,
+      y: `0x${"22".repeat(32)}`,
+    },
+    interface: { interfaceId: "0x01ffc9a7" },
+    data: { key: "com.ensforge.docs", value: "0x656e73666f726765" },
+  },
+};
 
 const usage = `
 Set up persistent ENSv2 fixtures on Sepolia.
@@ -50,10 +74,6 @@ Usage:
   pnpm setup:sepolia-v2 --apply
 
 Optional environment variables:
-  ENSFORGE_SEPOLIA_V2_NAME               Root name or label
-  ENSFORGE_SEPOLIA_V2_SECONDARY_ADDRESS  Different-owner fixture address
-  ENSFORGE_SEPOLIA_V2_OPERATOR_ADDRESS   Permission fixture address
-
 Without --apply, the script performs preflight checks and prints the fixture plan.
 Progress and generated fixture data are written under .ensforge/.
 `;
@@ -76,18 +96,15 @@ if (!/^0x[\da-fA-F]{64}$/.test(privateKey)) {
 }
 
 const account = privateKeyToAccount(privateKey);
-const configuredName = process.env.ENSFORGE_SEPOLIA_V2_NAME;
-const root = (configuredName ?? `ensforge-${account.address.slice(2, 10)}`).toLowerCase();
+const root = fixtureConfig.rootName.toLowerCase();
 const rootName = root.endsWith(".eth") ? root : `${root}.eth`;
 const rootLabel = rootName.slice(0, -4);
 if (!/^[a-z0-9](?:[a-z0-9-]{3,56}[a-z0-9])?\.eth$/.test(rootName) || rootLabel.length > 58) {
-  throw new Error("ENSFORGE_SEPOLIA_V2_NAME must be a normalized 5–58 character .eth label");
+  throw new Error("fixtureConfig.rootName must be a normalized 5–58 character .eth label");
 }
 const bareRoot = `${rootLabel}-bare.eth`;
-const secondary =
-  process.env.ENSFORGE_SEPOLIA_V2_SECONDARY_ADDRESS ?? "0x000000000000000000000000000000000000dead";
-const operator =
-  process.env.ENSFORGE_SEPOLIA_V2_OPERATOR_ADDRESS ?? "0x000000000000000000000000000000000000beef";
+const secondary = fixtureConfig.addresses.secondary;
+const operator = fixtureConfig.addresses.operator;
 if (!isAddress(secondary) || !isAddress(operator)) {
   throw new Error("Secondary and operator fixture accounts must be valid Ethereum addresses");
 }
@@ -109,16 +126,17 @@ if (deployment === undefined) throw new Error("The Sepolia config does not inclu
 const fixtures = makeSepoliaV2Fixtures({
   account: account.address,
   bareRoot,
-  btcAddress,
+  btcAddress: fixtureConfig.addresses.bitcoin,
   operator,
+  profile: fixtureConfig.profile,
   root: rootName,
   secondary,
-  solanaAddress,
+  solanaAddress: fixtureConfig.addresses.solana,
 });
 
 for (const [coinType, address] of [
-  [0n, btcAddress],
-  [501n, solanaAddress],
+  [0n, fixtureConfig.addresses.bitcoin],
+  [501n, fixtureConfig.addresses.solana],
 ]) {
   encodeAddressRecord({ coinType, address });
 }
