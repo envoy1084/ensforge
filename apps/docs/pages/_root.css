@@ -115,6 +115,10 @@
   max-width: 1480px;
 }
 
+[data-layout="minimal"] main {
+  margin-inline: auto;
+}
+
 .ensforge-feature-label {
   color: var(--ensforge-ember);
   font-family: var(--vocs-font-family-mono);
