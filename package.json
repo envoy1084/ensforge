@@ -17,6 +17,7 @@
     "prepare": "lefthook install",
     "release": "changeset publish",
     "setup:sepolia-v2": "pnpm --filter @ensforge/sdk... build && node scripts/setup-sepolia-v2.mjs",
+    "setup:docs-sepolia": "pnpm --filter @ensforge/sdk... build && ENSFORGE_SEPOLIA_V2_NAME=ensforge.eth node scripts/setup-sepolia-v2.mjs --apply",
     "test": "turbo run test",
     "test:integration": "pnpm --filter @ensforge/core test:integration",
     "test:live:mainnet": "pnpm --filter @ensforge/core test:live:mainnet",

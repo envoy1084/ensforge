@@ -26,9 +26,17 @@ const dnsTxtRecord = (name, value) => {
   ]);
 };
 
-export const fixtureVersion = 1;
+export const fixtureVersion = 2;
 
-export const makeSepoliaV2Fixtures = ({ account, bareRoot, operator, root, secondary }) => {
+export const makeSepoliaV2Fixtures = ({
+  account,
+  bareRoot,
+  btcAddress,
+  operator,
+  root,
+  secondary,
+  solanaAddress,
+}) => {
   const names = {
     root,
     bareRoot,
@@ -47,44 +55,49 @@ export const makeSepoliaV2Fixtures = ({ account, bareRoot, operator, root, secon
     availableRoot: `${root.slice(0, -4)}-available.eth`,
   };
 
+  const profileRecords = (name) => ({
+    addresses: [
+      { coinType: 60n, address: account },
+      { coinType: 0n, address: btcAddress },
+      { coinType: 501n, address: solanaAddress },
+      { coinType: baseCoinType, address: account },
+    ],
+    texts: [
+      { key: "description", value: "ensforge ENSv2 Sepolia documentation profile" },
+      { key: "url", value: "https://ensforge.com" },
+      { key: "com.twitter", value: "thenamespace" },
+      { key: "email", value: "hello@ensforge.com" },
+      { key: "avatar", value: "https://ensforge.com/og.png" },
+    ],
+    contentHash: {
+      protocol: "ipfs",
+      value: "QmYwAPJzv5CZsnAzt8auVZRnGiRAK8vN2jEw9kDrYb3a5f",
+    },
+    abi: [
+      {
+        type: "function",
+        name: "owner",
+        stateMutability: "view",
+        inputs: [],
+        outputs: [{ name: "", type: "address" }],
+      },
+    ],
+    pubkey: {
+      x: `0x${"11".repeat(32)}`,
+      y: `0x${"22".repeat(32)}`,
+    },
+    interface: { interfaceId: "0x01ffc9a7", implementer: account },
+    data: { key: "com.ensforge.docs", value: "0x656e73666f726765" },
+    name,
+  });
+
   return {
     version: fixtureVersion,
     accounts: { owner: account, operator, secondary },
     names,
     records: {
-      profile: {
-        addresses: [
-          { coinType: 60n, address: account },
-          { coinType: baseCoinType, address: account },
-        ],
-        texts: [
-          { key: "description", value: "ensforge ENSv2 Sepolia smoke-test profile" },
-          { key: "url", value: "https://ensforge.envoy1084.xyz" },
-          { key: "com.twitter", value: "ensforge" },
-          { key: "email", value: "smoke@ensforge.invalid" },
-          { key: "avatar", value: "https://ensforge.envoy1084.xyz/og.png" },
-        ],
-        contentHash: {
-          protocol: "ipfs",
-          value: "QmYwAPJzv5CZsnAzt8auVZRnGiRAK8vN2jEw9kDrYb3a5f",
-        },
-        abi: [
-          {
-            type: "function",
-            name: "owner",
-            stateMutability: "view",
-            inputs: [],
-            outputs: [{ name: "", type: "address" }],
-          },
-        ],
-        pubkey: {
-          x: `0x${"11".repeat(32)}`,
-          y: `0x${"22".repeat(32)}`,
-        },
-        interface: { interfaceId: "0x01ffc9a7", implementer: account },
-        data: { key: "com.ensforge.smoke", value: "0x656e73666f726765" },
-        name: names.profile,
-      },
+      root: profileRecords(root),
+      profile: profileRecords(names.profile),
       inherited: {
         text: { key: "description", value: "Resolver inherited from the fixture root" },
       },

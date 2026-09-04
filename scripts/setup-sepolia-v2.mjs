@@ -23,6 +23,7 @@ import {
 import { privateKeyToAccount } from "viem/accounts";
 import { sepolia } from "viem/chains";
 
+import { encodeAddressRecord } from "../packages/core/dist/index.js";
 import { Ensforge } from "../packages/sdk/dist/index.js";
 import { fixtureVersion, jsonReplacer, makeSepoliaV2Fixtures } from "./sepolia-v2-fixtures.mjs";
 
@@ -35,6 +36,10 @@ const duration = 365n * day;
 const confirmations = 2;
 const apply = process.argv.includes("--apply");
 const help = process.argv.includes("--help") || process.argv.includes("-h");
+
+// Fill these fixture addresses before running the script with --apply.
+const btcAddress = "";
+const solanaAddress = "";
 
 const usage = `
 Set up persistent ENSv2 fixtures on Sepolia.
@@ -104,10 +109,19 @@ if (deployment === undefined) throw new Error("The Sepolia config does not inclu
 const fixtures = makeSepoliaV2Fixtures({
   account: account.address,
   bareRoot,
+  btcAddress,
   operator,
   root: rootName,
   secondary,
+  solanaAddress,
 });
+
+for (const [coinType, address] of [
+  [0n, btcAddress],
+  [501n, solanaAddress],
+]) {
+  encodeAddressRecord({ coinType, address });
+}
 
 const parseState = async () => {
   try {
@@ -383,6 +397,23 @@ await step("set-profile-records", () =>
       { type: "interface", ...fixtures.records.profile.interface },
       { type: "data", ...fixtures.records.profile.data },
       { type: "name", value: fixtures.records.profile.name },
+    ],
+  }),
+);
+
+await step("set-root-records", () =>
+  sdk.records.setRecords({
+    name: rootName,
+    aggregation: "resolver",
+    records: [
+      ...fixtures.records.root.addresses.map((record) => ({ type: "address", ...record })),
+      ...fixtures.records.root.texts.map((record) => ({ type: "text", ...record })),
+      { type: "contentHash", ...fixtures.records.root.contentHash },
+      { type: "abi", contentType: "json", value: fixtures.records.root.abi },
+      { type: "pubkey", ...fixtures.records.root.pubkey },
+      { type: "interface", ...fixtures.records.root.interface },
+      { type: "data", ...fixtures.records.root.data },
+      { type: "name", value: fixtures.records.root.name },
     ],
   }),
 );
