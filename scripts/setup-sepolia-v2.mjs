@@ -41,17 +41,17 @@ const help = process.argv.includes("--help") || process.argv.includes("-h");
 const fixtureConfig = {
   rootName: "ensforge.eth",
   addresses: {
-    bitcoin: "",
-    solana: "",
-    secondary: "0x000000000000000000000000000000000000dead",
-    operator: "0x000000000000000000000000000000000000beef",
+    bitcoin: "bc1qvwplh0kq7t398ewqgzhf0tf3t0d5e5a245569u",
+    solana: "BpXue2S7nqaaMkSNpKpeNSEg3pZCgHtuhLj3JboA7cGo",
+    secondary: "0xc0d86456F6f2930b892f3DAD007CDBE32c081FE6",
+    operator: "0xc0d86456F6f2930b892f3DAD007CDBE32c081FE6",
   },
   profile: {
-    description: "ensforge ENSv2 Sepolia documentation profile",
+    description: "Type-safe tools for reading, writing, and building applications on ENS.",
     url: "https://ensforge.com",
     twitter: "thenamespace",
-    email: "hello@ensforge.com",
-    avatar: "https://ensforge.com/og.png",
+    email: "vedant@envoy1084.xyz",
+    avatar: "https://ensforge.com/logo.png",
     contentHash: {
       protocol: "ipfs",
       value: "QmYwAPJzv5CZsnAzt8auVZRnGiRAK8vN2jEw9kDrYb3a5f",
