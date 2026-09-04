@@ -6,8 +6,7 @@ import { Button } from "@thenamespace/uikit/button";
 
 const shortenAddress = (address: string): string => `${address.slice(0, 6)}…${address.slice(-4)}`;
 
-const walletButtonClassName =
-  "h-8 min-w-max rounded-lg border-[var(--vocs-border-color-primary)] bg-[color-mix(in_srgb,var(--vocs-background-color-primary)_88%,transparent)] px-3 text-[0.8125rem] font-semibold text-[var(--vocs-text-color-primary)] hover:border-[color-mix(in_srgb,var(--vocs-text-color-muted)_45%,transparent)] hover:bg-[var(--vocs-background-color-surfaceTint)]";
+const walletButtonClassName = "h-8 min-w-max rounded-xl px-3 text-[0.8125rem] font-semibold";
 
 const walletDangerButtonClassName = "h-8 min-w-max rounded-lg px-3 text-[0.8125rem] font-semibold";
 
@@ -47,7 +46,7 @@ export function WalletConnectButton() {
                 aria-label="Connect wallet"
                 className={walletButtonClassName}
                 size="sm"
-                variant="outline"
+                variant="primary"
                 onPress={openConnectModal}
               >
                 Connect
@@ -67,7 +66,7 @@ export function WalletConnectButton() {
                 aria-label={`Open wallet account for ${account.ensName ?? account.address}`}
                 className={`${walletButtonClassName} max-w-56`}
                 size="sm"
-                variant="outline"
+                variant="primary"
                 onPress={openAccountModal}
               >
                 {account.ensAvatar ? (

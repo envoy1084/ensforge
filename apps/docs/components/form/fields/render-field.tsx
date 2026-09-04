@@ -131,7 +131,7 @@ const ListInputField = ({ draft, error, field, fieldKey, onChange }: RenderField
           onChange={(event) => setCandidate(event.target.value)}
           onKeyDown={onKeyDown}
         />
-        <Button size="sm" type="button" variant="secondary" onPress={add}>
+        <Button className="h-9 shrink-0 rounded-lg" type="button" variant="secondary" onPress={add}>
           Add
         </Button>
       </div>

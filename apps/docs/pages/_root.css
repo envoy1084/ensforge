@@ -92,6 +92,13 @@
   border-radius: 0.5rem;
 }
 
+.ensforge-demo :where(.button, .input, .native-select__select, .segment__item):focus-visible,
+.ensforge-demo
+  :where(.button, .input, .native-select__select, .segment__item)[data-focus-visible="true"] {
+  box-shadow: 0 0 0 1px var(--focus);
+  outline: none;
+}
+
 .ensforge-demo form > .button[type="submit"] {
   border-radius: 0.5rem;
 }

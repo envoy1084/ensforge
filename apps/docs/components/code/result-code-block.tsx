@@ -42,17 +42,19 @@ export function ResultCodeBlock({ code }: ResultCodeBlockProps) {
     };
   }, [code]);
 
+  if (highlighted === undefined) {
+    return (
+      <div
+        aria-label="Formatting JSON result"
+        className="h-28 animate-pulse rounded-lg border border-[var(--vocs-border-color-primary)] bg-[var(--vocs-background-color-surfaceTint)] motion-reduce:animate-none"
+        role="status"
+      />
+    );
+  }
+
   return (
-    <VocsCodeBlock
-      className="shiki ensforge-result-code"
-      data-v-lang="json"
-      key={highlighted ? code : "loading"}
-    >
-      {highlighted ? (
-        <code dangerouslySetInnerHTML={{ __html: highlighted }} />
-      ) : (
-        <code>{code}</code>
-      )}
+    <VocsCodeBlock className="shiki ensforge-result-code" data-v-lang="json" key={code}>
+      <code dangerouslySetInnerHTML={{ __html: highlighted }} />
     </VocsCodeBlock>
   );
 }
