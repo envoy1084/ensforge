@@ -65,11 +65,11 @@ const usage = `
 Set up persistent ENSv2 fixtures on Sepolia.
 
 Usage:
-  ENSFORGE_SEPOLIA_RPC_URL=https://... \\
-  ENSFORGE_SEPOLIA_PRIVATE_KEY=0x... \\
-  pnpm setup:sepolia-v2 --apply
+  pnpm setup:sepolia-v2   # Preflight only
+  pnpm setup:docs-sepolia # Apply the fixture plan
 
-Without --apply, the script performs preflight checks and prints the fixture plan.
+Both commands load ENSFORGE_SEPOLIA_RPC_URL and ENSFORGE_SEPOLIA_PRIVATE_KEY from .env.
+Edit fixtureConfig near the top of this file before applying the plan.
 Progress and generated fixture data are written under .ensforge/.
 `;
 
